@@ -1,0 +1,14 @@
+{
+  "name": "bevibe",
+  "version": "1.0.0",
+  "description": "beVIBE — Korean Beauty & OEM Platform",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --open",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^6.0.0"
+  }
+}

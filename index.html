@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-i18n="metaTitle">beVIBE — Kết nối Tinh hoa Mỹ phẩm Hàn Quốc & Thị trường Việt Nam</title>
+  <meta name="description" content="beVIBE — Đại diện phân phối mỹ phẩm Hàn Quốc chính ngạch tại Việt Nam và cung cấp giải pháp R&D, gia công sản xuất OEM/ODM thương hiệu riêng chuẩn CGMP quốc tế.">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/assets/images/logo.png">
+
+  <!-- Google Fonts: Playfair Display, Plus Jakarta Sans, Noto Serif KR -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+  <!-- ================= Header & Sticky Navigation ================= -->
+  <header>
+    <div class="container header-inner">
+      <a href="#" class="brand-logo-wrap" aria-label="beVIBE Home">
+        <img src="/assets/images/logo.png" alt="beVIBE" class="brand-logo-img">
+        <div class="brand-logo-sub">
+          <span>비바이브</span>
+          K-BEAUTY
+        </div>
+      </a>
+
+      <!-- Desktop Navigation with Dropdowns -->
+      <nav class="desktop-nav">
+        <a href="#about" class="nav-link" data-i18n="navAbout">Về beVIBE</a>
+
+        <div class="nav-item-dropdown">
+          <a href="#business" class="nav-link" data-i18n="navBusiness">
+            Lĩnh vực kinh doanh
+            <svg class="chevron-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </a>
+          <div class="nav-dropdown-menu">
+            <div class="nav-dropdown-item open-service-modal-btn" data-service="distribution">
+              <span>Phân phối mỹ phẩm</span>
+              <span class="nav-dropdown-badge">01</span>
+            </div>
+            <div class="nav-dropdown-item open-service-modal-btn" data-service="partnership">
+              <span>Tổng đại diện thương hiệu</span>
+              <span class="nav-dropdown-badge">02</span>
+            </div>
+            <div class="nav-dropdown-item open-service-modal-btn" data-service="oem">
+              <span>Gia công sản xuất OEM/ODM</span>
+              <span class="nav-dropdown-badge">03</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="nav-item-dropdown">
+          <a href="#brands" class="nav-link" data-i18n="navBrands" id="navBrandsLink">
+            Thương hiệu phân phối
+            <svg class="chevron-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </a>
+          <div class="nav-dropdown-menu">
+            <div class="nav-dropdown-item open-brand-modal-btn" data-brand="dr-bargo">
+              <span>Dr. Bargo</span>
+              <span class="nav-dropdown-badge">Dược mỹ phẩm</span>
+            </div>
+            <div class="nav-dropdown-item open-brand-modal-btn" data-brand="neuraderm">
+              <span>NEURADERM</span>
+              <span class="nav-dropdown-badge">Medytox Biotech</span>
+            </div>
+            <div class="nav-dropdown-item open-brand-modal-btn" data-brand="stem-c">
+              <span>Stem C</span>
+              <span class="nav-dropdown-badge">Tế bào gốc</span>
+            </div>
+            <div class="nav-dropdown-item open-brand-modal-btn" data-brand="smib">
+              <span>SMIB</span>
+              <span class="nav-dropdown-badge">Chăm sóc da đầu</span>
+            </div>
+          </div>
+        </div>
+
+        <a href="#oem" class="nav-link" data-i18n="navOem">Sản xuất OEM/ODM</a>
+        <a href="#calculator" class="nav-link" data-i18n="navCalculator">Dự toán chi phí</a>
+        <a href="#contact" class="nav-link" data-i18n="navContact">Liên hệ hợp tác ↗</a>
+      </nav>
+
+      <!-- Header Actions: Language Switcher & CTA -->
+      <div class="header-actions">
+        <button id="langToggle" class="btn-lang" aria-label="Đổi ngôn ngữ">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          <span data-i18n="langBtn">KR · 한국어</span>
+        </button>
+
+        <a href="#contact" class="btn-nav-cta" data-i18n="heroCtaPrimary">Nhận tư vấn ↗</a>
+
+        <!-- Mobile Hamburger Button -->
+        <button id="mobileMenuBtn" class="mobile-menu-trigger" aria-label="Mở menu">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Navigation Drawer -->
+  <div id="mobileNavOverlay" class="mobile-nav-overlay"></div>
+  <aside id="mobileNavDrawer" class="mobile-nav-drawer">
+    <div>
+      <div class="brand-logo-wrap">
+        <img src="/assets/images/logo.png" alt="beVIBE" class="brand-logo-img">
+      </div>
+      <nav class="mobile-nav-links">
+        <a href="#about" class="mobile-nav-link" data-i18n="navAbout">Về beVIBE</a>
+        <a href="#business" class="mobile-nav-link" data-i18n="navBusiness">Lĩnh vực kinh doanh</a>
+        <a href="#brands" class="mobile-nav-link" data-i18n="navBrands">Thương hiệu phân phối</a>
+        <a href="#oem" class="mobile-nav-link" data-i18n="navOem">Sản xuất OEM/ODM</a>
+        <a href="#calculator" class="mobile-nav-link" data-i18n="navCalculator">Dự toán chi phí</a>
+        <a href="#contact" class="mobile-nav-link" data-i18n="navContact">Liên hệ hợp tác ↗</a>
+      </nav>
+    </div>
+    <div style="padding-top: 24px;">
+      <button id="langToggleMobile" class="btn-lang" style="width: 100%; justify-content: center; margin-bottom: 14px;">
+        KR · 한국어
+      </button>
+      <a href="#contact" class="btn-primary mobile-nav-link" style="width: 100%; justify-content: center; text-align: center;" data-i18n="heroCtaPrimary">
+        Nhận tư vấn hợp tác ↗
+      </a>
+    </div>
+  </aside>
+
+  <main>
+    <!-- ================= Hero Section ================= -->
+    <section class="hero-section">
+      <div class="container">
+        <div class="hero-grid">
+          <!-- Left Column: Copy & Actions -->
+          <div class="hero-copy">
+            <span class="eyebrow" data-i18n="heroEyebrow">KOREAN BEAUTY · VIETNAMESE VISION</span>
+            <h1 class="hero-title" data-i18n="heroTitle">
+              Tinh hoa Hàn Quốc.<br><em>Dấu ấn thương hiệu của bạn.</em>
+            </h1>
+            <p class="hero-desc" data-i18n="heroDesc">
+              beVIBE là đối tác chiến lược toàn diện đưa mỹ phẩm Hàn Quốc tiếp cận thị trường Việt Nam — từ đại diện tổng phân phối độc quyền đến giải pháp R&D và gia công OEM/ODM trọn gói chuẩn CGMP quốc tế.
+            </p>
+            <div class="hero-actions">
+              <a href="#contact" class="btn-primary" data-i18n="heroCtaPrimary">
+                Bắt đầu hợp tác ↗
+              </a>
+              <a href="#business" class="btn-secondary" data-i18n="heroCtaSecondary">
+                Khám phá dịch vụ ↓
+              </a>
+              <a href="#calculator" class="btn-pill-calc" data-i18n="heroCtaCalc">
+                Dự toán OEM nhanh ✨
+              </a>
+            </div>
+            <div class="hero-badges-row">
+              <div class="hero-badge-item">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <span data-i18n="heroBadge1">100% R&D & Made in Korea</span>
+              </div>
+              <div class="hero-badge-item">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                <span data-i18n="heroBadge2">Chuẩn CGMP & ISO 22716 Quốc Tế</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Visual Luxury Card with Auto-rotating Real Product Showcase -->
+          <div class="hero-visual-card" id="heroBannerCard">
+            <!-- Progress Fill Bar -->
+            <div class="hero-slide-progress-bar"><div class="hero-progress-fill" id="heroProgressFill"></div></div>
+
+            <!-- Slideshow Nav Top Controls -->
+            <div class="hero-slideshow-nav">
+              <button type="button" class="hero-nav-arrow" id="heroSlidePrev" aria-label="Slide trước">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+              </button>
+              <div class="hero-slide-indicators" id="heroSlideIndicators">
+                <button type="button" class="hero-indicator-dot active" data-goto="0" aria-label="Slide 1: NEURADERM"></button>
+                <button type="button" class="hero-indicator-dot" data-goto="1" aria-label="Slide 2: Dr. Bargo"></button>
+                <button type="button" class="hero-indicator-dot" data-goto="2" aria-label="Slide 3: Stem C"></button>
+                <button type="button" class="hero-indicator-dot" data-goto="3" aria-label="Slide 4: SMIB"></button>
+              </div>
+              <button type="button" class="hero-nav-arrow" id="heroSlideNext" aria-label="Slide tiếp theo">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+              </button>
+            </div>
+
+            <!-- Rotating Slides Container -->
+            <div class="hero-slideshow-track" id="heroSlideshowTrack">
+              
+              <!-- Slide 0: NEURADERM -->
+              <div class="hero-slide active" data-slide-index="0" data-brand="neuraderm">
+                <div class="hero-slide-bg" style="background-image: url('assets/images/neuraderm/hero_coretime.webp');"></div>
+                <div class="hero-slide-overlay">
+                  <div class="hero-slide-content">
+                    <span class="hero-slide-badge">Medytox Biotech · 08 Sản Phẩm</span>
+                    <h3 class="hero-slide-title">NEURADERM Coretime & MD</h3>
+                    <p class="hero-slide-desc">Đột phá peptide sinh học M.Biome BTX™ tái tạo collagen lõi & kem phục hồi y khoa chuẩn phòng lab Seoul.</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Slide 1: Dr. Bargo -->
+              <div class="hero-slide" data-slide-index="1" data-brand="dr-bargo">
+                <div class="hero-slide-bg" style="background-image: url('assets/images/dr-bargo/dr.bargo_serum.jpg');"></div>
+                <div class="hero-slide-overlay">
+                  <div class="hero-slide-content">
+                    <span class="hero-slide-badge">Clinical Formula · 04 Sản Phẩm</span>
+                    <h3 class="hero-slide-title">Dr.BARGO Clinic Derma</h3>
+                    <p class="hero-slide-desc">Huyết thanh phục hồi hàng rào màng da Ceramide NP & Madecassoside chuyên biệt cho Spa & Clinic.</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Slide 2: Stem C -->
+              <div class="hero-slide" data-slide-index="2" data-brand="stem-c">
+                <div class="hero-slide-bg" style="background-image: url('assets/images/stem-c/stemc_cream1.png');"></div>
+                <div class="hero-slide-overlay">
+                  <div class="hero-slide-content">
+                    <span class="hero-slide-badge">Stem Cell Active · 04 Sản Phẩm</span>
+                    <h3 class="hero-slide-title">Stem C Cellular Glow</h3>
+                    <p class="hero-slide-desc">Chiết xuất tế bào gốc thực vật Callus độ tinh khiết 98%, tái sinh cấu trúc da và tạo hiệu ứng Glass Skin căng bóng.</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Slide 3: SMIB -->
+              <div class="hero-slide" data-slide-index="3" data-brand="smib">
+                <div class="hero-slide-bg" style="background-image: url('assets/images/smib-banner.jpg');"></div>
+                <div class="hero-slide-overlay">
+                  <div class="hero-slide-content">
+                    <span class="hero-slide-badge">100 Tỷ Postbiotic · 09 Sản Phẩm</span>
+                    <h3 class="hero-slide-title">SMIB Hair & Scalp Therapy</h3>
+                    <p class="hero-slide-desc">Dầu gội phủ bạc màu tự nhiên không xót rát & công thức phục hồi nang tóc dày khỏe từ men vi sinh.</p>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Floating Glass Card interacting with active brand -->
+            <div class="hero-floating-glass-card">
+              <div class="glass-card-info">
+                <h4>K-Beauty Official Lineup</h4>
+                <p id="heroActiveBrandDesc">Tổng phân phối & Đối tác chiến lược tại VN</p>
+              </div>
+              <div class="glass-card-brands" id="heroBrandChips">
+                <button type="button" class="glass-brand-chip active" data-brand-chip="neuraderm">NEURADERM</button>
+                <button type="button" class="glass-brand-chip" data-brand-chip="dr-bargo">Dr. Bargo</button>
+                <button type="button" class="glass-brand-chip" data-brand-chip="stem-c">Stem C</button>
+                <button type="button" class="glass-brand-chip" data-brand-chip="smib">SMIB</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= Continuous Ticker Strip ================= -->
+    <div class="ticker-strip">
+      <div class="container">
+        <div class="ticker-content">
+          <div class="ticker-item"><span class="ticker-dot"></span> <span data-i18n="ticker1">KOREA → VIETNAM DIRECT ACCESS</span></div>
+          <div class="ticker-item"><span class="ticker-dot"></span> <span data-i18n="ticker2">PHÂN PHỐI ĐỘC QUYỀN CHÍNH NGẠCH</span></div>
+          <div class="ticker-item"><span class="ticker-dot"></span> <span data-i18n="ticker3">GIA CÔNG MỸ PHẨM OEM/ODM CHUẨN CGMP</span></div>
+          <div class="ticker-item"><span class="ticker-dot"></span> <span data-i18n="ticker4">R&D ĐỘC QUYỀN TỪ LAB SEOUL</span></div>
+          <div class="ticker-item"><span class="ticker-dot"></span> <span data-i18n="ticker5">HỖ TRỢ PHÁP LÝ & CÔNG BỐ TRỌN GÓI</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= Section 01: About beVIBE ================= -->
+    <section class="about-section" id="about">
+      <div class="container">
+        <div class="about-grid">
+          <div>
+            <span class="eyebrow" data-i18n="aboutEyebrow">01 / VỀ BEVIBE (ABOUT US)</span>
+            <h2 class="section-title" data-i18n="aboutTitle">
+              Một đối tác chiến lược.<br>Vô vàn cơ hội bứt phá thị trường.
+            </h2>
+            <div class="about-paragraphs" style="margin-top: 28px;">
+              <p data-i18n="aboutDesc1">
+                beVIBE là cầu nối tin cậy giữa nền công nghiệp mỹ phẩm đỉnh cao Hàn Quốc và tiềm năng tăng trưởng vượt bậc tại thị trường Việt Nam. Chúng tôi đóng vai trò là tổng đại lý phân phối cho các thương hiệu làm đẹp danh tiếng từ Seoul, đồng thời cung cấp dịch vụ sản xuất OEM/ODM độc quyền dành riêng cho các doanh nghiệp và nhà sáng lập thương hiệu tại Việt Nam.
+              </p>
+              <p data-i18n="aboutDesc2">
+                Với đội ngũ chuyên gia am hiểu sâu sắc quy chuẩn pháp lý, xu hướng thị trường (K-Beauty Trends) và mạng lưới phòng lab viện nghiên cứu hàng đầu Hàn Quốc, beVIBE cam kết đồng hành bền vững cùng nhà bán lẻ, chuỗi spa clinic và doanh nghiệp.
+              </p>
+            </div>
+          </div>
+
+          <!-- KPI Metric Cards -->
+          <div class="about-stats-grid">
+            <div class="stat-card">
+              <div class="stat-number" data-i18n="aboutStat1Num">100%</div>
+              <div class="stat-label" data-i18n="aboutStat1Label">Chính ngạch & Đạt chuẩn CGMP</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number" data-i18n="aboutStat2Num">4+</div>
+              <div class="stat-label" data-i18n="aboutStat2Label">Thương hiệu độc quyền phân phối</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number" data-i18n="aboutStat3Num">15+</div>
+              <div class="stat-label" data-i18n="aboutStat3Label">Ngày hoàn thiện mẫu R&D thử nghiệm</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number" data-i18n="aboutStat4Num">360°</div>
+              <div class="stat-label" data-i18n="aboutStat4Label">Giải pháp trọn gói từ ý tưởng đến kệ hàng</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= Section 02: Our Business ================= -->
+    <section class="business-section" id="business">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow" data-i18n="businessEyebrow">02 / LĨNH VỰC HOẠT ĐỘNG (OUR SERVICES)</span>
+          <h2 class="section-title" data-i18n="businessTitle">
+            Giải pháp toàn diện<br>cho mọi giai đoạn phát triển.
+          </h2>
+          <p class="section-desc" data-i18n="businessSubtitle">
+            Mô hình hợp tác linh hoạt, được thiết kế may đo cho từng đối tác từ khởi nghiệp đến tập đoàn bán lẻ.
+          </p>
+        </div>
+
+        <div class="services-grid">
+          <!-- Service Card 1 -->
+          <article class="service-card">
+            <div class="service-card-top">
+              <span class="service-tag" data-i18n="bizCard1Tag">01 — DISTRIBUTION</span>
+              <h3 class="service-title" data-i18n="bizCard1Title">Phân phối mỹ phẩm chính hãng</h3>
+              <p class="service-desc" data-i18n="bizCard1Desc">
+                Nhập khẩu và cung ứng các dòng mỹ phẩm Hàn Quốc chất lượng cao cho hệ thống bán sỉ, bán lẻ, chuỗi mỹ phẩm và clinic da liễu tại Việt Nam.
+              </p>
+              <ul class="service-list">
+                <li>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span data-i18n="bizCard1Li1">Chiết khấu đại lý hấp dẫn & chính sách bảo vệ giá</span>
+                </li>
+                <li>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span data-i18n="bizCard1Li2">Nguồn hàng date mới nhất, pháp lý & hóa đơn VAT minh bạch</span>
+                </li>
+                <li>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span data-i18n="bizCard1Li3">Tư vấn danh mục theo xu hướng người tiêu dùng Việt</span>
+                </li>
+              </ul>
+            </div>
+            <a href="#contact" class="service-action-btn">
+              <span data-i18n="heroCtaPrimary">Nhận báo giá sỉ ↗</span>
+            </a>
+          </article>
+
+          <!-- Service Card 2 -->
+          <article class="service-card">
+            <div class="service-card-top">
+              <span class="service-tag" data-i18n="bizCard2Tag">02 — BRAND PARTNERSHIP</span>
+              <h3 class="service-title" data-i18n="bizCard2Title">Tổng đại diện thương hiệu (Master Agent)</h3>
+              <p class="service-desc" data-i18n="bizCard2Desc">
+                Đồng hành cùng các thương hiệu mỹ phẩm Hàn Quốc thâm nhập, định vị và mở rộng thị phần bền vững tại thị trường Việt Nam.
+              </p>
+              <ul class="service-list">
+                <li>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span data-i18n="bizCard2Li1">Kết nối mạng lưới kênh phân phối đa tầng (Online & Offline)</span>
+                </li>
+                <li>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span data-i18n="bizCard2Li2">Bảo hộ sở hữu trí tuệ & đăng ký lưu hành Bộ Y Tế</span>
+                </li>
+                <li>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span data-i18n="bizCard2Li3">Chiến dịch tiếp thị địa phương hóa (Localized Marketing)</span>
+                </li>
+              </ul>
+            </div>
+            <a href="#contact" class="service-action-btn">
+              <span data-i18n="heroCtaPrimary">Hợp tác thương hiệu ↗</span>
+            </a>
+          </article>
+
+          <!-- Service Card 3 -->
+          <article class="service-card">
+            <div class="service-card-top">
+              <span class="service-tag" data-i18n="bizCard3Tag">03 — OEM / ODM DEVELOPMENT</span>
+              <h3 class="service-title" data-i18n="bizCard3Title">Gia công mỹ phẩm thương hiệu riêng</h3>
+              <p class="service-desc" data-i18n="bizCard3Desc">
+                Biến ý tưởng mỹ phẩm của bạn thành dòng sản phẩm cao cấp mang thương hiệu riêng sản xuất 100% tại các nhà máy CGMP Hàn Quốc.
+              </p>
+              <ul class="service-list">
+                <li>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span data-i18n="bizCard3Li1">R&D công thức độc quyền với hoạt chất sinh học tiên tiến</span>
+                </li>
+                <li>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span data-i18n="bizCard3Li2">Thiết kế bao bì 3D sang trọng, thời thượng theo phong cách Hàn</span>
+                </li>
+                <li>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span data-i18n="bizCard3Li3">MOQ linh hoạt, hỗ trợ trọn gói từ kiểm nghiệm đến hải quan</span>
+                </li>
+              </ul>
+            </div>
+            <a href="#calculator" class="service-action-btn">
+              <span data-i18n="heroCtaCalc">Khởi tạo dự án OEM ↗</span>
+            </a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= Section 03: Distributed Brands ================= -->
+    <section class="brands-section" id="brands">
+      <div class="container">
+        <div class="brands-filter-row">
+          <div>
+            <span class="eyebrow" data-i18n="brandsEyebrow">03 / THƯƠNG HIỆU ĐỐI TÁC (OUR BRANDS)</span>
+            <h2 class="section-title" data-i18n="brandsTitle">
+              Các thương hiệu mỹ phẩm Hàn Quốc<br>beVIBE đại diện phân phối.
+            </h2>
+          </div>
+          <!-- Filter Buttons -->
+          <div class="filter-buttons-group">
+            <button class="brand-filter-btn active" data-filter="all" data-i18n="brandFilterAll">Tất cả</button>
+            <button class="brand-filter-btn" data-filter="derma" data-i18n="brandFilterDerma">Dược mỹ phẩm</button>
+            <button class="brand-filter-btn" data-filter="biotech" data-i18n="brandFilterBiotech">Công nghệ sinh học</button>
+            <button class="brand-filter-btn" data-filter="scalp" data-i18n="brandFilterScalp">Chăm sóc da đầu & tóc</button>
+          </div>
+        </div>
+
+        <!-- Dynamic Brands Grid Container -->
+        <div id="brandsGrid" class="brands-grid">
+          <!-- Injected via JavaScript -->
+        </div>
+
+        <!-- SMIB & K-Beauty Official Lineup Banner -->
+        <div class="brand-visual-banner">
+          <img src="assets/images/smib-banner.jpg" alt="SMIB Official Product Lineup & Ebook Catalog" width="1200" height="325">
+          <div class="brand-banner-overlay">
+            <div class="brand-banner-text">
+              <span class="banner-pill-tag">OFFICIAL SMIB EBOOK CATALOG</span>
+              <h3>SMIB Hair & Scalp Care</h3>
+              <p>
+                Cẩm nang điện tử 09 sản phẩm chăm sóc da đầu & tóc chính hãng Hàn Quốc — Công nghệ 100 Tỷ Postbiotic và phức hợp kích hoạt nang tóc dày khỏe.
+              </p>
+              <div class="banner-actions-row">
+                <a href="https://bevibe-smib-ebook.quiettoad513.chatgpt.site/#page-1" target="_blank" rel="noopener noreferrer" class="btn-primary" style="padding: 10px 22px; font-size: 0.86rem;">
+                  📖 Đọc Ebook Toàn Văn ↗
+                </a>
+                <button onclick="window.openBrandModal('smib')" class="btn-secondary" style="padding: 9px 20px; font-size: 0.86rem; background: rgba(255,255,255,0.18); color: #fff; border-color: rgba(255,255,255,0.5);">
+                  Xem 09 Sản Phẩm Chi Tiết ℹ️
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= Sub-Section: Interactive Product Catalog Showcase ================= -->
+        <div class="product-catalog-showcase" id="catalogShowcase">
+          <div class="catalog-header-row">
+            <div>
+              <span class="eyebrow">DANH MỤC SẢN PHẨM PHÂN PHỐI (OFFICIAL CATALOG)</span>
+              <h3 class="section-title" style="font-size: 2rem; margin-top: 8px;">
+                Danh mục chi tiết từng sản phẩm theo hãng.
+              </h3>
+              <p class="section-desc" style="margin-top: 6px; max-width: 680px;">
+                Hình ảnh sản phẩm thực tế từ cẩm nang điện tử (Ebook), thông số dung tích và công thức hoạt chất sinh học chuẩn CGMP Hàn Quốc.
+              </p>
+            </div>
+            <!-- Catalog Brand Filter Tabs -->
+            <div class="catalog-tabs-group" id="catalogTabsGroup">
+              <button class="catalog-tab-btn active" data-catalog-brand="all">Tất cả (25 SP)</button>
+              <button class="catalog-tab-btn" data-catalog-brand="smib">SMIB (09 SP)</button>
+              <button class="catalog-tab-btn" data-catalog-brand="neuraderm">NEURADERM (08 SP)</button>
+              <button class="catalog-tab-btn" data-catalog-brand="dr-bargo">Dr. Bargo (04 SP)</button>
+              <button class="catalog-tab-btn" data-catalog-brand="stem-c">Stem C (04 SP)</button>
+            </div>
+          </div>
+
+          <!-- Product Catalog Grid -->
+          <div id="productCatalogGrid" class="product-catalog-grid">
+            <!-- Injected via JavaScript -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= Section 04: OEM/ODM Development Workflow ================= -->
+    <section class="oem-section" id="oem">
+      <div class="container">
+        <div class="oem-top-grid">
+          <div>
+            <span class="eyebrow light" data-i18n="oemEyebrow">04 / QUY TRÌNH GIA CÔNG OEM (WORKFLOW)</span>
+            <h2 class="section-title" data-i18n="oemTitle">
+              Từ ý tưởng sơ khởi.<br>Đến thương hiệu mỹ phẩm độc bản.
+            </h2>
+            <p class="section-desc" data-i18n="oemDesc">
+              Quy trình làm việc 4 bước chuẩn hóa quốc tế, minh bạch và tối ưu hóa thời gian đưa sản phẩm ra thị trường (Time-to-market).
+            </p>
+          </div>
+          <div class="oem-lab-img-card">
+            <img src="assets/images/oem-lab.jpg" alt="Seoul Cosmetic R&D Laboratory Formulation" width="600" height="320">
+          </div>
+        </div>
+
+        <!-- 4 Step Interactive Workflow -->
+        <div class="oem-steps-grid">
+          <!-- Step 1 -->
+          <div class="step-card active">
+            <div class="step-number" data-i18n="step1Num">01</div>
+            <h3 class="step-title" data-i18n="step1Title">Lắng nghe & Khảo sát</h3>
+            <p class="step-desc" data-i18n="step1Desc">
+              Trao đổi sâu về tệp khách hàng mục tiêu, định vị thương hiệu, bảng thành phần mong muốn và ngân sách dự toán. Ký kết thỏa thuận bảo mật ý tưởng (NDA).
+            </p>
+            <span class="step-time-pill" data-i18n="step1Time">Thời gian: 3 - 5 ngày làm việc</span>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="step-card">
+            <div class="step-number" data-i18n="step2Num">02</div>
+            <h3 class="step-title" data-i18n="step2Title">Nghiên cứu R&D & Bao bì</h3>
+            <p class="step-desc" data-i18n="step2Desc">
+              Phòng lab tại Hàn Quốc phát triển công thức mẫu thử (Sample Lab) và gửi tận tay khách hàng trải nghiệm. Đồng thời lên concept thiết kế bao bì, chai lọ 3D độc quyền.
+            </p>
+            <span class="step-time-pill" data-i18n="step2Time">Thời gian: 10 - 15 ngày làm việc</span>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="step-card">
+            <div class="step-number" data-i18n="step3Num">03</div>
+            <h3 class="step-title" data-i18n="step3Title">Kiểm nghiệm & Thống nhất</h3>
+            <p class="step-desc" data-i18n="step3Desc">
+              Kiểm tra độ ổn định, kiểm nghiệm da liễu không gây kích ứng. Chốt số lượng sản xuất (MOQ), đơn giá minh bạch và ký hợp đồng kinh tế chính thức.
+            </p>
+            <span class="step-time-pill" data-i18n="step3Time">Thời gian: 5 - 7 ngày làm việc</span>
+          </div>
+
+          <!-- Step 4 -->
+          <div class="step-card">
+            <div class="step-number" data-i18n="step4Num">04</div>
+            <h3 class="step-title" data-i18n="step4Title">Sản xuất CGMP & Bàn giao</h3>
+            <p class="step-desc" data-i18n="step4Desc">
+              Tiến hành sản xuất tại nhà máy chuẩn CGMP Hàn Quốc, đóng gói, hoàn tất thủ tục hải quan nhập khẩu chính ngạch và bàn giao giấy công bố mỹ phẩm lưu hành tại Việt Nam.
+            </p>
+            <span class="step-time-pill" data-i18n="step4Time">Thời gian: 35 - 45 ngày sản xuất</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= Section 05: OEM Cost Estimator Tool ================= -->
+    <section class="calculator-section" id="calculator">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow" data-i18n="calcEyebrow">05 / DỰ TOÁN CHI PHÍ OEM (ESTIMATOR)</span>
+          <h2 class="section-title" data-i18n="calcTitle">Công cụ ước tính ngân sách OEM.</h2>
+          <p class="section-desc" data-i18n="calcDesc">
+            Chọn dòng sản phẩm, cấp độ bao bì và quy mô dự kiến để nhận ước tính sơ bộ tức thì trước khi trao đổi cùng chuyên gia.
+          </p>
+        </div>
+
+        <div class="calc-box-card">
+          <!-- Left: Selectors -->
+          <div class="calc-inputs-col">
+            <div class="calc-input-group">
+              <label for="calcProduct" data-i18n="calcCatLabel">Dòng sản phẩm bạn muốn phát triển:</label>
+              <select id="calcProduct" class="calc-select">
+                <option value="serum" data-i18n="calcOptSerum">Serum / Ampoule đặc trị (30ml - 50ml)</option>
+                <option value="cream" data-i18n="calcOptCream">Kem dưỡng ẩm / Chống lão hóa (50ml)</option>
+                <option value="sun" data-i18n="calcOptSun">Kem chống nắng sinh học / Nâng tông (50ml)</option>
+                <option value="cleanser" data-i18n="calcOptCleanser">Sữa rửa mặt tạo bọt / Gel dịu nhẹ (120ml)</option>
+                <option value="toner" data-i18n="calcOptToner">Toner dưỡng ẩm / Essence phục hồi (150ml)</option>
+                <option value="scalp" data-i18n="calcOptScalp">Dầu gội / Tinh chất mọc tóc chuyên sâu (250ml)</option>
+              </select>
+            </div>
+
+            <div class="calc-input-group">
+              <label for="calcPackaging" data-i18n="calcPackLabel">Quy cách chai lọ bao bì:</label>
+              <select id="calcPackaging" class="calc-select">
+                <option value="standard" data-i18n="calcPackStandard">Bao bì tiêu chuẩn Hàn Quốc (Tối ưu chi phí)</option>
+                <option value="premium" data-i18n="calcPackPremium">Thủy tinh mờ cao cấp + Nắp mạ kim loại sang trọng</option>
+                <option value="custom" data-i18n="calcPackCustom">Khuôn thiết kế độc quyền riêng (Custom Mold)</option>
+              </select>
+            </div>
+
+            <div class="calc-input-group">
+              <label for="calcQuantity" data-i18n="calcQtyLabel">Số lượng sản xuất dự kiến (MOQ):</label>
+              <select id="calcQuantity" class="calc-select">
+                <option value="1000">1.000 sản phẩm (Giai đoạn Test Market)</option>
+                <option value="3000" selected>3.000 sản phẩm (Quy mô thương mại vừa)</option>
+                <option value="5000">5.000 sản phẩm (Tối ưu đơn giá)</option>
+                <option value="10000">10.000+ sản phẩm (Đại trà & Chuỗi phân phối)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Right: Result Display & Apply Button -->
+          <div class="calc-result-box">
+            <div>
+              <div class="calc-result-label" data-i18n="calcEstInvestment">Mức đầu tư dự kiến sơ bộ:</div>
+              <div id="calcEstCost" class="calc-cost-display">120 - 145 triệu VNĐ</div>
+
+              <div class="calc-result-label" data-i18n="calcEstTimeline">Thời gian bàn giao ước tính:</div>
+              <div id="calcEstTime" class="calc-time-display">35 - 42 ngày (chuẩn CGMP)</div>
+            </div>
+
+            <button id="calcApplyBtn" class="calc-apply-btn" data-i18n="calcApplyBtn">
+              Áp dụng vào biểu mẫu liên hệ ↗
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= Section 06: Partnership Inquiry Form & Generator ================= -->
+    <section class="contact-section" id="contact">
+      <div class="container">
+        <div class="contact-grid">
+          <!-- Left: Information Column -->
+          <div class="contact-info-col">
+            <span class="eyebrow" data-i18n="contactEyebrow">06 / KẾT NỐI HỢP TÁC (PARTNERSHIP INQUIRY)</span>
+            <h2 class="section-title" data-i18n="contactTitle">
+              Cùng tạo nên thành công<br>trong ngành mỹ phẩm.
+            </h2>
+            <p class="section-desc" data-i18n="contactDesc">
+              Dù bạn đang tìm kiếm nguồn hàng mỹ phẩm Hàn Quốc chính ngạch hay ấp ủ phát triển thương hiệu mỹ phẩm của riêng mình, beVIBE luôn sẵn sàng lắng nghe và đồng hành.
+            </p>
+            <div class="contact-note-badge">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              <span data-i18n="contactNote">beVIBE cam kết bảo mật 100% mọi thông tin ý tưởng kinh doanh của quý đối tác theo thỏa thuận NDA.</span>
+            </div>
+          </div>
+
+          <!-- Right: Interactive Form & Text Proposal Generator -->
+          <div class="inquiry-form-wrap">
+            <form id="inquiryForm">
+              <div class="form-grid-2col">
+                <div class="form-group">
+                  <label for="formName" data-i18n="formNameLabel">Họ và tên người đại diện *</label>
+                  <input type="text" id="formName" class="form-control" required data-i18n-ph="formNamePh" placeholder="VD: Nguyễn Văn An">
+                </div>
+
+                <div class="form-group">
+                  <label for="formCompany" data-i18n="formCompanyLabel">Tên công ty / Thương hiệu</label>
+                  <input type="text" id="formCompany" class="form-control" data-i18n-ph="formCompanyPh" placeholder="VD: Công ty TNHH Làm Đẹp Á Đông">
+                </div>
+
+                <div class="form-group">
+                  <label for="formEmail" data-i18n="formEmailLabel">Địa chỉ Email *</label>
+                  <input type="email" id="formEmail" class="form-control" required data-i18n-ph="formEmailPh" placeholder="VD: partner@bevibe.vn">
+                </div>
+
+                <div class="form-group">
+                  <label for="formPhone" data-i18n="formPhoneLabel">Số điện thoại / Zalo *</label>
+                  <input type="tel" id="formPhone" class="form-control" required data-i18n-ph="formPhonePh" placeholder="VD: 0912 345 678">
+                </div>
+
+                <div class="form-group full">
+                  <label for="formService" data-i18n="formServiceLabel">Nhu cầu hợp tác chính *</label>
+                  <select id="formService" class="form-control">
+                    <option data-i18n="formServiceOpt1">Phân phối mỹ phẩm Hàn Quốc (Đại lý / Sỉ)</option>
+                    <option data-i18n="formServiceOpt2">Hợp tác tổng đại diện thương hiệu (Master Agent)</option>
+                    <option data-i18n="formServiceOpt3">Gia công sản xuất mỹ phẩm OEM / ODM trọn gói</option>
+                    <option data-i18n="formServiceOpt4">Đăng ký nhận mẫu thử & Catalogue sản phẩm</option>
+                  </select>
+                </div>
+
+                <div class="form-group full">
+                  <label for="formBudget" data-i18n="formBudgetLabel">Ngân sách dự kiến (cho dự án OEM)</label>
+                  <select id="formBudget" class="form-control">
+                    <option data-i18n="formBudgetOpt1">Chưa xác định / Cần tư vấn thêm</option>
+                    <option data-i18n="formBudgetOpt2">Dưới 100 triệu VNĐ</option>
+                    <option data-i18n="formBudgetOpt3">100 triệu - 300 triệu VNĐ</option>
+                    <option data-i18n="formBudgetOpt4">300 triệu - 500 triệu VNĐ</option>
+                    <option data-i18n="formBudgetOpt5">Trên 500 triệu VNĐ</option>
+                  </select>
+                </div>
+
+                <div class="form-group full">
+                  <label for="formMessage" data-i18n="formMessageLabel">Mô tả chi tiết dự án & yêu cầu của bạn *</label>
+                  <textarea id="formMessage" class="form-control" required data-i18n-ph="formMessagePh" placeholder="Chia sẻ ngắn gọn về dòng sản phẩm quan tâm, định hướng thương hiệu, yêu cầu mẫu thử hoặc số lượng mong muốn..."></textarea>
+                </div>
+              </div>
+
+              <div class="form-submit-row">
+                <button type="submit" class="form-submit-btn" data-i18n="formSubmitBtn">
+                  Tạo nội dung yêu cầu hợp tác ↗
+                </button>
+              </div>
+            </form>
+
+            <!-- Result Box: Proposal Text Output & Direct Share Buttons -->
+            <div id="formResultArea" class="form-result-area hidden">
+              <p class="result-instruction" data-i18n="formResultNote">
+                Hệ thống đã tổng hợp bản yêu cầu hợp tác. Bạn có thể sao chép nhanh hoặc bấm gửi trực tiếp qua Zalo / Email bên dưới.
+              </p>
+              <textarea id="proposalTextarea" class="proposal-textarea" readonly></textarea>
+              <div class="result-action-buttons">
+                <button id="copyProposalBtn" class="btn-action-copy">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                  <span data-i18n="btnCopy">Sao chép nội dung</span>
+                </button>
+                <button id="sendZaloBtn" class="btn-action-zalo">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.82.49 3.53 1.34 5L2 22l5.17-1.31c1.42.79 3.06 1.31 4.83 1.31 5.52 0 10-4.48 10-10S17.52 2 12 2zm1 14h-2v-2h2v2zm0-4h-2V7h2v5z"/></svg>
+                  <span data-i18n="btnSendZalo">Gửi qua Zalo beVIBE ↗</span>
+                </button>
+                <button id="sendEmailBtn" class="btn-action-email">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                  <span data-i18n="btnSendEmail">Gửi qua Email ↗</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ================= Floating Quick Action Bar ================= -->
+  <div class="floating-quick-bar">
+    <a href="https://zalo.me/0988123456" target="_blank" rel="noopener noreferrer" class="quick-btn zalo" aria-label="Chat Zalo cùng chuyên viên beVIBE">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.82.49 3.53 1.34 5L2 22l5.17-1.31c1.42.79 3.06 1.31 4.83 1.31 5.52 0 10-4.48 10-10S17.52 2 12 2zm1 14h-2v-2h2v2zm0-4h-2V7h2v5z"/></svg>
+    </a>
+    <button id="backToTopBtn" class="quick-btn back-to-top" aria-label="Cuộn về đầu trang">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+    </button>
+  </div>
+
+  <!-- Toast Notification Pill -->
+  <div id="toastNotification" class="toast-pill" role="alert"></div>
+
+  <!-- ================= Footer ================= -->
+  <footer>
+    <div class="container">
+      <div class="footer-top-grid">
+        <div class="footer-brand">
+          <img src="/assets/images/logo-white.png" alt="beVIBE" class="brand-logo-img footer-logo" style="margin-bottom: 14px;">
+          <p data-i18n="footerDesc">
+            beVIBE — Đối tác chiến lược kết nối tinh hoa công nghệ mỹ phẩm Hàn Quốc với thị trường Việt Nam.
+          </p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Điều hướng nhanh</h4>
+          <ul class="footer-links-list">
+            <li><a href="#about" data-i18n="navAbout">Về beVIBE</a></li>
+            <li><a href="#business" data-i18n="navBusiness">Lĩnh vực kinh doanh</a></li>
+            <li><a href="#brands" data-i18n="navBrands">Thương hiệu phân phối</a></li>
+            <li><a href="#oem" data-i18n="navOem">Sản xuất OEM/ODM</a></li>
+            <li><a href="#calculator" data-i18n="navCalculator">Dự toán chi phí OEM</a></li>
+            <li><a href="#contact" data-i18n="navContact">Liên hệ hợp tác ↗</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Văn phòng & Liên hệ</h4>
+          <div class="footer-contact-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <span data-i18n="footerAddressSeoul">Seoul: Gangnam-gu, Teheran-ro 152, Seoul, Korea</span>
+          </div>
+          <div class="footer-contact-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <span data-i18n="footerAddressVn">HCMC: Landmark 81, Bình Thạnh, TP. HCM</span>
+          </div>
+          <div class="footer-contact-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            <span data-i18n="footerHotline">Hotline / Zalo: (+84) 988 123 456</span>
+          </div>
+          <div class="footer-contact-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            <span data-i18n="footerEmail">Email: contact@bevibe.vn</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom-row">
+        <span data-i18n="footerCopy">© 2026 beVIBE. Bản quyền thuộc về beVIBE Korea & Vietnam. All rights reserved.</span>
+        <a href="#" data-i18n="footerBackToTop">Về đầu trang ↑</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ================= Interactive Brand Detail Modal ================= -->
+  <div id="brandDetailModal" class="modal-overlay" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-header-tabs">
+        <div class="modal-tabs-list">
+          <button class="modal-tab-btn active" data-brand-tab="dr-bargo">Dr. Bargo</button>
+          <button class="modal-tab-btn" data-brand-tab="neuraderm">NEURADERM</button>
+          <button class="modal-tab-btn" data-brand-tab="stem-c">Stem C</button>
+          <button class="modal-tab-btn" data-brand-tab="smib">SMIB</button>
+        </div>
+        <button class="modal-close-btn" id="closeBrandModalBtn" aria-label="Đóng cửa sổ">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <div class="modal-body" id="brandModalBody">
+        <!-- Injected dynamically by app.js -->
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-modal-secondary" id="closeBrandModalFooterBtn">Đóng</button>
+        <button class="btn-modal-primary" id="modalRequestBrandQuoteBtn">
+          <span>Nhận bảng báo giá thương hiệu này ↗</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= Interactive Service Detail Modal ================= -->
+  <div id="serviceDetailModal" class="modal-overlay" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-header-tabs">
+        <div class="modal-tabs-list">
+          <button class="modal-tab-btn active" data-service-tab="distribution">01. Phân phối mỹ phẩm</button>
+          <button class="modal-tab-btn" data-service-tab="partnership">02. Tổng đại diện thương hiệu</button>
+          <button class="modal-tab-btn" data-service-tab="oem">03. Gia công OEM/ODM</button>
+        </div>
+        <button class="modal-close-btn" id="closeServiceModalBtn" aria-label="Đóng cửa sổ">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <div class="modal-body" id="serviceModalBody">
+        <!-- Injected dynamically by app.js -->
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-modal-secondary" id="closeServiceModalFooterBtn">Đóng</button>
+        <button class="btn-modal-primary" id="modalRequestServiceQuoteBtn">
+          <span>Bắt đầu hợp tác lĩnh vực này ↗</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script type="module" src="/assets/js/app.js"></script>
+</body>
+</html>
