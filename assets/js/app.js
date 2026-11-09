@@ -7,8 +7,6 @@ import { i18nData, brandsData, servicesDetailsData } from './translations.js';
 document.addEventListener('DOMContentLoaded', () => {
   // --- State ---
   let currentLang = localStorage.getItem('bevibe_lang') || 'vi';
-  let activeBrandFilter = 'all';
-  let activeCatalogBrand = 'all';
   let currentActiveBrandId = 'dr-bargo';
   let currentActiveServiceId = 'distribution';
 
@@ -20,9 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const mobileNavOverlay = document.getElementById('mobileNavOverlay');
   const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
   const brandsGrid = document.getElementById('brandsGrid');
-  const brandFilterBtns = document.querySelectorAll('.brand-filter-btn');
   const productCatalogGrid = document.getElementById('productCatalogGrid');
-  const catalogTabBtns = document.querySelectorAll('.catalog-tab-btn');
   const inquiryForm = document.getElementById('inquiryForm');
   const formResultArea = document.getElementById('formResultArea');
   const proposalTextarea = document.getElementById('proposalTextarea');
@@ -50,6 +46,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const modalRequestBrandQuoteBtn = document.getElementById('modalRequestBrandQuoteBtn');
 
   const serviceDetailModal = document.getElementById('serviceDetailModal');
+  const productDetailModal = document.getElementById('productDetailModal');
+  const closeProductModalBtn = document.getElementById('closeProductModalBtn');
+  const closeProductModalFooterBtn = document.getElementById('closeProductModalFooterBtn');
+  const prodModalRequestQuoteBtn = document.getElementById('prodModalRequestQuoteBtn');
+  const prodModalExtraLink = document.getElementById('prodModalExtraLink');
+  const productModalBody = document.getElementById('productModalBody');
+  const prodModalBrandBadge = document.getElementById('prodModalBrandBadge');
+  let currentActiveProductId = null;
   const closeServiceModalBtn = document.getElementById('closeServiceModalBtn');
   const closeServiceModalFooterBtn = document.getElementById('closeServiceModalFooterBtn');
   const modalRequestServiceQuoteBtn = document.getElementById('modalRequestServiceQuoteBtn');
@@ -97,8 +101,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // Re-render brands with new language
     renderBrands();
 
-    // Re-render product catalog with new language
-    renderProductCatalog(activeCatalogBrand);
+    // Re-render navigation, product catalog & trend tags with new language
+    renderNavigation();
+    renderProductCatalog();
+    renderTrendTags();
+    if (searchDropdown && !searchDropdown.hidden) renderSearchDropdown();
 
     // Re-calculate OEM estimate with localized currency/text
     calculateOemEstimate();
@@ -115,147 +122,684 @@ document.addEventListener('DOMContentLoaded', () => {
     localStorage.setItem('bevibe_lang', currentLang);
   }
 
+  /* ==========================================================================
+     Catalogue model: categories, product index, filters & search
+     ========================================================================== */
+  const CATEGORY_DEFS = [
+    { id: 'cleanser', vi: 'Sữa rửa mặt', ko: '클렌저' },
+    { id: 'toner', vi: 'Toner & Xịt khoáng', ko: '토너 & 미스트' },
+    { id: 'serum', vi: 'Serum & Ampoule', ko: '세럼 & 앰플' },
+    { id: 'moisturizer', vi: 'Kem & Sữa dưỡng', ko: '크림 & 에멀전' },
+    { id: 'sun', vi: 'Chống nắng & BB', ko: '선케어 & BB' },
+    { id: 'mask', vi: 'Mặt nạ', ko: '마스크팩' },
+    { id: 'hair', vi: 'Tóc & Da đầu', ko: '헤어 & 두피' }
+  ];
+
+  const TREND_TERMS = {
+    vi: ['Kem chống nắng', 'Serum phục hồi', 'Dầu gội', 'Men vi sinh', 'Tế bào gốc', 'Mặt nạ', 'Ceramide', 'Toner'],
+    ko: ['선크림', '세럼', '샴푸', '포스트바이오틱스', '줄기세포', '마스크', 'Ceramide', '토너']
+  };
+
+  const catalogState = { brand: 'all', line: 'all', category: 'all', query: '', expanded: false };
+
+  function getLine(brandId, lineId) {
+    const brand = brandsData.find((b) => b.id === brandId);
+    return brand && brand.lines ? brand.lines.find((l) => l.id === lineId) : null;
+  }
+
+  function lineLabel(brandId, lineId) {
+    const line = getLine(brandId, lineId);
+    if (!line) return '';
+    return currentLang === 'vi' ? line.nameVi : line.nameKo;
+  }
+
+  function escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  }
+
+  function normalizeText(str) {
+    return String(str || '')
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[̀-ͯ]/g, '')
+      .replace(/đ/g, 'd');
+  }
+
+  function detectCategory(viName, brandId) {
+    if (brandId === 'smib') return 'hair';
+    const n = viName.toLowerCase();
+    if (/sun|bb cream/.test(n)) return 'sun';
+    if (/mask/.test(n)) return 'mask';
+    if (/cleansing|foam/.test(n)) return 'cleanser';
+    if (/toner|mist/.test(n)) return 'toner';
+    if (/serum|ampoule|essence/.test(n)) return 'serum';
+    return 'moisturizer';
+  }
+
+  function categoryLabel(catId) {
+    const def = CATEGORY_DEFS.find((c) => c.id === catId);
+    if (!def) return '';
+    return currentLang === 'vi' ? def.vi : def.ko;
+  }
+
+  // Bilingual index: one entry per product id, built once.
+  const productIndex = [];
+  brandsData.forEach((brand) => {
+    brand.productsVi.forEach((pVi) => {
+      const pKo = (brand.productsKo || []).find((x) => x.id === pVi.id) || pVi;
+      const category = detectCategory(pVi.name, brand.id);
+      const def = CATEGORY_DEFS.find((c) => c.id === category);
+      const line = (brand.lines || []).find((l) => l.id === pVi.line) || {};
+      productIndex.push({
+        id: pVi.id,
+        brandId: brand.id,
+        brandName: brand.name,
+        line: pVi.line || '',
+        category,
+        vi: pVi,
+        ko: pKo,
+        image: pVi.image || pKo.image || brand.coverImage || '/assets/images/hero.jpg',
+        hasVideo: !!(pVi.video || pKo.video),
+        strong: normalizeText([pVi.name, pKo.name, brand.name, line.nameVi, line.nameKo].join(' ')),
+        medium: normalizeText([pVi.tag, pKo.tag, def.vi, def.ko, brand.badge].join(' ')),
+        weak: normalizeText([pVi.desc, pKo.desc, pVi.spec].join(' '))
+      });
+    });
+  });
+
+  function localized(entry) {
+    const p = currentLang === 'vi' ? entry.vi : entry.ko;
+    return { ...entry, name: p.name, tag: p.tag, spec: p.spec };
+  }
+
+  function searchProducts(query) {
+    const terms = normalizeText(query).split(/\s+/).filter(Boolean);
+    if (!terms.length) return [];
+    return productIndex
+      .map((e) => {
+        let score = 0;
+        for (const t of terms) {
+          if (e.strong.includes(t)) score += 3;
+          else if (e.medium.includes(t)) score += 2;
+          else if (e.weak.includes(t)) score += 0.5;
+          else return null; // every term must match somewhere
+        }
+        return { e, score };
+      })
+      .filter(Boolean)
+      .sort((a, b) => b.score - a.score)
+      .map((r) => r.e);
+  }
+
+  function getFilteredProducts() {
+    const base = catalogState.query ? searchProducts(catalogState.query) : productIndex;
+    return base.filter((e) =>
+      (catalogState.brand === 'all' || e.brandId === catalogState.brand) &&
+      (catalogState.line === 'all' || e.line === catalogState.line) &&
+      (catalogState.category === 'all' || e.category === catalogState.category)
+    );
+  }
+
   /**
-   * Render Brand Cards based on active filter and current language
+   * Brand tiles (compact, logo-grid style)
    */
   function renderBrands() {
     if (!brandsGrid) return;
     const isVi = currentLang === 'vi';
-    const filtered = activeBrandFilter === 'all'
-      ? brandsData
-      : brandsData.filter(b => b.category === activeBrandFilter);
-
-    brandsGrid.innerHTML = filtered.map(b => {
+    brandsGrid.innerHTML = brandsData.map((b) => {
+      const count = b.productsVi.length;
       const desc = isVi ? b.descVi : b.descKo;
-      const highlights = isVi ? b.highlightsVi : b.highlightsKo;
-      const prodCount = isVi ? b.productsVi.length : b.productsKo.length;
       return `
-        <article class="brand-card has-cover" data-brand-id="${b.id}">
-          <div class="brand-card-cover" style="cursor: pointer;" onclick="window.openBrandModal('${b.id}')">
+        <article class="brand-tile">
+          <button type="button" class="brand-tile-media" data-action="brand-modal" data-brand-id="${b.id}" aria-label="${b.name}">
             <img src="${b.coverImage || '/assets/images/hero.jpg'}" alt="${b.name}" loading="lazy">
-            <div class="brand-card-cover-overlay">
-              <span class="brand-badge">${b.badge}</span>
-              <span class="brand-prods-pill">${prodCount} ${isVi ? 'sản phẩm' : '개 품목'}</span>
+            <span class="brand-tile-count">${count} ${isVi ? 'sản phẩm' : '개 품목'}</span>
+          </button>
+          <div class="brand-tile-body">
+            <span class="brand-tile-badge">${b.badge}</span>
+            <h3 class="brand-tile-name">${b.name}</h3>
+            <p class="brand-tile-desc">${desc}</p>
+            ${(b.lines || []).length ? `
+              <div class="brand-tile-lines">
+                <span class="brand-tile-lines-label">${isVi ? 'Dòng sản phẩm' : '제품 라인'}</span>
+                ${b.lines.map((l) => {
+                  const n = b.productsVi.filter((p) => p.line === l.id).length;
+                  return `<button type="button" class="line-chip" data-action="line" data-brand-id="${b.id}" data-line="${l.id}">${isVi ? l.nameVi : l.nameKo} <span>${n}</span></button>`;
+                }).join('')}
+              </div>
+            ` : ''}
+            <div class="brand-tile-actions">
+              <button type="button" class="brand-tile-primary" data-action="brand-products" data-brand-id="${b.id}">
+                ${isVi ? 'Xem sản phẩm →' : '제품 보기 →'}
+              </button>
+              <button type="button" class="brand-tile-secondary" data-action="brand-modal" data-brand-id="${b.id}">
+                ${isVi ? 'Về thương hiệu' : '브랜드 소개'}
+              </button>
             </div>
-          </div>
-          <div class="brand-card-body" style="cursor: pointer;" onclick="window.openBrandModal('${b.id}')">
-            <div class="brand-card-submeta">
-              <span class="brand-origin">${b.origin}</span>
-              ${b.ebookUrl ? `<span class="brand-ebook-indicator">📖 Ebook Online</span>` : ''}
-            </div>
-            <h3 class="brand-name">${b.name}</h3>
-            <p class="brand-tagline">${b.tagline}</p>
-            <p class="brand-desc">${desc}</p>
-            <div class="brand-highlights">
-              ${highlights.map(h => `<span class="brand-pill"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> ${h}</span>`).join('')}
-            </div>
-          </div>
-          <div class="brand-card-footer" style="display: flex; justify-content: space-between; align-items: center; gap: 8px;">
-            <button class="btn-text-link trigger-brand-detail-btn" data-brand-id="${b.id}" style="font-weight: 700;">
-              ${isVi ? 'Xem chi tiết hãng ℹ️ ↗' : '브랜드 상세 정보 ℹ️ ↗'}
-            </button>
-            <button class="btn-text-link request-brand-info-btn" data-brand="${b.name}" style="color: var(--text-muted); font-size: 0.78rem;">
-              ${isVi ? 'Báo giá sỉ ↗' : '도매 문의 ↗'}
-            </button>
           </div>
         </article>
       `;
     }).join('');
+  }
 
-    // Attach click events for direct brand detail modal
-    document.querySelectorAll('.trigger-brand-detail-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const brandId = btn.getAttribute('data-brand-id');
-        openBrandModal(brandId);
-      });
+  /**
+   * Header mega menu, category dropdown, mobile drawer brand list
+   */
+  function renderNavigation() {
+    const isVi = currentLang === 'vi';
+    const megaBrands = document.getElementById('megaBrands');
+    if (megaBrands) {
+      megaBrands.innerHTML = `
+        <div class="container mega-inner">
+          ${brandsData.map((b) => {
+            const list = isVi ? b.productsVi : b.productsKo;
+            return `
+              <div class="mega-col">
+                <button type="button" class="mega-brand" data-action="brand-products" data-brand-id="${b.id}">
+                  <img src="${b.coverImage || '/assets/images/hero.jpg'}" alt="" loading="lazy">
+                  <span><strong>${b.name}</strong><small>${b.badge}</small></span>
+                </button>
+                ${(b.lines || []).map((l) => `
+                  <button type="button" class="mega-line" data-action="line" data-brand-id="${b.id}" data-line="${l.id}">${isVi ? l.nameVi : l.nameKo}</button>
+                  <ul class="mega-list">
+                    ${list.filter((p) => p.line === l.id).slice(0, 5).map((p) => `<li><button type="button" data-action="product-modal" data-product-id="${p.id}">${p.name}</button></li>`).join('')}
+                  </ul>
+                `).join('')}
+                <button type="button" class="mega-more" data-action="brand-products" data-brand-id="${b.id}">
+                  ${isVi ? `Xem tất cả ${list.length} sản phẩm →` : `${list.length}개 제품 전체 보기 →`}
+                </button>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      `;
+    }
+
+    const navCategoryMenu = document.getElementById('navCategoryMenu');
+    if (navCategoryMenu) {
+      navCategoryMenu.innerHTML = CATEGORY_DEFS.map((c) => {
+        const count = productIndex.filter((e) => e.category === c.id).length;
+        return `
+          <button type="button" class="hnav-dd-item" data-action="category" data-category="${c.id}">
+            <span>${isVi ? c.vi : c.ko}</span><span class="hnav-dd-badge">${count}</span>
+          </button>
+        `;
+      }).join('');
+    }
+
+    const drawerBrandList = document.getElementById('drawerBrandList');
+    if (drawerBrandList) {
+      drawerBrandList.innerHTML = brandsData.map((b) => `
+        <button type="button" class="drawer-brand" data-action="brand-products" data-brand-id="${b.id}">
+          <img src="${b.coverImage || '/assets/images/hero.jpg'}" alt="" loading="lazy">
+          <span>${b.name}</span>
+        </button>
+      `).join('');
+    }
+  }
+
+  /**
+   * Category rail (circle thumbnails) + brand tabs
+   */
+  function renderCatalogFilters() {
+    const isVi = currentLang === 'vi';
+    const rail = document.getElementById('categoryRail');
+    if (rail) {
+      const items = [{ id: 'all', vi: 'Tất cả', ko: '전체' }, ...CATEGORY_DEFS];
+      rail.innerHTML = items.map((c) => {
+        const inCat = c.id === 'all' ? productIndex : productIndex.filter((e) => e.category === c.id);
+        const thumb = inCat[0] ? inCat[0].image : '/assets/images/lineup.jpg';
+        return `
+          <button type="button" class="category-chip ${catalogState.category === c.id ? 'active' : ''}" data-action="category" data-category="${c.id}">
+            <span class="category-chip-img"><img src="${thumb}" alt="" loading="lazy"></span>
+            <span class="category-chip-label">${isVi ? c.vi : c.ko}</span>
+            <span class="category-chip-count">${inCat.length}</span>
+          </button>
+        `;
+      }).join('');
+    }
+
+    const tabs = document.getElementById('catalogTabsGroup');
+    if (tabs) {
+      const unit = isVi ? 'SP' : '개';
+      const tabItems = [{ id: 'all', name: isVi ? 'Tất cả' : '전체', count: productIndex.length },
+        ...brandsData.map((b) => ({ id: b.id, name: b.name, count: b.productsVi.length }))];
+      tabs.innerHTML = tabItems.map((t) => `
+        <button type="button" class="catalog-tab-btn ${catalogState.brand === t.id ? 'active' : ''}" data-action="brand-tab" data-brand-id="${t.id}">
+          ${t.name} <span class="catalog-tab-count">${t.count} ${unit}</span>
+        </button>
+      `).join('');
+    }
+
+    // Line chips: only when one brand is selected and it has product lines
+    let lineRow = document.getElementById('catalogLineRow');
+    if (!lineRow && tabs) {
+      lineRow = document.createElement('div');
+      lineRow.id = 'catalogLineRow';
+      lineRow.className = 'catalog-line-row';
+      tabs.insertAdjacentElement('afterend', lineRow);
+    }
+    if (lineRow) {
+      const brand = brandsData.find((b) => b.id === catalogState.brand);
+      const lines = brand && brand.lines ? brand.lines : [];
+      lineRow.hidden = lines.length === 0;
+      lineRow.innerHTML = lines.length ? `
+        <span class="catalog-line-label">${isVi ? 'Dòng sản phẩm:' : '제품 라인:'}</span>
+        <button type="button" class="line-chip ${catalogState.line === 'all' ? 'active' : ''}" data-action="line" data-brand-id="${brand.id}" data-line="all">${isVi ? 'Tất cả' : '전체'} <span>${brand.productsVi.length}</span></button>
+        ${lines.map((l) => `
+          <button type="button" class="line-chip ${catalogState.line === l.id ? 'active' : ''}" data-action="line" data-brand-id="${brand.id}" data-line="${l.id}">
+            ${isVi ? l.nameVi : l.nameKo} <span>${brand.productsVi.filter((p) => p.line === l.id).length}</span>
+          </button>
+        `).join('')}
+      ` : '';
+    }
+  }
+
+  function productCardHtml(entry) {
+    const isVi = currentLang === 'vi';
+    const p = localized(entry);
+    return `
+      <article class="pcard" data-action="product-modal" data-product-id="${p.id}" tabindex="0">
+        <div class="pcard-media">
+          <img src="${p.image}" alt="${escapeHtml(p.name)}" loading="lazy">
+          <span class="pcard-badge-brand">${p.brandName}</span>
+          ${p.hasVideo ? `<span class="pcard-badge-video"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg> Video</span>` : ''}
+        </div>
+        <div class="pcard-body">
+          <span class="pcard-cat">${[lineLabel(p.brandId, p.line), categoryLabel(p.category)].filter(Boolean).join(' · ')}</span>
+          <h3 class="pcard-title">${p.name}</h3>
+          <p class="pcard-tag">${p.tag || ''}</p>
+          <span class="pcard-spec">${p.spec || ''}</span>
+          <div class="pcard-foot">
+            <div class="pcard-price">
+              <small>${isVi ? 'Giá đại lý' : '도매가'}</small>
+              <strong>${isVi ? 'Liên hệ' : '문의'}</strong>
+            </div>
+            <button type="button" class="pcard-quote" data-action="product-quote" data-product-name="${escapeHtml(p.name)}" data-brand-name="${p.brandName}">
+              ${isVi ? 'Báo giá sỉ' : '견적 요청'}
+            </button>
+          </div>
+        </div>
+      </article>
+    `;
+  }
+
+  /**
+   * Product catalogue: carousel by default, grid when expanded / filtered by search
+   */
+  function renderProductCatalog() {
+    if (!productCatalogGrid) return;
+    const isVi = currentLang === 'vi';
+    const list = getFilteredProducts();
+    const selectedBrand = brandsData.find((b) => b.id === catalogState.brand);
+    // One brand selected without narrower filters → show it grouped by product line
+    const grouped = !!(selectedBrand && selectedBrand.lines && selectedBrand.lines.length &&
+      catalogState.line === 'all' && catalogState.category === 'all' && !catalogState.query);
+    const useGrid = grouped || catalogState.expanded || !!catalogState.query || (selectedBrand && catalogState.line !== 'all');
+
+    renderCatalogFilters();
+
+    productCatalogGrid.classList.toggle('is-carousel', !useGrid);
+    productCatalogGrid.classList.toggle('is-grid', useGrid && !grouped);
+    productCatalogGrid.classList.toggle('is-grouped', grouped);
+
+    if (grouped) {
+      productCatalogGrid.innerHTML = selectedBrand.lines.map((l) => {
+        const items = list.filter((e) => e.line === l.id);
+        if (!items.length) return '';
+        return `
+          <section class="line-group">
+            <header class="line-group-head">
+              <div>
+                <span class="line-group-brand">${selectedBrand.name}</span>
+                <h3 class="line-group-title">${isVi ? l.nameVi : l.nameKo} <span>${items.length} ${isVi ? 'sản phẩm' : '개 제품'}</span></h3>
+                <p class="line-group-desc">${isVi ? l.descVi : l.descKo}</p>
+              </div>
+            </header>
+            <div class="line-group-grid">${items.map(productCardHtml).join('')}</div>
+          </section>
+        `;
+      }).join('');
+    } else if (!list.length) {
+      productCatalogGrid.innerHTML = `
+        <div class="catalog-empty">
+          <p>${isVi ? 'Chưa có sản phẩm phù hợp với bộ lọc hiện tại.' : '현재 필터에 맞는 제품이 없습니다.'}</p>
+          <button type="button" class="btn-secondary" data-action="reset-filters">${isVi ? 'Xem toàn bộ sản phẩm' : '전체 제품 보기'}</button>
+        </div>
+      `;
+    } else {
+      productCatalogGrid.innerHTML = list.map(productCardHtml).join('');
+    }
+    productCatalogGrid.scrollLeft = 0;
+
+    // Result meta + active filter chips
+    const meta = document.getElementById('catalogResultMeta');
+    if (meta) {
+      const chips = [];
+      if (catalogState.query) chips.push({ key: 'query', label: `“${escapeHtml(catalogState.query)}”` });
+      if (catalogState.category !== 'all') chips.push({ key: 'category', label: categoryLabel(catalogState.category) });
+      if (catalogState.brand !== 'all') {
+        const b = brandsData.find((x) => x.id === catalogState.brand);
+        if (b) chips.push({ key: 'brand', label: b.name });
+      }
+      if (catalogState.line !== 'all') chips.push({ key: 'line', label: lineLabel(catalogState.brand, catalogState.line) });
+      meta.innerHTML = `
+        <span>${isVi ? `Hiển thị <strong>${list.length}</strong> sản phẩm` : `<strong>${list.length}</strong>개 제품`}</span>
+        ${chips.map((c) => `<button type="button" class="filter-chip" data-action="clear-filter" data-filter="${c.key}">${c.label} <span aria-hidden="true">✕</span></button>`).join('')}
+      `;
+    }
+
+    const viewAllBtn = document.getElementById('catalogViewAllBtn');
+    if (viewAllBtn) {
+      viewAllBtn.hidden = !!selectedBrand;
+      viewAllBtn.textContent = useGrid
+        ? (isVi ? 'Thu gọn ↑' : '접기 ↑')
+        : (isVi ? `Xem tất cả (${list.length}) →` : `전체 보기 (${list.length}) →`);
+    }
+    document.querySelectorAll('#catalogPrev, #catalogNext').forEach((btn) => {
+      btn.hidden = useGrid || list.length === 0;
     });
+  }
 
-    // Attach click events for direct brand quotation prefill
-    document.querySelectorAll('.request-brand-info-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const brandName = btn.getAttribute('data-brand');
-        prefillBrandInquiry(brandName);
-      });
+  function scrollToProducts() {
+    const target = document.getElementById('products');
+    if (target) target.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  function setCatalogFilter(partial, { scroll = true } = {}) {
+    Object.assign(catalogState, partial);
+    renderProductCatalog();
+    if (scroll) scrollToProducts();
+  }
+
+  /**
+   * Trending search tags
+   */
+  function renderTrendTags() {
+    const wrap = document.getElementById('trendTags');
+    if (!wrap) return;
+    const terms = TREND_TERMS[currentLang] || TREND_TERMS.vi;
+    wrap.innerHTML = terms.map((t) => `<button type="button" class="trend-tag" data-action="search-term" data-term="${escapeHtml(t)}">${escapeHtml(t)}</button>`).join('')
+      + `<a href="#oem" class="trend-tag trend-tag-accent">${currentLang === 'vi' ? 'Gia công OEM' : 'OEM 제조'}</a>`;
+  }
+
+  /**
+   * Header live search
+   */
+  const headerSearchForm = document.getElementById('headerSearchForm');
+  const headerSearchInput = document.getElementById('headerSearchInput');
+  const searchDropdown = document.getElementById('searchDropdown');
+
+  function closeSearchDropdown() {
+    if (searchDropdown) searchDropdown.hidden = true;
+  }
+
+  function renderSearchDropdown() {
+    if (!searchDropdown || !headerSearchInput) return;
+    const isVi = currentLang === 'vi';
+    const q = headerSearchInput.value.trim();
+    if (!q) {
+      const terms = TREND_TERMS[currentLang] || TREND_TERMS.vi;
+      searchDropdown.innerHTML = `
+        <div class="search-group-title">${isVi ? 'Tìm kiếm phổ biến' : '인기 검색어'}</div>
+        <div class="search-trend-row">
+          ${terms.slice(0, 6).map((t) => `<button type="button" class="trend-tag" data-action="search-term" data-term="${escapeHtml(t)}">${escapeHtml(t)}</button>`).join('')}
+        </div>
+      `;
+      searchDropdown.hidden = false;
+      return;
+    }
+
+    const results = searchProducts(q);
+    const nq = normalizeText(q);
+    const brandHits = brandsData.filter((b) => normalizeText(b.name).includes(nq));
+
+    if (!results.length && !brandHits.length) {
+      searchDropdown.innerHTML = `<div class="search-empty">${isVi ? `Không tìm thấy kết quả cho “${escapeHtml(q)}”.` : `“${escapeHtml(q)}” 검색 결과가 없습니다.`}</div>`;
+      searchDropdown.hidden = false;
+      return;
+    }
+
+    searchDropdown.innerHTML = `
+      ${brandHits.length ? `
+        <div class="search-group-title">${isVi ? 'Thương hiệu' : '브랜드'}</div>
+        ${brandHits.map((b) => `
+          <button type="button" class="search-result" data-action="brand-products" data-brand-id="${b.id}">
+            <img src="${b.coverImage}" alt="" loading="lazy">
+            <span><strong>${b.name}</strong><small>${b.badge} · ${b.productsVi.length} ${isVi ? 'sản phẩm' : '개 품목'}</small></span>
+          </button>
+        `).join('')}
+      ` : ''}
+      ${results.length ? `
+        <div class="search-group-title">${isVi ? 'Sản phẩm' : '제품'}</div>
+        ${results.slice(0, 5).map((e) => {
+          const p = localized(e);
+          return `
+            <button type="button" class="search-result" data-action="product-modal" data-product-id="${p.id}">
+              <img src="${p.image}" alt="" loading="lazy">
+              <span><strong>${p.name}</strong><small>${[p.brandName, lineLabel(p.brandId, p.line), p.spec].filter(Boolean).join(" · ")}</small></span>
+            </button>
+          `;
+        }).join('')}
+        <button type="button" class="search-see-all" data-action="search-submit">
+          ${isVi ? `Xem tất cả ${results.length} kết quả cho “${escapeHtml(q)}” →` : `“${escapeHtml(q)}” 결과 ${results.length}개 모두 보기 →`}
+        </button>
+      ` : ''}
+    `;
+    searchDropdown.hidden = false;
+  }
+
+  function runSearch(term) {
+    const q = (term !== undefined ? term : (headerSearchInput ? headerSearchInput.value : '')).trim();
+    if (headerSearchInput && term !== undefined) headerSearchInput.value = q;
+    closeSearchDropdown();
+    if (headerSearchInput) headerSearchInput.blur();
+    document.querySelector('.site-header')?.classList.remove('search-open');
+    setCatalogFilter({ query: q, brand: 'all', line: 'all', category: 'all' });
+  }
+
+  if (headerSearchInput) {
+    headerSearchInput.addEventListener('input', renderSearchDropdown);
+    headerSearchInput.addEventListener('focus', renderSearchDropdown);
+    headerSearchInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') { closeSearchDropdown(); headerSearchInput.blur(); }
+    });
+  }
+  if (headerSearchForm) {
+    headerSearchForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      runSearch();
+    });
+  }
+  document.addEventListener('click', (e) => {
+    if (headerSearchForm && !headerSearchForm.contains(e.target)) closeSearchDropdown();
+  });
+
+  const mobileSearchToggle = document.getElementById('mobileSearchToggle');
+  if (mobileSearchToggle) {
+    mobileSearchToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const siteHeader = document.querySelector('.site-header');
+      const open = siteHeader.classList.toggle('search-open');
+      if (open && headerSearchInput) headerSearchInput.focus();
     });
   }
 
   /**
-   * Render Product Catalog Grid in Section 03
+   * Carousel arrows & expand toggle
    */
-  function renderProductCatalog(brandFilter = 'all') {
+  function scrollCarousel(dir) {
     if (!productCatalogGrid) return;
-    const isVi = currentLang === 'vi';
-    
-    // Collect products with brand context
-    let allProducts = [];
-    brandsData.forEach(brand => {
-      if (brandFilter === 'all' || brand.id === brandFilter) {
-        const prods = isVi ? brand.productsVi : brand.productsKo;
-        prods.forEach(p => {
-          allProducts.push({
-            ...p,
-            brandId: brand.id,
-            brandName: brand.name,
-            brandBadge: brand.badge,
-            ebookUrl: brand.ebookUrl,
-            driveFolder: brand.driveFolder,
-            // Fallback image if product doesn't have its own image
-            image: p.image || (brand.id === 'dr-bargo' ? '/assets/images/hero.jpg' : brand.id === 'neuraderm' ? '/assets/images/lineup.jpg' : '/assets/images/hero.jpg')
-          });
-        });
-      }
-    });
-
-    productCatalogGrid.innerHTML = allProducts.map(p => `
-      <div class="catalog-product-card" data-brand="${p.brandId}">
-        <div class="catalog-product-img-wrap">
-          <img src="${p.image}" alt="${p.name}" loading="lazy">
-          <span class="catalog-brand-badge">${p.brandName}</span>
-          ${p.tag ? `<span class="catalog-prod-tag">${p.tag}</span>` : ''}
-        </div>
-        <div class="catalog-product-body">
-          <div class="catalog-product-meta">
-            <span class="catalog-product-spec">${p.spec}</span>
-            <span class="catalog-product-code">${p.brandBadge}</span>
-          </div>
-          <h4 class="catalog-product-title">${p.name}</h4>
-          <p class="catalog-product-desc">${p.desc}</p>
-          <div class="catalog-product-actions">
-            ${p.ebookPage ? `
-              <a href="${p.ebookPage}" target="_blank" rel="noopener noreferrer" class="btn-catalog-ebook">
-                <span>📖 Ebook ↗</span>
-              </a>
-            ` : p.driveFolder ? `
-              <a href="${p.driveFolder}" target="_blank" rel="noopener noreferrer" class="btn-catalog-ebook" style="color: var(--gold-dark); border-color: rgba(201,160,80,0.35);">
-                <span>📁 Drive ↗</span>
-              </a>
-            ` : ''}
-            <button class="btn-catalog-inquire" data-product-name="${p.name}" data-brand-name="${p.brandName}">
-              <span>${isVi ? 'Báo giá sỉ ↗' : '도매 견적 ↗'}</span>
-            </button>
-          </div>
-        </div>
-      </div>
-    `).join('');
-
-    // Attach click listeners to catalog inquiry buttons
-    productCatalogGrid.querySelectorAll('.btn-catalog-inquire').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const prodName = btn.getAttribute('data-product-name');
-        const brandName = btn.getAttribute('data-brand-name');
-        prefillProductInquiry(prodName, brandName);
-      });
-    });
+    const card = productCatalogGrid.querySelector('.pcard');
+    const step = card ? (card.getBoundingClientRect().width + 20) * 2 : productCatalogGrid.clientWidth * 0.8;
+    productCatalogGrid.scrollBy({ left: dir * step, behavior: 'smooth' });
   }
+  document.getElementById('catalogPrev')?.addEventListener('click', () => scrollCarousel(-1));
+  document.getElementById('catalogNext')?.addEventListener('click', () => scrollCarousel(1));
+  document.getElementById('catalogViewAllBtn')?.addEventListener('click', () => {
+    const wasGrid = catalogState.expanded || !!catalogState.query;
+    if (wasGrid) {
+      catalogState.expanded = false;
+      catalogState.query = '';
+      if (headerSearchInput) headerSearchInput.value = '';
+    } else {
+      catalogState.expanded = true;
+    }
+    renderProductCatalog();
+    scrollToProducts();
+  });
+
+  /**
+   * Inquiry form helpers (select by index so they also work after KO translation)
+   */
+  const SERVICE_OPTION = { distribution: 0, partnership: 1, oem: 2, sample: 3 };
+  function setServiceOption(key) {
+    const serviceSelect = document.getElementById('formService');
+    if (serviceSelect && serviceSelect.options[SERVICE_OPTION[key]]) {
+      serviceSelect.selectedIndex = SERVICE_OPTION[key];
+    }
+  }
+
+  function prefillSampleRequest(email) {
+    const isVi = currentLang === 'vi';
+    setServiceOption('sample');
+    const messageInput = document.getElementById('formMessage');
+    if (messageInput && !messageInput.value.trim()) {
+      messageInput.value = isVi
+        ? 'Tôi muốn đăng ký nhận mẫu thử và catalogue sản phẩm cùng chính sách đại lý mới nhất của beVIBE.'
+        : 'beVIBE 제품 샘플, 카탈로그 및 최신 대리점 정책을 요청합니다.';
+    }
+    if (email) {
+      const emailInput = document.getElementById('formEmail');
+      if (emailInput) emailInput.value = email;
+    }
+    document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+    showToast(isVi ? 'Đã chọn “Đăng ký mẫu thử & Catalogue” — vui lòng hoàn tất thông tin liên hệ.' : '샘플 & 카탈로그 신청이 선택되었습니다. 연락처를 입력해 주세요.');
+  }
+
+  document.getElementById('catalogSignupForm')?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const emailInput = document.getElementById('signupEmail');
+    prefillSampleRequest(emailInput ? emailInput.value.trim() : '');
+    if (emailInput) emailInput.value = '';
+  });
+
+  /**
+   * Top bar rotating promos
+   */
+  (function initTopbarPromos() {
+    const promos = document.querySelectorAll('.topbar-promo');
+    if (promos.length < 2) return;
+    let i = 0;
+    setInterval(() => {
+      promos[i].classList.remove('active');
+      i = (i + 1) % promos.length;
+      promos[i].classList.add('active');
+    }, 4000);
+  })();
+
+  /**
+   * Single delegated handler for every [data-action] element
+   */
+  const headerNav = document.getElementById('headerNav');
+  if (headerNav) {
+    headerNav.addEventListener('mouseleave', () => headerNav.classList.remove('menu-closed'));
+  }
+
+  document.addEventListener('click', (e) => {
+    const el = e.target.closest('[data-action]');
+    if (!el) return;
+    const action = el.getAttribute('data-action');
+
+    // Close menus that triggered the action
+    if (headerNav && headerNav.contains(el)) {
+      headerNav.classList.add('menu-closed');
+      if (document.activeElement) document.activeElement.blur();
+    }
+    if (mobileNavDrawer && mobileNavDrawer.contains(el)) closeMobileMenu();
+    if (searchDropdown && searchDropdown.contains(el) && action !== 'search-term') closeSearchDropdown();
+
+    switch (action) {
+      case 'brand-modal':
+        openBrandModal(el.getAttribute('data-brand-id'));
+        break;
+      case 'brand-products':
+        if (headerSearchInput) headerSearchInput.value = '';
+        setCatalogFilter({ brand: el.getAttribute('data-brand-id'), line: 'all', category: 'all', query: '' });
+        break;
+      case 'brand-tab':
+        setCatalogFilter({ brand: el.getAttribute('data-brand-id'), line: 'all' }, { scroll: false });
+        break;
+      case 'line': {
+        const insideProducts = !!el.closest('#products');
+        if (headerSearchInput && !insideProducts) headerSearchInput.value = '';
+        setCatalogFilter(
+          insideProducts
+            ? { brand: el.getAttribute('data-brand-id'), line: el.getAttribute('data-line') }
+            : { brand: el.getAttribute('data-brand-id'), line: el.getAttribute('data-line'), category: 'all', query: '' },
+          { scroll: !insideProducts }
+        );
+        break;
+      }
+      case 'category': {
+        const insideProducts = !!el.closest('#products');
+        setCatalogFilter({ category: el.getAttribute('data-category') }, { scroll: !insideProducts });
+        break;
+      }
+      case 'clear-filter': {
+        const key = el.getAttribute('data-filter');
+        if (key === 'query') {
+          catalogState.query = '';
+          if (headerSearchInput) headerSearchInput.value = '';
+        } else {
+          catalogState[key] = 'all';
+          if (key === 'brand') catalogState.line = 'all';
+        }
+        renderProductCatalog();
+        break;
+      }
+      case 'reset-filters':
+        if (headerSearchInput) headerSearchInput.value = '';
+        setCatalogFilter({ brand: 'all', line: 'all', category: 'all', query: '' }, { scroll: false });
+        break;
+      case 'search-term':
+        runSearch(el.getAttribute('data-term'));
+        break;
+      case 'search-submit':
+        runSearch();
+        break;
+      case 'product-modal':
+        if (e.target.closest('[data-action="product-quote"]')) return;
+        openProductModal(el.getAttribute('data-product-id'));
+        break;
+      case 'product-quote':
+        e.stopPropagation();
+        prefillProductInquiry(el.getAttribute('data-product-name'), el.getAttribute('data-brand-name'));
+        break;
+      case 'service-modal':
+        openServiceModal(el.getAttribute('data-service'));
+        break;
+      case 'sample-request':
+        prefillSampleRequest();
+        break;
+      default:
+        break;
+    }
+  });
+
+  // Keyboard support for focusable product cards
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Enter') return;
+    const card = e.target.closest && e.target.closest('.pcard');
+    if (card && e.target === card) openProductModal(card.getAttribute('data-product-id'));
+  });
 
   function prefillProductInquiry(productName, brandName) {
     const isVi = currentLang === 'vi';
     const serviceSelect = document.getElementById('formService');
     const messageInput = document.getElementById('formMessage');
     if (serviceSelect) {
-      serviceSelect.value = 'Phân phối mỹ phẩm Hàn Quốc (Đại lý / Sỉ)';
+      setServiceOption('distribution');
     }
     if (messageInput) {
       messageInput.value = isVi 
@@ -274,7 +818,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const serviceSelect = document.getElementById('formService');
     const messageInput = document.getElementById('formMessage');
     if (serviceSelect) {
-      serviceSelect.value = 'Hợp tác tổng đại diện thương hiệu (Master Agent)';
+      setServiceOption('partnership');
     }
     if (messageInput) {
       messageInput.value = isVi 
@@ -370,8 +914,8 @@ document.addEventListener('DOMContentLoaded', () => {
               <span>${isVi ? `Dòng sản phẩm phân phối (${products.length} SP)` : `대표 주력 제품군 (${products.length}개)`}</span>
             </div>
             <div class="modal-products-list">
-              ${products.map(p => `
-                <div class="modal-product-card ${p.image ? 'has-img' : ''}">
+              ${(brand.lines && brand.lines.length ? brand.lines : [null]).map(line => { const items = line ? products.filter(p => p.line === line.id) : products; return (line ? `<div class="modal-line-head"><strong>${isVi ? line.nameVi : line.nameKo}</strong><span>${items.length} ${isVi ? "SP" : "개"}</span><p>${isVi ? line.descVi : line.descKo}</p></div>` : "") + items.map(p => `
+                <div class="modal-product-card ${p.image ? 'has-img' : ''}" style="cursor: pointer;" onclick="window.openProductModal('${p.id}')" title="${isVi ? 'Bấm để xem video & chi tiết' : '영상 및 상세 정보 보기'}">
                   ${p.image ? `
                     <div class="modal-product-thumb-wrap">
                       <img src="${p.image}" alt="${p.name}" class="modal-product-thumb" loading="lazy">
@@ -391,7 +935,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     ` : ''}
                   </div>
                 </div>
-              `).join('')}
+              `).join(''); }).join('')}
             </div>
 
             <div class="modal-section-title" style="margin-top: 24px;">
@@ -497,6 +1041,270 @@ document.addEventListener('DOMContentLoaded', () => {
   window.openServiceModal = openServiceModal;
 
   /**
+   * Open Interactive Product Detail & Video Modal
+   */
+  function openProductModal(productId) {
+    const isVi = currentLang === 'vi';
+    currentActiveProductId = productId;
+    
+    // Find product across all brands
+    let foundProduct = null;
+    let foundBrand = null;
+
+    for (const b of brandsData) {
+      const list = isVi ? b.productsVi : b.productsKo;
+      const p = list.find(item => item.id === productId);
+      if (p) {
+        foundProduct = p;
+        foundBrand = b;
+        break;
+      }
+    }
+
+    if (!foundProduct || !foundBrand) return;
+
+    if (prodModalBrandBadge) {
+      prodModalBrandBadge.textContent = foundBrand.name.toUpperCase();
+    }
+
+    const hasVideo = !!foundProduct.video;
+    const videoSrc = foundProduct.video || '';
+    const imgSrc = foundProduct.image || foundBrand.coverImage || '/assets/images/hero.jpg';
+
+    const t = i18nData[currentLang] || {};
+
+    if (productModalBody) {
+      productModalBody.innerHTML = `
+        <div class="prod-modal-grid">
+          <!-- Left Column: Visual & Video Showcase -->
+          <div class="prod-modal-media-col">
+            <!-- Media Nav Tabs -->
+            <div class="prod-media-nav">
+              <button type="button" class="prod-media-tab-btn ${hasVideo ? 'active' : ''}" id="tabMediaVideo" data-mediatab="video" ${!hasVideo ? 'style="display:none;"' : ''}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                <span>${t.modalProdVideoTab || (isVi ? '🎬 Video giới thiệu (HD)' : '🎬 제품 소개 영상 (HD)')}</span>
+              </button>
+              <button type="button" class="prod-media-tab-btn ${!hasVideo ? 'active' : ''}" id="tabMediaPhoto" data-mediatab="photo">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                <span>${t.modalProdPhotoTab || (isVi ? '🖼️ Ảnh chụp thực tế' : '🖼️ 제품 실물 이미지')}</span>
+              </button>
+            </div>
+
+            <!-- Video Player Box -->
+            ${hasVideo ? `
+              <div class="prod-video-wrapper" id="prodModalVideoWrapper">
+                <video id="prodModalVideoPlayer" class="prod-video-player" playsinline controls loop preload="auto">
+                  <source src="${videoSrc}" type="video/mp4">
+                  Trình duyệt không hỗ trợ video MP4.
+                </video>
+                <div class="prod-video-badge-overlay">
+                  <span class="pulse-dot"></span>
+                  <span>Official Video 4K/HD</span>
+                </div>
+              </div>
+            ` : ''}
+
+            <!-- Photo Box -->
+            <div class="prod-photo-wrapper ${hasVideo ? 'hidden' : ''}" id="prodModalPhotoWrapper" ${!hasVideo ? 'style="display:flex;"' : 'style="display:none;"'}>
+              <img src="${imgSrc}" alt="${foundProduct.name}" id="prodModalImage">
+            </div>
+
+            ${(foundProduct.gallery && foundProduct.gallery.length) ? `
+              <div class="prod-gallery-strip" id="prodGalleryStrip">
+                ${[imgSrc, ...foundProduct.gallery].map((src, i) => `<button type="button" class="prod-gallery-thumb ${i === 0 ? 'active' : ''}" data-src="${src}" aria-label="Ảnh ${i + 1}"><img src="${src}" alt="" loading="lazy"></button>`).join('')}
+              </div>
+            ` : ''}
+
+            <!-- Direct Drive fallback link -->
+            ${foundProduct.driveVideoUrl ? `
+              <a href="${foundProduct.driveVideoUrl}" target="_blank" rel="noopener noreferrer" class="prod-drive-direct-link" title="Mở video gốc trên Google Drive">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>
+                <span>${t.modalProdDriveLink || (isVi ? 'Mở video gốc trên Google Drive ↗' : 'Google Drive에서 원본 영상 보기 ↗')}</span>
+              </a>
+            ` : ''}
+
+            <!-- Specs Highlights -->
+            <div class="prod-specs-row">
+              <div class="prod-spec-item">
+                <span class="spec-label">${isVi ? 'Quy cách' : '용량/규격'}</span>
+                <span class="spec-val">${foundProduct.spec || 'Tiêu chuẩn'}</span>
+              </div>
+              <div class="prod-spec-item">
+                <span class="spec-label">${isVi ? 'Thương hiệu' : '브랜드'}</span>
+                <span class="spec-val">${foundBrand.name}</span>
+              </div>
+              <div class="prod-spec-item">
+                <span class="spec-label">${isVi ? 'Chứng nhận' : '품질 인증'}</span>
+                <span class="spec-val">CGMP & ISO 22716</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Ingredients, Benefits, Usage -->
+          <div class="prod-modal-info-col">
+            <span class="prod-info-category">${foundProduct.tag || foundBrand.badge}</span>
+            <h3 class="prod-info-title">${foundProduct.name}</h3>
+            <p class="prod-info-desc">${foundProduct.desc}</p>
+
+            <!-- Block 1: Thành phần chính (only when real data exists) -->
+            ${foundProduct.ingredients && foundProduct.ingredients.length > 0 ? `
+            <div class="prod-detail-block">
+              <h4 class="prod-block-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10 2v7.31L4.62 18.6A2 2 0 0 0 6.34 22h11.32a2 2 0 0 0 1.72-3.4L14 9.31V2"/></svg>
+                <span>${t.modalProdIngredients || (isVi ? 'Thành phần hoạt tính chính' : '주요 활성 성분')}</span>
+              </h4>
+              <div class="prod-ingredients-list">
+                ${foundProduct.ingredients && foundProduct.ingredients.length > 0 ? foundProduct.ingredients.map(ing => `
+                  <div class="prod-ingredient-card">
+                    <span class="ingredient-name">${ing.name}</span>
+                    <p class="ingredient-desc">${ing.desc}</p>
+                  </div>
+                `).join('') : `
+                  <div class="prod-ingredient-card">
+                    <span class="ingredient-name">${isVi ? 'Hoạt chất sinh học chuẩn CGMP Hàn Quốc' : 'CGMP 인증 바이오 유효 성분'}</span>
+                    <p class="ingredient-desc">${isVi ? 'Ứng dụng công nghệ nuôi cấy và chiết xuất sinh học tiên tiến từ Seoul.' : '서울 연구소의 첨단 바이오 추출 및 발효 공법 적용.'}</p>
+                  </div>
+                `}
+              </div>
+            </div>
+            ` : ''}
+
+            <!-- Block 2: Công dụng & Hiệu quả -->
+            <div class="prod-detail-block">
+              <h4 class="prod-block-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <span>${t.modalProdBenefits || (isVi ? 'Công dụng & Hiệu quả vượt trội' : '핵심 효능 및 임상 효과')}</span>
+              </h4>
+              <ul class="prod-benefits-list">
+                ${foundProduct.benefits && foundProduct.benefits.length > 0 ? foundProduct.benefits.map(b => `
+                  <li>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                    <span>${b}</span>
+                  </li>
+                `).join('') : `
+                  <li>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                    <span>${foundProduct.desc}</span>
+                  </li>
+                `}
+              </ul>
+            </div>
+
+            <!-- Block 3: Hướng dẫn sử dụng -->
+            <div class="prod-detail-block">
+              <h4 class="prod-block-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                <span>${t.modalProdUsage || (isVi ? 'Hướng dẫn sử dụng chuẩn Clinic' : '사용 방법 및 추천 루틴')}</span>
+              </h4>
+              <div class="prod-usage-card">
+                <p>${foundProduct.usage || (isVi ? 'Lấy lượng vừa đủ thoa đều khắp mặt và cổ sau bước làm sạch. Dùng 2 lần sáng và tối.' : '세안 후 적당량을 덜어 피부 결을 따라 부드럽게 흡수시킵니다. 아침, 저녁 데일리 사용.')}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      // Gallery thumbnails → swap main photo (and switch to the photo tab)
+      const galleryStrip = document.getElementById('prodGalleryStrip');
+      if (galleryStrip) {
+        galleryStrip.addEventListener('click', (ev) => {
+          const thumb = ev.target.closest('.prod-gallery-thumb');
+          if (!thumb) return;
+          const mainImg = document.getElementById('prodModalImage');
+          if (mainImg) mainImg.src = thumb.getAttribute('data-src');
+          galleryStrip.querySelectorAll('.prod-gallery-thumb').forEach((t) => t.classList.toggle('active', t === thumb));
+          const photoTab = document.getElementById('tabMediaPhoto');
+          if (photoTab && !photoTab.classList.contains('active')) photoTab.click();
+        });
+      }
+
+      // Media Tab switching
+      const tabVideo = document.getElementById('tabMediaVideo');
+      const tabPhoto = document.getElementById('tabMediaPhoto');
+      const wrapperVideo = document.getElementById('prodModalVideoWrapper');
+      const wrapperPhoto = document.getElementById('prodModalPhotoWrapper');
+      const videoPlayer = document.getElementById('prodModalVideoPlayer');
+
+      if (tabVideo && tabPhoto && wrapperVideo && wrapperPhoto) {
+        tabVideo.addEventListener('click', () => {
+          tabVideo.classList.add('active');
+          tabPhoto.classList.remove('active');
+          wrapperVideo.style.display = 'flex';
+          wrapperPhoto.style.display = 'none';
+          if (videoPlayer) {
+            videoPlayer.play().catch(() => {});
+          }
+        });
+
+        tabPhoto.addEventListener('click', () => {
+          tabPhoto.classList.add('active');
+          tabVideo.classList.remove('active');
+          wrapperPhoto.style.display = 'flex';
+          wrapperVideo.style.display = 'none';
+          if (videoPlayer) {
+            videoPlayer.pause();
+          }
+        });
+      }
+
+      // Setup Extra Link Button (Ebook or Drive)
+      if (prodModalExtraLink) {
+        if (foundProduct.ebookPage || foundBrand.ebookUrl) {
+          prodModalExtraLink.href = foundProduct.ebookPage || foundBrand.ebookUrl;
+          prodModalExtraLink.style.display = 'inline-flex';
+          prodModalExtraLink.querySelector('span').textContent = isVi ? '📖 Đọc Cẩm Nang Ebook ↗' : '📖 공식 E-Book 열기 ↗';
+        } else if (foundProduct.driveVideoUrl || foundBrand.driveFolder) {
+          prodModalExtraLink.href = foundProduct.driveVideoUrl || foundBrand.driveFolder;
+          prodModalExtraLink.style.display = 'inline-flex';
+          prodModalExtraLink.querySelector('span').textContent = isVi ? '📁 Thư Mục Google Drive ↗' : '📁 구글 드라이브 자료 ↗';
+        } else {
+          prodModalExtraLink.style.display = 'none';
+        }
+      }
+
+      // Setup Request Quote Button
+      if (prodModalRequestQuoteBtn) {
+        prodModalRequestQuoteBtn.onclick = () => {
+          closeProductModal();
+          prefillProductInquiry(foundProduct.name, foundBrand.name);
+        };
+        prodModalRequestQuoteBtn.querySelector('span').textContent = t.modalProdInquireBtn || (isVi ? 'Nhận báo giá sỉ sản phẩm này ↗' : '이 제품 도매 견적 문의 ↗');
+      }
+
+      // Open modal
+      if (productDetailModal) {
+        productDetailModal.classList.add('active');
+        productDetailModal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+      }
+
+      // Autoplay video
+      if (videoPlayer) {
+        videoPlayer.currentTime = 0;
+        videoPlayer.play().catch(e => {
+          console.log('Video autoplay handled:', e.message);
+        });
+      }
+    }
+  }
+
+  function closeProductModal() {
+    if (productDetailModal) {
+      const videoPlayer = productModalBody ? productModalBody.querySelector('video') : null;
+      if (videoPlayer) {
+        videoPlayer.pause();
+        videoPlayer.currentTime = 0;
+      }
+      productDetailModal.classList.remove('active');
+      productDetailModal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+  }
+
+  window.openProductModal = openProductModal;
+  window.closeProductModal = closeProductModal;
+
+  /**
    * OEM Cost Calculator Engine
    */
   function calculateOemEstimate() {
@@ -586,44 +1394,15 @@ document.addEventListener('DOMContentLoaded', () => {
   if (mobileMenuBtn) mobileMenuBtn.addEventListener('click', openMobileMenu);
   if (mobileNavOverlay) mobileNavOverlay.addEventListener('click', closeMobileMenu);
   mobileNavLinks.forEach(link => link.addEventListener('click', closeMobileMenu));
+  document.getElementById('mobileMenuClose')?.addEventListener('click', closeMobileMenu);
 
-  // Brand Filtering in Section 03
-  brandFilterBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      brandFilterBtns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      activeBrandFilter = btn.getAttribute('data-filter') || 'all';
-      renderBrands();
-    });
-  });
-
-  // Product Catalog Brand Filtering in Section 03
-  if (catalogTabBtns) {
-    catalogTabBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        catalogTabBtns.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        activeCatalogBrand = btn.getAttribute('data-catalog-brand') || 'all';
-        renderProductCatalog(activeCatalogBrand);
-      });
-    });
-  }
-
-  // Navigation Links & Dropdowns
+  // Navigation Links & Dropdowns (brand/category/service actions use [data-action] delegation)
   document.querySelectorAll('.open-brand-modal-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
       const brandId = btn.getAttribute('data-brand') || 'dr-bargo';
       openBrandModal(brandId);
     });
   });
-
-  const navBrandsLink = document.getElementById('navBrandsLink');
-  if (navBrandsLink) {
-    navBrandsLink.addEventListener('click', (e) => {
-      // Open brand modal directly with first brand
-      openBrandModal('dr-bargo');
-    });
-  }
 
   document.querySelectorAll('.open-service-modal-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
@@ -639,6 +1418,14 @@ document.addEventListener('DOMContentLoaded', () => {
       openBrandModal(brandId);
     });
   });
+
+  if (closeProductModalBtn) closeProductModalBtn.addEventListener('click', closeProductModal);
+  if (closeProductModalFooterBtn) closeProductModalFooterBtn.addEventListener('click', closeProductModal);
+  if (productDetailModal) {
+    productDetailModal.addEventListener('click', (e) => {
+      if (e.target === productDetailModal) closeProductModal();
+    });
+  }
 
   if (closeBrandModalBtn) closeBrandModalBtn.addEventListener('click', closeBrandModal);
   if (closeBrandModalFooterBtn) closeBrandModalFooterBtn.addEventListener('click', closeBrandModal);
@@ -682,9 +1469,9 @@ document.addEventListener('DOMContentLoaded', () => {
       const serviceSelect = document.getElementById('formService');
       const messageInput = document.getElementById('formMessage');
       if (serviceSelect && service) {
-        if (currentActiveServiceId === 'distribution') serviceSelect.value = 'Phân phối mỹ phẩm Hàn Quốc (Đại lý / Sỉ)';
-        else if (currentActiveServiceId === 'partnership') serviceSelect.value = 'Hợp tác tổng đại diện thương hiệu (Master Agent)';
-        else serviceSelect.value = 'Gia công sản xuất mỹ phẩm OEM / ODM trọn gói';
+        if (currentActiveServiceId === 'distribution') setServiceOption('distribution');
+        else if (currentActiveServiceId === 'partnership') setServiceOption('partnership');
+        else setServiceOption('oem');
       }
       if (messageInput && service) {
         messageInput.value = isVi
@@ -700,6 +1487,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e.key === 'Escape') {
       closeBrandModal();
       closeServiceModal();
+      closeProductModal();
     }
   });
 
@@ -721,7 +1509,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const messageInput = document.getElementById('formMessage');
 
       if (serviceSelect) {
-        serviceSelect.value = 'Gia công sản xuất mỹ phẩm OEM / ODM trọn gói';
+        setServiceOption('oem');
       }
 
       const noteText = isVi
@@ -906,16 +1694,16 @@ document.addEventListener('DOMContentLoaded', () => {
     let isPaused = false;
 
     const brandDescriptionsVi = {
-      'neuraderm': 'Medytox Biotech · Tinh chất Coretime Ampoule & MD Cream y khoa',
+      'neuraderm': 'Medytox · Basic Derma & Clinic Derma (17 sản phẩm)',
       'dr-bargo': 'Gangnam Clinic Formula · Serum phục hồi màng bảo vệ da chuyên sâu',
-      'stem-c': 'Cellular Bio Cell · Kem tế bào gốc thực vật & dưỡng sáng Glass Skin',
+      'medipharm': 'MediPharm · Dòng Stem C tế bào gốc (6 sản phẩm)',
       'smib': '100 Tỷ Postbiotic · Dầu gội phủ bạc tự nhiên & trị liệu da đầu'
     };
 
     const brandDescriptionsKo = {
       'neuraderm': '메디톡스 바이오 · 코어타임 앰플 및 병원 처방 MD 크림',
       'dr-bargo': '강남 피부과 처방 · 손상 장벽 급속 리페어 세럼',
-      'stem-c': '식물 줄기세포 · 리바이탈 크림 및 3중 기능성 BB크림',
+      'medipharm': '메디팜 · 스템씨 줄기세포 라인 (6개 제품)',
       'smib': '1000억 포스트바이오틱스 · 컬러 체인지 샴푸 및 두피 케어'
     };
 
