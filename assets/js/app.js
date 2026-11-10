@@ -1799,12 +1799,9 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
 
-    // Pause on hover
-    bannerCard.addEventListener('mouseenter', () => { isPaused = true; });
-    bannerCard.addEventListener('mouseleave', () => { 
-      isPaused = false; 
-      const currentPct = parseFloat(progressFill?.style.width || '0');
-      progressStartTime = performance.now() - (currentPct / 100 * slideDuration);
+    // Hover: jump to the next slide right away and keep auto-playing
+    bannerCard.addEventListener('mouseenter', () => {
+      updateSlide(currentSlide + 1);
     });
 
     // Expose globally for convenience

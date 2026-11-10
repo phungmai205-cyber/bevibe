@@ -24,41 +24,6 @@
 
 <body>
 
-  <!-- ================= Top Announcement Bar ================= -->
-  <div class="topbar">
-    <div class="container topbar-inner">
-      <div class="topbar-promos" id="topbarPromos" aria-live="polite">
-        <span class="topbar-promo active" data-i18n="topPromo1">Chính sách chiết khấu & bảo vệ giá dành riêng cho đại lý</span>
-        <span class="topbar-promo" data-i18n="topPromo2">Đăng ký nhận mẫu thử & Catalogue sản phẩm cho đối tác</span>
-        <span class="topbar-promo" data-i18n="topPromo3">Hỗ trợ pháp lý & công bố mỹ phẩm trọn gói tại Việt Nam</span>
-      </div>
-      <div class="topbar-links">
-        <a href="https://bevibe-smib-ebook.quiettoad513.chatgpt.site/#page-1" target="_blank" rel="noopener noreferrer">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-          <span data-i18n="topEbook">Ebook Catalogue</span>
-        </a>
-        <a href="mailto:bevibevn@gmail.com" class="topbar-hide-sm">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-          bevibevn@gmail.com
-        </a>
-        <button id="langToggle" class="topbar-lang" aria-label="Đổi ngôn ngữ">
-          <span data-i18n="langBtn">KR · 한국어</span>
-        </button>
-        <!-- Topbar Auth & Portal Switcher -->
-        <div class="topbar-auth" id="topbarAuth">
-          <button type="button" class="topbar-auth-btn" id="topbarLoginBtn">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
-            <span data-i18n="authLogin">Đăng nhập</span>
-          </button>
-          <span class="topbar-auth-sep">/</span>
-          <button type="button" class="topbar-auth-btn register" id="topbarRegisterBtn">
-            <span data-i18n="authRegister">Đăng ký đối tác</span>
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- ================= Header: Logo · Search · Actions + Category Nav ================= -->
   <header class="site-header">
     <div class="header-main">
@@ -147,12 +112,6 @@
           <div class="hnav-dropdown">
             <button type="button" class="hnav-dd-item" data-action="service-modal" data-service="distribution">
               <span data-i18n="bizCard1Title">Phân phối mỹ phẩm chính hãng</span><span class="hnav-dd-badge">01</span>
-            </button>
-            <button type="button" class="hnav-dd-item" data-action="service-modal" data-service="partnership">
-              <span data-i18n="bizCard2Title">Tổng đại diện thương hiệu (Master Agent)</span><span class="hnav-dd-badge">02</span>
-            </button>
-            <button type="button" class="hnav-dd-item" data-action="service-modal" data-service="oem">
-              <span data-i18n="bizCard3Title">Gia công mỹ phẩm thương hiệu riêng</span><span class="hnav-dd-badge">03</span>
             </button>
           </div>
         </div>
@@ -271,13 +230,20 @@
               <div class="hero-progress-fill" id="heroProgressFill"></div>
             </div>
 
-            <!-- Slideshow Nav Top Controls -->
+            <!-- Slideshow side arrows -->
+            <button type="button" class="hero-nav-arrow hero-side-arrow prev" id="heroSlidePrev" aria-label="Slide trước">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="15 18 9 12 15 6" />
+              </svg>
+            </button>
+            <button type="button" class="hero-nav-arrow hero-side-arrow next" id="heroSlideNext" aria-label="Slide tiếp theo">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="9 18 15 12 9 6" />
+              </svg>
+            </button>
+
+            <!-- Slideshow indicators -->
             <div class="hero-slideshow-nav">
-              <button type="button" class="hero-nav-arrow" id="heroSlidePrev" aria-label="Slide trước">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                  <polyline points="15 18 9 12 15 6" />
-                </svg>
-              </button>
               <div class="hero-slide-indicators" id="heroSlideIndicators">
                 <button type="button" class="hero-indicator-dot active" data-goto="0"
                   aria-label="Slide 1: NEURADERM"></button>
@@ -285,11 +251,6 @@
                 <button type="button" class="hero-indicator-dot" data-goto="2" aria-label="Slide 3: MediPharm"></button>
                 <button type="button" class="hero-indicator-dot" data-goto="3" aria-label="Slide 4: SMIB"></button>
               </div>
-              <button type="button" class="hero-nav-arrow" id="heroSlideNext" aria-label="Slide tiếp theo">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                  <polyline points="9 18 15 12 9 6" />
-                </svg>
-              </button>
             </div>
 
             <!-- Rotating Slides Container -->
@@ -472,12 +433,6 @@
             <h2 class="block-title" data-i18n="productsTitle">Sản phẩm phân phối chính hãng</h2>
           </div>
           <div class="block-head-actions">
-            <button type="button" class="carousel-arrow" id="catalogPrev" aria-label="Trước">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6" /></svg>
-            </button>
-            <button type="button" class="carousel-arrow" id="catalogNext" aria-label="Sau">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6" /></svg>
-            </button>
             <button type="button" class="block-link" id="catalogViewAllBtn">Xem tất cả →</button>
           </div>
         </div>
@@ -489,29 +444,30 @@
           <div class="catalog-result-meta" id="catalogResultMeta"></div>
         </div>
 
-        <div id="productCatalogGrid" class="product-catalog-grid is-carousel"><!-- Rendered by app.js --></div>
+        <div class="catalog-carousel">
+          <button type="button" class="carousel-arrow carousel-arrow-side prev" id="catalogPrev" aria-label="Trước">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6" /></svg>
+          </button>
+          <div id="productCatalogGrid" class="product-catalog-grid is-carousel"><!-- Rendered by app.js --></div>
+          <button type="button" class="carousel-arrow carousel-arrow-side next" id="catalogNext" aria-label="Sau">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6" /></svg>
+          </button>
+        </div>
       </div>
     </section>
 
     <!-- ================= Trending searches + Catalogue signup ================= -->
     <section class="trend-band">
-      <div class="container trend-band-inner">
-        <div class="trend-col">
-          <h3 class="trend-title">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
-            <span data-i18n="trendTitle">TÌM KIẾM PHỔ BIẾN</span>
-          </h3>
-          <div class="trend-tags" id="trendTags"><!-- Rendered by app.js --></div>
-        </div>
-        <form class="signup-col" id="catalogSignupForm">
+      <form class="container signup-col" id="catalogSignupForm">
+        <div class="signup-text">
           <h3 class="trend-title" data-i18n="signupTitle">NHẬN CATALOGUE & BẢNG GIÁ SỈ</h3>
           <p data-i18n="signupDesc">Để lại email doanh nghiệp, chuyên viên beVIBE sẽ gửi catalogue và chính sách đại lý mới nhất.</p>
-          <div class="signup-row">
-            <input type="email" id="signupEmail" required data-i18n-ph="signupPh" placeholder="Email doanh nghiệp của bạn" aria-label="Email">
-            <button type="submit" data-i18n="signupBtn">Đăng ký</button>
-          </div>
-        </form>
-      </div>
+        </div>
+        <div class="signup-row">
+          <input type="email" id="signupEmail" required data-i18n-ph="signupPh" placeholder="Email doanh nghiệp của bạn" aria-label="Email">
+          <button type="submit" data-i18n="signupBtn">Đăng ký</button>
+        </div>
+      </form>
     </section>
 
     <!-- ================= Section 01: About beVIBE ================= -->
@@ -563,7 +519,7 @@
 
     <!-- ================= Section 02: Our Business ================= -->
     <section class="business-section" id="business">
-      <div class="container">
+      <div class="container business-layout">
         <div class="section-head">
           <span class="eyebrow" data-i18n="businessEyebrow">LĨNH VỰC HOẠT ĐỘNG (OUR SERVICES)</span>
           <h2 class="section-title" data-i18n="businessTitle">
@@ -574,112 +530,31 @@
           </p>
         </div>
 
-        <div class="services-grid">
-          <!-- Service Card 1 -->
-          <article class="service-card">
-            <div class="service-card-top">
-              <span class="service-tag" data-i18n="bizCard1Tag">01 — DISTRIBUTION</span>
-              <h3 class="service-title" data-i18n="bizCard1Title">Phân phối mỹ phẩm chính hãng</h3>
-              <p class="service-desc" data-i18n="bizCard1Desc">
-                Nhập khẩu và cung ứng các dòng mỹ phẩm Hàn Quốc chất lượng cao cho hệ thống bán sỉ, bán lẻ, chuỗi mỹ
-                phẩm và clinic da liễu tại Việt Nam.
-              </p>
-              <ul class="service-list">
-                <li>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                    <polyline points="20 6 9 17 4 12" />
-                  </svg>
-                  <span data-i18n="bizCard1Li1">Chiết khấu đại lý hấp dẫn & chính sách bảo vệ giá</span>
-                </li>
-                <li>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                    <polyline points="20 6 9 17 4 12" />
-                  </svg>
-                  <span data-i18n="bizCard1Li2">Nguồn hàng date mới nhất, pháp lý & hóa đơn VAT minh bạch</span>
-                </li>
-                <li>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                    <polyline points="20 6 9 17 4 12" />
-                  </svg>
-                  <span data-i18n="bizCard1Li3">Tư vấn danh mục theo xu hướng người tiêu dùng Việt</span>
-                </li>
-              </ul>
-            </div>
-            <a href="#contact" class="service-action-btn">
-              <span data-i18n="heroCtaPrimary">Nhận báo giá sỉ ↗</span>
-            </a>
-          </article>
-
-          <!-- Service Card 2 -->
-          <article class="service-card">
-            <div class="service-card-top">
-              <span class="service-tag" data-i18n="bizCard2Tag">02 — BRAND PARTNERSHIP</span>
-              <h3 class="service-title" data-i18n="bizCard2Title">Tổng đại diện thương hiệu (Master Agent)</h3>
-              <p class="service-desc" data-i18n="bizCard2Desc">
-                Đồng hành cùng các thương hiệu mỹ phẩm Hàn Quốc thâm nhập, định vị và mở rộng thị phần bền vững tại thị
-                trường Việt Nam.
-              </p>
-              <ul class="service-list">
-                <li>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                    <polyline points="20 6 9 17 4 12" />
-                  </svg>
-                  <span data-i18n="bizCard2Li1">Kết nối mạng lưới kênh phân phối đa tầng (Online & Offline)</span>
-                </li>
-                <li>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                    <polyline points="20 6 9 17 4 12" />
-                  </svg>
-                  <span data-i18n="bizCard2Li2">Bảo hộ sở hữu trí tuệ & đăng ký lưu hành Bộ Y Tế</span>
-                </li>
-                <li>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                    <polyline points="20 6 9 17 4 12" />
-                  </svg>
-                  <span data-i18n="bizCard2Li3">Chiến dịch tiếp thị địa phương hóa (Localized Marketing)</span>
-                </li>
-              </ul>
-            </div>
-            <a href="#contact" class="service-action-btn">
-              <span data-i18n="heroCtaPrimary">Hợp tác thương hiệu ↗</span>
-            </a>
-          </article>
-
-          <!-- Service Card 3 -->
-          <article class="service-card">
-            <div class="service-card-top">
-              <span class="service-tag" data-i18n="bizCard3Tag">03 — OEM / ODM DEVELOPMENT</span>
-              <h3 class="service-title" data-i18n="bizCard3Title">Gia công mỹ phẩm thương hiệu riêng</h3>
-              <p class="service-desc" data-i18n="bizCard3Desc">
-                Biến ý tưởng mỹ phẩm của bạn thành dòng sản phẩm cao cấp mang thương hiệu riêng sản xuất 100% tại các
-                nhà máy CGMP Hàn Quốc.
-              </p>
-              <ul class="service-list">
-                <li>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                    <polyline points="20 6 9 17 4 12" />
-                  </svg>
-                  <span data-i18n="bizCard3Li1">R&D công thức độc quyền với hoạt chất sinh học tiên tiến</span>
-                </li>
-                <li>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                    <polyline points="20 6 9 17 4 12" />
-                  </svg>
-                  <span data-i18n="bizCard3Li2">Thiết kế bao bì 3D sang trọng, thời thượng theo phong cách Hàn</span>
-                </li>
-                <li>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                    <polyline points="20 6 9 17 4 12" />
-                  </svg>
-                  <span data-i18n="bizCard3Li3">MOQ linh hoạt, hỗ trợ trọn gói từ kiểm nghiệm đến hải quan</span>
-                </li>
-              </ul>
-            </div>
-            <a href="#calculator" class="service-action-btn">
-              <span data-i18n="heroCtaCalc">Khởi tạo dự án OEM ↗</span>
-            </a>
-          </article>
-        </div>
+        <article class="service-feature">
+          <span class="service-tag" data-i18n="bizCard1Tag">01 — DISTRIBUTION</span>
+          <h3 class="service-title" data-i18n="bizCard1Title">Phân phối mỹ phẩm chính hãng</h3>
+          <p class="service-desc" data-i18n="bizCard1Desc">
+            Nhập khẩu và cung ứng các dòng mỹ phẩm Hàn Quốc chất lượng cao cho hệ thống bán sỉ, bán lẻ, chuỗi mỹ
+            phẩm và clinic da liễu tại Việt Nam.
+          </p>
+          <ul class="service-list">
+            <li>
+              <span class="service-list-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><polyline points="20 6 9 17 4 12" /></svg></span>
+              <span data-i18n="bizCard1Li1">Chiết khấu đại lý hấp dẫn & chính sách bảo vệ giá</span>
+            </li>
+            <li>
+              <span class="service-list-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><polyline points="20 6 9 17 4 12" /></svg></span>
+              <span data-i18n="bizCard1Li2">Nguồn hàng date mới nhất, pháp lý & hóa đơn VAT minh bạch</span>
+            </li>
+            <li>
+              <span class="service-list-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><polyline points="20 6 9 17 4 12" /></svg></span>
+              <span data-i18n="bizCard1Li3">Tư vấn danh mục theo xu hướng người tiêu dùng Việt</span>
+            </li>
+          </ul>
+          <a href="#contact" class="service-action-btn">
+            <span data-i18n="heroCtaPrimary">Nhận báo giá sỉ ↗</span>
+          </a>
+        </article>
       </div>
     </section>
 
@@ -1103,7 +978,6 @@
           <h4 data-i18n="footerColSupport">Hỗ trợ đối tác</h4>
           <ul class="footer-links-list">
             <li><button type="button" data-action="service-modal" data-service="distribution" data-i18n="footerLinkPolicy">Chính sách đại lý & phân phối</button></li>
-            <li><button type="button" data-action="service-modal" data-service="oem" data-i18n="footerLinkOem">Quy trình gia công OEM/ODM</button></li>
             <li><button type="button" data-action="sample-request" data-i18n="footerLinkSample">Đăng ký mẫu thử & Catalogue</button></li>
             <li><a href="https://bevibe-smib-ebook.quiettoad513.chatgpt.site/#page-1" target="_blank" rel="noopener noreferrer" data-i18n="footerLinkEbook">Ebook sản phẩm SMIB ↗</a></li>
             <li><a href="#contact" data-i18n="footerLinkNda">Bảo mật thông tin (NDA)</a></li>
@@ -2040,8 +1914,6 @@
       <div class="modal-header-tabs">
         <div class="modal-tabs-list">
           <button class="modal-tab-btn active" data-service-tab="distribution">01. Phân phối mỹ phẩm</button>
-          <button class="modal-tab-btn" data-service-tab="partnership">02. Tổng đại diện thương hiệu</button>
-          <button class="modal-tab-btn" data-service-tab="oem">03. Gia công OEM/ODM</button>
         </div>
         <button class="modal-close-btn" id="closeServiceModalBtn" aria-label="Đóng cửa sổ">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
