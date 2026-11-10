@@ -19,8 +19,8 @@
     rel="stylesheet">
 
   <!-- Main Stylesheet -->
-  <script type="module" crossorigin src="/assets/index-wommWsCF.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/index-UKkzkkzR.css">
+  <script type="module" crossorigin src="/assets/index-BFQd8eaM.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-CarzfeZr.css">
 </head>
 
 <body>
@@ -38,13 +38,24 @@
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
           <span data-i18n="topEbook">Ebook Catalogue</span>
         </a>
-        <a href="mailto:contact@bevibe.vn" class="topbar-hide-sm">
+        <a href="mailto:bevibevn@gmail.com" class="topbar-hide-sm">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-          contact@bevibe.vn
+          bevibevn@gmail.com
         </a>
         <button id="langToggle" class="topbar-lang" aria-label="Đổi ngôn ngữ">
           <span data-i18n="langBtn">KR · 한국어</span>
         </button>
+        <!-- Topbar Auth & Portal Switcher -->
+        <div class="topbar-auth" id="topbarAuth">
+          <button type="button" class="topbar-auth-btn" id="topbarLoginBtn">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+            <span data-i18n="authLogin">Đăng nhập</span>
+          </button>
+          <span class="topbar-auth-sep">/</span>
+          <button type="button" class="topbar-auth-btn register" id="topbarRegisterBtn">
+            <span data-i18n="authRegister">Đăng ký đối tác</span>
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -78,16 +89,31 @@
         </form>
 
         <div class="header-actions">
-          <a href="tel:+84988123456" class="header-hotline">
+          <a href="tel:0368822112" class="header-hotline">
             <span class="header-hotline-icon">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
             </span>
             <span class="header-hotline-text">
               <small data-i18n="hotlineLabel">Hotline đối tác</small>
-              <strong>0988 123 456</strong>
+              <strong>036 8822112</strong>
             </span>
           </a>
           <a href="#contact" class="btn-nav-cta" data-i18n="headerQuote">Nhận báo giá ↗</a>
+          
+          <!-- Header Auth / Profile Button -->
+          <div class="header-auth-wrap" id="headerAuthWrap">
+            <button type="button" class="btn-header-auth" id="headerAuthBtn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+              <span id="headerAuthText" data-i18n="authLogin">Tài khoản</span>
+            </button>
+            <div class="header-user-menu" id="headerUserMenu" hidden>
+              <!-- Dynamic User Dropdown injected by app.js -->
+            </div>
+          </div>
+
           <button type="button" class="header-search-toggle" id="mobileSearchToggle" aria-label="Tìm kiếm">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
           </button>
@@ -132,9 +158,43 @@
           </div>
         </div>
 
+        <a href="#mesotherapy" class="hnav-link" data-i18n="navMesotherapy">Đào tạo Mesotherapy</a>
         <a href="#oem" class="hnav-link" data-i18n="navOem">Sản xuất OEM/ODM</a>
         <a href="#calculator" class="hnav-link" data-i18n="navCalculator">Dự toán chi phí</a>
         <a href="#about" class="hnav-link" data-i18n="navAbout">Về beVIBE</a>
+
+        <!-- Portal Nav Switcher Dropdown in Main Menu -->
+        <div class="hnav-item portal-nav-item">
+          <button type="button" class="hnav-link hnav-link-portal" id="navPortalsTrigger">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+            <span data-i18n="navPortals">Phân hệ B2B</span>
+            <svg class="chevron-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9" /></svg>
+          </button>
+          <div class="hnav-dropdown portal-dropdown">
+            <button type="button" class="hnav-dd-item active" data-portal-action="public">
+              <span class="portal-dd-icon">🌐</span>
+              <div class="portal-dd-text">
+                <strong data-i18n="portalPublic">Trang chủ Website</strong>
+                <small>Giới thiệu & Danh mục sản phẩm</small>
+              </div>
+            </button>
+            <button type="button" class="hnav-dd-item" data-portal-action="customer">
+              <span class="portal-dd-icon">👤</span>
+              <div class="portal-dd-text">
+                <strong data-i18n="portalCustomer">Phân hệ Khách hàng / Đại lý</strong>
+                <small>Báo giá sỉ, Đơn hàng B2B, Tài liệu</small>
+              </div>
+            </button>
+            <button type="button" class="hnav-dd-item" data-portal-action="admin">
+              <span class="portal-dd-icon">🛡️</span>
+              <div class="portal-dd-text">
+                <strong data-i18n="portalAdmin">Phân hệ Quản trị Admin</strong>
+                <small>Dashboard KPI, Quản lý đơn, CRM</small>
+              </div>
+            </button>
+          </div>
+        </div>
+
         <button type="button" class="hnav-link hnav-link-accent" data-action="sample-request" data-i18n="navSample">Nhận mẫu thử</button>
       </div>
     </nav>
@@ -152,11 +212,35 @@
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
         </button>
       </div>
+
+      <!-- Mobile Auth Quick Section -->
+      <div class="mobile-auth-card" id="mobileAuthCard">
+        <button type="button" class="btn-mobile-login" id="mobileLoginBtn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+          <span data-i18n="authLogin">Đăng nhập tài khoản B2B</span>
+        </button>
+      </div>
+
+      <!-- Mobile Portal Switcher -->
+      <span class="drawer-group-title" data-i18n="navPortals">Phân hệ B2B & Quản trị</span>
+      <div class="mobile-portal-switcher">
+        <button type="button" class="mobile-portal-btn active" data-portal-action="public">
+          <span>🌐 Website</span>
+        </button>
+        <button type="button" class="mobile-portal-btn" data-portal-action="customer">
+          <span>👤 Khách hàng</span>
+        </button>
+        <button type="button" class="mobile-portal-btn" data-portal-action="admin">
+          <span>🛡️ Admin</span>
+        </button>
+      </div>
+
       <span class="drawer-group-title" data-i18n="navBrandsMega">Thương hiệu</span>
       <div class="drawer-brand-list" id="drawerBrandList"><!-- Rendered by app.js --></div>
       <span class="drawer-group-title" data-i18n="drawerExplore">Khám phá</span>
       <nav class="mobile-nav-links">
         <a href="#products" class="mobile-nav-link" data-i18n="navCategories">Danh mục sản phẩm</a>
+        <a href="#mesotherapy" class="mobile-nav-link" data-i18n="navMesotherapy">Đào tạo Mesotherapy</a>
         <a href="#business" class="mobile-nav-link" data-i18n="navBusiness">Lĩnh vực kinh doanh</a>
         <a href="#oem" class="mobile-nav-link" data-i18n="navOem">Sản xuất OEM/ODM</a>
         <a href="#calculator" class="mobile-nav-link" data-i18n="navCalculator">Dự toán chi phí</a>
@@ -175,6 +259,8 @@
     </div>
   </aside>
 
+  <!-- ================= PUBLIC MAIN WEBSITE VIEW ================= -->
+  <div id="publicWebsiteView" class="portal-view active">
   <main>
     <!-- ================= Hero: Main Slider + Intro Card ================= -->
     <section class="hero-section">
@@ -598,6 +684,99 @@
       </div>
     </section>
 
+    <!-- ================= Section: Mesotherapy & Clinical Aesthetic Training (Pharmicell Vietnam Style) ================= -->
+    <section class="mesotherapy-section" id="mesotherapy">
+      <div class="container">
+        <div class="section-header text-center">
+          <span class="eyebrow" data-i18n="mesoSectionTag">CHUYỂN GIAO CÔNG NGHỆ CHUẨN Y KHOA HÀN QUỐC</span>
+          <h2 class="section-title" data-i18n="mesoSectionTitle">Khóa Đào Tạo & Chuyển Giao Công Nghệ Mesotherapy</h2>
+          <p class="section-desc centered" data-i18n="mesoSectionDesc">
+            Hợp tác cùng viện nghiên cứu y sinh & bác sĩ da liễu Hàn Quốc — Đào tạo bài bản từ lý thuyết hoạt chất đến thực chiến lâm sàng, cấp chứng chỉ quốc tế.
+          </p>
+        </div>
+
+        <div class="meso-cards-grid">
+          <!-- Card 1: Online Master Class -->
+          <div class="meso-card">
+            <div class="meso-card-badge">KHÓA 01 · TRỰC TUYẾN</div>
+            <div class="meso-card-media">
+              <img src="/assets/images/dr-bargo/dr.bargo_serum.jpg" alt="Đào tạo Mesotherapy Online" class="meso-card-img">
+              <span class="meso-format-pill">Online Video 4K</span>
+            </div>
+            <div class="meso-card-content">
+              <h3>Đào tạo Mesotherapy Chuyên đề Online</h3>
+              <p class="meso-card-desc">
+                Giảng dạy cơ chế phân tử Hyaluronic Acid, Peptide sinh học, Exosome và kỹ thuật tiêm vi điểm Nappage, Point-by-Point qua video HD chuẩn y khoa.
+              </p>
+              <ul class="meso-card-list">
+                <li>✓ 12 Module bài giảng chi tiết từ Bác sĩ Hàn Quốc</li>
+                <li>✓ Tặng trọn bộ Ebook phác đồ điều trị lâm sàng</li>
+                <li>✓ Tham gia nhóm chuyên môn VIP giải đáp 24/7</li>
+              </ul>
+              <div class="meso-card-footer">
+                <span class="meso-price">Miễn phí cho Đại lý B2B</span>
+                <button type="button" class="btn-meso-enroll" data-action="auth-modal" data-course="online">
+                  <span>Đăng ký tham gia ↗</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: Offline Clinic Workshop (Featured) -->
+          <div class="meso-card featured">
+            <div class="meso-card-badge highlight">KHÓA 02 · THỰC CHIẾN CLINIC</div>
+            <div class="meso-card-media">
+              <img src="/assets/images/oem-lab.jpg" alt="Chuyển giao thực chiến Offline" class="meso-card-img">
+              <span class="meso-format-pill">Offline 1:1 Cầm tay chỉ việc</span>
+            </div>
+            <div class="meso-card-content">
+              <h3>Chuyển Giao Thực Chiến Tại Việt Nam</h3>
+              <p class="meso-card-desc">
+                Cầm tay chỉ việc trực tiếp trên người mẫu thật tại Clinic. Bác sĩ chuyên khoa Hàn Quốc trực tiếp chuyển giao kỹ thuật tiêm cấy M.Booster & phục hồi sau laser.
+              </p>
+              <ul class="meso-card-list">
+                <li>✓ Thực hành lâm sàng vô trùng chuẩn bệnh viện</li>
+                <li>✓ Tặng bộ Kit thực hành 10 ống M.Booster trị giá 15.000.000 đ</li>
+                <li>✓ Cấp Chứng chỉ Quốc tế từ Viện Nghiên cứu Medytox Hàn Quốc</li>
+              </ul>
+              <div class="meso-card-footer">
+                <span class="meso-price highlight">Đặc quyền Đối tác beVIBE</span>
+                <button type="button" class="btn-meso-enroll primary" data-action="auth-modal" data-course="offline">
+                  <span>Đăng ký suất thực hành ↗</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3: Korea Study Tour -->
+          <div class="meso-card">
+            <div class="meso-card-badge">KHÓA 03 · TU NGHIỆP SEOUL</div>
+            <div class="meso-card-media">
+              <img src="/assets/images/lineup.jpg" alt="Tu nghiệp tại Seoul Hàn Quốc" class="meso-card-img">
+              <span class="meso-format-pill">Gangnam, Seoul · 5 Ngày 4 Đêm</span>
+            </div>
+            <div class="meso-card-content">
+              <h3>Khóa Tu Nghiệp & Đào Tạo Tại Seoul</h3>
+              <p class="meso-card-desc">
+                Trực tiếp tu nghiệp tại Viện R&D và Bệnh viện Thẩm mỹ hàng đầu Gangnam. Khám phá quy trình sản xuất tế bào gốc đạt chuẩn CGMP quốc tế.
+              </p>
+              <ul class="meso-card-list">
+                <li>✓ Đào tạo công nghệ trẻ hóa tế bào gốc mới nhất 2026</li>
+                <li>✓ Cấp Bằng Chứng nhận Hiệp hội Thẩm mỹ Sinh học Hàn Quốc</li>
+                <li>✓ Trọn gói vé máy bay, khách sạn 5 sao & phiên dịch y khoa</li>
+              </ul>
+              <div class="meso-card-footer">
+                <span class="meso-price">Suất giới hạn mỗi quý</span>
+                <button type="button" class="btn-meso-enroll" data-action="auth-modal" data-course="korea">
+                  <span>Nhận lịch trình chi tiết ↗</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- ================= Section 04: OEM/ODM Development Workflow ================= -->
     <section class="oem-section" id="oem">
       <div class="container">
@@ -858,11 +1037,11 @@
   </main>
   <!-- ================= Floating Quick Action Bar ================= -->
   <div class="floating-quick-bar">
-    <a href="tel:+84988123456" class="quick-btn phone" aria-label="Gọi hotline beVIBE">
+    <a href="tel:0368822112" class="quick-btn phone" aria-label="Gọi hotline beVIBE: 036 8822112">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
     </a>
-    <a href="https://zalo.me/0988123456" target="_blank" rel="noopener noreferrer" class="quick-btn zalo"
-      aria-label="Chat Zalo cùng chuyên viên beVIBE">
+    <a href="https://zalo.me/0368822112" target="_blank" rel="noopener noreferrer" class="quick-btn zalo"
+      aria-label="Chat Zalo cùng chuyên viên beVIBE: 036 8822112">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="white">
         <path
           d="M12 2C6.48 2 2 6.48 2 12c0 1.82.49 3.53 1.34 5L2 22l5.17-1.31c1.42.79 3.06 1.31 4.83 1.31 5.52 0 10-4.48 10-10S17.52 2 12 2zm1 14h-2v-2h2v2zm0-4h-2V7h2v5z" />
@@ -953,14 +1132,18 @@
               <path
                 d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
             </svg>
-            <span data-i18n="footerHotline">Hotline / Zalo: (+84) 988 123 456</span>
+            <a href="tel:0368822112" class="footer-contact-link" style="color: inherit; text-decoration: none;">
+              <span data-i18n="footerHotline">Hotline / Zalo: 036 8822112</span>
+            </a>
           </div>
           <div class="footer-contact-item">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
               <polyline points="22,6 12,13 2,6" />
             </svg>
-            <span data-i18n="footerEmail">Email: contact@bevibe.vn</span>
+            <a href="mailto:bevibevn@gmail.com" class="footer-contact-link" style="color: inherit; text-decoration: none;">
+              <span data-i18n="footerEmail">Email: bevibevn@gmail.com</span>
+            </a>
           </div>
           <a href="https://www.facebook.com/profile.php?id=61585798103406" target="_blank" rel="noopener noreferrer" class="footer-btn-facebook" aria-label="Fanpage Facebook beVIBE">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
@@ -972,8 +1155,13 @@
       </div>
 
       <div class="footer-bottom-row">
-        <span data-i18n="footerCopy">© 2026 beVIBE. Bản quyền thuộc về beVIBE Korea & Vietnam. All rights
-          reserved.</span>
+        <div>
+          <span data-i18n="footerCopy">© 2026 beVIBE. Bản quyền thuộc về beVIBE Korea & Vietnam. All rights reserved.</span>
+          <div class="footer-bottom-contact-meta" style="margin-top: 6px; font-size: 0.82rem; color: var(--text-muted); display: flex; gap: 16px; flex-wrap: wrap;">
+            <span>📞 Điện thoại: <a href="tel:0368822112" style="color: var(--accent-gold); text-decoration: none; font-weight: 600;">036 8822112</a></span>
+            <span>✉️ Email: <a href="mailto:bevibevn@gmail.com" style="color: var(--accent-gold); text-decoration: none; font-weight: 600;">bevibevn@gmail.com</a></span>
+          </div>
+        </div>
         <div class="footer-bottom-links">
           <a href="https://www.facebook.com/profile.php?id=61585798103406" target="_blank" rel="noopener noreferrer" class="footer-bottom-fb-link" aria-label="Fanpage Facebook beVIBE">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
@@ -986,6 +1174,835 @@
       </div>
     </div>
   </footer>
+  </div> <!-- /#publicWebsiteView -->
+
+  <!-- ================= B2B CUSTOMER & CLINIC PARTNER PORTAL ================= -->
+  <div id="customerPortalView" class="portal-view" hidden>
+    <div class="portal-layout">
+      <!-- Portal Top Bar -->
+      <header class="portal-topbar">
+        <div class="container portal-topbar-inner">
+          <div class="portal-brand-area">
+            <span class="portal-badge customer">B2B PARTNER HUB</span>
+            <h2 class="portal-title">Cổng Thông Tin Đại Lý & Khách Hàng Clinic</h2>
+          </div>
+          <div class="portal-user-meta">
+            <div class="portal-user-card">
+              <div class="portal-avatar" id="custAvatar">B2B</div>
+              <div class="portal-user-info">
+                <strong id="custPortalName">Tài khoản Đối tác B2B</strong>
+                <span class="partner-tier-pill" id="custPortalTier">Đại lý Mới (Đang hoàn thiện hồ sơ)</span>
+              </div>
+            </div>
+            <div class="portal-header-actions">
+              <button type="button" class="btn-portal-action" data-portal-action="public" title="Về trang chủ">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                <span>Trang chủ</span>
+              </button>
+              <button type="button" class="btn-portal-action highlight" data-portal-action="admin" title="Chuyển sang phân hệ Quản trị">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                <span>Vào Admin</span>
+              </button>
+              <button type="button" class="btn-portal-action logout" id="custLogoutBtn" title="Đăng xuất">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                <span>Thoát</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Portal Tabs Navigation -->
+      <nav class="portal-nav-bar">
+        <div class="container portal-nav-tabs">
+          <button type="button" class="portal-tab-btn active" data-cust-tab="overview">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            <span>Tổng quan đối tác</span>
+          </button>
+          <button type="button" class="portal-tab-btn" data-cust-tab="wholesale">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+            <span>Báo giá sỉ & Đặt hàng B2B</span>
+          </button>
+          <button type="button" class="portal-tab-btn" data-cust-tab="orders">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+            <span>Quản lý Đơn hàng & Tiến độ</span>
+            <span class="portal-tab-count" id="custOrdersCount">0</span>
+          </button>
+          <button type="button" class="portal-tab-btn" data-cust-tab="documents">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            <span>Hồ sơ công bố & Ebook</span>
+          </button>
+          <button type="button" class="portal-tab-btn" data-cust-tab="training">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+            <span>Đăng ký Đào tạo Mesotherapy</span>
+          </button>
+        </div>
+      </nav>
+
+      <!-- Portal Body Contents -->
+      <main class="portal-main-content">
+        <div class="container">
+          <!-- Customer Tab 1: Overview -->
+          <div class="portal-tab-pane active" id="custPaneOverview">
+            <!-- 4 KPI Cards -->
+            <div class="portal-kpi-grid">
+              <div class="kpi-card">
+                <span class="kpi-label">Doanh số nhập lũy kế</span>
+                <div class="kpi-val" id="custKpiRevenue">0 <small>VNĐ</small></div>
+                <span class="kpi-trend">Chưa phát sinh doanh số</span>
+              </div>
+              <div class="kpi-card">
+                <span class="kpi-label">Chiết khấu đang áp dụng</span>
+                <div class="kpi-val text-gold" id="custKpiDiscount">0% <small>chờ duyệt</small></div>
+                <span class="kpi-note">Áp dụng sau khi xét duyệt hồ sơ đại lý</span>
+              </div>
+              <div class="kpi-card">
+                <span class="kpi-label">Đơn hàng đang xử lý</span>
+                <div class="kpi-val text-crimson" id="custKpiOrders">0 <small>đơn</small></div>
+                <span class="kpi-note">Chưa có đơn hàng nào đang vận chuyển</span>
+              </div>
+              <div class="kpi-card">
+                <span class="kpi-label">Chứng chỉ chuyển giao</span>
+                <div class="kpi-val" id="custKpiCerts">0 <small>chứng chỉ</small></div>
+                <span class="kpi-note">Chưa đăng ký khóa đào tạo</span>
+              </div>
+            </div>
+
+            <!-- Welcome Banner & Dedicated Account Manager -->
+            <div class="portal-manager-card">
+              <div class="manager-info">
+                <div class="manager-badge">CHUYÊN VIÊN PHỤ TRÁCH ĐỘC QUYỀN</div>
+                <h3>Ms. Kim Yến — Chuyên viên Tư vấn Chiến lược B2B</h3>
+                <p>Hỗ trợ riêng cho Quý đối tác & Clinic: Xử lý đơn hàng sỉ, cung cấp hồ sơ kiểm định da liễu, hỗ trợ đào tạo và bảo hộ độc quyền khu vực.</p>
+                <div class="manager-contacts">
+                  <a href="tel:0368822112" class="btn-manager-contact">📞 Hotline VIP: 036 8822112</a>
+                  <a href="https://zalo.me/0368822112" target="_blank" rel="noopener noreferrer" class="btn-manager-contact zalo">💬 Zalo VIP Trực tiếp</a>
+                </div>
+              </div>
+              <div class="manager-stats-box">
+                <span class="ms-title">Chính sách bảo vệ đại lý</span>
+                <ul>
+                  <li>✓ Cam kết 100% hàng nhập khẩu chính ngạch K-Beauty</li>
+                  <li>✓ Bảo vệ giá niêm yết, chống bán phá giá trên thị trường</li>
+                  <li>✓ Đổi trả 1-1 nếu lỗi phát sinh do khâu bảo quản/vận chuyển</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Quick Action Links -->
+            <div class="portal-quick-actions-row">
+              <button type="button" class="quick-action-card" data-cust-switch-tab="wholesale">
+                <span class="qa-icon">🛒</span>
+                <strong>Báo giá sỉ & Đặt hàng B2B</strong>
+                <small>Bảng giá niêm yết & Đặt hàng nhanh B2B</small>
+              </button>
+              <button type="button" class="quick-action-card" data-cust-switch-tab="orders">
+                <span class="qa-icon">📦</span>
+                <strong>Tra cứu đơn hàng B2B</strong>
+                <small>Kiểm tra vận đơn VNPost Express & tiến độ xuất kho</small>
+              </button>
+              <button type="button" class="quick-action-card" data-cust-switch-tab="documents">
+                <span class="qa-icon">📄</span>
+                <strong>Tải Giấy công bố Bộ Y Tế</strong>
+                <small>Hồ sơ pháp lý lưu hành phòng khám/spa</small>
+              </button>
+              <button type="button" class="quick-action-card" data-cust-switch-tab="training">
+                <span class="qa-icon">🎓</span>
+                <strong>Đăng ký Khóa Mesotherapy</strong>
+                <small>Đào tạo tiêm vi điểm & chuyển giao phác đồ</small>
+              </button>
+            </div>
+          </div>
+
+          <!-- Customer Tab 2: Wholesale Catalog & Quick Ordering -->
+          <div class="portal-tab-pane" id="custPaneWholesale">
+            <div class="pane-header-row">
+              <div>
+                <h2>Bảng Báo Giá Sỉ Đại Lý & Đặt Hàng B2B</h2>
+                <p>Áp dụng mức chiết khấu Đại lý Vàng: <strong>-38%</strong> trên toàn bộ danh mục sản phẩm chính hãng.</p>
+              </div>
+              <div class="pane-actions">
+                <button type="button" class="btn-primary" id="btnSubmitWholesaleOrder">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span>Tạo Đơn Hàng Sỉ B2B Ngay ↗</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="portal-table-wrap">
+              <table class="portal-table" id="wholesaleTable">
+                <thead>
+                  <tr>
+                    <th>Sản phẩm / Dòng</th>
+                    <th>Thương hiệu</th>
+                    <th>Quy cách</th>
+                    <th>Giá niêm yết</th>
+                    <th>Giá sỉ (-38%)</th>
+                    <th>Số lượng</th>
+                    <th>Tạm tính</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr data-prod-id="nb-1" data-price="1250000" data-wholesale="775000">
+                    <td>
+                      <div class="table-prod-cell">
+                        <img src="/assets/images/dr-bargo/dr.bargo_serum.jpg" alt="Serum Dr. Bargo" class="table-prod-thumb">
+                        <div>
+                          <strong>Dr.BARGO Intensive Barrier Serum</strong>
+                          <small>Serum phục hồi màng bảo vệ da chuyên sâu</small>
+                        </div>
+                      </div>
+                    </td>
+                    <td><span class="badge-brand dr-bargo">Dr. Bargo</span></td>
+                    <td>Chai 50ml</td>
+                    <td>1.250.000 đ</td>
+                    <td class="text-gold font-bold">775.000 đ</td>
+                    <td>
+                      <div class="qty-counter">
+                        <button type="button" class="qty-btn minus">-</button>
+                        <input type="number" class="qty-input" value="10" min="0" max="500">
+                        <button type="button" class="qty-btn plus">+</button>
+                      </div>
+                    </td>
+                    <td class="row-subtotal font-bold">7.750.000 đ</td>
+                  </tr>
+                  <tr data-prod-id="nb-2" data-price="1850000" data-wholesale="1147000">
+                    <td>
+                      <div class="table-prod-cell">
+                        <img src="/assets/images/oem-lab.jpg" alt="NEURADERM M.Booster" class="table-prod-thumb">
+                        <div>
+                          <strong>NEURADERM M.Booster Face Pro</strong>
+                          <small>Tinh chất tiêm cấy vi điểm tế bào gốc sinh học</small>
+                        </div>
+                      </div>
+                    </td>
+                    <td><span class="badge-brand neuraderm">NEURADERM</span></td>
+                    <td>Hộp 5 lọ x 3ml</td>
+                    <td>1.850.000 đ</td>
+                    <td class="text-gold font-bold">1.147.000 đ</td>
+                    <td>
+                      <div class="qty-counter">
+                        <button type="button" class="qty-btn minus">-</button>
+                        <input type="number" class="qty-input" value="15" min="0" max="500">
+                        <button type="button" class="qty-btn plus">+</button>
+                      </div>
+                    </td>
+                    <td class="row-subtotal font-bold">17.205.000 đ</td>
+                  </tr>
+                  <tr data-prod-id="nb-3" data-price="950000" data-wholesale="589000">
+                    <td>
+                      <div class="table-prod-cell">
+                        <img src="/assets/images/dr-bargo/dr.bargo_emulsion_01.jpg" alt="Dr. Bargo Emulsion" class="table-prod-thumb">
+                        <div>
+                          <strong>Dr.BARGO Barrier Emulsion</strong>
+                          <small>Sữa dưỡng ẩm phục hồi làm dịu cấp tốc</small>
+                        </div>
+                      </div>
+                    </td>
+                    <td><span class="badge-brand dr-bargo">Dr. Bargo</span></td>
+                    <td>Chai 130ml</td>
+                    <td>950.000 đ</td>
+                    <td class="text-gold font-bold">589.000 đ</td>
+                    <td>
+                      <div class="qty-counter">
+                        <button type="button" class="qty-btn minus">-</button>
+                        <input type="number" class="qty-input" value="5" min="0" max="500">
+                        <button type="button" class="qty-btn plus">+</button>
+                      </div>
+                    </td>
+                    <td class="row-subtotal font-bold">2.945.000 đ</td>
+                  </tr>
+                  <tr data-prod-id="nb-4" data-price="890000" data-wholesale="551800">
+                    <td>
+                      <div class="table-prod-cell">
+                        <img src="/assets/images/lineup.jpg" alt="SMIB Shampoo" class="table-prod-thumb">
+                        <div>
+                          <strong>SMIB Natural Hair Darkening Shampoo</strong>
+                          <small>Dầu gội phủ bạc sinh học 100 Tỷ Postbiotic</small>
+                        </div>
+                      </div>
+                    </td>
+                    <td><span class="badge-brand smib">SMIB</span></td>
+                    <td>Chai 500ml</td>
+                    <td>890.000 đ</td>
+                    <td class="text-gold font-bold">551.800 đ</td>
+                    <td>
+                      <div class="qty-counter">
+                        <button type="button" class="qty-btn minus">-</button>
+                        <input type="number" class="qty-input" value="8" min="0" max="500">
+                        <button type="button" class="qty-btn plus">+</button>
+                      </div>
+                    </td>
+                    <td class="row-subtotal font-bold">4.414.400 đ</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="wholesale-summary-box">
+              <div class="ws-calc-details">
+                <div class="ws-row"><span>Tổng giá niêm yết bán lẻ:</span> <strong id="wsTotalRetail">52.120.000 đ</strong></div>
+                <div class="ws-row"><span>Chiết khấu đối tác Vàng (-38%):</span> <strong class="text-crimson" id="wsTotalDiscount">-19.805.600 đ</strong></div>
+                <div class="ws-row total"><span>Tổng thanh toán B2B dự kiến:</span> <strong class="text-gold" id="wsGrandTotal">32.314.400 đ</strong></div>
+              </div>
+              <div class="ws-actions">
+                <button type="button" class="btn-primary large" id="btnConfirmB2BOrder">
+                  <span>Xác nhận & Gửi yêu cầu xuất kho ↗</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Customer Tab 3: Orders Tracking -->
+          <div class="portal-tab-pane" id="custPaneOrders">
+            <div class="pane-header-row">
+              <div>
+                <h2>Lịch Sử Đơn Hàng & Tiến Độ Vận Chuyển</h2>
+                <p>Theo dõi thời gian thực các đơn hàng nhập sỉ và các dự án gia công OEM độc quyền.</p>
+              </div>
+            </div>
+
+            <div class="orders-list" id="customerOrdersList">
+              <div class="orders-empty-state" id="customerEmptyOrdersState" style="text-align: center; padding: 48px 20px; background: rgba(255,255,255,0.02); border: 1px dashed var(--border-subtle); border-radius: var(--radius-md);">
+                <div style="font-size: 2.5rem; margin-bottom: 12px; opacity: 0.6;">📦</div>
+                <h4 style="font-size: 1.1rem; margin-bottom: 8px;">Hiện tại chưa có đơn hàng nào</h4>
+                <p class="text-muted" style="max-width: 460px; margin: 0 auto 18px; font-size: 0.9rem;">Quý đối tác có thể tạo đơn hàng sỉ đầu tiên tại mục "Báo giá sỉ & Đặt hàng B2B" hoặc yêu cầu báo giá dự án OEM thương hiệu riêng.</p>
+                <button type="button" class="btn-primary" data-cust-switch-tab="wholesale" style="font-size: 0.85rem;">
+                  <span>Đến Bảng Báo Giá Sỉ & Đặt Hàng ↗</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Customer Tab 4: Documents & Legal -->
+          <div class="portal-tab-pane" id="custPaneDocuments">
+            <div class="pane-header-row">
+              <div>
+                <h2>Kho Hồ Sơ Pháp Lý, Giấy Phép & Ebook Đào Tạo</h2>
+                <p>Tải toàn bộ giấy tiếp nhận công bố mỹ phẩm, kiểm nghiệm lâm sàng và tài liệu đào tạo chuyên sâu.</p>
+              </div>
+            </div>
+
+            <div class="docs-grid">
+              <div class="doc-card">
+                <div class="doc-icon">📜</div>
+                <div class="doc-content">
+                  <h4>Giấy Công Bố Mỹ Phẩm NEURADERM (Bộ Y Tế)</h4>
+                  <p>Số công bố: 219840/23/CBMP-QLD · Cục Quản lý Dược Việt Nam</p>
+                  <button type="button" class="btn-doc-download" onclick="alert('Đang tải bản scan PDF Giấy tiếp nhận công bố NEURADERM chính hãng...')">⬇ Tải bản scan PDF chính hãng</button>
+                </div>
+              </div>
+
+              <div class="doc-card">
+                <div class="doc-icon">📜</div>
+                <div class="doc-content">
+                  <h4>Giấy Công Bố Mỹ Phẩm Dr. BARGO (Bộ Y Tế)</h4>
+                  <p>Số công bố: 218765/23/CBMP-QLD · Cục Quản lý Dược Việt Nam</p>
+                  <button type="button" class="btn-doc-download" onclick="alert('Đang tải bản scan PDF Giấy tiếp nhận công bố Dr. BARGO chính hãng...')">⬇ Tải bản scan PDF chính hãng</button>
+                </div>
+              </div>
+
+              <div class="doc-card">
+                <div class="doc-icon">🔬</div>
+                <div class="doc-content">
+                  <h4>Báo Cáo Nghiên Cứu Lâm Sàng P&K Skin Research Center</h4>
+                  <p>Chứng minh hiệu quả phục hồi hàng rào bảo vệ da sau 72 giờ và độ an toàn 0.00% kích ứng</p>
+                  <button type="button" class="btn-doc-download" onclick="alert('Đang tải tài liệu nghiên cứu lâm sàng từ Hàn Quốc...')">⬇ Tải Báo cáo Lâm sàng (EN/KR/VI)</button>
+                </div>
+              </div>
+
+              <div class="doc-card">
+                <div class="doc-icon">📖</div>
+                <div class="doc-content">
+                  <h4>Ebook Cẩm Nang Trị Liệu Rụng Tóc SMIB (9 Sản phẩm)</h4>
+                  <p>Phác đồ phục hồi nang tóc với 100 Tỷ Postbiotic và ion sinh học tự nhiên</p>
+                  <a href="https://bevibe-smib-ebook.quiettoad513.chatgpt.site/#page-1" target="_blank" rel="noopener noreferrer" class="btn-doc-download link">📖 Mở Ebook Trực Tuyến ↗</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Customer Tab 5: Training Mesotherapy Registration -->
+          <div class="portal-tab-pane" id="custPaneTraining">
+            <div class="pane-header-row">
+              <div>
+                <h2>Đăng Ký Đào Tạo Mesotherapy & Chuyển Giao Công Nghệ</h2>
+                <p>Đặc quyền dành riêng cho Bác sĩ & Kỹ thuật viên của hệ thống Clinic đối tác beVIBE.</p>
+              </div>
+            </div>
+
+            <div class="training-reg-box">
+              <form id="custTrainingForm" class="training-form">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>Họ tên học viên *</label>
+                    <input type="text" id="custTrainingName" class="form-control" placeholder="Họ và tên bác sĩ / Kỹ thuật viên" required>
+                  </div>
+                  <div class="form-group">
+                    <label>Chức danh chuyên môn *</label>
+                    <input type="text" id="custTrainingTitle" class="form-control" placeholder="Ví dụ: Bác sĩ Da liễu, Chủ Spa / Clinic..." required>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>Khóa học đăng ký *</label>
+                    <select class="form-control" id="custCourseSelect">
+                      <option value="offline">Khóa 02: Chuyển giao Thực chiến tại Việt Nam (Thực hành 1:1 trên mẫu)</option>
+                      <option value="korea">Khóa 03: Tu nghiệp & Chuyển giao tại Seoul Hàn Quốc (5 Ngày 4 Đêm)</option>
+                      <option value="online">Khóa 01: Đào tạo Mesotherapy Online Chuyên sâu (12 Module)</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label>Số lượng nhân sự tham gia</label>
+                    <input type="number" id="custTrainingQty" class="form-control" value="1" min="1" max="10">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label>Ghi chú hoặc yêu cầu đào tạo chuyên đề riêng</label>
+                  <textarea class="form-control" rows="3" placeholder="Ví dụ: Mong muốn tập trung kỹ thuật tiêm cấy M.Booster cho nền da nám tái phát..."></textarea>
+                </div>
+
+                <button type="submit" class="btn-primary large">
+                  <span>Xác nhận Đăng ký Suất Đào Tạo Chính Hãng ↗</span>
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- ================= BEVIBE EXECUTIVE ADMIN CONTROL HUB ================= -->
+  <div id="adminPortalView" class="portal-view" hidden>
+    <div class="portal-layout admin-layout">
+      <!-- Admin Top Bar -->
+      <header class="portal-topbar admin-topbar">
+        <div class="container portal-topbar-inner">
+          <div class="portal-brand-area">
+            <span class="portal-badge admin">beVIBE HQ EXECUTIVE HUB</span>
+            <h2 class="portal-title">Trung Tâm Quản Trị Hệ Thống & Đối Tác Toàn Quốc</h2>
+          </div>
+          <div class="portal-user-meta">
+            <div class="portal-user-card">
+              <div class="portal-avatar admin">AD</div>
+              <div class="portal-user-info">
+                <strong>Ban Quản Trị beVIBE (Korea & VN)</strong>
+                <span class="admin-tier-pill">🛡️ System Administrator</span>
+              </div>
+            </div>
+            <div class="portal-header-actions">
+              <button type="button" class="btn-portal-action" data-portal-action="public" title="Về trang chủ">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                <span>Trang chủ</span>
+              </button>
+              <button type="button" class="btn-portal-action highlight" data-portal-action="customer" title="Xem phân hệ Khách hàng">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                <span>Xem quyền Khách</span>
+              </button>
+              <button type="button" class="btn-portal-action logout" id="adminLogoutBtn" title="Đăng xuất">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                <span>Thoát</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Admin Tabs Navigation -->
+      <nav class="portal-nav-bar admin-nav-bar">
+        <div class="container portal-nav-tabs">
+          <button type="button" class="portal-tab-btn active" data-admin-tab="dashboard">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            <span>Báo cáo & KPI Doanh số</span>
+          </button>
+          <button type="button" class="portal-tab-btn" data-admin-tab="orders">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            <span>Quản lý Báo giá & Đơn hàng</span>
+            <span class="portal-tab-count" id="adminPendingCount">0</span>
+          </button>
+          <button type="button" class="portal-tab-btn" data-admin-tab="catalog">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+            <span>Quản lý Danh mục & Sản phẩm</span>
+          </button>
+          <button type="button" class="portal-tab-btn" data-admin-tab="partners">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            <span>Quản lý Đại lý & Khách hàng (CRM)</span>
+          </button>
+          <button type="button" class="portal-tab-btn" data-admin-tab="training">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+            <span>Quản lý Lớp Đào tạo Mesotherapy</span>
+          </button>
+        </div>
+      </nav>
+
+      <!-- Admin Main Body -->
+      <main class="portal-main-content">
+        <div class="container">
+          <!-- Admin Tab 1: Dashboard Analytics -->
+          <div class="portal-tab-pane active" id="adminPaneDashboard">
+            <div class="portal-kpi-grid">
+              <div class="kpi-card">
+                <span class="kpi-label">Doanh thu B2B tháng này</span>
+                <div class="kpi-val text-gold" id="adminKpiRevenue">0 <small>VNĐ</small></div>
+                <span class="kpi-trend">Chưa phát sinh doanh số tháng này</span>
+              </div>
+              <div class="kpi-card">
+                <span class="kpi-label">Yêu cầu hợp tác & Đơn hàng mới</span>
+                <div class="kpi-val text-crimson" id="adminTotalReqCount">0 <small>yêu cầu</small></div>
+                <span class="kpi-note" id="adminPendingNote">0 đơn chờ duyệt chiết khấu</span>
+              </div>
+              <div class="kpi-card">
+                <span class="kpi-label">Dự án OEM/ODM đang gia công</span>
+                <div class="kpi-val" id="adminKpiOem">00 <small>thương hiệu</small></div>
+                <span class="kpi-note">Chưa có dự án OEM mới</span>
+              </div>
+              <div class="kpi-card">
+                <span class="kpi-label">Tổng số Clinic & Spa đối tác</span>
+                <div class="kpi-val" id="adminTotalPartnersCount">00 <small>cơ sở</small></div>
+                <span class="kpi-trend">Chưa có đối tác đăng ký</span>
+              </div>
+            </div>
+
+            <div class="admin-dashboard-row">
+              <div class="admin-chart-box">
+                <div class="ac-head">
+                  <h3>Tỷ trọng Doanh thu theo Thương hiệu K-Beauty</h3>
+                  <span class="badge-month">Tháng 11 / 2026</span>
+                </div>
+                <div class="brand-bar-group">
+                  <div class="bbar-item">
+                    <div class="bbar-info"><span>NEURADERM (Medytox Bio)</span> <strong>0% (0 đ)</strong></div>
+                    <div class="bbar-track"><div class="bbar-fill neuraderm" style="width: 0%;"></div></div>
+                  </div>
+                  <div class="bbar-item">
+                    <div class="bbar-info"><span>Dr. BARGO Clinic Barrier</span> <strong>0% (0 đ)</strong></div>
+                    <div class="bbar-track"><div class="bbar-fill dr-bargo" style="width: 0%;"></div></div>
+                  </div>
+                  <div class="bbar-item">
+                    <div class="bbar-info"><span>SMIB Scalp & Postbiotics</span> <strong>0% (0 đ)</strong></div>
+                    <div class="bbar-track"><div class="bbar-fill smib" style="width: 0%;"></div></div>
+                  </div>
+                  <div class="bbar-item">
+                    <div class="bbar-info"><span>Stem C & Dòng OEM Riêng</span> <strong>0% (0 đ)</strong></div>
+                    <div class="bbar-track"><div class="bbar-fill stem-c" style="width: 0%;"></div></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="admin-ops-box">
+                <h3>Trạng thái Hạ tầng & Kết nối Quốc tế</h3>
+                <div class="ops-list">
+                  <div class="ops-item">
+                    <span class="ops-dot online"></span>
+                    <div>
+                      <strong>Máy chủ R&D Teheran-ro, Seoul</strong>
+                      <small>Đồng bộ dữ liệu kiểm định lâm sàng 0.1s</small>
+                    </div>
+                  </div>
+                  <div class="ops-item">
+                    <span class="ops-dot online"></span>
+                    <div>
+                      <strong>Cổng Hải Quan & Thông Quan Cảng Cát Lái</strong>
+                      <small>Sẵn sàng cho các lô hàng nhập khẩu chính ngạch</small>
+                    </div>
+                  </div>
+                  <div class="ops-item">
+                    <span class="ops-dot online"></span>
+                    <div>
+                      <strong>Hệ thống Phân quyền Đại lý Cục Dược</strong>
+                      <small>Cập nhật số công bố tự động vào hợp đồng B2B</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Admin Tab 2: Orders & Leads Management -->
+          <div class="portal-tab-pane" id="adminPaneOrders">
+            <div class="pane-header-row">
+              <div>
+                <h2>Danh Sách Yêu Cầu Hợp Tác & Đơn Hàng B2B</h2>
+                <p>Tiếp nhận, thẩm định chiết khấu đại lý và điều phối xuất kho từ nhà máy Hàn Quốc.</p>
+              </div>
+              <div class="pane-actions">
+                <button type="button" class="btn-secondary" onclick="alert('Đã xuất file báo cáo Excel Đơn hàng B2B thành công!')">📥 Xuất Excel</button>
+              </div>
+            </div>
+
+            <div class="portal-table-wrap">
+              <table class="portal-table admin-table" id="adminOrdersTable">
+                <thead>
+                  <tr>
+                    <th>Mã yêu cầu</th>
+                    <th>Đối tác / Phòng khám</th>
+                    <th>Số điện thoại</th>
+                    <th>Nội dung / Nhu cầu</th>
+                    <th>Ngân sách</th>
+                    <th>Trạng thái</th>
+                    <th>Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody id="adminOrdersTbody">
+                  <tr id="adminNoOrdersRow">
+                    <td colspan="7" class="text-center py-5 text-muted" style="text-align: center; padding: 40px 15px;">
+                      <div style="font-size: 2rem; margin-bottom: 8px; opacity: 0.5;">📋</div>
+                      <strong style="display: block; font-size: 0.95rem; margin-bottom: 4px; color: var(--text-sand);">Chưa có yêu cầu hợp tác hoặc đơn hàng B2B nào</strong>
+                      <small style="color: var(--text-muted);">Khi khách hàng điền form liên hệ hoặc tạo đơn hàng B2B, dữ liệu thực tế sẽ được tiếp nhận và hiển thị tại đây.</small>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Admin Tab 3: Catalog Management -->
+          <div class="portal-tab-pane" id="adminPaneCatalog">
+            <div class="pane-header-row">
+              <div>
+                <h2>Quản Lý Danh Mục & Sản Phẩm beVIBE</h2>
+                <p>Điều chỉnh trạng thái hiển thị, gắn nhãn HOT/NEW (신제품) và giá bán sỉ đại lý.</p>
+              </div>
+              <div class="pane-actions">
+                <button type="button" class="btn-primary" onclick="alert('Mở form thêm sản phẩm mới vào hệ thống beVIBE!')">+ Thêm Sản Phẩm Mới</button>
+              </div>
+            </div>
+
+            <div class="portal-table-wrap">
+              <table class="portal-table admin-table">
+                <thead>
+                  <tr>
+                    <th>Sản phẩm</th>
+                    <th>Thương hiệu</th>
+                    <th>Giá niêm yết</th>
+                    <th>Giá sỉ (-38%)</th>
+                    <th>Trạng thái kho</th>
+                    <th>Nhãn nổi bật</th>
+                    <th>Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Dr.BARGO Intensive Barrier Serum</strong></td>
+                    <td><span class="badge-brand dr-bargo">Dr. Bargo</span></td>
+                    <td>1.250.000 đ</td>
+                    <td class="text-gold">775.000 đ</td>
+                    <td><span class="stock-pill in-stock">Còn hàng (1.240)</span></td>
+                    <td><span class="catalog-tag hot">🔥 HOT</span></td>
+                    <td>
+                      <button type="button" class="btn-tbl-action" onclick="alert('Chỉnh sửa sản phẩm Dr. Bargo Serum')">Sửa</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><strong>NEURADERM M.Booster Face Pro</strong></td>
+                    <td><span class="badge-brand neuraderm">NEURADERM</span></td>
+                    <td>1.850.000 đ</td>
+                    <td class="text-gold">1.147.000 đ</td>
+                    <td><span class="stock-pill in-stock">Còn hàng (850)</span></td>
+                    <td><span class="catalog-tag new">✨ MỚI (신제품)</span></td>
+                    <td>
+                      <button type="button" class="btn-tbl-action" onclick="alert('Chỉnh sửa sản phẩm Neuraderm M.Booster')">Sửa</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><strong>SMIB Hair Darkening Shampoo 500ml</strong></td>
+                    <td><span class="badge-brand smib">SMIB</span></td>
+                    <td>890.000 đ</td>
+                    <td class="text-gold">551.800 đ</td>
+                    <td><span class="stock-pill in-stock">Còn hàng (2.100)</span></td>
+                    <td><span class="catalog-tag hot">🔥 Bán chạy</span></td>
+                    <td>
+                      <button type="button" class="btn-tbl-action" onclick="alert('Chỉnh sửa sản phẩm SMIB Shampoo')">Sửa</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Admin Tab 4: Partner CRM -->
+          <div class="portal-tab-pane" id="adminPanePartners">
+            <div class="pane-header-row">
+              <div>
+                <h2>Quản Lý Đại Lý & Phòng Khám Đối Tác (CRM)</h2>
+                <p>Phân quyền cấp bậc chiết khấu (Bạc 28%, Vàng 38%, Kim Cương 45%) và vùng bảo hộ độc quyền.</p>
+              </div>
+            </div>
+
+            <div class="portal-table-wrap">
+              <table class="portal-table admin-table">
+                <thead>
+                  <tr>
+                    <th>Clinic / Đối tác</th>
+                    <th>Người đại diện</th>
+                    <th>Khu vực</th>
+                    <th>Cấp bậc</th>
+                    <th>Chiết khấu</th>
+                    <th>Lũy kế</th>
+                    <th>Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody id="adminPartnersTbody">
+                  <tr id="adminNoPartnersRow">
+                    <td colspan="7" class="text-center py-5 text-muted" style="text-align: center; padding: 40px 15px;">
+                      <div style="font-size: 2rem; margin-bottom: 8px; opacity: 0.5;">🏥</div>
+                      <strong style="display: block; font-size: 0.95rem; margin-bottom: 4px; color: var(--text-sand);">Chưa có đối tác hoặc phòng khám nào đăng ký</strong>
+                      <small style="color: var(--text-muted);">Hồ sơ đại lý thật sẽ tự động được ghi nhận tại đây khi các bác sĩ, spa hoặc clinic đăng ký tài khoản.</small>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Admin Tab 5: Training Mesotherapy CMS -->
+          <div class="portal-tab-pane" id="adminPaneTraining">
+            <div class="pane-header-row">
+              <div>
+                <h2>Quản Lý Học Viên & Khóa Đào Tạo Mesotherapy</h2>
+                <p>Danh sách bác sĩ & kỹ thuật viên đăng ký các khóa đào tạo trực tuyến, thực chiến và tu nghiệp Seoul.</p>
+              </div>
+            </div>
+
+            <div class="portal-table-wrap">
+              <table class="portal-table admin-table">
+                <thead>
+                  <tr>
+                    <th>Học viên</th>
+                    <th>Clinic / Đơn vị</th>
+                    <th>Khóa học</th>
+                    <th>Thời gian</th>
+                    <th>Trạng thái lớp</th>
+                    <th>Chứng chỉ</th>
+                  </tr>
+                </thead>
+                <tbody id="adminTrainingTbody">
+                  <tr id="adminNoTrainingRow">
+                    <td colspan="6" class="text-center py-5 text-muted" style="text-align: center; padding: 40px 15px;">
+                      <div style="font-size: 2rem; margin-bottom: 8px; opacity: 0.5;">🎓</div>
+                      <strong style="display: block; font-size: 0.95rem; margin-bottom: 4px; color: var(--text-sand);">Chưa có học viên nào đăng ký khóa đào tạo</strong>
+                      <small style="color: var(--text-muted);">Danh sách đăng ký khóa Mesotherapy chuyển giao công nghệ sẽ hiển thị tại đây khi có học viên gửi phiếu.</small>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- ================= AUTHENTICATION MODAL (LOGIN & REGISTER) ================= -->
+  <div id="authModal" class="modal-overlay auth-modal-overlay" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-dialog auth-modal-dialog">
+      <div class="auth-modal-header">
+        <div class="auth-brand-logo">
+          <img src="/assets/images/logo.png" alt="beVIBE" class="auth-logo-img">
+          <div>
+            <h3>beVIBE Partner Portal</h3>
+            <p>Hệ thống Đăng nhập & Quản lý Phân hệ B2B</p>
+          </div>
+        </div>
+        <button class="modal-close-btn" id="closeAuthModalBtn" aria-label="Đóng cửa sổ">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Tabs: Login vs Register -->
+      <div class="auth-tabs">
+        <button type="button" class="auth-tab-btn active" data-auth-tab="login">Đăng nhập tài khoản</button>
+        <button type="button" class="auth-tab-btn" data-auth-tab="register">Đăng ký Đối tác / Đại lý mới</button>
+      </div>
+
+      <div class="auth-modal-body">
+        <!-- Form Đăng nhập -->
+        <form id="authLoginForm" class="auth-form active">
+          <div class="form-group">
+            <label for="loginEmail">Email đăng nhập *</label>
+            <input type="email" id="loginEmail" class="form-control" placeholder="bevibevn@gmail.com hoặc email đối tác" required autocomplete="username">
+          </div>
+          <div class="form-group">
+            <label for="loginPassword">Mật khẩu *</label>
+            <div class="password-input-wrap">
+              <input type="password" id="loginPassword" class="form-control" placeholder="Nhập mật khẩu" required autocomplete="current-password">
+              <button type="button" class="btn-toggle-pwd" id="togglePasswordBtn" aria-label="Hiện/Ẩn mật khẩu">
+                <svg class="eye-open" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                <svg class="eye-closed" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Admin Credentials Quick Hint -->
+          <div class="auth-hint-box">
+            <div class="hint-title">🔐 Tài khoản Quản trị Admin:</div>
+            <div class="hint-cred">Email: <code>bevibevn@gmail.com</code> · Mật khẩu: <code>Bevibe123@</code></div>
+            <button type="button" class="btn-fill-admin" id="btnFillAdminCred">⚡ Tự động điền tài khoản Admin</button>
+          </div>
+
+          <div class="auth-form-options">
+            <label class="checkbox-label">
+              <input type="checkbox" id="loginRemember" checked>
+              <span>Ghi nhớ đăng nhập trên thiết bị này</span>
+            </label>
+            <a href="#contact" class="auth-forgot-link">Quên mật khẩu?</a>
+          </div>
+          <div class="auth-form-submit">
+            <button type="submit" class="btn-primary auth-submit-btn">
+              <span>Đăng nhập vào Hệ thống ↗</span>
+            </button>
+          </div>
+        </form>
+
+        <!-- Form Đăng ký -->
+        <form id="authRegisterForm" class="auth-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="regFullName">Họ và tên đại diện *</label>
+              <input type="text" id="regFullName" class="form-control" placeholder="Bs. Nguyễn Thu Trang" required>
+            </div>
+            <div class="form-group">
+              <label for="regPhone">Số điện thoại / Zalo *</label>
+              <input type="tel" id="regPhone" class="form-control" placeholder="0909 123 456" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="regEmail">Email công việc *</label>
+            <input type="email" id="regEmail" class="form-control" placeholder="trang.clinic@gmail.com" required>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="regClinic">Tên Clinic / Spa / Doanh nghiệp *</label>
+              <input type="text" id="regClinic" class="form-control" placeholder="Aesthetic & Skin Clinic" required>
+            </div>
+            <div class="form-group">
+              <label for="regInterest">Nhu cầu hợp tác chính *</label>
+              <select id="regInterest" class="form-control">
+                <option value="distribution">Đại lý phân phối độc quyền (Neuraderm / Dr. Bargo / SMIB)</option>
+                <option value="oem">Gia công sản xuất OEM/ODM thương hiệu riêng</option>
+                <option value="training">Đào tạo Mesotherapy & Chuyển giao công nghệ</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="regPassword">Tạo mật khẩu đăng nhập *</label>
+            <input type="password" id="regPassword" class="form-control" placeholder="Ít nhất 6 ký tự" required>
+          </div>
+          <div class="auth-form-submit">
+            <button type="submit" class="btn-primary auth-submit-btn">
+              <span>Đăng ký tài khoản Đối tác & Nhận chiết khấu sỉ ↗</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 
   <!-- ================= Interactive Brand Detail Modal ================= -->
   <div id="brandDetailModal" class="modal-overlay" role="dialog" aria-modal="true" aria-hidden="true">
