@@ -3,6 +3,7 @@
  * Korean Aesthetic & B2B Cosmetic Partnership Platform
  */
 import { i18nData, brandsData, servicesDetailsData } from './translations.js';
+import { blogPosts, blogCategories } from './blog.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   // --- State ---
@@ -106,6 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
     renderProductCatalog();
     renderTrendTags();
     if (searchDropdown && !searchDropdown.hidden) renderSearchDropdown();
+    if (typeof renderPageHero === 'function') renderPageHero();
 
     // Re-calculate OEM estimate with localized currency/text
     calculateOemEstimate();
@@ -141,6 +143,8 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   const catalogState = { brand: 'all', line: 'all', category: 'all', query: '', expanded: false };
+  // Products page sidebar filters (multi-select)
+  const pageFilter = { cats: new Set(), brands: new Set(), lines: new Set() };
 
   function getLine(brandId, lineId) {
     const brand = brandsData.find((b) => b.id === brandId);
@@ -251,7 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const desc = isVi ? b.descVi : b.descKo;
       return `
         <article class="brand-tile">
-          <button type="button" class="brand-tile-media" data-action="brand-modal" data-brand-id="${b.id}" aria-label="${b.name}">
+          <button type="button" class="brand-tile-media" data-action="brand-products" data-brand-id="${b.id}" aria-label="${b.name}">
             <img src="${b.coverImage || '/assets/images/hero.jpg'}" alt="${b.name}" loading="lazy">
             <span class="brand-tile-count">${count} ${isVi ? 'sản phẩm' : '개 품목'}</span>
           </button>
@@ -270,10 +274,7 @@ document.addEventListener('DOMContentLoaded', () => {
             ` : ''}
             <div class="brand-tile-actions">
               <button type="button" class="brand-tile-primary" data-action="brand-products" data-brand-id="${b.id}">
-                ${isVi ? 'Xem sản phẩm →' : '제품 보기 →'}
-              </button>
-              <button type="button" class="brand-tile-secondary" data-action="brand-modal" data-brand-id="${b.id}">
-                ${isVi ? 'Về thương hiệu' : '브랜드 소개'}
+                ${isVi ? 'Xem chi tiết →' : '자세히 보기 →'}
               </button>
             </div>
           </div>
@@ -429,6 +430,7 @@ document.addEventListener('DOMContentLoaded', () => {
    */
   function renderProductCatalog() {
     if (!productCatalogGrid) return;
+    if (isFilterPage()) { renderFilterPage(); return; }
     const isVi = currentLang === 'vi';
     const list = getFilteredProducts();
     const selectedBrand = brandsData.find((b) => b.id === catalogState.brand);
@@ -449,13 +451,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!items.length) return '';
         return `
           <section class="line-group">
-            <header class="line-group-head">
+            <div class="line-group-head">
               <div>
                 <span class="line-group-brand">${selectedBrand.name}</span>
                 <h3 class="line-group-title">${isVi ? l.nameVi : l.nameKo} <span>${items.length} ${isVi ? 'sản phẩm' : '개 제품'}</span></h3>
                 <p class="line-group-desc">${isVi ? l.descVi : l.descKo}</p>
               </div>
-            </header>
+            </div>
             <div class="line-group-grid">${items.map(productCardHtml).join('')}</div>
           </section>
         `;
@@ -595,7 +597,7 @@ document.addEventListener('DOMContentLoaded', () => {
     closeSearchDropdown();
     if (headerSearchInput) headerSearchInput.blur();
     document.querySelector('.site-header')?.classList.remove('search-open');
-    setCatalogFilter({ query: q, brand: 'all', line: 'all', category: 'all' });
+    navigate(q ? `san-pham?q=${encodeURIComponent(q)}` : 'san-pham');
   }
 
   if (headerSearchInput) {
@@ -637,6 +639,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('catalogPrev')?.addEventListener('click', () => scrollCarousel(-1));
   document.getElementById('catalogNext')?.addEventListener('click', () => scrollCarousel(1));
   document.getElementById('catalogViewAllBtn')?.addEventListener('click', () => {
+    if (currentRoute.page === 'home') { navigate('san-pham'); return; }
     const wasGrid = catalogState.expanded || !!catalogState.query;
     if (wasGrid) {
       catalogState.expanded = false;
@@ -698,6 +701,240 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 4000);
   })();
 
+
+  /* ==========================================================================
+     Products page: checkbox filter sidebar (multi-select per group)
+     ========================================================================== */
+  function isFilterPage() {
+    const section = document.getElementById('products');
+    return !!(section && section.classList.contains('is-filter-page'));
+  }
+
+  function getPageFilteredProducts() {
+    const base = catalogState.query ? searchProducts(catalogState.query) : productIndex;
+    return base.filter((e) =>
+      (pageFilter.cats.size === 0 || pageFilter.cats.has(e.category)) &&
+      (pageFilter.brands.size === 0 || pageFilter.brands.has(e.brandId)) &&
+      (pageFilter.lines.size === 0 || pageFilter.lines.has(`${e.brandId}|${e.line}`))
+    );
+  }
+
+  function filterOptionsFor(group) {
+    const isVi = currentLang === 'vi';
+    if (group === 'cats') {
+      return CATEGORY_DEFS.map((c) => ({
+        value: c.id,
+        label: isVi ? c.vi : c.ko,
+        count: productIndex.filter((e) => e.category === c.id).length
+      }));
+    }
+    if (group === 'brands') {
+      return brandsData.map((b) => ({ value: b.id, label: b.name, count: b.productsVi.length }));
+    }
+    // lines: only for the selected brands (all brands when none selected)
+    const brands = pageFilter.brands.size ? brandsData.filter((b) => pageFilter.brands.has(b.id)) : brandsData;
+    return brands.flatMap((b) => (b.lines || []).map((l) => ({
+      value: `${b.id}|${l.id}`,
+      label: isVi ? l.nameVi : l.nameKo,
+      sub: b.name,
+      count: b.productsVi.filter((p) => p.line === l.id).length
+    })));
+  }
+
+  function filterLabel(group, value) {
+    const opt = filterOptionsFor(group).find((o) => o.value === value) ||
+      (group === 'lines' ? (() => {
+        const [bId, lId] = value.split('|');
+        return { label: lineLabel(bId, lId) };
+      })() : null);
+    return opt ? opt.label : value;
+  }
+
+  function renderCatalogSidebar() {
+    const sidebar = document.getElementById('catalogSidebar');
+    if (!sidebar) return;
+    const isVi = currentLang === 'vi';
+    const active = pageFilter.cats.size + pageFilter.brands.size + pageFilter.lines.size;
+    const groups = [
+      { key: 'cats', title: isVi ? 'Danh mục' : '카테고리' },
+      { key: 'brands', title: isVi ? 'Thương hiệu' : '브랜드' },
+      { key: 'lines', title: isVi ? 'Dòng sản phẩm' : '제품 라인' }
+    ];
+    sidebar.innerHTML = `
+      <div class="filter-head">
+        <strong>${isVi ? 'Bộ lọc' : '필터'}</strong>
+        ${active ? `<button type="button" class="filter-clear" data-action="pf-clear">${isVi ? 'Xóa tất cả' : '전체 해제'}</button>` : ''}
+      </div>
+      ${groups.map((g) => {
+        const opts = filterOptionsFor(g.key);
+        if (!opts.length) return '';
+        return `
+          <section class="filter-group">
+            <h3 class="filter-group-title">${g.title}</h3>
+            <ul class="filter-list">
+              ${opts.map((o) => `
+                <li>
+                  <label class="filter-option">
+                    <input type="checkbox" data-pf-group="${g.key}" value="${escapeHtml(o.value)}" ${pageFilter[g.key].has(o.value) ? 'checked' : ''}>
+                    <span class="filter-option-label">${escapeHtml(o.label)}${o.sub ? ` <small>· ${escapeHtml(o.sub)}</small>` : ''}</span>
+                    <span class="filter-option-count">(${o.count})</span>
+                  </label>
+                </li>
+              `).join('')}
+            </ul>
+          </section>
+        `;
+      }).join('')}
+    `;
+  }
+
+  function renderFilterPage() {
+    const isVi = currentLang === 'vi';
+    const list = getPageFilteredProducts();
+
+    renderCatalogSidebar();
+
+    productCatalogGrid.classList.remove('is-carousel', 'is-grouped');
+    productCatalogGrid.classList.add('is-grid');
+    productCatalogGrid.innerHTML = list.length
+      ? list.map(productCardHtml).join('')
+      : `
+        <div class="catalog-empty">
+          <p>${isVi ? 'Chưa có sản phẩm phù hợp với bộ lọc hiện tại.' : '현재 필터에 맞는 제품이 없습니다.'}</p>
+          <button type="button" class="btn-secondary" data-action="pf-clear">${isVi ? 'Xóa bộ lọc' : '필터 해제'}</button>
+        </div>
+      `;
+
+    const meta = document.getElementById('catalogResultMeta');
+    if (meta) {
+      const chips = [];
+      if (catalogState.query) {
+        chips.push(`<button type="button" class="filter-chip" data-action="clear-filter" data-filter="query">“${escapeHtml(catalogState.query)}” <span aria-hidden="true">✕</span></button>`);
+      }
+      ['cats', 'brands', 'lines'].forEach((g) => {
+        pageFilter[g].forEach((v) => {
+          chips.push(`<button type="button" class="filter-chip" data-action="pf-remove" data-group="${g}" data-value="${escapeHtml(v)}">${escapeHtml(filterLabel(g, v))} <span aria-hidden="true">✕</span></button>`);
+        });
+      });
+      meta.innerHTML = `
+        <span>${isVi ? `Hiển thị <strong>${list.length}</strong> sản phẩm` : `<strong>${list.length}</strong>개 제품`}</span>
+        ${chips.join('')}
+      `;
+    }
+
+    const viewAllBtn = document.getElementById('catalogViewAllBtn');
+    if (viewAllBtn) viewAllBtn.hidden = true;
+    document.querySelectorAll('#catalogPrev, #catalogNext').forEach((btn) => { btn.hidden = true; });
+
+    const toggle = document.getElementById('catalogFilterToggle');
+    if (toggle) {
+      const n = pageFilter.cats.size + pageFilter.brands.size + pageFilter.lines.size;
+      toggle.querySelector('span').textContent = (isVi ? 'Bộ lọc' : '필터') + (n ? ` (${n})` : '');
+    }
+  }
+
+  document.getElementById('catalogSidebar')?.addEventListener('change', (e) => {
+    const cb = e.target.closest('input[data-pf-group]');
+    if (!cb) return;
+    const group = cb.getAttribute('data-pf-group');
+    if (cb.checked) pageFilter[group].add(cb.value);
+    else pageFilter[group].delete(cb.value);
+    // Unticking a brand also drops its product lines
+    if (group === 'brands' && !cb.checked) {
+      Array.from(pageFilter.lines).forEach((v) => { if (v.startsWith(`${cb.value}|`)) pageFilter.lines.delete(v); });
+    }
+    renderProductCatalog();
+  });
+
+  document.getElementById('catalogFilterToggle')?.addEventListener('click', () => {
+    document.getElementById('catalogLayout')?.classList.toggle('filters-open');
+  });
+
+
+  /* ==========================================================================
+     Blog: featured posts (home), list (#/blog) and post detail (#/blog/<slug>)
+     ========================================================================== */
+  const blogState = { featured: 'all', page: 'all' };
+
+  function formatPostDate(iso) {
+    const d = new Date(`${iso}T00:00:00`);
+    return currentLang === 'vi'
+      ? `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`
+      : `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`;
+  }
+
+  function blogCategoryLabel(id) {
+    const c = blogCategories.find((x) => x.id === id);
+    return c ? c.label : '';
+  }
+
+  function blogCardHtml(post) {
+    return `
+      <a class="blog-card" href="#/blog/${post.slug}">
+        <span class="blog-card-media">
+          <img src="${post.cover}" alt="${escapeHtml(post.title)}" loading="lazy">
+          <span class="blog-card-cat">${escapeHtml(blogCategoryLabel(post.category))}</span>
+        </span>
+        <span class="blog-card-body">
+          <span class="blog-card-title">${escapeHtml(post.title)}</span>
+          <span class="blog-card-meta">${formatPostDate(post.date)} · ${post.readTime} phút đọc</span>
+        </span>
+      </a>
+    `;
+  }
+
+  function blogChipsHtml(active, target) {
+    const items = [{ id: 'all', label: 'Tất cả' }, ...blogCategories];
+    return items.map((c) => `
+      <button type="button" class="blog-chip ${active === c.id ? 'active' : ''}" data-action="blog-cat" data-target="${target}" data-cat="${c.id}">${escapeHtml(c.label)}</button>
+    `).join('');
+  }
+
+  function sortedPosts(cat) {
+    return blogPosts
+      .filter((p) => cat === 'all' || p.category === cat)
+      .slice()
+      .sort((a, b) => b.date.localeCompare(a.date));
+  }
+
+  function renderBlogFeatured() {
+    const chips = document.getElementById('blogFeaturedChips');
+    const grid = document.getElementById('blogFeaturedGrid');
+    if (!grid) return;
+    if (chips) chips.innerHTML = blogChipsHtml(blogState.featured, 'featured');
+    grid.innerHTML = sortedPosts(blogState.featured).slice(0, 4).map(blogCardHtml).join('');
+  }
+
+  function renderBlogPage() {
+    const chips = document.getElementById('blogPageChips');
+    const grid = document.getElementById('blogPageGrid');
+    if (!grid) return;
+    if (chips) chips.innerHTML = blogChipsHtml(blogState.page, 'page');
+    grid.innerHTML = sortedPosts(blogState.page).map(blogCardHtml).join('');
+  }
+
+  function renderBlogPost(post) {
+    const body = document.getElementById('blogPostBody');
+    if (!body || !post) return;
+    const products = (post.products || [])
+      .map((id) => productIndex.find((e) => e.id === id))
+      .filter(Boolean);
+    const related = blogPosts.filter((p) => p.slug !== post.slug).slice(0, 3);
+    body.innerHTML = `
+      <article class="blog-article">${post.content}</article>
+      ${products.length ? `
+        <section class="blog-related-products">
+          <h2 class="blog-section-title">Sản phẩm gợi ý</h2>
+          <div class="product-catalog-grid is-grid blog-products-grid">${products.map(productCardHtml).join('')}</div>
+        </section>` : ''}
+      <section class="blog-related">
+        <h2 class="blog-section-title">Bài viết liên quan</h2>
+        <div class="blog-grid blog-grid--related">${related.map(blogCardHtml).join('')}</div>
+        <div class="blog-more"><a href="#/blog" class="blog-more-btn">Xem tất cả bài viết</a></div>
+      </section>
+    `;
+  }
+
   /**
    * Single delegated handler for every [data-action] element
    */
@@ -725,29 +962,41 @@ document.addEventListener('DOMContentLoaded', () => {
         break;
       case 'brand-products':
         if (headerSearchInput) headerSearchInput.value = '';
-        setCatalogFilter({ brand: el.getAttribute('data-brand-id'), line: 'all', category: 'all', query: '' });
+        navigate(`thuong-hieu/${el.getAttribute('data-brand-id')}`);
+        break;
+      case 'brand-quote':
+        prefillBrandInquiry(el.getAttribute('data-brand-name'));
         break;
       case 'brand-tab':
         setCatalogFilter({ brand: el.getAttribute('data-brand-id'), line: 'all' }, { scroll: false });
         break;
       case 'line': {
         const insideProducts = !!el.closest('#products');
-        if (headerSearchInput && !insideProducts) headerSearchInput.value = '';
-        setCatalogFilter(
-          insideProducts
-            ? { brand: el.getAttribute('data-brand-id'), line: el.getAttribute('data-line') }
-            : { brand: el.getAttribute('data-brand-id'), line: el.getAttribute('data-line'), category: 'all', query: '' },
-          { scroll: !insideProducts }
-        );
+        if (insideProducts) {
+          setCatalogFilter({ brand: el.getAttribute('data-brand-id'), line: el.getAttribute('data-line') }, { scroll: false });
+        } else {
+          if (headerSearchInput) headerSearchInput.value = '';
+          navigate(`thuong-hieu/${el.getAttribute('data-brand-id')}?line=${encodeURIComponent(el.getAttribute('data-line'))}`);
+        }
         break;
       }
       case 'category': {
-        const insideProducts = !!el.closest('#products');
-        setCatalogFilter({ category: el.getAttribute('data-category') }, { scroll: !insideProducts });
+        // Filter in place only on the products / brand pages; elsewhere open the products page
+        const insideProducts = !!el.closest('#products') && currentRoute.page !== 'home';
+        if (insideProducts) {
+          setCatalogFilter({ category: el.getAttribute('data-category') }, { scroll: false });
+        } else {
+          const cat = el.getAttribute('data-category');
+          navigate(cat && cat !== 'all' ? `san-pham?cat=${encodeURIComponent(cat)}` : 'san-pham');
+        }
         break;
       }
       case 'clear-filter': {
         const key = el.getAttribute('data-filter');
+        if (key === 'brand' && currentRoute.page === 'brand') {
+          navigate('san-pham');
+          break;
+        }
         if (key === 'query') {
           catalogState.query = '';
           if (headerSearchInput) headerSearchInput.value = '';
@@ -758,6 +1007,29 @@ document.addEventListener('DOMContentLoaded', () => {
         renderProductCatalog();
         break;
       }
+      case 'pf-remove': {
+        const group = el.getAttribute('data-group');
+        const value = el.getAttribute('data-value');
+        if (pageFilter[group]) pageFilter[group].delete(value);
+        if (group === 'brands') {
+          Array.from(pageFilter.lines).forEach((v) => { if (v.startsWith(`${value}|`)) pageFilter.lines.delete(v); });
+        }
+        renderProductCatalog();
+        break;
+      }
+      case 'blog-cat':
+        blogState[el.getAttribute('data-target')] = el.getAttribute('data-cat');
+        if (el.getAttribute('data-target') === 'page') renderBlogPage();
+        else renderBlogFeatured();
+        break;
+      case 'pf-clear':
+        pageFilter.cats.clear();
+        pageFilter.brands.clear();
+        pageFilter.lines.clear();
+        catalogState.query = '';
+        if (headerSearchInput) headerSearchInput.value = '';
+        renderProductCatalog();
+        break;
       case 'reset-filters':
         if (headerSearchInput) headerSearchInput.value = '';
         setCatalogFilter({ brand: 'all', line: 'all', category: 'all', query: '' }, { scroll: false });
@@ -1701,7 +1973,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let currentSlide = 0;
     const totalSlides = slides.length;
-    const slideDuration = 4500; // 4.5s per slide
+    const slideDuration = 8000; // 8s per slide
     let progressStartTime = performance.now();
     let animFrame = null;
     let isPaused = false;
@@ -1720,12 +1992,30 @@ document.addEventListener('DOMContentLoaded', () => {
       'smib': '1000억 포스트바이오틱스 · 컬러 체인지 샴푸 및 두피 케어'
     };
 
-    function updateSlide(index) {
+    // dir: 1 = next slide slides in from the right, -1 = previous slides in from the left
+    function updateSlide(index, dir = 1) {
+      const prevSlide = currentSlide;
       currentSlide = (index + totalSlides) % totalSlides;
 
       // Update slide elements
       slides.forEach((slide, i) => {
-        slide.classList.toggle('active', i === currentSlide);
+        slide.classList.remove('is-leaving');
+        if (i === currentSlide && i !== prevSlide) {
+          // place the incoming slide off-screen without animating, then slide it in
+          slide.style.transition = 'none';
+          slide.style.transform = `translateX(${dir > 0 ? 100 : -100}%)`;
+          void slide.offsetWidth;
+          slide.style.transition = '';
+          slide.style.transform = '';
+          slide.classList.add('active');
+        } else if (i === prevSlide && i !== currentSlide) {
+          slide.classList.remove('active');
+          slide.classList.add('is-leaving');
+          slide.style.transform = `translateX(${dir > 0 ? -100 : 100}%)`;
+        } else {
+          slide.classList.toggle('active', i === currentSlide);
+          if (i !== currentSlide) slide.style.transform = '';
+        }
       });
 
       // Update indicators
@@ -1776,7 +2066,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Controls
     if (prevBtn) {
-      prevBtn.addEventListener('click', () => updateSlide(currentSlide - 1));
+      prevBtn.addEventListener('click', () => updateSlide(currentSlide - 1, -1));
     }
     if (nextBtn) {
       nextBtn.addEventListener('click', () => updateSlide(currentSlide + 1));
@@ -1785,7 +2075,7 @@ document.addEventListener('DOMContentLoaded', () => {
     dots.forEach(dot => {
       dot.addEventListener('click', () => {
         const target = parseInt(dot.getAttribute('data-goto'), 10);
-        updateSlide(target);
+        updateSlide(target, target < currentSlide ? -1 : 1);
       });
     });
 
@@ -1794,7 +2084,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const brandKey = chip.getAttribute('data-brand-chip');
         const targetIndex = Array.from(slides).findIndex(s => s.getAttribute('data-brand') === brandKey);
         if (targetIndex !== -1) {
-          updateSlide(targetIndex);
+          updateSlide(targetIndex, targetIndex < currentSlide ? -1 : 1);
         }
       });
     });
@@ -2611,9 +2901,267 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+
+  /* ==========================================================================
+     Page router (hash based). Each header menu item opens its own page:
+     #/san-pham, #/thuong-hieu, #/thuong-hieu/<brandId>, #/du-toan, #/ve-bevibe, #/blog.
+     Empty hash shows the home page; plain anchors (#contact…) just scroll.
+     ========================================================================== */
+  const publicMain = document.querySelector('#publicWebsiteView > main');
+  const pageHero = document.getElementById('pageHero');
+  const productsSection = document.getElementById('products');
+  const baseTitle = document.title;
+  let currentRoute = { page: 'home', params: {} };
+
+  const PAGE_DEFS = {
+    'san-pham': {
+      sections: ['#products', '#contact'],
+      vi: { eyebrow: 'OFFICIAL CATALOG', title: 'Danh mục sản phẩm', desc: 'Toàn bộ mỹ phẩm Hàn Quốc chính hãng do beVIBE phân phối. Lọc theo danh mục, thương hiệu và dòng sản phẩm để tìm đúng sản phẩm bạn cần.' },
+      ko: { eyebrow: 'OFFICIAL CATALOG', title: '제품 카탈로그', desc: '비바이브가 공식 유통하는 한국 화장품 전 제품. 카테고리, 브랜드, 제품 라인별로 찾아보세요.' }
+    },
+    'thuong-hieu': {
+      sections: ['#brands', '#contact'],
+      vi: { eyebrow: 'OUR BRANDS', title: 'Thương hiệu', desc: 'Các thương hiệu mỹ phẩm Hàn Quốc được beVIBE phân phối độc quyền tại Việt Nam. Chọn một thương hiệu để xem đầy đủ sản phẩm theo từng dòng.' },
+      ko: { eyebrow: 'OUR BRANDS', title: '브랜드', desc: '비바이브가 베트남에서 독점 유통하는 한국 화장품 브랜드. 브랜드를 선택하면 라인별 전체 제품을 볼 수 있습니다.' }
+    },
+    'brand': {
+      sections: ['#products', '#contact']
+    },
+    'post': {
+      sections: ['#blogPost', '#contact']
+    },
+    'du-toan': {
+      sections: ['#oemGuide', '#calculator', '#contact'],
+      vi: { eyebrow: 'OEM COST ESTIMATOR', title: 'Dự toán chi phí', desc: 'Ước tính nhanh chi phí và thời gian sản xuất OEM theo loại sản phẩm, bao bì và số lượng đặt hàng.' },
+      ko: { eyebrow: 'OEM COST ESTIMATOR', title: '비용 견적', desc: 'OEM 생산 비용과 기간을 제품 유형, 패키지, 수량별로 빠르게 산출하세요.' }
+    },
+    've-bevibe': {
+      sections: ['#about', '.usp-strip', '#contact'],
+      vi: { eyebrow: 'ABOUT US', title: 'Về beVIBE', desc: 'Đối tác phân phối mỹ phẩm Hàn Quốc chính ngạch, đồng hành cùng nhà bán lẻ, spa, clinic và doanh nghiệp tại Việt Nam.' },
+      ko: { eyebrow: 'ABOUT US', title: '비바이브 소개', desc: '베트남 소매점, 스파, 클리닉, 기업과 함께하는 한국 화장품 공식 유통 파트너.' }
+    },
+    'blog': {
+      sections: ['#blog', '#contact'],
+      vi: { eyebrow: 'BLOG', title: 'Blog', desc: 'Tin tức, kiến thức K-Beauty và cập nhật mới nhất từ beVIBE.' },
+      ko: { eyebrow: 'BLOG', title: '블로그', desc: 'K-뷰티 소식과 비바이브의 최신 업데이트.' }
+    }
+  };
+
+  function parseRoute() {
+    const hash = window.location.hash;
+    if (!hash || hash === '#' || hash === '#/') return { page: 'home', params: {} };
+    if (!hash.startsWith('#/')) return null; // plain in-page anchor
+    const [path, query = ''] = hash.slice(2).split('?');
+    const parts = path.split('/').filter(Boolean);
+    const params = Object.fromEntries(new URLSearchParams(query));
+    if (parts[0] === 'blog' && parts[1] && blogPosts.some((p) => p.slug === parts[1])) {
+      return { page: 'post', slug: parts[1], params };
+    }
+    if (parts[0] === 'thuong-hieu' && parts[1] && brandsData.some((b) => b.id === parts[1])) {
+      return { page: 'brand', brandId: parts[1], params };
+    }
+    return PAGE_DEFS[parts[0]] ? { page: parts[0], params } : { page: 'home', params: {} };
+  }
+
+  function navigate(path) {
+    const target = `#/${path}`;
+    if (window.location.hash === target) renderRoute();
+    else window.location.hash = target;
+  }
+
+  function renderPageHero() {
+    if (!pageHero || currentRoute.page === 'home') return;
+    const isVi = currentLang === 'vi';
+    const crumbs = [`<a href="#">${isVi ? 'Trang chủ' : '홈'}</a>`];
+    let eyebrow = '';
+    let title = '';
+    let desc = '';
+    let media = '';
+    const meta = [];
+    let actions = '';
+    let extra = '';
+
+    if (currentRoute.page === 'post') {
+      const post = blogPosts.find((p) => p.slug === currentRoute.slug);
+      crumbs.push(`<a href="#/blog">Blog</a>`);
+      title = post.title;
+      desc = escapeHtml(post.excerpt);
+      meta.push(blogCategoryLabel(post.category), formatPostDate(post.date), `${post.readTime} phút đọc`);
+    } else if (currentRoute.page === 'brand') {
+      const b = brandsData.find((x) => x.id === currentRoute.brandId);
+      crumbs.push(`<a href="#/thuong-hieu">${isVi ? 'Thương hiệu' : '브랜드'}</a>`);
+      eyebrow = b.badge || '';
+      title = b.name;
+      desc = isVi ? b.descVi : b.descKo;
+      media = b.coverImage ? `<div class="page-hero-media"><img src="${b.coverImage}" alt="${escapeHtml(b.name)}"></div>` : '';
+      meta.push(`${b.productsVi.length} ${isVi ? 'sản phẩm' : '개 제품'}`);
+      if ((b.lines || []).length) meta.push(`${b.lines.length} ${isVi ? 'dòng sản phẩm' : '제품 라인'}`);
+      actions = `
+        <div class="page-hero-actions">
+          <button type="button" class="page-hero-btn primary" data-action="brand-quote" data-brand-name="${escapeHtml(b.name)}">${isVi ? 'Nhận báo giá ↗' : '견적 요청 ↗'}</button>
+        </div>`;
+      const story = isVi ? b.storyVi : b.storyKo;
+      const tech = isVi ? b.techVi : b.techKo;
+      const infoCard = (icon, heading, text) => text ? `
+        <article class="brand-info-card">
+          <h2 class="brand-info-title">${icon}<span>${heading}</span></h2>
+          <p>${text}</p>
+        </article>` : '';
+      extra = (story || tech) ? `
+        <div class="brand-info-grid">
+          ${infoCard('<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>',
+            isVi ? 'Câu chuyện thương hiệu' : '브랜드 히스토리', story)}
+          ${infoCard('<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>',
+            isVi ? 'Công nghệ sinh học & hoạt chất độc quyền' : '핵심 독자 기술 및 유효 성분', tech)}
+        </div>` : '';
+    } else {
+      const t = PAGE_DEFS[currentRoute.page][isVi ? 'vi' : 'ko'];
+      eyebrow = t.eyebrow;
+      title = t.title;
+      desc = t.desc;
+      if (currentRoute.page === 'san-pham') {
+        meta.push(
+          `${productIndex.length} ${isVi ? 'sản phẩm' : '개 제품'}`,
+          `${brandsData.length} ${isVi ? 'thương hiệu' : '개 브랜드'}`,
+          `${CATEGORY_DEFS.length} ${isVi ? 'danh mục' : '개 카테고리'}`
+        );
+      } else if (currentRoute.page === 'thuong-hieu') {
+        meta.push(`${brandsData.length} ${isVi ? 'thương hiệu' : '개 브랜드'}`, `${productIndex.length} ${isVi ? 'sản phẩm' : '개 제품'}`);
+      }
+    }
+    crumbs.push(`<span>${escapeHtml(title)}</span>`);
+
+    pageHero.innerHTML = `
+      <div class="container page-hero-inner ${media ? 'has-media' : ''} ${currentRoute.page === 'post' ? 'is-post' : ''}">
+        <div>
+          <nav class="page-breadcrumb" aria-label="Breadcrumb">${crumbs.join('<span class="sep">/</span>')}</nav>
+          <h1 class="page-hero-title">${escapeHtml(title)}</h1>
+          ${desc ? `<p class="page-hero-desc">${desc}</p>` : ''}
+          ${extra}
+          ${meta.length ? `<div class="page-hero-meta">${meta.map((m) => `<span>${m}</span>`).join('')}</div>` : ''}
+          ${actions}
+        </div>
+        ${media}
+      </div>
+    `;
+    document.title = `${title} · ${baseTitle}`;
+  }
+
+  function renderRoute({ initial = false } = {}) {
+    let route = parseRoute();
+    if (!route) {
+      if (!initial) return; // in-page anchor while on a page: keep the page
+      route = { page: 'home', params: {} };
+    }
+    currentRoute = route;
+    const isHome = route.page === 'home';
+    const def = PAGE_DEFS[route.page];
+
+    if (publicMain) {
+      const visible = new Set();
+      if (!isHome) {
+        def.sections.forEach((sel) => publicMain.querySelectorAll(`:scope > ${sel}`).forEach((el) => visible.add(el)));
+      }
+      Array.from(publicMain.children).forEach((el) => {
+        if (el === pageHero) el.hidden = isHome;
+        else el.hidden = isHome ? el.hasAttribute('data-page-only') : !visible.has(el);
+      });
+      publicMain.classList.toggle('is-subpage', !isHome);
+    }
+
+    // Catalogue state for the products / brand pages; home goes back to the carousel
+    const p = route.params || {};
+    if (route.page === 'san-pham') {
+      Object.assign(catalogState, { brand: 'all', line: 'all', category: 'all', query: p.q || '', expanded: true });
+      pageFilter.cats = new Set(p.cat ? [p.cat] : []);
+      pageFilter.brands = new Set(p.brand ? [p.brand] : []);
+      pageFilter.lines = new Set();
+    } else if (route.page === 'brand') {
+      Object.assign(catalogState, { brand: route.brandId, line: p.line || 'all', category: 'all', query: '', expanded: true });
+    } else {
+      Object.assign(catalogState, { brand: 'all', line: 'all', category: 'all', query: '', expanded: false });
+    }
+    if (headerSearchInput) headerSearchInput.value = catalogState.query;
+    if (productsSection) {
+      productsSection.classList.toggle('is-page', route.page === 'san-pham' || route.page === 'brand');
+      productsSection.classList.toggle('is-brand-page', route.page === 'brand');
+      productsSection.classList.toggle('is-filter-page', route.page === 'san-pham');
+      document.getElementById('catalogLayout')?.classList.remove('filters-open');
+    }
+    renderProductCatalog();
+
+    if (isHome) document.title = baseTitle;
+    else renderPageHero();
+    if (route.page === 'blog') renderBlogPage();
+    if (route.page === 'post') renderBlogPost(blogPosts.find((p) => p.slug === route.slug));
+
+    const navKey = route.page === 'brand' ? 'thuong-hieu' : route.page === 'post' ? 'blog' : route.page;
+    document.querySelectorAll('.hnav-link, .mobile-nav-link').forEach((a) => {
+      a.classList.toggle('is-active', !isHome && a.getAttribute('href') === `#/${navKey}`);
+    });
+
+    if (!(initial && isHome)) window.scrollTo(0, 0);
+  }
+
+  window.addEventListener('hashchange', () => renderRoute());
+
+  // Cost estimate page: expand / collapse the guide article ("Xem thêm" / "Thu gọn")
+  const oemArticleToggle = document.getElementById('oemArticleToggle');
+  const oemArticleBody = document.getElementById('oemArticleBody');
+  if (oemArticleToggle && oemArticleBody) {
+    oemArticleToggle.addEventListener('click', () => {
+      const open = oemArticleBody.classList.toggle('expanded');
+      oemArticleToggle.setAttribute('aria-expanded', String(open));
+      oemArticleToggle.innerHTML = open
+        ? 'Thu gọn <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg>'
+        : 'Xem thêm <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>';
+      if (!open) oemArticleToggle.closest('.oem-article')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  }
+  // Clicking the link of the page you are already on still resets it to the top
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest('a[href^="#/"]');
+    if (a && a.getAttribute('href') === window.location.hash) renderRoute();
+  });
+
   // Initial Initialization
   applyTranslations();
   calculateOemEstimate();
   initHeroSlideshow();
   initAuthAndPortals();
+  renderBlogFeatured();
+  renderRoute({ initial: true });
+
+  /**
+   * Thank-you promo popup: shows once per browser session on the public site.
+   * Clicking the card opens the products page; X / backdrop / Esc closes it.
+   */
+  (function initPromoPopup() {
+    const popup = document.getElementById('promoPopup');
+    if (!popup) return;
+    const SEEN_KEY = 'bevibe_promo_seen';
+    const markSeen = () => { try { sessionStorage.setItem(SEEN_KEY, '1'); } catch (e) {} };
+    const close = () => {
+      popup.classList.remove('open');
+      markSeen();
+      setTimeout(() => { popup.hidden = true; }, 250);
+      document.removeEventListener('keydown', onKey);
+    };
+    const onKey = (e) => { if (e.key === 'Escape') close(); };
+
+    popup.querySelectorAll('[data-promo-close]').forEach((el) => el.addEventListener('click', close));
+    document.getElementById('promoCardLink')?.addEventListener('click', () => close());
+
+    let seen = false;
+    try { seen = sessionStorage.getItem(SEEN_KEY) === '1'; } catch (e) {}
+    if (seen) return;
+    setTimeout(() => {
+      const publicView = document.getElementById('publicWebsiteView');
+      if (publicView && publicView.hidden) return; // not on the B2B / admin portals
+      popup.hidden = false;
+      requestAnimationFrame(() => popup.classList.add('open'));
+      document.addEventListener('keydown', onKey);
+    }, 1200);
+  })();
+
 });
