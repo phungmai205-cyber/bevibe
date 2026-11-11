@@ -3,7 +3,8 @@
  * Korean Aesthetic & B2B Cosmetic Partnership Platform
  */
 import { i18nData, brandsData, servicesDetailsData } from './translations.js';
-import { blogPosts, blogCategories } from './blog.js';
+import { blogPosts, blogCategories, popularSlugs, trendCategoryIds } from './blog.js';
+import { productPrices, PRICE_LIST_DATE, WHOLESALE_DISCOUNT, formatVnd } from './prices.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   // --- State ---
@@ -27,7 +28,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const sendZaloBtn = document.getElementById('sendZaloBtn');
   const sendEmailBtn = document.getElementById('sendEmailBtn');
   const toastNotification = document.getElementById('toastNotification');
-  const backToTopBtn = document.getElementById('backToTopBtn');
 
   // OEM Calculator Elements
   const calcProduct = document.getElementById('calcProduct');
@@ -202,6 +202,8 @@ document.addEventListener('DOMContentLoaded', () => {
         category,
         vi: pVi,
         ko: pKo,
+        price: productPrices[pVi.id] ? productPrices[pVi.id].price : null,
+        priceUnit: productPrices[pVi.id] ? productPrices[pVi.id].unit : '',
         image: pVi.image || pKo.image || brand.coverImage || '/assets/images/hero.jpg',
         hasVideo: !!(pVi.video || pKo.video),
         strong: normalizeText([pVi.name, pKo.name, brand.name, line.nameVi, line.nameKo].join(' ')),
@@ -213,7 +215,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function localized(entry) {
     const p = currentLang === 'vi' ? entry.vi : entry.ko;
-    return { ...entry, name: p.name, tag: p.tag, spec: p.spec };
+    // Quy cách theo bảng giá (nếu có) để giá và dung tích luôn khớp nhau
+    return { ...entry, name: p.name, tag: p.tag, spec: entry.priceUnit || p.spec };
   }
 
   function searchProducts(query) {
@@ -292,26 +295,14 @@ document.addEventListener('DOMContentLoaded', () => {
     if (megaBrands) {
       megaBrands.innerHTML = `
         <div class="container mega-inner">
-          ${brandsData.map((b) => {
-            const list = isVi ? b.productsVi : b.productsKo;
-            return `
+          ${brandsData.map((b) => `
               <div class="mega-col">
                 <button type="button" class="mega-brand" data-action="brand-products" data-brand-id="${b.id}">
                   <img src="${b.coverImage || '/assets/images/hero.jpg'}" alt="" loading="lazy">
                   <span><strong>${b.name}</strong><small>${b.badge}</small></span>
                 </button>
-                ${(b.lines || []).map((l) => `
-                  <button type="button" class="mega-line" data-action="line" data-brand-id="${b.id}" data-line="${l.id}">${isVi ? l.nameVi : l.nameKo}</button>
-                  <ul class="mega-list">
-                    ${list.filter((p) => p.line === l.id).slice(0, 5).map((p) => `<li><button type="button" data-action="product-modal" data-product-id="${p.id}">${p.name}</button></li>`).join('')}
-                  </ul>
-                `).join('')}
-                <button type="button" class="mega-more" data-action="brand-products" data-brand-id="${b.id}">
-                  ${isVi ? `Xem tất cả ${list.length} sản phẩm →` : `${list.length}개 제품 전체 보기 →`}
-                </button>
               </div>
-            `;
-          }).join('')}
+            `).join('')}
         </div>
       `;
     }
@@ -413,8 +404,8 @@ document.addEventListener('DOMContentLoaded', () => {
           <span class="pcard-spec">${p.spec || ''}</span>
           <div class="pcard-foot">
             <div class="pcard-price">
-              <small>${isVi ? 'Giá đại lý' : '도매가'}</small>
-              <strong>${isVi ? 'Liên hệ' : '문의'}</strong>
+              <small>${isVi ? 'Giá niêm yết' : '정가'}</small>
+              <strong>${p.price ? formatVnd(p.price) : (isVi ? 'Liên hệ' : '문의')}</strong>
             </div>
             <button type="button" class="pcard-quote" data-action="product-quote" data-product-name="${escapeHtml(p.name)}" data-brand-name="${p.brandName}">
               ${isVi ? 'Báo giá sỉ' : '견적 요청'}
@@ -579,7 +570,7 @@ document.addEventListener('DOMContentLoaded', () => {
           return `
             <button type="button" class="search-result" data-action="product-modal" data-product-id="${p.id}">
               <img src="${p.image}" alt="" loading="lazy">
-              <span><strong>${p.name}</strong><small>${[p.brandName, lineLabel(p.brandId, p.line), p.spec].filter(Boolean).join(" · ")}</small></span>
+              <span><strong>${p.name}</strong><small>${[p.brandName, p.spec, p.price ? formatVnd(p.price) : ''].filter(Boolean).join(" · ")}</small></span>
             </button>
           `;
         }).join('')}
@@ -676,7 +667,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const emailInput = document.getElementById('formEmail');
       if (emailInput) emailInput.value = email;
     }
-    document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+    openContactModal();
     showToast(isVi ? 'Đã chọn “Đăng ký mẫu thử & Catalogue” — vui lòng hoàn tất thông tin liên hệ.' : '샘플 & 카탈로그 신청이 선택되었습니다. 연락처를 입력해 주세요.');
   }
 
@@ -854,7 +845,7 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ==========================================================================
      Blog: featured posts (home), list (#/blog) and post detail (#/blog/<slug>)
      ========================================================================== */
-  const blogState = { featured: 'all', page: 'all' };
+  const blogState = { featured: 'all', page: 'all', trend: 'all' };
 
   function formatPostDate(iso) {
     const d = new Date(`${iso}T00:00:00`);
@@ -905,13 +896,94 @@ document.addEventListener('DOMContentLoaded', () => {
     grid.innerHTML = sortedPosts(blogState.featured).slice(0, 4).map(blogCardHtml).join('');
   }
 
+  // "Xu hướng & mẹo làm đẹp": newest post large on the left, next 3 listed on the right
+  function renderBlogTrend() {
+    const chips = document.getElementById('blogTrendChips');
+    const wrap = document.getElementById('blogTrend');
+    if (!wrap) return;
+    const cats = blogCategories.filter((c) => trendCategoryIds.includes(c.id));
+    if (chips) {
+      chips.innerHTML = [{ id: 'all', label: 'Tất cả' }, ...cats].map((c) => `
+        <button type="button" class="blog-chip ${blogState.trend === c.id ? 'active' : ''}" data-action="blog-cat" data-target="trend" data-cat="${c.id}">${escapeHtml(c.label)}</button>
+      `).join('');
+    }
+    const posts = blogPosts
+      .filter((p) => (blogState.trend === 'all' ? trendCategoryIds.includes(p.category) : p.category === blogState.trend))
+      .slice()
+      .sort((a, b) => b.date.localeCompare(a.date))
+      .slice(0, 4);
+    if (!posts.length) { wrap.innerHTML = ''; return; }
+    const [lead, ...rest] = posts;
+    const meta = (p) => `<span class="spot-date"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg>${formatPostDate(p.date)} · ${p.readTime} phút đọc</span>`;
+    wrap.innerHTML = `
+      <a class="spot-lead" href="#/blog/${lead.slug}">
+        <img src="${lead.cover}" alt="${escapeHtml(lead.title)}" loading="lazy">
+        <span class="spot-lead-body">
+          <span class="spot-tag">${escapeHtml(blogCategoryLabel(lead.category))}</span>
+          <span class="spot-lead-title">${escapeHtml(lead.title)}</span>
+          ${meta(lead)}
+        </span>
+      </a>
+      <div class="spot-list">
+        ${rest.map((p) => `
+          <a class="spot-item" href="#/blog/${p.slug}">
+            <span class="spot-thumb"><img src="${p.cover}" alt="${escapeHtml(p.title)}" loading="lazy"></span>
+            <span class="spot-item-body">
+              <span class="spot-tag">${escapeHtml(blogCategoryLabel(p.category))}</span>
+              <span class="spot-item-title">${escapeHtml(p.title)}</span>
+              ${meta(p)}
+            </span>
+          </a>
+        `).join('')}
+      </div>
+    `;
+  }
+
   function renderBlogPage() {
+    renderBlogTrend();
     const chips = document.getElementById('blogPageChips');
     const grid = document.getElementById('blogPageGrid');
     if (!grid) return;
     if (chips) chips.innerHTML = blogChipsHtml(blogState.page, 'page');
     grid.innerHTML = sortedPosts(blogState.page).map(blogCardHtml).join('');
+    grid.scrollLeft = 0;
+    updateBlogArrows();
+
+    const popular = document.getElementById('blogPopular');
+    if (popular) {
+      popular.innerHTML = popularSlugs
+        .map((slug) => blogPosts.find((p) => p.slug === slug))
+        .filter(Boolean)
+        .map((post, i) => blogCardHtml(post).replace('<span class="blog-card-media">', `<span class="blog-card-media"><span class="blog-card-rank">${i + 1}</span>`))
+        .join('');
+      popular.scrollLeft = 0;
+      updateBlogArrows();
+    }
   }
+
+  function updateBlogArrows() {
+    document.querySelectorAll('.blog-carousel').forEach((wrap) => {
+      const track = wrap.querySelector('.blog-track');
+      if (!track) return;
+      const max = track.scrollWidth - track.clientWidth - 2;
+      wrap.querySelectorAll('[data-blog-scroll]').forEach((btn) => {
+        const dir = Number(btn.getAttribute('data-blog-scroll'));
+        btn.hidden = max <= 0 || (dir < 0 ? track.scrollLeft <= 2 : track.scrollLeft >= max);
+      });
+    });
+  }
+
+  document.querySelectorAll('[data-blog-scroll]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const track = btn.closest('.blog-carousel')?.querySelector('.blog-track');
+      const card = track && track.querySelector('.blog-card');
+      if (!track) return;
+      const step = card ? (card.getBoundingClientRect().width + 24) * 2 : track.clientWidth * 0.8;
+      track.scrollBy({ left: Number(btn.getAttribute('data-blog-scroll')) * step, behavior: 'smooth' });
+    });
+  });
+  document.querySelectorAll('.blog-track').forEach((t) => t.addEventListener('scroll', () => updateBlogArrows(), { passive: true }));
+  window.addEventListener('resize', () => updateBlogArrows());
 
   function renderBlogPost(post) {
     const body = document.getElementById('blogPostBody');
@@ -921,7 +993,19 @@ document.addEventListener('DOMContentLoaded', () => {
       .filter(Boolean);
     const related = blogPosts.filter((p) => p.slug !== post.slug).slice(0, 3);
     body.innerHTML = `
-      <article class="blog-article">${post.content}</article>
+      <article class="blog-article">
+        ${post.content}
+        ${(post.faq || []).length ? `
+          <section class="blog-faq">
+            <h2>Câu hỏi thường gặp</h2>
+            ${post.faq.map((f, i) => `
+              <details class="blog-faq-item" ${i === 0 ? 'open' : ''}>
+                <summary>${escapeHtml(f.q)}</summary>
+                <p>${escapeHtml(f.a)}</p>
+              </details>
+            `).join('')}
+          </section>` : ''}
+      </article>
       ${products.length ? `
         <section class="blog-related-products">
           <h2 class="blog-section-title">Sản phẩm gợi ý</h2>
@@ -934,6 +1018,188 @@ document.addEventListener('DOMContentLoaded', () => {
       </section>
     `;
   }
+
+
+  /* ==========================================================================
+     SEO: per-page <title>, meta description, canonical, Open Graph, JSON-LD
+     ========================================================================== */
+  const DEFAULT_SEO = {
+    title: document.title,
+    description: document.querySelector('meta[name="description"]')?.getAttribute('content') || ''
+  };
+
+  function upsertHeadTag(selector, create) {
+    let el = document.head.querySelector(selector);
+    if (!el) { el = create(); document.head.appendChild(el); }
+    return el;
+  }
+
+  function setMeta(attr, key, content) {
+    const el = upsertHeadTag(`meta[${attr}="${key}"]`, () => {
+      const m = document.createElement('meta');
+      m.setAttribute(attr, key);
+      return m;
+    });
+    el.setAttribute('content', content);
+  }
+
+  function setSeo({ title, description, url, image, type = 'website', jsonLd = null }) {
+    document.title = title;
+    setMeta('name', 'description', description);
+    setMeta('property', 'og:title', title);
+    setMeta('property', 'og:description', description);
+    setMeta('property', 'og:type', type);
+    setMeta('property', 'og:url', url);
+    setMeta('property', 'og:site_name', 'beVIBE');
+    setMeta('property', 'og:locale', 'vi_VN');
+    if (image) setMeta('property', 'og:image', image);
+    setMeta('name', 'twitter:card', image ? 'summary_large_image' : 'summary');
+    upsertHeadTag('link[rel="canonical"]', () => {
+      const l = document.createElement('link');
+      l.setAttribute('rel', 'canonical');
+      return l;
+    }).setAttribute('href', url);
+
+    const old = document.getElementById('seoJsonLd');
+    if (old) old.remove();
+    if (jsonLd) {
+      const s = document.createElement('script');
+      s.type = 'application/ld+json';
+      s.id = 'seoJsonLd';
+      s.textContent = JSON.stringify(jsonLd);
+      document.head.appendChild(s);
+    }
+  }
+
+  function absoluteUrl(path) {
+    return new URL(path, window.location.origin).href;
+  }
+
+  function postSeo(post) {
+    const url = absoluteUrl(`/#/blog/${post.slug}`);
+    const image = absoluteUrl(post.cover);
+    const plainFaq = (post.faq || []).map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a }
+    }));
+    setSeo({
+      title: `${post.seoTitle} | beVIBE`,
+      description: post.metaDescription,
+      url,
+      image,
+      type: 'article',
+      jsonLd: [
+        {
+          '@context': 'https://schema.org',
+          '@type': 'BlogPosting',
+          headline: post.title,
+          description: post.metaDescription,
+          image: [image],
+          datePublished: post.date,
+          dateModified: post.date,
+          inLanguage: 'vi-VN',
+          keywords: post.keyword,
+          articleSection: blogCategoryLabel(post.category),
+          mainEntityOfPage: url,
+          author: { '@type': 'Organization', name: 'beVIBE' },
+          publisher: {
+            '@type': 'Organization',
+            name: 'beVIBE',
+            logo: { '@type': 'ImageObject', url: absoluteUrl('/assets/images/logo.png') }
+          }
+        },
+        ...(plainFaq.length ? [{ '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: plainFaq }] : []),
+        {
+          '@context': 'https://schema.org',
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Trang chủ', item: absoluteUrl('/') },
+            { '@type': 'ListItem', position: 2, name: 'Blog', item: absoluteUrl('/#/blog') },
+            { '@type': 'ListItem', position: 3, name: post.title, item: url }
+          ]
+        }
+      ]
+    });
+  }
+
+  function pageSeo(route) {
+    if (route.page === 'post') {
+      const post = blogPosts.find((p) => p.slug === route.slug);
+      if (post) { postSeo(post); return; }
+    }
+    if (route.page === 'home') {
+      setSeo({ title: DEFAULT_SEO.title, description: DEFAULT_SEO.description, url: absoluteUrl('/') });
+      return;
+    }
+    if (route.page === 'blog') {
+      setSeo({
+        title: 'Blog chăm sóc da & kiến thức mỹ phẩm Hàn Quốc | beVIBE',
+        description: 'Blog beVIBE: hướng dẫn skincare, cách dùng mỹ phẩm Hàn Quốc đúng cách và giải đáp thắc mắc về da mặt, da đầu từ chuyên gia.',
+        url: absoluteUrl('/#/blog'),
+        jsonLd: {
+          '@context': 'https://schema.org',
+          '@type': 'Blog',
+          name: 'Blog beVIBE',
+          inLanguage: 'vi-VN',
+          blogPost: blogPosts.map((p) => ({ '@type': 'BlogPosting', headline: p.title, url: absoluteUrl(`/#/blog/${p.slug}`), datePublished: p.date }))
+        }
+      });
+      return;
+    }
+    // Other sub-pages keep the title set by renderPageHero, with the default description
+    setSeo({ title: document.title, description: DEFAULT_SEO.description, url: absoluteUrl(window.location.hash ? `/${window.location.hash}` : '/') });
+  }
+
+
+  /* ==========================================================================
+     Partnership form as a popup (the inline contact section was removed).
+     Opened by every "#contact" link and by the quote / sample / calculator actions.
+     ========================================================================== */
+  const contactSection = document.getElementById('contact');
+  let contactCloseBtn = null;
+
+  function closeContactModal() {
+    if (!contactSection) return;
+    contactSection.classList.remove('as-modal');
+    contactSection.hidden = true;
+    document.body.style.overflow = '';
+    document.removeEventListener('keydown', onContactKey);
+  }
+
+  function onContactKey(e) {
+    if (e.key === 'Escape') closeContactModal();
+  }
+
+  function openContactModal() {
+    if (!contactSection) return;
+    if (!contactCloseBtn) {
+      contactCloseBtn = document.createElement('button');
+      contactCloseBtn.type = 'button';
+      contactCloseBtn.className = 'contact-modal-close';
+      contactCloseBtn.setAttribute('aria-label', 'Đóng');
+      contactCloseBtn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+      contactCloseBtn.addEventListener('click', closeContactModal);
+      const formCol = contactSection.querySelector('.inquiry-form-wrap');
+      (formCol || contactSection).prepend(contactCloseBtn);
+      // click on the dark backdrop closes it
+      contactSection.addEventListener('click', (e) => { if (e.target === contactSection) closeContactModal(); });
+    }
+    contactSection.hidden = false;
+    contactSection.classList.add('as-modal');
+    contactSection.scrollTop = 0;
+    document.body.style.overflow = 'hidden';
+    document.addEventListener('keydown', onContactKey);
+  }
+
+  // Links to "#contact" open the popup instead of jumping to a section
+  document.addEventListener('click', (e) => {
+    const link = e.target.closest('a[href="#contact"]');
+    if (!link) return;
+    e.preventDefault();
+    if (mobileNavDrawer && mobileNavDrawer.contains(link)) closeMobileMenu();
+    openContactModal();
+  });
 
   /**
    * Single delegated handler for every [data-action] element
@@ -1020,6 +1286,7 @@ document.addEventListener('DOMContentLoaded', () => {
       case 'blog-cat':
         blogState[el.getAttribute('data-target')] = el.getAttribute('data-cat');
         if (el.getAttribute('data-target') === 'page') renderBlogPage();
+        else if (el.getAttribute('data-target') === 'trend') renderBlogTrend();
         else renderBlogFeatured();
         break;
       case 'pf-clear':
@@ -1078,7 +1345,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ? `Tôi quan tâm đến sản phẩm [${productName}] thuộc hãng ${brandName}. Vui lòng cung cấp bảng giá đại lý, số lượng đặt hàng tối thiểu (MOQ) và hồ sơ kiểm nghiệm sản phẩm.`
         : `beVIBE의 [${productName}] (${brandName}) 제품에 관심이 있습니다. 도매 단가표, 최소 발주 수량(MOQ) 및 위생허가 서류를 요청합니다.`;
     }
-    document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+    openContactModal();
     showToast(isVi ? `Đã chọn [${productName}] vào mẫu liên hệ!` : `[${productName}] 견적 요청이 적용되었습니다!`);
   }
 
@@ -1097,7 +1364,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ? `Tôi quan tâm đến thương hiệu ${brandName} của beVIBE. Vui lòng gửi bảng báo giá sỉ, chính sách đại lý và catalogue sản phẩm chi tiết.`
         : `beVIBE의 ${brandName} 브랜드에 관심이 있습니다. 도매 공급가, 파트너십 정책 및 상세 카탈로그를 요청합니다.`;
     }
-    document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+    openContactModal();
     showToast(isVi ? `Đã chọn thương hiệu ${brandName} vào mẫu liên hệ!` : `${brandName} 문의 내용이 적용되었습니다!`);
   }
 
@@ -1399,7 +1666,11 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="prod-specs-row">
               <div class="prod-spec-item">
                 <span class="spec-label">${isVi ? 'Quy cách' : '용량/규격'}</span>
-                <span class="spec-val">${foundProduct.spec || 'Tiêu chuẩn'}</span>
+                <span class="spec-val">${(productPrices[foundProduct.id] && productPrices[foundProduct.id].unit) || foundProduct.spec || 'Tiêu chuẩn'}</span>
+              </div>
+              <div class="prod-spec-item prod-spec-price">
+                <span class="spec-label">${isVi ? 'Giá niêm yết' : '정가'}</span>
+                <span class="spec-val">${productPrices[foundProduct.id] ? formatVnd(productPrices[foundProduct.id].price) : (isVi ? 'Liên hệ' : '문의')}</span>
               </div>
               <div class="prod-spec-item">
                 <span class="spec-label">${isVi ? 'Thương hiệu' : '브랜드'}</span>
@@ -1580,15 +1851,17 @@ document.addEventListener('DOMContentLoaded', () => {
    * OEM Cost Calculator Engine
    */
   function calculateOemEstimate() {
-    if (!calcProduct || !calcPackaging || !calcQuantity || !calcEstCost) return;
+    if (!calcProduct || !calcQuantity || !calcEstCost) return;
     const isVi = currentLang === 'vi';
 
+    // Đơn giá gia công tham khảo (bao bì tiêu chuẩn, lô 1.000 sp) ≈ 12% giá bán lẻ trung bình
+    // của cùng nhóm sản phẩm trong bảng giá beVIBE 27/08/2026. Dầu gội chưa có giá → tạm tính như sữa rửa mặt.
     const baseUnitCosts = {
-      serum: 45000,
-      cream: 55000,
-      sun: 48000,
-      cleanser: 32000,
-      toner: 36000,
+      serum: 143000,
+      cream: 115000,
+      sun: 62000,
+      cleanser: 52000,
+      toner: 60000,
       scalp: 52000
     };
 
@@ -1600,9 +1873,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const qty = parseInt(calcQuantity.value, 10) || 1000;
     const productKey = calcProduct.value;
-    const packKey = calcPackaging.value;
+    const packKey = calcPackaging ? calcPackaging.value : 'standard'; // packaging selector removed → standard
 
-    const unitBase = (baseUnitCosts[productKey] || 45000) * (packagingMultipliers[packKey] || 1.0);
+    const unitBase = (baseUnitCosts[productKey] || 60000) * (packagingMultipliers[packKey] || 1.0);
     let discount = 1.0;
     if (qty >= 10000) discount = 0.82;
     else if (qty >= 5000) discount = 0.88;
@@ -1750,7 +2023,7 @@ document.addEventListener('DOMContentLoaded', () => {
           ? `Tôi muốn tìm hiểu chi tiết về gói hợp tác: ${service.titleVi}. Vui lòng liên hệ tư vấn lộ trình và chính sách ưu đãi.`
           : `beVIBE의 ${service.titleKo} 제휴 방안에 대해 상세한 상담을 요청합니다.`;
       }
-      document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+      openContactModal();
     });
   }
 
@@ -1773,7 +2046,6 @@ document.addEventListener('DOMContentLoaded', () => {
     calcApplyBtn.addEventListener('click', () => {
       const isVi = currentLang === 'vi';
       const prodText = calcProduct.options[calcProduct.selectedIndex].text;
-      const packText = calcPackaging.options[calcPackaging.selectedIndex].text;
       const qtyText = calcQuantity.value;
       const estText = calcEstCost.textContent;
 
@@ -1785,15 +2057,15 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       const noteText = isVi
-        ? `[DỰ TOÁN OEM BEVIBE]\n• Sản phẩm: ${prodText}\n• Bao bì: ${packText}\n• Số lượng dự kiến: ${parseInt(qtyText).toLocaleString('vi-VN')} chai/hộp\n• Mức dự toán: ${estText}\n\n[GHI CHÚ DỰ ÁN]: `
-        : `[beVIBE OEM 시뮬레이션 결과]\n• 제품군: ${prodText}\n• 패키지: ${packText}\n• 희망 수량: ${parseInt(qtyText).toLocaleString()}개\n• 예상 견적: ${estText}\n\n[문의 내용]: `;
+        ? `[DỰ TOÁN OEM BEVIBE]\n• Sản phẩm: ${prodText}\n• Số lượng dự kiến: ${parseInt(qtyText).toLocaleString('vi-VN')} chai/hộp\n• Mức dự toán: ${estText}\n\n[GHI CHÚ DỰ ÁN]: `
+        : `[beVIBE OEM 시뮬레이션 결과]\n• 제품군: ${prodText}\n• 희망 수량: ${parseInt(qtyText).toLocaleString()}개\n• 예상 견적: ${estText}\n\n[문의 내용]: `;
 
       if (messageInput) {
         messageInput.value = noteText;
         messageInput.focus();
       }
 
-      document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+      openContactModal();
       showToast(isVi ? 'Đã điền thông số dự toán vào biểu mẫu!' : '시뮬레이션 견적이 문의 양식에 적용되었습니다!');
     });
   }
@@ -1941,18 +2213,26 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('scroll', () => {
     if (window.scrollY > 40) {
       header.classList.add('scrolled');
-      if (backToTopBtn) backToTopBtn.classList.add('visible');
     } else {
       header.classList.remove('scrolled');
-      if (backToTopBtn) backToTopBtn.classList.remove('visible');
     }
   });
 
-  // Back To Top Button
-  if (backToTopBtn) {
-    backToTopBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+  // Floating quick bar: arrow button shows / hides the contact buttons
+  const quickBar = document.querySelector('.floating-quick-bar');
+  const quickToggleBtn = document.getElementById('quickToggleBtn');
+  if (quickBar && quickToggleBtn) {
+    const setQuickBarOpen = (open) => {
+      quickBar.classList.toggle('is-collapsed', !open);
+      quickToggleBtn.setAttribute('aria-expanded', String(open));
+      quickToggleBtn.setAttribute('aria-label', open ? 'Thu gọn liên hệ' : 'Mở liên hệ');
+      try { localStorage.setItem('bevibe_quickbar_open', open ? '1' : '0'); } catch (e) { /* storage unavailable */ }
+    };
+    let startOpen = true;
+    try { startOpen = localStorage.getItem('bevibe_quickbar_open') !== '0'; } catch (e) { /* storage unavailable */ }
+    setQuickBarOpen(startOpen);
+    quickToggleBtn.addEventListener('click', () => {
+      setQuickBarOpen(quickBar.classList.contains('is-collapsed'));
     });
   }
 
@@ -1973,7 +2253,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let currentSlide = 0;
     const totalSlides = slides.length;
-    const slideDuration = 8000; // 8s per slide
+    const slideDuration = 5000; // 5s per slide (auto-advance)
     let progressStartTime = performance.now();
     let animFrame = null;
     let isPaused = false;
@@ -1982,14 +2262,16 @@ document.addEventListener('DOMContentLoaded', () => {
       'neuraderm': 'Medytox · Basic Derma & Clinic Derma (17 sản phẩm)',
       'dr-bargo': 'Gangnam Clinic Formula · Serum phục hồi màng bảo vệ da chuyên sâu',
       'medipharm': 'MediPharm · Dòng Stem C tế bào gốc (6 sản phẩm)',
-      'smib': '100 Tỷ Postbiotic · Dầu gội phủ bạc tự nhiên & trị liệu da đầu'
+      'smib': '100 Tỷ Postbiotic · Dầu gội phủ bạc tự nhiên & trị liệu da đầu',
+      'cellgrams': 'CELLGRAMS · Dòng chăm sóc da chuyên sâu'
     };
 
     const brandDescriptionsKo = {
       'neuraderm': '메디톡스 바이오 · 코어타임 앰플 및 병원 처방 MD 크림',
       'dr-bargo': '강남 피부과 처방 · 손상 장벽 급속 리페어 세럼',
       'medipharm': '메디팜 · 스템씨 줄기세포 라인 (6개 제품)',
-      'smib': '1000억 포스트바이오틱스 · 컬러 체인지 샴푸 및 두피 케어'
+      'smib': '1000억 포스트바이오틱스 · 컬러 체인지 샴푸 및 두피 케어',
+      'cellgrams': '셀그램스 · 집중 스킨케어 라인'
     };
 
     // dir: 1 = next slide slides in from the right, -1 = previous slides in from the left
@@ -2085,14 +2367,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const targetIndex = Array.from(slides).findIndex(s => s.getAttribute('data-brand') === brandKey);
         if (targetIndex !== -1) {
           updateSlide(targetIndex, targetIndex < currentSlide ? -1 : 1);
+        } else {
+          // No hero slide for this brand: open its brand page instead
+          window.location.hash = `#/thuong-hieu/${brandKey}`;
         }
       });
     });
 
-    // Hover: jump to the next slide right away and keep auto-playing
-    bannerCard.addEventListener('mouseenter', () => {
-      updateSlide(currentSlide + 1);
-    });
 
     // Expose globally for convenience
     window.heroGoToSlide = function(idx) {
@@ -2319,7 +2600,7 @@ document.addEventListener('DOMContentLoaded', () => {
               <span>${currentUser.name}</span>
               <span class="chip-role ${currentUser.role}">${roleLabel}</span>
             </div>
-            <button type="button" class="topbar-auth-btn" id="topbarLogoutBtn" style="color: #ff8595; margin-left: 6px;">
+            <button type="button" class="topbar-auth-btn" id="topbarLogoutBtn" style="color: #a7dcef; margin-left: 6px;">
               <span>${isVi ? 'Đăng xuất' : '로그아웃'}</span>
             </button>
           `;
@@ -2594,6 +2875,57 @@ document.addEventListener('DOMContentLoaded', () => {
         switchCustTab(btn.getAttribute('data-cust-switch-tab'));
       });
     });
+
+    // Bảng báo giá sỉ (B2B) + bảng sản phẩm Admin: dựng từ bảng giá thật (prices.js)
+    (function renderPriceTables() {
+      const priced = productIndex.filter((e) => e.price);
+      const pct = Math.round(WHOLESALE_DISCOUNT * 100);
+      document.querySelectorAll('[data-wholesale-pct]').forEach((el) => { el.textContent = `-${pct}%`; });
+      const wsBody = document.querySelector('#wholesaleTable tbody');
+      if (wsBody) {
+        wsBody.innerHTML = priced.map((e) => {
+          const ws = Math.round(e.price * (1 - WHOLESALE_DISCOUNT) / 100) * 100;
+          return `
+            <tr data-prod-id="${e.id}" data-price="${e.price}" data-wholesale="${ws}">
+              <td>
+                <div class="table-prod-cell">
+                  <img src="${e.image}" alt="${escapeHtml(e.vi.name)}" class="table-prod-thumb">
+                  <div><strong>${escapeHtml(e.vi.name)}</strong><small>${escapeHtml(e.vi.tag || '')}</small></div>
+                </div>
+              </td>
+              <td><span class="badge-brand ${e.brandId}">${e.brandName}</span></td>
+              <td>${e.priceUnit}</td>
+              <td>${formatVnd(e.price)}</td>
+              <td class="text-gold font-bold">${formatVnd(ws)}</td>
+              <td>
+                <div class="qty-counter">
+                  <button type="button" class="qty-btn minus">-</button>
+                  <input type="number" class="qty-input" value="0" min="0" max="500">
+                  <button type="button" class="qty-btn plus">+</button>
+                </div>
+              </td>
+              <td class="row-subtotal font-bold">0 đ</td>
+            </tr>`;
+        }).join('');
+      }
+      const adminBody = document.querySelector('#adminProductsTable tbody');
+      if (adminBody) {
+        adminBody.innerHTML = priced.map((e) => {
+          const ws = Math.round(e.price * (1 - WHOLESALE_DISCOUNT) / 100) * 100;
+          return `
+            <tr>
+              <td><strong>${escapeHtml(e.vi.name)}</strong><br><small>${e.priceUnit}</small></td>
+              <td><span class="badge-brand ${e.brandId}">${e.brandName}</span></td>
+              <td>${formatVnd(e.price)}</td>
+              <td class="text-gold">${formatVnd(ws)}</td>
+              <td><span class="stock-pill in-stock">—</span></td>
+              <td>—</td>
+              <td><button type="button" class="btn-tbl-action" data-action="product-modal" data-product-id="${e.id}">Xem</button></td>
+            </tr>`;
+        }).join('');
+      }
+      document.querySelectorAll('[data-price-list-date]').forEach((el) => { el.textContent = PRICE_LIST_DATE; });
+    })();
 
     // Wholesale Table Calculator
     function updateWholesaleTotals() {
@@ -2915,33 +3247,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const PAGE_DEFS = {
     'san-pham': {
-      sections: ['#products', '#contact'],
+      sections: ['#products'],
       vi: { eyebrow: 'OFFICIAL CATALOG', title: 'Danh mục sản phẩm', desc: 'Toàn bộ mỹ phẩm Hàn Quốc chính hãng do beVIBE phân phối. Lọc theo danh mục, thương hiệu và dòng sản phẩm để tìm đúng sản phẩm bạn cần.' },
       ko: { eyebrow: 'OFFICIAL CATALOG', title: '제품 카탈로그', desc: '비바이브가 공식 유통하는 한국 화장품 전 제품. 카테고리, 브랜드, 제품 라인별로 찾아보세요.' }
     },
     'thuong-hieu': {
-      sections: ['#brands', '#contact'],
+      sections: ['#brands'],
       vi: { eyebrow: 'OUR BRANDS', title: 'Thương hiệu', desc: 'Các thương hiệu mỹ phẩm Hàn Quốc được beVIBE phân phối độc quyền tại Việt Nam. Chọn một thương hiệu để xem đầy đủ sản phẩm theo từng dòng.' },
       ko: { eyebrow: 'OUR BRANDS', title: '브랜드', desc: '비바이브가 베트남에서 독점 유통하는 한국 화장품 브랜드. 브랜드를 선택하면 라인별 전체 제품을 볼 수 있습니다.' }
     },
     'brand': {
-      sections: ['#products', '#contact']
+      sections: ['#products']
     },
     'post': {
-      sections: ['#blogPost', '#contact']
+      sections: ['#blogPost']
     },
     'du-toan': {
-      sections: ['#oemGuide', '#calculator', '#contact'],
+      sections: ['#oemGuide', '#calculator'],
       vi: { eyebrow: 'OEM COST ESTIMATOR', title: 'Dự toán chi phí', desc: 'Ước tính nhanh chi phí và thời gian sản xuất OEM theo loại sản phẩm, bao bì và số lượng đặt hàng.' },
       ko: { eyebrow: 'OEM COST ESTIMATOR', title: '비용 견적', desc: 'OEM 생산 비용과 기간을 제품 유형, 패키지, 수량별로 빠르게 산출하세요.' }
     },
     've-bevibe': {
-      sections: ['#about', '.usp-strip', '#contact'],
+      sections: ['#aboutStory', '#about', '.usp-strip'],
       vi: { eyebrow: 'ABOUT US', title: 'Về beVIBE', desc: 'Đối tác phân phối mỹ phẩm Hàn Quốc chính ngạch, đồng hành cùng nhà bán lẻ, spa, clinic và doanh nghiệp tại Việt Nam.' },
       ko: { eyebrow: 'ABOUT US', title: '비바이브 소개', desc: '베트남 소매점, 스파, 클리닉, 기업과 함께하는 한국 화장품 공식 유통 파트너.' }
     },
     'blog': {
-      sections: ['#blog', '#contact'],
+      sections: ['#blog'],
       vi: { eyebrow: 'BLOG', title: 'Blog', desc: 'Tin tức, kiến thức K-Beauty và cập nhật mới nhất từ beVIBE.' },
       ko: { eyebrow: 'BLOG', title: '블로그', desc: 'K-뷰티 소식과 비바이브의 최신 업데이트.' }
     }
@@ -3048,6 +3380,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function renderRoute({ initial = false } = {}) {
+    if (contactSection && contactSection.classList.contains('as-modal')) closeContactModal();
     let route = parseRoute();
     if (!route) {
       if (!initial) return; // in-page anchor while on a page: keep the page
@@ -3094,6 +3427,7 @@ document.addEventListener('DOMContentLoaded', () => {
     else renderPageHero();
     if (route.page === 'blog') renderBlogPage();
     if (route.page === 'post') renderBlogPost(blogPosts.find((p) => p.slug === route.slug));
+    pageSeo(route);
 
     const navKey = route.page === 'brand' ? 'thuong-hieu' : route.page === 'post' ? 'blog' : route.page;
     document.querySelectorAll('.hnav-link, .mobile-nav-link').forEach((a) => {

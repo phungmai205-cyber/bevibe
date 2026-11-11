@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Great+Vibes&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Serif+KR:wght@400;600;700&family=Great+Vibes&display=swap"
     rel="stylesheet">
 
   <!-- Main Stylesheet -->
@@ -230,69 +230,30 @@
         <!-- Slideshow indicators -->
         <div class="hero-slideshow-nav">
           <div class="hero-slide-indicators" id="heroSlideIndicators">
-            <button type="button" class="hero-indicator-dot active" data-goto="0"
-              aria-label="Slide 1: NEURADERM"></button>
-            <button type="button" class="hero-indicator-dot" data-goto="1" aria-label="Slide 2: Dr. Bargo"></button>
-            <button type="button" class="hero-indicator-dot" data-goto="2" aria-label="Slide 3: MediPharm"></button>
-            <button type="button" class="hero-indicator-dot" data-goto="3" aria-label="Slide 4: SMIB"></button>
+            <button type="button" class="hero-indicator-dot active" data-goto="0" aria-label="Slide 1: NEURADERM"></button>
+            <button type="button" class="hero-indicator-dot" data-goto="1" aria-label="Slide 2: NEURADERM – Science of Perfect Skin"></button>
+            <button type="button" class="hero-indicator-dot" data-goto="2" aria-label="Slide 3: NEURADERM M.Biome"></button>
+            <button type="button" class="hero-indicator-dot" data-goto="3" aria-label="Slide 4: CELLGRAMS"></button>
           </div>
         </div>
 
         <!-- Rotating Slides Container -->
         <div class="hero-slideshow-track" id="heroSlideshowTrack">
 
-          <!-- Slide 0: NEURADERM -->
-          <div class="hero-slide active" data-slide-index="0" data-brand="neuraderm">
-            <div class="hero-slide-bg" style="background-image: url('assets/images/neuraderm/hero_coretime.webp');">
-            </div>
-            <div class="hero-slide-overlay">
-              <div class="hero-slide-content">
-                <span class="hero-slide-badge">Medytox · Basic & Clinic Derma · 17 Sản Phẩm</span>
-                <h3 class="hero-slide-title">NEURADERM Coretime & MD</h3>
-                <p class="hero-slide-desc">Đột phá peptide sinh học M.Biome BTX™ tái tạo collagen lõi & kem phục hồi
-                  y khoa chuẩn phòng lab Seoul.</p>
-              </div>
-            </div>
+          <div class="hero-slide hero-slide--image active" data-slide-index="0" data-brand="neuraderm" role="img" aria-label="NEURADERM">
+            <div class="hero-slide-bg" style="background-image: url('/assets/images/hero/hero-1.png');"></div>
           </div>
 
-          <!-- Slide 1: Dr. Bargo -->
-          <div class="hero-slide" data-slide-index="1" data-brand="dr-bargo">
-            <div class="hero-slide-bg" style="background-image: url('assets/images/dr-bargo/dr.bargo_serum.jpg');">
-            </div>
-            <div class="hero-slide-overlay">
-              <div class="hero-slide-content">
-                <span class="hero-slide-badge">Dòng 31°C · 04 Sản Phẩm</span>
-                <h3 class="hero-slide-title">Dr.BARGO Clinic Derma</h3>
-                <p class="hero-slide-desc">Huyết thanh phục hồi hàng rào màng da Ceramide NP & Madecassoside chuyên
-                  biệt cho Spa & Clinic.</p>
-              </div>
-            </div>
+          <div class="hero-slide hero-slide--image" data-slide-index="1" data-brand="neuraderm" role="img" aria-label="NEURADERM – Science of Perfect Skin">
+            <div class="hero-slide-bg" style="background-image: url('/assets/images/hero/hero-2.png');"></div>
           </div>
 
-          <!-- Slide 2: MediPharm · Stem C -->
-          <div class="hero-slide" data-slide-index="2" data-brand="medipharm">
-            <div class="hero-slide-bg" style="background-image: url('assets/images/stem-c/stem_c_-_toner.jpg');">
-            </div>
-            <div class="hero-slide-overlay">
-              <div class="hero-slide-content">
-                <span class="hero-slide-badge">Dòng Stem C · 06 Sản Phẩm</span>
-                <h3 class="hero-slide-title">MediPharm Stem C</h3>
-                <p class="hero-slide-desc">Bộ chăm sóc da ứng dụng chiết xuất tế bào gốc: tẩy trang, toner, lotion, kem dưỡng, chống nắng và BB cream.</p>
-              </div>
-            </div>
+          <div class="hero-slide hero-slide--image" data-slide-index="2" data-brand="neuraderm" role="img" aria-label="NEURADERM M.Biome">
+            <div class="hero-slide-bg" style="background-image: url('/assets/images/hero/hero-3.png');"></div>
           </div>
 
-          <!-- Slide 3: SMIB -->
-          <div class="hero-slide" data-slide-index="3" data-brand="smib">
-            <div class="hero-slide-bg hero-slide-bg--fit" style="background-image: url('assets/images/smib-banner.jpg');"></div>
-            <div class="hero-slide-overlay">
-              <div class="hero-slide-content">
-                <span class="hero-slide-badge">LactoBio & innaBi · 09 Sản Phẩm</span>
-                <h3 class="hero-slide-title">SMIB Hair & Scalp Therapy</h3>
-                <p class="hero-slide-desc">Dầu gội phủ bạc màu tự nhiên không xót rát & công thức phục hồi nang tóc
-                  dày khỏe từ men vi sinh.</p>
-              </div>
-            </div>
+          <div class="hero-slide hero-slide--image" data-slide-index="3" data-brand="cellgrams" role="img" aria-label="CELLGRAMS">
+            <div class="hero-slide-bg" style="background-image: url('/assets/images/hero/hero-4.png');"></div>
           </div>
 
         </div>
@@ -321,6 +282,7 @@
             beVIBE là đối tác chiến lược toàn diện đưa mỹ phẩm Hàn Quốc tiếp cận thị trường Việt Nam — từ đại diện
             tổng phân phối độc quyền đến giải pháp R&D và gia công OEM/ODM trọn gói chuẩn CGMP quốc tế.
           </p>
+          <a href="#/ve-bevibe" class="hero-about-btn">Về beVIBE</a>
         </div>
 
         <!-- Sub-banners row -->
@@ -459,6 +421,48 @@
       </div>
     </section>
 
+    <!-- ================= About page: company story (page only) ================= -->
+    <section class="about-story" id="aboutStory" data-page-only hidden>
+      <div class="container">
+        <article class="blog-article">
+          <p><strong>beVIBE</strong> là đối tác chiến lược đưa mỹ phẩm Hàn Quốc chính hãng đến thị trường Việt Nam. Chúng tôi phân phối chính ngạch các thương hiệu dược mỹ phẩm uy tín từ Hàn Quốc và đồng hành cùng doanh nghiệp Việt xây dựng thương hiệu riêng qua dịch vụ R&amp;D, gia công OEM/ODM tại nhà máy đạt chuẩn CGMP.</p>
+
+          <h2>Cầu nối giữa K-Beauty và thị trường Việt Nam</h2>
+          <figure class="blog-figure"><img src="/assets/images/neuraderm/hero_coretime.webp" alt="NEURADERM Coretime – một trong các thương hiệu mỹ phẩm Hàn Quốc beVIBE phân phối chính ngạch" loading="lazy"><figcaption>NEURADERM Coretime – một trong các thương hiệu mỹ phẩm Hàn Quốc beVIBE phân phối chính ngạch</figcaption></figure>
+          <p>Thị trường mỹ phẩm Việt Nam ngày càng ưa chuộng sản phẩm Hàn Quốc, nhưng nhà bán lẻ, spa và clinic vẫn gặp khó khăn trong việc tìm nguồn hàng chính ngạch, minh bạch pháp lý và ổn định. beVIBE ra đời để giải quyết bài toán đó: kết nối trực tiếp các thương hiệu từ Seoul với đối tác tại Việt Nam, đảm bảo nguồn gốc rõ ràng, hóa đơn VAT đầy đủ và chính sách đại lý rõ ràng.</p>
+
+          <h2>Chúng tôi làm gì?</h2>
+          <h3>1. Phân phối mỹ phẩm Hàn Quốc chính ngạch</h3>
+          <p>beVIBE là đơn vị phân phối các thương hiệu dược mỹ phẩm Hàn Quốc cho hệ thống bán sỉ, bán lẻ, chuỗi mỹ phẩm và clinic da liễu tại Việt Nam, với chiết khấu đại lý hấp dẫn, chính sách bảo vệ giá và tư vấn danh mục theo xu hướng người tiêu dùng Việt.</p>
+          <h3>2. R&amp;D và gia công OEM/ODM thương hiệu riêng</h3>
+          <figure class="blog-figure"><img src="/assets/images/oem-lab.jpg" alt="Phòng lab R&amp;D phát triển công thức mỹ phẩm OEM/ODM chuẩn Hàn Quốc" loading="lazy"><figcaption>Phòng lab R&amp;D phát triển công thức mỹ phẩm OEM/ODM chuẩn Hàn Quốc</figcaption></figure>
+          <p>Với doanh nghiệp muốn sở hữu thương hiệu riêng, beVIBE đồng hành từ ý tưởng đến kệ hàng: phát triển công thức, hoàn thiện mẫu R&amp;D trong khoảng 15 ngày tại lab Seoul, sản xuất tại nhà máy chuẩn CGMP &amp; ISO 22716 và hỗ trợ trọn gói kiểm nghiệm, công bố mỹ phẩm, thủ tục nhập khẩu. Số lượng sản xuất linh hoạt từ 1.000 sản phẩm. Xem thêm <a href="#/du-toan">dự toán chi phí OEM</a>.</p>
+
+          <h2>Các thương hiệu beVIBE phân phối</h2>
+          <ul>
+            <li><a href="#/thuong-hieu/dr-bargo">Dr.Bargo</a> — dược mỹ phẩm chuyên khoa da liễu, phục hồi màng bảo vệ da, phát triển bởi nhóm bác sĩ da liễu Gangnam.</li>
+            <li><a href="#/thuong-hieu/neuraderm">NEURADERM</a> — thương hiệu từ tập đoàn Medytox, độc quyền peptide M.Biome BTX cải thiện nếp nhăn và trẻ hóa da.</li>
+            <li><a href="#/thuong-hieu/medipharm">MediPharm</a> — dòng Stem C ứng dụng chiết xuất tế bào gốc trong chăm sóc da hằng ngày.</li>
+            <li><a href="#/thuong-hieu/smib">SMIB</a> — chăm sóc da đầu và tóc với công nghệ 100 tỷ Postbiotic.</li>
+          </ul>
+          <p>Xem toàn bộ sản phẩm tại <a href="#/san-pham">danh mục sản phẩm</a>.</p>
+
+          <h2>Cam kết của beVIBE</h2>
+          <ul>
+            <li><strong>100% chính ngạch:</strong> nguồn hàng rõ ràng, hóa đơn VAT và hồ sơ pháp lý minh bạch.</li>
+            <li><strong>Chuẩn sản xuất Hàn Quốc:</strong> sản phẩm sản xuất tại nhà máy đạt chuẩn CGMP &amp; ISO 22716.</li>
+            <li><strong>Bảo mật tuyệt đối:</strong> thông tin dự án và ý tưởng kinh doanh của đối tác được bảo vệ theo thỏa thuận NDA.</li>
+            <li><strong>Đồng hành lâu dài:</strong> đội ngũ am hiểu quy chuẩn pháp lý, xu hướng K-Beauty và mạng lưới phòng lab tại Hàn Quốc.</li>
+          </ul>
+
+          <h2>Đối tác của chúng tôi</h2>
+          <p>beVIBE hợp tác với nhà bán sỉ, cửa hàng và chuỗi mỹ phẩm, spa, clinic da liễu cũng như các doanh nghiệp và nhà sáng lập thương hiệu đang muốn phát triển dòng sản phẩm riêng tại Việt Nam.</p>
+
+          <blockquote><strong>Liên hệ hợp tác:</strong> hotline <a href="tel:0368822112">036 8822112</a> · email <a href="mailto:bevibevn@gmail.com">bevibevn@gmail.com</a> — hoặc <a href="#contact">gửi yêu cầu hợp tác</a> để chuyên viên beVIBE liên hệ lại.</blockquote>
+        </article>
+      </div>
+    </section>
+
     <!-- ================= Section 01: About beVIBE ================= -->
     <section class="about-section" id="about">
       <div class="container">
@@ -513,9 +517,9 @@
       <div class="container calc-band-inner">
         <div class="calc-band-text">
           <h3>Bạn muốn ước tính ngân sách OEM cho dòng sản phẩm riêng?</h3>
-          <p>Chọn loại sản phẩm, bao bì và số lượng để nhận mức đầu tư sơ bộ chỉ trong vài giây.</p>
+          <p>Chọn loại sản phẩm và số lượng để nhận mức đầu tư sơ bộ chỉ trong vài giây.</p>
           <div class="calc-band-chips">
-            <span>Từ ~32.000 đ/sp</span>
+            <span>Từ ~52.000 đ/sp</span>
             <span>MOQ từ 1.000 sp</span>
             <span>Mẫu R&amp;D 15 ngày</span>
           </div>
@@ -550,17 +554,18 @@
             <h3>2. Đơn giá tham khảo (bao bì tiêu chuẩn, 1.000 sp)</h3>
             <div class="oem-table-wrap">
               <table class="oem-table">
-                <thead><tr><th>Dòng sản phẩm</th><th>Đơn giá tham khảo</th></tr></thead>
+                <thead><tr><th>Dòng sản phẩm</th><th>Giá bán lẻ TB trên thị trường</th><th>Chi phí gia công tham khảo</th></tr></thead>
                 <tbody>
-                  <tr><td>Sữa rửa mặt / Gel dịu nhẹ (120ml)</td><td>~32.000 đ/sp</td></tr>
-                  <tr><td>Toner / Essence phục hồi (150ml)</td><td>~36.000 đ/sp</td></tr>
-                  <tr><td>Serum / Ampoule đặc trị (30 – 50ml)</td><td>~45.000 đ/sp</td></tr>
-                  <tr><td>Kem chống nắng sinh học (50ml)</td><td>~48.000 đ/sp</td></tr>
-                  <tr><td>Dầu gội / Tinh chất da đầu (250ml)</td><td>~52.000 đ/sp</td></tr>
-                  <tr><td>Kem dưỡng ẩm / Chống lão hóa (50ml)</td><td>~55.000 đ/sp</td></tr>
+                  <tr><td>Sữa rửa mặt / Gel dịu nhẹ (120ml)</td><td>~433.000 đ</td><td>~52.000 đ/sp</td></tr>
+                  <tr><td>Dầu gội / Tinh chất da đầu (250ml)</td><td>—</td><td>~52.000 đ/sp</td></tr>
+                  <tr><td>Toner / Essence phục hồi (150ml)</td><td>~497.000 đ</td><td>~60.000 đ/sp</td></tr>
+                  <tr><td>Kem chống nắng sinh học (50ml)</td><td>~520.000 đ</td><td>~62.000 đ/sp</td></tr>
+                  <tr><td>Kem dưỡng ẩm / Chống lão hóa (50ml)</td><td>~960.000 đ</td><td>~115.000 đ/sp</td></tr>
+                  <tr><td>Serum / Ampoule đặc trị (30 – 50ml)</td><td>~1.195.000 đ</td><td>~143.000 đ/sp</td></tr>
                 </tbody>
               </table>
             </div>
+            <p class="oem-table-note">Chi phí gia công tham khảo được ước tính ở mức khoảng 12% giá bán lẻ trung bình của sản phẩm cùng phân khúc (theo bảng giá beVIBE cập nhật 27/08/2026), áp dụng cho bao bì tiêu chuẩn và lô 1.000 sản phẩm. Báo giá chính thức phụ thuộc công thức, hoạt chất và nhà máy.</p>
 
             <h3>3. Yếu tố làm thay đổi chi phí</h3>
             <ul class="oem-list">
@@ -604,7 +609,7 @@
         <div class="section-head">
           <h2 class="section-title" data-i18n="calcTitle">Công cụ ước tính ngân sách OEM.</h2>
           <p class="section-desc" data-i18n="calcDesc">
-            Chọn dòng sản phẩm, cấp độ bao bì và quy mô dự kiến để nhận ước tính sơ bộ tức thì trước khi trao đổi cùng
+            Chọn dòng sản phẩm và quy mô dự kiến để nhận ước tính sơ bộ tức thì trước khi trao đổi cùng
             chuyên gia.
           </p>
         </div>
@@ -621,17 +626,6 @@
                 <option value="cleanser" data-i18n="calcOptCleanser">Sữa rửa mặt tạo bọt / Gel dịu nhẹ (120ml)</option>
                 <option value="toner" data-i18n="calcOptToner">Toner dưỡng ẩm / Essence phục hồi (150ml)</option>
                 <option value="scalp" data-i18n="calcOptScalp">Dầu gội / Tinh chất mọc tóc chuyên sâu (250ml)</option>
-              </select>
-            </div>
-
-            <div class="calc-input-group">
-              <label for="calcPackaging" data-i18n="calcPackLabel">Quy cách chai lọ bao bì:</label>
-              <select id="calcPackaging" class="calc-select">
-                <option value="standard" data-i18n="calcPackStandard">Bao bì tiêu chuẩn Hàn Quốc (Tối ưu chi phí)
-                </option>
-                <option value="premium" data-i18n="calcPackPremium">Thủy tinh mờ cao cấp + Nắp mạ kim loại sang trọng
-                </option>
-                <option value="custom" data-i18n="calcPackCustom">Khuôn thiết kế độc quyền riêng (Custom Mold)</option>
               </select>
             </div>
 
@@ -672,13 +666,40 @@
     <!-- ================= Blog ================= -->
     <section class="blog-section" id="blog" data-page-only hidden>
       <div class="container">
+        <h2 class="blog-section-title">Tất cả bài viết</h2>
         <div class="blog-chips" id="blogPageChips"><!-- Rendered by app.js --></div>
-        <div class="blog-grid blog-grid--page" id="blogPageGrid"><!-- Rendered by app.js --></div>
+        <div class="blog-carousel">
+          <button type="button" class="carousel-arrow carousel-arrow-side prev" data-blog-scroll="-1" aria-label="Bài trước">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6" /></svg>
+          </button>
+          <div class="blog-track" id="blogPageGrid"><!-- Rendered by app.js --></div>
+          <button type="button" class="carousel-arrow carousel-arrow-side next" data-blog-scroll="1" aria-label="Bài sau">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6" /></svg>
+          </button>
+        </div>
+
+        <h2 class="blog-section-title blog-popular-title">Xem nhiều nhất</h2>
+        <div class="blog-carousel">
+          <button type="button" class="carousel-arrow carousel-arrow-side prev" data-blog-scroll="-1" aria-label="Bài trước">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6" /></svg>
+          </button>
+          <div class="blog-track" id="blogPopular"><!-- Rendered by app.js --></div>
+          <button type="button" class="carousel-arrow carousel-arrow-side next" data-blog-scroll="1" aria-label="Bài sau">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6" /></svg>
+          </button>
+        </div>
+
+        <!-- Xu hướng & mẹo làm đẹp: 1 large post + 3 compact posts -->
+        <div class="blog-trend-block">
+          <h2 class="blog-section-title">Xu hướng &amp; mẹo làm đẹp</h2>
+          <div class="blog-chips" id="blogTrendChips"><!-- Rendered by app.js --></div>
+          <div class="blog-spotlight" id="blogTrend"><!-- Rendered by app.js --></div>
+        </div>
       </div>
     </section>
 
     <!-- ================= Section 06: Partnership Inquiry Form & Generator ================= -->
-    <section class="contact-section" id="contact">
+    <section class="contact-section" id="contact" data-page-only hidden aria-modal="true" role="dialog" aria-label="Liên hệ hợp tác">
       <div class="container">
         <div class="contact-grid">
           <!-- Left: Information Column -->
@@ -832,6 +853,7 @@
 
   <!-- ================= Floating Quick Action Bar ================= -->
   <div class="floating-quick-bar">
+    <div class="quick-contacts" id="quickContacts">
     <a href="tel:0368822112" class="quick-btn phone" aria-label="Gọi hotline beVIBE: 036 8822112">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
     </a>
@@ -848,7 +870,8 @@
         <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
       </svg>
     </a>
-    <button id="backToTopBtn" class="quick-btn back-to-top" aria-label="Cuộn về đầu trang">
+    </div>
+    <button type="button" id="quickToggleBtn" class="quick-btn quick-toggle" aria-controls="quickContacts" aria-expanded="true" aria-label="Thu gọn liên hệ">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
         <polyline points="18 15 12 9 6 15" />
       </svg>
@@ -1129,7 +1152,7 @@
                     <th>Thương hiệu</th>
                     <th>Quy cách</th>
                     <th>Giá niêm yết</th>
-                    <th>Giá sỉ (-38%)</th>
+                    <th>Giá sỉ (<span data-wholesale-pct>-38%</span>)</th>
                     <th>Số lượng</th>
                     <th>Tạm tính</th>
                   </tr>
@@ -1233,9 +1256,9 @@
 
             <div class="wholesale-summary-box">
               <div class="ws-calc-details">
-                <div class="ws-row"><span>Tổng giá niêm yết bán lẻ:</span> <strong id="wsTotalRetail">52.120.000 đ</strong></div>
-                <div class="ws-row"><span>Chiết khấu đối tác Vàng (-38%):</span> <strong class="text-crimson" id="wsTotalDiscount">-19.805.600 đ</strong></div>
-                <div class="ws-row total"><span>Tổng thanh toán B2B dự kiến:</span> <strong class="text-gold" id="wsGrandTotal">32.314.400 đ</strong></div>
+                <div class="ws-row"><span>Tổng giá niêm yết bán lẻ:</span> <strong id="wsTotalRetail">0 đ</strong></div>
+                <div class="ws-row"><span>Chiết khấu đối tác Vàng (<span data-wholesale-pct>-38%</span>):</span> <strong class="text-crimson" id="wsTotalDiscount">-0 đ</strong></div>
+                <div class="ws-row total"><span>Tổng thanh toán B2B dự kiến:</span> <strong class="text-gold" id="wsGrandTotal">0 đ</strong></div>
               </div>
               <div class="ws-actions">
                 <button type="button" class="btn-primary large" id="btnConfirmB2BOrder">
@@ -1564,13 +1587,13 @@
             </div>
 
             <div class="portal-table-wrap">
-              <table class="portal-table admin-table">
+              <table class="portal-table admin-table" id="adminProductsTable">
                 <thead>
                   <tr>
                     <th>Sản phẩm</th>
                     <th>Thương hiệu</th>
                     <th>Giá niêm yết</th>
-                    <th>Giá sỉ (-38%)</th>
+                    <th>Giá sỉ (<span data-wholesale-pct>-38%</span>)</th>
                     <th>Trạng thái kho</th>
                     <th>Nhãn nổi bật</th>
                     <th>Thao tác</th>
