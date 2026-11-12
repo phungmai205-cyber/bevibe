@@ -35,6 +35,23 @@ export const productPrices = {
   'drbargo-4': { price: 420000, unit: 'Chai 400ml' }      // #24 Toner
 };
 
+/**
+ * "Sản phẩm bán chạy" trên trang chủ: thứ tự do biên tập chọn (chưa có số liệu bán hàng thật).
+ * Sửa danh sách id (theo translations.js) để đổi sản phẩm hiển thị.
+ */
+export const BEST_SELLER_IDS = ['drbargo-1', 'drbargo-3', 'drbargo-4', 'drbargo-2'];
+
+/** Ảnh riêng cho thẻ sản phẩm ở mục "Sản phẩm bán chạy" (không đổi ảnh ở các trang khác) */
+export const BEST_SELLER_IMAGES = {
+  'drbargo-1': '/assets/images/bestseller/drbargo-emulsion.png',
+  'drbargo-3': '/assets/images/bestseller/drbargo-serum.png',
+  'drbargo-4': '/assets/images/bestseller/drbargo-toner.png',
+  'drbargo-2': '/assets/images/bestseller/drbargo-foam-cleansing.png'
+};
+
+/** Thương hiệu hiển thị ở mục "Sản phẩm phân phối chính hãng" trên trang chủ */
+export const HOME_OFFICIAL_BRAND = 'dr-bargo';
+
 export function formatVnd(n) {
   return `${Number(n).toLocaleString('vi-VN')}đ`;
 }

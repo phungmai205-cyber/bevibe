@@ -1026,6 +1026,986 @@ export const blogPosts = [
       { q: 'Da yếu có nên đắp mặt nạ không?', a: 'Có thể dùng mặt nạ cấp ẩm, làm dịu với thành phần đơn giản; tránh mặt nạ chứa hoạt chất mạnh hoặc hương liệu.' },
       { q: 'Ceramide có dùng được hằng ngày không?', a: 'Được. Ceramide lành tính, phù hợp dùng hằng ngày cả sáng và tối, đặc biệt với da khô và nhạy cảm.' }
     ]
+  },
+
+  /* ================================================================== */
+  /* Bổ sung 11/2026: 5 bài mỗi chủ đề                                   */
+  /* ================================================================== */
+
+  /* ---------------- Kiến thức làn da ---------------- */
+  {
+    slug: 'cach-xac-dinh-loai-da-tai-nha',
+    keyword: 'cách xác định loại da',
+    category: 'kien-thuc',
+    date: '2026-11-12',
+    readTime: 5,
+    cover: '/assets/images/catalog/neuraderm/neura-1.jpg',
+    seoTitle: 'Cách xác định loại da tại nhà chỉ trong 30 phút',
+    metaDescription: 'Hướng dẫn cách xác định loại da tại nhà bằng phép thử giấy thấm dầu và quan sát sau rửa mặt: da dầu, da khô, da hỗn hợp, da thường hay da nhạy cảm.',
+    title: 'Cách xác định loại da tại nhà chỉ trong 30 phút',
+    excerpt: 'Chọn sai sản phẩm thường bắt đầu từ việc đoán sai loại da. Hai phép thử đơn giản dưới đây giúp bạn biết chính xác da mình thuộc nhóm nào.',
+    products: ['neura-1', 'drbargo-2', 'neura-8'],
+    content: `
+      <p>Biết <strong>cách xác định loại da</strong> là bước đầu tiên để xây dựng routine hiệu quả. Cùng một loại kem, da dầu có thể thấy bí còn da khô lại thấy vừa đủ. Bạn không cần máy soi da chuyên nghiệp — chỉ cần sữa rửa mặt dịu nhẹ, giấy thấm dầu và 30 phút quan sát.</p>
+
+      <h2>5 loại da cơ bản</h2>
+      <ul>
+        <li><strong>Da thường:</strong> không quá dầu, không quá khô, ít khi kích ứng.</li>
+        <li><strong>Da dầu:</strong> bóng nhờn toàn mặt, lỗ chân lông to, dễ nổi mụn.</li>
+        <li><strong>Da khô:</strong> căng, thô ráp, có thể bong vảy nhỏ, ít dầu.</li>
+        <li><strong>Da hỗn hợp:</strong> vùng chữ T (trán, mũi, cằm) dầu, hai má thường hoặc khô.</li>
+        <li><strong>Da nhạy cảm:</strong> dễ đỏ, ngứa, châm chích khi đổi sản phẩm hoặc thời tiết. Đây là "tình trạng" có thể đi kèm bất kỳ loại da nào.</li>
+      </ul>
+
+      <h2>Phép thử 1: Rửa mặt và chờ 30 phút</h2>
+      ${fig('/assets/images/catalog/neuraderm/neura-1.jpg', 'Sữa rửa mặt dịu nhẹ Neuraderm Calming Foam Cleansing dùng trước khi kiểm tra loại da')}
+      <ol>
+        <li>Rửa mặt bằng sữa rửa mặt dịu nhẹ, lau khô bằng khăn sạch.</li>
+        <li>Không thoa bất kỳ sản phẩm nào, ngồi trong phòng thoáng mát 30 phút.</li>
+        <li>Quan sát và cảm nhận: da căng kéo là da khô; bóng toàn mặt là da dầu; chỉ bóng vùng chữ T là da hỗn hợp; thoải mái, không bóng không căng là da thường.</li>
+      </ol>
+
+      <h2>Phép thử 2: Giấy thấm dầu</h2>
+      <p>Sau 30 phút, ấn nhẹ giấy thấm dầu lên trán, mũi, má và cằm rồi soi giấy dưới ánh sáng. Giấy thấm nhiều dầu ở mọi vị trí → da dầu; chỉ ở trán và mũi → da hỗn hợp; gần như không có dầu → da khô hoặc da thường.</p>
+
+      <h2>Dấu hiệu nhận biết da nhạy cảm</h2>
+      <p>Da nhạy cảm thường đỏ lên khi rửa nước nóng, châm chích khi thoa toner có cồn, hoặc nổi mẩn khi đổi mỹ phẩm mới. Nếu bạn gặp từ hai dấu hiệu trở lên, hãy ưu tiên sản phẩm không hương liệu và xem thêm <a href="#/blog/dau-hieu-hang-rao-bao-ve-da-bi-ton-thuong">dấu hiệu hàng rào da bị tổn thương</a>.</p>
+
+      <h2>Loại da có thay đổi không?</h2>
+      <p>Có. Nội tiết, tuổi tác, khí hậu và cả việc dùng hoạt chất mạnh đều khiến loại da thay đổi. Nên kiểm tra lại mỗi khi chuyển mùa hoặc khi thấy routine cũ không còn phù hợp.</p>
+
+      <h2>Kết luận</h2>
+      <p>Sau khi biết loại da, bạn có thể chọn đúng <a href="#/blog/cach-chon-sua-rua-mat-theo-loai-da">sữa rửa mặt theo loại da</a> và các bước dưỡng phía sau. Một routine đúng loại da luôn hiệu quả hơn một routine đắt tiền nhưng sai hướng.</p>
+    `,
+    faq: [
+      { q: 'Nên kiểm tra loại da vào lúc nào?', a: 'Buổi sáng hoặc sau khi rửa mặt 30 phút, khi da không có sản phẩm nào và không vừa vận động ra mồ hôi.' },
+      { q: 'Da dầu nhưng vẫn căng khô là loại da gì?', a: 'Thường là da dầu thiếu nước. Da vẫn tiết dầu nhưng lớp sừng thiếu ẩm, cần bổ sung cấp nước nhẹ thay vì tẩy dầu mạnh.' }
+    ]
+  },
+
+  {
+    slug: 'da-thieu-nuoc-va-da-kho-khac-nhau-the-nao',
+    keyword: 'da thiếu nước và da khô',
+    category: 'kien-thuc',
+    date: '2026-11-07',
+    readTime: 4,
+    cover: '/assets/images/catalog/neuraderm/neura-15.jpg',
+    seoTitle: 'Da thiếu nước và da khô khác nhau thế nào?',
+    metaDescription: 'Phân biệt da thiếu nước và da khô qua dấu hiệu, nguyên nhân và cách chăm sóc: cấp nước bằng chất hút ẩm hay bổ sung dầu để khóa ẩm.',
+    title: 'Da thiếu nước và da khô: khác nhau thế nào, chăm sóc ra sao?',
+    excerpt: 'Da khô là thiếu dầu, da thiếu nước là thiếu ẩm. Nhầm lẫn hai tình trạng này khiến nhiều người bôi kem đặc mà da vẫn căng rát.',
+    products: ['neura-15', 'neura-16', 'drbargo-1'],
+    content: `
+      <p>Nhiều người nghĩ <strong>da thiếu nước và da khô</strong> là một. Thực tế, da khô là <em>loại da</em> (tuyến dầu hoạt động ít), còn da thiếu nước là <em>tình trạng</em> (lớp sừng thiếu ẩm) — và ngay cả da dầu cũng có thể thiếu nước.</p>
+
+      <h2>Dấu hiệu nhận biết</h2>
+      <h3>Da khô</h3>
+      <ul>
+        <li>Ít dầu quanh năm, lỗ chân lông nhỏ.</li>
+        <li>Thô ráp, có thể bong vảy, dễ nứt nẻ khi lạnh.</li>
+        <li>Cảm giác khô kéo dài kể cả khi đã dưỡng ẩm nhẹ.</li>
+      </ul>
+      <h3>Da thiếu nước</h3>
+      <ul>
+        <li>Vẫn có dầu nhưng bề mặt căng, sạm, kém đàn hồi.</li>
+        <li>Xuất hiện nếp nhăn li ti khi véo nhẹ má.</li>
+        <li>Lớp nền dễ mốc, da tiết dầu nhiều hơn để "bù".</li>
+      </ul>
+
+      <h2>Nguyên nhân</h2>
+      <p>Da khô chủ yếu do cơ địa và tuổi tác. Da thiếu nước thường do môi trường điều hòa, uống ít nước, rửa mặt quá sạch, lạm dụng hoạt chất tẩy hoặc hàng rào da suy yếu.</p>
+
+      <h2>Cách chăm sóc khác nhau</h2>
+      ${fig('/assets/images/catalog/neuraderm/neura-15.jpg', 'Mặt nạ cấp ẩm ôm khít Neuraderm M.BT Hydration Fit Mask cho da thiếu nước')}
+      <ul>
+        <li><strong>Da thiếu nước:</strong> ưu tiên chất hút ẩm (Hyaluronic Acid, Glycerin, Panthenol) trong toner, serum, mặt nạ; sau đó khóa bằng kem mỏng nhẹ.</li>
+        <li><strong>Da khô:</strong> cần cả nước lẫn dầu — bổ sung Ceramide, Squalane, bơ hạt mỡ trong kem dưỡng giàu dưỡng chất.</li>
+      </ul>
+
+      <h2>Thói quen hỗ trợ</h2>
+      <ol>
+        <li>Rửa mặt bằng nước mát, không dùng nước nóng.</li>
+        <li>Thoa dưỡng ẩm trong vòng 1 phút sau khi rửa mặt, khi da còn hơi ẩm.</li>
+        <li>Dùng máy tạo ẩm nếu ngồi điều hòa cả ngày.</li>
+        <li>Đắp mặt nạ cấp ẩm 2 – 3 lần/tuần. Xem <a href="#/blog/dap-mat-na-giay-bao-nhieu-lan-mot-tuan">đắp mặt nạ giấy bao nhiêu lần một tuần</a>.</li>
+      </ol>
+
+      <h2>Kết luận</h2>
+      <p>Xác định đúng tình trạng giúp bạn chọn đúng sản phẩm: da thiếu nước cần "nước", da khô cần "dầu". Nhiều làn da cần cả hai — khi đó hãy kết hợp serum cấp ẩm và kem dưỡng phục hồi như <a href="#/thuong-hieu/neuraderm">Neuraderm Neuro Lacto Moisturizer</a>.</p>
+    `,
+    faq: [
+      { q: 'Da dầu có bị thiếu nước không?', a: 'Có, và khá phổ biến. Da dầu thiếu nước thường bóng nhờn nhưng vẫn căng, sần, dễ nổi mụn ẩn.' },
+      { q: 'Uống nhiều nước có hết da thiếu nước không?', a: 'Uống đủ nước hỗ trợ cơ thể nhưng không đủ để cấp ẩm cho lớp sừng; vẫn cần sản phẩm dưỡng ẩm bôi ngoài da.' }
+    ]
+  },
+
+  {
+    slug: 'lo-chan-long-to-nguyen-nhan-va-cach-thu-nho',
+    keyword: 'lỗ chân lông to',
+    category: 'kien-thuc',
+    date: '2026-10-31',
+    readTime: 5,
+    cover: '/assets/images/catalog/medipharm/stemc-4.jpg',
+    seoTitle: 'Lỗ chân lông to: nguyên nhân và cách thu nhỏ hiệu quả',
+    metaDescription: 'Vì sao lỗ chân lông to? Tìm hiểu nguyên nhân do dầu thừa, lão hóa, ánh nắng và cách chăm sóc giúp lỗ chân lông trông nhỏ và mịn hơn.',
+    title: 'Lỗ chân lông to: nguyên nhân và cách thu nhỏ hiệu quả',
+    excerpt: 'Không có sản phẩm nào "đóng" được lỗ chân lông, nhưng chăm sóc đúng có thể giúp chúng trông nhỏ và đều màu hơn rõ rệt.',
+    products: ['stemc-4', 'stemc-5', 'drbargo-4'],
+    content: `
+      <p><strong>Lỗ chân lông to</strong> là nỗi lo của nhiều người, đặc biệt da dầu và da hỗn hợp. Kích thước lỗ chân lông phần lớn do gen quyết định, nhưng dầu thừa, bụi bẩn và lão hóa khiến chúng giãn rộng và lộ rõ hơn.</p>
+
+      <h2>Nguyên nhân khiến lỗ chân lông to</h2>
+      <ul>
+        <li><strong>Tiết dầu nhiều:</strong> dầu và tế bào chết tích tụ làm thành lỗ chân lông căng ra.</li>
+        <li><strong>Lão hóa:</strong> collagen giảm, da kém đàn hồi nên lỗ chân lông chảy xệ, trông to hơn.</li>
+        <li><strong>Tia UV:</strong> phá hủy collagen quanh lỗ chân lông.</li>
+        <li><strong>Nặn mụn sai cách:</strong> gây tổn thương, để lại lỗ chân lông giãn và sẹo rỗ.</li>
+      </ul>
+
+      <h2>Cách giúp lỗ chân lông trông nhỏ hơn</h2>
+      ${fig('/assets/images/catalog/medipharm/stemc-4.jpg', 'Nước hoa hồng Stem C Toner giúp cân bằng và làm mịn bề mặt da')}
+      <h3>1. Làm sạch kỹ nhưng dịu nhẹ</h3>
+      <p>Tẩy trang mỗi tối và rửa mặt với sữa rửa mặt pH cân bằng. Làm sạch quá mạnh khiến da tiết dầu bù, lỗ chân lông càng to.</p>
+      <h3>2. Tẩy tế bào chết hóa học</h3>
+      <p>BHA (Salicylic Acid) tan trong dầu, len vào lỗ chân lông làm sạch bã nhờn. Dùng 2 – 3 lần/tuần, bắt đầu từ nồng độ thấp.</p>
+      <h3>3. Cân bằng bằng toner</h3>
+      <p>Toner giúp cân bằng độ ẩm, làm mịn bề mặt để lỗ chân lông kém rõ. Xem thêm <a href="#/blog/toner-co-can-thiet-khong">toner có cần thiết không</a>.</p>
+      <h3>4. Bổ sung hoạt chất tăng đàn hồi</h3>
+      <p>Retinol, Niacinamide và Peptide hỗ trợ collagen, giúp thành lỗ chân lông săn chắc hơn theo thời gian.</p>
+      <h3>5. Chống nắng mỗi ngày</h3>
+      <p>Bảo vệ collagen là cách phòng lỗ chân lông giãn rộng lâu dài.</p>
+
+      <h2>Những điều nên tránh</h2>
+      <ul>
+        <li>Tự nặn mụn, lột mụn bằng miếng dán quá thường xuyên.</li>
+        <li>Dùng sản phẩm chứa cồn cao để "se" lỗ chân lông — chỉ có tác dụng tức thời và làm khô da.</li>
+        <li>Bỏ qua dưỡng ẩm vì sợ bí.</li>
+      </ul>
+
+      <h2>Kết luận</h2>
+      <p>Lỗ chân lông không biến mất, nhưng có thể trông nhỏ và mịn hơn nhiều sau 6 – 8 tuần chăm sóc đúng. Kiên trì với làm sạch, cân bằng và chống nắng là chìa khóa.</p>
+    `,
+    faq: [
+      { q: 'Nước đá có làm se khít lỗ chân lông không?', a: 'Chỉ làm co tạm thời trong vài phút. Không nên chườm đá trực tiếp lâu vì có thể gây tổn thương mao mạch.' },
+      { q: 'Bao lâu thì thấy lỗ chân lông nhỏ hơn?', a: 'Thường sau 4 – 8 tuần dùng BHA, retinol hoặc niacinamide đều đặn kết hợp chống nắng.' }
+    ]
+  },
+
+  {
+    slug: 'mun-an-la-gi-cach-xu-ly-mun-an',
+    keyword: 'mụn ẩn',
+    category: 'kien-thuc',
+    date: '2026-10-26',
+    readTime: 5,
+    cover: '/assets/images/catalog/neuraderm/neura-7.jpg',
+    seoTitle: 'Mụn ẩn là gì? Nguyên nhân và cách xử lý đúng',
+    metaDescription: 'Mụn ẩn là gì, vì sao da nổi mụn ẩn li ti dưới da và cách xử lý mụn ẩn an toàn bằng làm sạch, tẩy tế bào chết nhẹ và phục hồi hệ vi sinh.',
+    title: 'Mụn ẩn là gì? Nguyên nhân và cách xử lý đúng',
+    excerpt: 'Những nốt sần li ti dưới da, sờ thấy cộm nhưng không có nhân trắng — đó là mụn ẩn. Xử lý sai rất dễ biến chúng thành mụn viêm.',
+    products: ['neura-7', 'neura-8', 'neura-1'],
+    content: `
+      <p><strong>Mụn ẩn</strong> là những nốt mụn nhỏ nằm sâu dưới da, chưa có nhân lộ ra ngoài. Chúng làm bề mặt da sần sùi, kém mịn và có thể bùng thành mụn viêm nếu bị kích thích.</p>
+
+      <h2>Vì sao nổi mụn ẩn?</h2>
+      <ul>
+        <li>Bã nhờn và tế bào chết bít tắc lỗ chân lông.</li>
+        <li>Dùng mỹ phẩm quá dày, không tẩy trang kỹ.</li>
+        <li>Hàng rào da và hệ vi sinh mất cân bằng.</li>
+        <li>Thay đổi nội tiết, căng thẳng, thức khuya.</li>
+      </ul>
+
+      <h2>Cách xử lý mụn ẩn</h2>
+      ${fig('/assets/images/catalog/neuraderm/neura-7.jpg', 'Serum men vi sinh Neuraderm Neuro Lacto Serum hỗ trợ cân bằng da dễ nổi mụn ẩn')}
+      <h3>Làm sạch 2 bước buổi tối</h3>
+      <p>Tẩy trang hoặc dầu tẩy trang, sau đó rửa lại bằng sữa rửa mặt dịu nhẹ để loại bỏ hoàn toàn kem chống nắng và bụi bẩn.</p>
+      <h3>Tẩy tế bào chết nhẹ nhàng</h3>
+      <p>BHA nồng độ 1 – 2% dùng 2 – 3 tối/tuần giúp thông thoáng lỗ chân lông. Không chà hạt mạnh vì dễ gây viêm.</p>
+      <h3>Cân bằng hệ vi sinh</h3>
+      <p>Da có hệ vi sinh khỏe mạnh sẽ kiểm soát vi khuẩn gây mụn tốt hơn. Sản phẩm chứa lợi khuẩn như dòng Neuro Lacto giúp da ổn định. Xem thêm <a href="#/blog/xu-huong-cham-soc-he-vi-sinh-da-microbiome">xu hướng chăm sóc hệ vi sinh da</a>.</p>
+      <h3>Dưỡng ẩm mỏng nhẹ</h3>
+      <p>Da thiếu ẩm sẽ tiết dầu nhiều hơn. Chọn kem dạng gel hoặc lotion không gây bít tắc. Xem <a href="#/blog/da-dau-mun-co-can-kem-duong-am-khong">da dầu mụn có cần kem dưỡng ẩm không</a>.</p>
+
+      <h2>Không nên làm gì?</h2>
+      <ul>
+        <li>Nặn mụn ẩn khi chưa có nhân — dễ để lại thâm và sẹo.</li>
+        <li>Dùng cùng lúc quá nhiều hoạt chất trị mụn.</li>
+        <li>Thay sản phẩm liên tục khi chưa đủ 4 tuần.</li>
+      </ul>
+
+      <h2>Kết luận</h2>
+      <p>Mụn ẩn cần kiên nhẫn: làm sạch đúng, tẩy tế bào chết vừa phải và giữ hàng rào da khỏe. Nếu mụn ẩn kéo dài hoặc lan rộng, hãy gặp bác sĩ da liễu.</p>
+    `,
+    faq: [
+      { q: 'Mụn ẩn bao lâu thì hết?', a: 'Thường cần 4 – 8 tuần chăm sóc đều đặn, vì đó là thời gian da hoàn thành chu kỳ thay mới.' },
+      { q: 'Có nên đắp mặt nạ đất sét trị mụn ẩn không?', a: 'Có thể dùng 1 lần/tuần cho da dầu, nhưng nên dưỡng ẩm ngay sau đó để tránh khô da.' }
+    ]
+  },
+
+  {
+    slug: 'collagen-va-qua-trinh-lao-hoa-da',
+    keyword: 'collagen và lão hóa da',
+    category: 'kien-thuc',
+    date: '2026-10-18',
+    readTime: 5,
+    cover: '/assets/images/catalog/neuraderm/neura-3.jpg',
+    seoTitle: 'Collagen và lão hóa da: hiểu đúng để chăm sóc đúng',
+    metaDescription: 'Collagen giảm từ tuổi 25 khiến da chảy xệ, nếp nhăn xuất hiện. Tìm hiểu mối liên hệ giữa collagen và lão hóa da, cách kích thích collagen tự nhiên.',
+    title: 'Collagen và lão hóa da: hiểu đúng để chăm sóc đúng',
+    excerpt: 'Từ tuổi 25, mỗi năm da mất khoảng 1% collagen. Biết điều gì phá hủy collagen và cách kích thích nó giúp làm chậm lão hóa hiệu quả.',
+    products: ['neura-3', 'neura-9', 'stemc-2'],
+    content: `
+      <p><strong>Collagen</strong> là protein chiếm khoảng 75% trọng lượng khô của lớp trung bì, giữ cho da căng, đàn hồi. Mối liên hệ giữa <strong>collagen và lão hóa da</strong> rất rõ: collagen giảm đến đâu, nếp nhăn và chảy xệ xuất hiện đến đó.</p>
+
+      <h2>Collagen giảm như thế nào?</h2>
+      <p>Cơ thể sản sinh collagen chậm dần từ khoảng tuổi 25, mỗi năm mất khoảng 1%. Sau mãn kinh, tốc độ này có thể tăng mạnh trong vài năm đầu.</p>
+
+      <h2>Những yếu tố phá hủy collagen</h2>
+      <ul>
+        <li><strong>Tia UV:</strong> nguyên nhân hàng đầu gây lão hóa sớm (photoaging).</li>
+        <li><strong>Đường và glycation:</strong> đường gắn vào sợi collagen làm chúng cứng, giòn.</li>
+        <li><strong>Hút thuốc, khói bụi:</strong> tạo gốc tự do phá vỡ cấu trúc collagen.</li>
+        <li><strong>Thiếu ngủ, căng thẳng:</strong> cortisol cao làm giảm tái tạo da.</li>
+      </ul>
+
+      <h2>Cách kích thích collagen tự nhiên</h2>
+      ${fig('/assets/images/catalog/neuraderm/neura-3.jpg', 'Ampoule Neuraderm Coretime hỗ trợ nâng cơ và giảm nếp nhăn')}
+      <ol>
+        <li><strong>Retinoid:</strong> hoạt chất được nghiên cứu nhiều nhất về kích thích collagen.</li>
+        <li><strong>Vitamin C:</strong> cần thiết cho quá trình tổng hợp collagen, đồng thời chống oxy hóa.</li>
+        <li><strong>Peptide:</strong> "tín hiệu" giúp da tăng sản xuất collagen. Xem <a href="#/blog/peptide-la-gi-cong-dung-chong-lao-hoa">peptide là gì</a>.</li>
+        <li><strong>Growth factor (EGF, bFGF):</strong> hỗ trợ tái tạo và phục hồi.</li>
+        <li><strong>Chống nắng mỗi ngày:</strong> bước "giữ" collagen quan trọng nhất.</li>
+      </ol>
+
+      <h2>Bôi collagen có tác dụng không?</h2>
+      <p>Phân tử collagen quá lớn để thấm vào trung bì. Collagen bôi ngoài chủ yếu giữ ẩm bề mặt. Muốn tăng collagen thật sự, hãy dùng các hoạt chất kích thích da tự sản sinh như trên.</p>
+
+      <h2>Kết luận</h2>
+      <p>Chống lão hóa hiệu quả là bảo vệ collagen hiện có và kích thích collagen mới. Kết hợp chống nắng, hoạt chất phù hợp và lối sống lành mạnh sẽ giúp da trẻ lâu hơn.</p>
+    `,
+    faq: [
+      { q: 'Nên bắt đầu chống lão hóa từ tuổi nào?', a: 'Chống nắng nên dùng từ rất sớm; hoạt chất như retinol, peptide có thể bắt đầu từ khoảng 25 tuổi.' },
+      { q: 'Uống collagen có giúp đẹp da không?', a: 'Một số nghiên cứu cho thấy collagen thủy phân hỗ trợ độ ẩm và đàn hồi, nhưng không thay thế được chống nắng và skincare.' }
+    ]
+  },
+
+  /* ---------------- Hướng dẫn sử dụng ---------------- */
+  {
+    slug: 'cach-tay-trang-dung-cach',
+    keyword: 'cách tẩy trang đúng cách',
+    category: 'huong-dan',
+    date: '2026-11-11',
+    readTime: 4,
+    cover: '/assets/images/catalog/medipharm/stemc-5.jpg',
+    seoTitle: 'Cách tẩy trang đúng cách cho từng loại da',
+    metaDescription: 'Hướng dẫn cách tẩy trang đúng cách với nước tẩy trang, dầu tẩy trang: các bước, thời gian, lỗi thường gặp và cách chọn sản phẩm theo loại da.',
+    title: 'Cách tẩy trang đúng cách: 5 bước sạch sâu mà không khô da',
+    excerpt: 'Kem chống nắng và lớp nền không thể sạch chỉ bằng sữa rửa mặt. Tẩy trang đúng là nền móng cho mọi bước dưỡng phía sau.',
+    products: ['stemc-5', 'neura-1', 'drbargo-2'],
+    content: `
+      <p>Kể cả không trang điểm, bạn vẫn cần tẩy trang nếu dùng kem chống nắng. <strong>Cách tẩy trang đúng cách</strong> giúp loại bỏ dầu, bụi mịn và màng lọc chống nắng mà không làm tổn thương hàng rào da.</p>
+
+      <h2>Chọn sản phẩm tẩy trang theo loại da</h2>
+      <ul>
+        <li><strong>Nước tẩy trang (micellar):</strong> nhẹ, hợp da dầu, da nhạy cảm, trang điểm nhẹ.</li>
+        <li><strong>Dầu / sáp tẩy trang:</strong> hòa tan tốt lớp trang điểm dày, kem chống nắng chống nước; hợp da khô, da thường.</li>
+        <li><strong>Sữa tẩy trang:</strong> dịu nhẹ, hợp da khô nhạy cảm.</li>
+      </ul>
+
+      <h2>5 bước tẩy trang với nước tẩy trang</h2>
+      ${fig('/assets/images/catalog/medipharm/stemc-5.jpg', 'Nước tẩy trang MediPharm Stem C Cleansing Water làm sạch sâu dịu nhẹ')}
+      <ol>
+        <li>Rửa tay sạch, buộc gọn tóc.</li>
+        <li>Thấm đẫm bông tẩy trang, không để bông khô.</li>
+        <li>Áp bông lên mắt và môi 10 – 15 giây để lớp trang điểm tan ra rồi lau nhẹ theo một chiều.</li>
+        <li>Lau toàn mặt từ trong ra ngoài, thay bông đến khi bông sạch.</li>
+        <li>Rửa lại bằng sữa rửa mặt dịu nhẹ (làm sạch kép).</li>
+      </ol>
+
+      <h2>Với dầu tẩy trang</h2>
+      <p>Thoa dầu lên da <em>khô</em>, massage 30 – 60 giây, sau đó làm ướt tay để nhũ hóa (dầu chuyển màu trắng đục) rồi rửa sạch bằng nước ấm, tiếp theo là sữa rửa mặt.</p>
+
+      <h2>Lỗi thường gặp</h2>
+      <ul>
+        <li>Chà xát mạnh vùng mắt gây nếp nhăn và thâm.</li>
+        <li>Bỏ qua bước rửa mặt sau tẩy trang, để cặn tồn đọng.</li>
+        <li>Dùng khăn ướt tẩy trang hằng ngày — tiện nhưng dễ kích ứng.</li>
+      </ul>
+
+      <h2>Kết luận</h2>
+      <p>Tẩy trang kỹ, nhẹ tay và làm sạch kép là đủ cho hầu hết làn da. Sau đó, chọn <a href="#/blog/cach-chon-sua-rua-mat-theo-loai-da">sữa rửa mặt theo loại da</a> và tiếp tục routine dưỡng.</p>
+    `,
+    faq: [
+      { q: 'Không trang điểm có cần tẩy trang không?', a: 'Nếu dùng kem chống nắng, đặc biệt loại chống nước, bạn vẫn nên tẩy trang hoặc làm sạch kép vào buổi tối.' },
+      { q: 'Tẩy trang xong có cần rửa mặt không?', a: 'Nên rửa lại bằng sữa rửa mặt dịu nhẹ để loại bỏ cặn tẩy trang và bụi bẩn còn sót.' }
+    ]
+  },
+
+  {
+    slug: 'cach-dung-serum-dung-cach',
+    keyword: 'cách dùng serum',
+    category: 'huong-dan',
+    date: '2026-11-06',
+    readTime: 4,
+    cover: '/assets/images/catalog/dr-bargo/drbargo-3-g1.jpg',
+    seoTitle: 'Cách dùng serum đúng cách để thấm nhanh, hiệu quả',
+    metaDescription: 'Hướng dẫn cách dùng serum đúng: dùng bao nhiêu giọt, bước nào trong routine, kết hợp nhiều serum ra sao và những lỗi khiến serum kém hiệu quả.',
+    title: 'Cách dùng serum đúng cách để thấm nhanh và hiệu quả',
+    excerpt: 'Serum là bước chứa hoạt chất đậm đặc nhất. Dùng sai lượng hoặc sai thứ tự sẽ khiến bạn tốn tiền mà da không đổi.',
+    products: ['drbargo-3', 'neura-7', 'neura-3'],
+    content: `
+      <p>Serum chứa nồng độ hoạt chất cao với kết cấu mỏng nhẹ, thấm sâu. Nắm đúng <strong>cách dùng serum</strong> giúp bạn tận dụng tối đa sản phẩm.</p>
+
+      <h2>Serum dùng ở bước nào?</h2>
+      <p>Thứ tự cơ bản: làm sạch → toner → <strong>serum</strong> → kem dưỡng → kem chống nắng (ban ngày). Nguyên tắc chung là kết cấu từ mỏng đến dày. Xem chi tiết <a href="#/blog/thu-tu-skincare-sang-toi">thứ tự skincare sáng tối</a>.</p>
+
+      <h2>Các bước thoa serum</h2>
+      ${fig('/assets/images/catalog/dr-bargo/drbargo-3-g1.jpg', 'Tinh chất phục hồi Dr.BARGO Serum dùng sau toner')}
+      <ol>
+        <li>Lấy 2 – 3 giọt (khoảng bằng hạt đậu) cho toàn mặt.</li>
+        <li>Chấm lên trán, hai má, mũi, cằm.</li>
+        <li>Dàn đều và vỗ nhẹ bằng đầu ngón tay, không chà xát.</li>
+        <li>Áp lòng bàn tay lên mặt vài giây để serum thấm.</li>
+        <li>Chờ 30 – 60 giây trước bước tiếp theo.</li>
+      </ol>
+
+      <h2>Dùng nhiều serum cùng lúc được không?</h2>
+      <p>Được, nhưng tối đa 2 loại mỗi lần và tránh các cặp dễ kích ứng như Retinol + AHA/BHA hay Vitamin C nồng độ cao + AHA. Bạn có thể chia: buổi sáng serum chống oxy hóa, buổi tối serum phục hồi hoặc treatment. Xem <a href="#/blog/vi-sao-serum-buoi-toi-chong-nang-buoi-sang">vì sao serum buổi tối, chống nắng buổi sáng</a>.</p>
+
+      <h2>Lỗi thường gặp</h2>
+      <ul>
+        <li>Dùng quá nhiều giọt khiến da bết, vón và lãng phí.</li>
+        <li>Bỏ kem dưỡng sau serum, làm hoạt chất bay hơi cùng nước.</li>
+        <li>Bảo quản nơi nóng hoặc có ánh nắng làm hoạt chất mất tác dụng.</li>
+      </ul>
+
+      <h2>Kết luận</h2>
+      <p>Đúng lượng, đúng thứ tự và kiên trì ít nhất 4 tuần — đó là cách để serum phát huy hiệu quả. Hãy chọn serum theo vấn đề chính của da thay vì chạy theo nhiều loại cùng lúc.</p>
+    `,
+    faq: [
+      { q: 'Serum dùng sáng hay tối?', a: 'Tùy hoạt chất. Vitamin C hợp buổi sáng; retinol, AHA/BHA hợp buổi tối; serum cấp ẩm, phục hồi dùng được cả hai.' },
+      { q: 'Có cần đợi serum khô hẳn mới thoa kem không?', a: 'Không cần khô hẳn, chỉ cần serum thấm (khoảng 30 – 60 giây) là có thể thoa kem dưỡng.' }
+    ]
+  },
+
+  {
+    slug: 'cach-dung-xit-khoang-dung-cach',
+    keyword: 'cách dùng xịt khoáng',
+    category: 'huong-dan',
+    date: '2026-10-29',
+    readTime: 3,
+    cover: '/assets/images/catalog/neuraderm/neura-2.jpg',
+    seoTitle: 'Cách dùng xịt khoáng đúng cách để không làm khô da',
+    metaDescription: 'Xịt khoáng dùng sai có thể làm da khô hơn. Hướng dẫn cách dùng xịt khoáng đúng: khoảng cách, thời điểm, cách thấm và kết hợp với kem dưỡng.',
+    title: 'Cách dùng xịt khoáng đúng cách để không làm khô da',
+    excerpt: 'Xịt khoáng rồi để tự bay hơi có thể kéo theo cả độ ẩm trên da. Chỉ cần thêm một thao tác nhỏ là khắc phục được.',
+    products: ['neura-2', 'stemc-4', 'neura-16'],
+    content: `
+      <p>Xịt khoáng giúp làm dịu, cấp ẩm tức thì và giữ lớp trang điểm tươi tắn. Tuy nhiên nếu không biết <strong>cách dùng xịt khoáng</strong>, nước bay hơi có thể khiến da khô hơn trước.</p>
+
+      <h2>Cách xịt đúng</h2>
+      ${fig('/assets/images/catalog/neuraderm/neura-2.jpg', 'Xịt khoáng Neuraderm Calming Mist cấp ẩm làm dịu tức thì')}
+      <ol>
+        <li>Lắc nhẹ chai (nếu có hướng dẫn), nhắm mắt.</li>
+        <li>Giữ chai cách mặt 20 – 30cm để hạt sương mịn và đều.</li>
+        <li>Xịt 2 – 3 lần theo hình chữ Z.</li>
+        <li>Đợi 10 – 15 giây rồi vỗ nhẹ hoặc thấm bằng khăn giấy — không để tự bay hơi hoàn toàn.</li>
+        <li>Thoa kem dưỡng ngay sau đó để khóa ẩm.</li>
+      </ol>
+
+      <h2>Khi nào nên dùng xịt khoáng?</h2>
+      <ul>
+        <li>Sau rửa mặt, thay toner cho da nhạy cảm.</li>
+        <li>Giữa ngày khi ngồi điều hòa lâu.</li>
+        <li>Sau khi đi nắng, tập thể dục để làm dịu.</li>
+        <li>Trước và sau trang điểm giúp lớp nền ẩm mịn.</li>
+        <li>Sau treatment, laser khi da nóng rát. Xem <a href="#/blog/cham-soc-da-sau-laser-peel">chăm sóc da sau laser, peel</a>.</li>
+      </ul>
+
+      <h2>Sai lầm thường gặp</h2>
+      <ul>
+        <li>Xịt quá nhiều lần trong ngày mà không dưỡng ẩm lại.</li>
+        <li>Chọn xịt khoáng có cồn, hương liệu cho da nhạy cảm.</li>
+        <li>Xịt khi da đang có lớp bụi bẩn mà không làm sạch.</li>
+      </ul>
+
+      <h2>Kết luận</h2>
+      <p>Xịt khoáng là "trợ thủ" tiện lợi, nhưng chỉ phát huy tác dụng khi được thấm nhẹ và khóa ẩm. Hãy chọn sản phẩm có thành phần làm dịu như Panthenol, Allantoin cho da nhạy cảm.</p>
+    `,
+    faq: [
+      { q: 'Xịt khoáng có thay toner được không?', a: 'Được với da nhạy cảm hoặc routine tối giản, nhất là các loại xịt có thành phần cấp ẩm, làm dịu.' },
+      { q: 'Một ngày nên xịt bao nhiêu lần?', a: 'Khoảng 2 – 4 lần là đủ, mỗi lần nên thấm nhẹ và dưỡng ẩm lại nếu da khô.' }
+    ]
+  },
+
+  {
+    slug: 'cach-dung-kem-duong-am-hieu-qua',
+    keyword: 'cách dùng kem dưỡng ẩm',
+    category: 'huong-dan',
+    date: '2026-10-22',
+    readTime: 4,
+    cover: '/assets/images/catalog/neuraderm/neura-16.jpg',
+    seoTitle: 'Cách dùng kem dưỡng ẩm hiệu quả cho mọi loại da',
+    metaDescription: 'Hướng dẫn cách dùng kem dưỡng ẩm: lượng dùng, thời điểm thoa, kỹ thuật massage và cách chọn kết cấu kem phù hợp da dầu, da khô, da nhạy cảm.',
+    title: 'Cách dùng kem dưỡng ẩm hiệu quả cho mọi loại da',
+    excerpt: 'Kem dưỡng là bước khóa lại mọi dưỡng chất phía trước. Thoa đúng thời điểm và đúng lượng giúp da mềm mịn cả ngày.',
+    products: ['neura-16', 'neura-10', 'drbargo-1'],
+    content: `
+      <p>Dù da dầu hay da khô, kem dưỡng ẩm đều là bước không thể thiếu. Biết <strong>cách dùng kem dưỡng ẩm</strong> đúng giúp da giữ nước, củng cố hàng rào bảo vệ và tăng hiệu quả của serum.</p>
+
+      <h2>Chọn kết cấu theo loại da</h2>
+      <ul>
+        <li><strong>Da dầu, da mụn:</strong> gel, gel-cream, lotion mỏng nhẹ.</li>
+        <li><strong>Da hỗn hợp:</strong> emulsion, cream nhẹ; có thể dùng kem đặc hơn cho vùng má.</li>
+        <li><strong>Da khô, da nhạy cảm:</strong> cream giàu Ceramide, Squalane, bơ hạt mỡ.</li>
+      </ul>
+
+      <h2>Các bước thoa kem dưỡng</h2>
+      ${fig('/assets/images/catalog/neuraderm/neura-16.jpg', 'Kem dưỡng ẩm men vi sinh Neuraderm Neuro Lacto Moisturizer')}
+      <ol>
+        <li>Thoa khi da còn hơi ẩm sau serum hoặc toner.</li>
+        <li>Lấy lượng bằng hạt đậu lớn (khoảng 1 đốt ngón tay út).</li>
+        <li>Làm ấm kem giữa hai đầu ngón tay.</li>
+        <li>Chấm 5 điểm và dàn đều từ trong ra ngoài, từ dưới lên trên.</li>
+        <li>Đừng quên cổ và vùng quai hàm.</li>
+      </ol>
+
+      <h2>Kem dưỡng ngày và đêm có khác nhau?</h2>
+      <p>Ban ngày nên dùng kem mỏng để lớp kem chống nắng bám tốt. Ban đêm có thể dùng kem đặc hơn hoặc kem phục hồi vì da tái tạo mạnh nhất lúc ngủ.</p>
+
+      <h2>Mẹo tăng hiệu quả</h2>
+      <ul>
+        <li>Da rất khô: thoa thêm một lớp mỏng lên vùng khô sau 5 phút.</li>
+        <li>Da đang treatment: dùng kỹ thuật sandwich (kem – retinol – kem).</li>
+        <li>Đậy nắp kín, dùng thìa lấy kem dạng hũ để vệ sinh.</li>
+      </ul>
+
+      <h2>Kết luận</h2>
+      <p>Kem dưỡng đúng kết cấu, thoa đúng lúc là cách đơn giản nhất để da khỏe. Xem thêm <a href="#/blog/da-dau-mun-co-can-kem-duong-am-khong">da dầu mụn có cần kem dưỡng ẩm không</a>.</p>
+    `,
+    faq: [
+      { q: 'Da dầu có cần kem dưỡng ẩm không?', a: 'Có. Thiếu ẩm khiến da tiết dầu nhiều hơn; chọn kem dạng gel hoặc lotion không gây bít tắc.' },
+      { q: 'Thoa kem dưỡng xong bao lâu thì bôi kem chống nắng?', a: 'Khoảng 1 – 3 phút, khi kem dưỡng đã thấm và bề mặt da không còn trơn ướt.' }
+    ]
+  },
+
+  {
+    slug: 'cach-dung-dau-goi-va-kem-u-toc-dung-cach',
+    keyword: 'cách dùng kem ủ tóc',
+    category: 'huong-dan',
+    date: '2026-10-15',
+    readTime: 4,
+    cover: '/assets/images/catalog/smib/smib-8.jpg',
+    seoTitle: 'Cách dùng dầu gội và kem ủ tóc đúng cách',
+    metaDescription: 'Hướng dẫn cách dùng dầu gội và kem ủ tóc đúng: gội da đầu, ủ ngọn tóc, thời gian ủ và tần suất giúp tóc mềm mượt, giảm gãy rụng.',
+    title: 'Cách dùng dầu gội và kem ủ tóc đúng cách cho tóc mềm mượt',
+    excerpt: 'Dầu gội dành cho da đầu, kem ủ dành cho thân và ngọn tóc. Đảo ngược thứ tự này là lý do tóc vừa bết vừa xơ.',
+    products: ['smib-8', 'smib-3', 'smib-6'],
+    content: `
+      <p>Nhiều người thoa kem ủ lên cả da đầu hoặc chỉ xả qua loa vài giây. Hiểu <strong>cách dùng kem ủ tóc</strong> và dầu gội đúng giúp tóc mềm mượt mà da đầu vẫn sạch thoáng.</p>
+
+      <h2>Bước 1: Gội đầu đúng cách</h2>
+      <ol>
+        <li>Làm ướt tóc hoàn toàn bằng nước ấm (không nóng) khoảng 1 phút.</li>
+        <li>Tạo bọt dầu gội trên tay trước khi thoa.</li>
+        <li>Tập trung massage <strong>da đầu</strong> bằng đầu ngón tay, không dùng móng.</li>
+        <li>Để bọt tự chảy xuống thân tóc, không cần chà xát ngọn.</li>
+        <li>Xả sạch hoàn toàn.</li>
+      </ol>
+      <p>Xem thêm <a href="#/blog/goi-dau-dung-cach-da-dau-dau-gau-rung-toc">gội đầu đúng cách cho da đầu dầu, gàu, rụng tóc</a>.</p>
+
+      <h2>Bước 2: Ủ tóc</h2>
+      ${fig('/assets/images/catalog/smib/smib-8.jpg', 'Kem ủ tóc SMIB LactoBio Silk Treatment giúp tóc mềm mượt')}
+      <ol>
+        <li>Vắt nhẹ cho tóc bớt nước.</li>
+        <li>Thoa kem ủ từ <strong>giữa thân đến ngọn tóc</strong>, tránh chân tóc và da đầu.</li>
+        <li>Dùng lược răng thưa chải đều.</li>
+        <li>Ủ 1 – 5 phút tùy hướng dẫn sản phẩm (có thể quấn khăn ấm để thấm tốt hơn).</li>
+        <li>Xả lại bằng nước mát để tóc bóng mượt.</li>
+      </ol>
+
+      <h2>Tần suất phù hợp</h2>
+      <ul>
+        <li>Da đầu dầu: gội 1 lần/ngày hoặc cách ngày.</li>
+        <li>Da đầu khô: 2 – 3 lần/tuần.</li>
+        <li>Kem ủ: mỗi lần gội với tóc hư tổn; 2 – 3 lần/tuần với tóc thường.</li>
+      </ul>
+
+      <h2>Sai lầm thường gặp</h2>
+      <ul>
+        <li>Thoa kem ủ lên da đầu gây bết và bít nang tóc.</li>
+        <li>Sấy nhiệt cao khi tóc còn ướt sũng.</li>
+        <li>Buộc tóc khi chưa khô hẳn.</li>
+      </ul>
+
+      <h2>Kết luận</h2>
+      <p>Dầu gội cho da đầu, kem ủ cho ngọn tóc — nguyên tắc đơn giản giúp tóc khỏe lâu dài. Dòng <a href="#/thuong-hieu/smib">SMIB LactoBio</a> kết hợp lợi khuẩn giúp chăm sóc cả da đầu lẫn thân tóc.</p>
+    `,
+    faq: [
+      { q: 'Kem ủ và dầu xả khác nhau thế nào?', a: 'Dầu xả làm mượt bề mặt nhanh, còn kem ủ giàu dưỡng chất hơn, cần thời gian để thấm vào thân tóc.' },
+      { q: 'Có nên ủ tóc qua đêm không?', a: 'Chỉ nên làm với sản phẩm được thiết kế để ủ lâu; kem ủ thông thường nên xả sạch sau vài phút.' }
+    ]
+  },
+
+  /* ---------------- Mẹo làm đẹp mỗi ngày ---------------- */
+  {
+    slug: 'meo-cham-soc-da-khi-ngoi-dieu-hoa-ca-ngay',
+    keyword: 'chăm sóc da khi ngồi điều hòa',
+    category: 'meo-lam-dep',
+    date: '2026-11-12',
+    readTime: 4,
+    cover: '/assets/images/catalog/neuraderm/neura-13.jpg',
+    seoTitle: 'Mẹo chăm sóc da khi ngồi điều hòa cả ngày',
+    metaDescription: 'Ngồi điều hòa 8 tiếng khiến da khô căng, bong tróc. 6 mẹo chăm sóc da khi ngồi điều hòa giúp da văn phòng luôn ẩm mịn.',
+    title: '6 mẹo chăm sóc da khi ngồi điều hòa cả ngày',
+    excerpt: 'Không khí điều hòa hút ẩm khỏi da từng giờ. Vài thói quen nhỏ tại bàn làm việc giúp da văn phòng không còn khô căng.',
+    products: ['neura-2', 'neura-13', 'neura-16'],
+    content: `
+      <p>Điều hòa làm giảm độ ẩm không khí, khiến nước trên da bốc hơi nhanh. Những <strong>mẹo chăm sóc da khi ngồi điều hòa</strong> dưới đây dễ áp dụng ngay tại văn phòng.</p>
+
+      <h2>1. Dưỡng ẩm kỹ từ buổi sáng</h2>
+      <p>Thoa serum cấp ẩm rồi khóa bằng kem dưỡng có Ceramide trước khi đến văn phòng. Lớp nền ẩm tốt giúp da chịu đựng cả ngày.</p>
+
+      <h2>2. Mang theo xịt khoáng</h2>
+      <p>Xịt 2 – 3 lần mỗi buổi và nhớ thấm nhẹ. Xem <a href="#/blog/cach-dung-xit-khoang-dung-cach">cách dùng xịt khoáng đúng cách</a>.</p>
+
+      <h2>3. Đặt một máy tạo ẩm mini</h2>
+      <p>Máy tạo ẩm để bàn giúp vùng không khí quanh bạn ẩm hơn, giảm khô da và khô mắt.</p>
+
+      <h2>4. Uống nước đều đặn</h2>
+      <p>Đặt bình nước 1 lít trên bàn và uống từng ngụm mỗi giờ thay vì đợi khát.</p>
+
+      <h2>5. Đắp mặt nạ cấp ẩm buổi tối</h2>
+      ${fig('/assets/images/catalog/neuraderm/neura-13.jpg', 'Mặt nạ cấp ẩm và sáng da Neuraderm Hydro Brightening Mask Pack')}
+      <p>2 – 3 lần/tuần, mặt nạ giấy cấp ẩm giúp bù lại lượng nước da mất trong ngày.</p>
+
+      <h2>6. Đừng chỉnh nhiệt độ quá thấp</h2>
+      <p>Nhiệt độ 25 – 27°C vừa dễ chịu vừa ít làm khô da. Hướng gió điều hòa không nên thổi thẳng vào mặt.</p>
+
+      <h2>Kết luận</h2>
+      <p>Da văn phòng cần cấp ẩm liên tục và khóa ẩm đúng cách. Kết hợp những thói quen nhỏ này với routine phù hợp, da sẽ mềm mịn suốt cả ngày dài.</p>
+    `,
+    faq: [
+      { q: 'Có nên dặm kem dưỡng giữa ngày không?', a: 'Có thể thoa lớp kem dưỡng mỏng lên vùng khô, hoặc dùng xịt khoáng rồi vỗ nhẹ để da hấp thụ.' },
+      { q: 'Da dầu ngồi điều hòa có bị khô không?', a: 'Có. Da dầu vẫn có thể thiếu nước khi ngồi điều hòa lâu, dẫn đến tiết dầu nhiều hơn.' }
+    ]
+  },
+
+  {
+    slug: 'meo-ngu-dung-cach-de-da-dep-hon',
+    keyword: 'ngủ đủ giấc đẹp da',
+    category: 'meo-lam-dep',
+    date: '2026-11-04',
+    readTime: 4,
+    cover: '/assets/images/catalog/neuraderm/neura-12.jpg',
+    seoTitle: 'Mẹo ngủ đúng cách để da đẹp hơn mỗi sáng',
+    metaDescription: 'Giấc ngủ ảnh hưởng trực tiếp đến làn da. Những mẹo ngủ đủ giấc đẹp da: giờ ngủ, vỏ gối, tư thế và routine trước khi ngủ.',
+    title: 'Mẹo ngủ đúng cách để da đẹp hơn mỗi sáng',
+    excerpt: 'Ban đêm là lúc da tái tạo mạnh nhất. Ngủ đúng cách là "liệu trình" miễn phí mà ai cũng nên tận dụng.',
+    products: ['neura-12', 'neura-10', 'drbargo-3'],
+    content: `
+      <p>Khi ngủ, cơ thể tăng tiết hormone tăng trưởng, tăng lưu thông máu tới da và đẩy nhanh quá trình sửa chữa tế bào. Đó là lý do <strong>ngủ đủ giấc đẹp da</strong> không chỉ là lời khuyên suông.</p>
+
+      <h2>1. Ngủ trước 23h và đủ 7 – 8 tiếng</h2>
+      <p>Thiếu ngủ làm tăng cortisol, gây viêm, nổi mụn và quầng thâm. Cố định giờ ngủ giúp da tái tạo ổn định.</p>
+
+      <h2>2. Không bỏ skincare buổi tối</h2>
+      ${fig('/assets/images/catalog/neuraderm/neura-12.jpg', 'Mặt nạ kem nâng cơ Neuraderm Repair Lifting Cream Mask Pack dùng buổi tối')}
+      <p>Làm sạch kỹ và dùng sản phẩm phục hồi, treatment buổi tối khi da hấp thụ tốt nhất. Xem <a href="#/blog/thu-tu-skincare-sang-toi">thứ tự skincare sáng tối</a>.</p>
+
+      <h2>3. Thay vỏ gối thường xuyên</h2>
+      <p>Vỏ gối tích tụ dầu, bụi và vi khuẩn. Thay 2 lần/tuần; vỏ gối lụa giúp giảm ma sát, hạn chế nếp hằn trên da và tóc.</p>
+
+      <h2>4. Nằm ngửa nếu có thể</h2>
+      <p>Nằm nghiêng hoặc úp mặt lâu ngày có thể tạo nếp nhăn do ép và làm sản phẩm dưỡng dính vào gối.</p>
+
+      <h2>5. Hạn chế màn hình trước khi ngủ</h2>
+      <p>Ánh sáng xanh làm giảm melatonin, khiến khó ngủ sâu. Tắt điện thoại 30 – 60 phút trước giờ ngủ.</p>
+
+      <h2>6. Giữ phòng ngủ ẩm và mát</h2>
+      <p>Phòng quá khô khiến da mất nước qua đêm. Dùng máy tạo ẩm hoặc đặt một chậu nước nhỏ trong phòng.</p>
+
+      <h2>Kết luận</h2>
+      <p>Giấc ngủ chất lượng kết hợp routine tối phù hợp là bí quyết cho làn da tươi tắn mỗi sáng. Hãy bắt đầu từ việc ngủ sớm hơn 30 phút mỗi ngày.</p>
+    `,
+    faq: [
+      { q: 'Thức khuya có gây mụn không?', a: 'Có thể. Thiếu ngủ làm tăng cortisol và viêm, khiến da tiết dầu nhiều hơn và dễ nổi mụn.' },
+      { q: 'Mặt nạ ngủ có cần rửa lại không?', a: 'Mặt nạ ngủ (sleeping mask) được thiết kế để để qua đêm, sáng hôm sau rửa mặt bình thường.' }
+    ]
+  },
+
+  {
+    slug: 'an-gi-de-da-dep-thuc-pham-tot-cho-da',
+    keyword: 'thực phẩm tốt cho da',
+    category: 'meo-lam-dep',
+    date: '2026-10-30',
+    readTime: 4,
+    cover: '/assets/images/catalog/medipharm/stemc-2.jpg',
+    seoTitle: 'Ăn gì để da đẹp? 8 thực phẩm tốt cho da',
+    metaDescription: 'Danh sách 8 thực phẩm tốt cho da giàu vitamin C, omega-3, chất chống oxy hóa và những món nên hạn chế để da sáng mịn, ít mụn.',
+    title: 'Ăn gì để da đẹp? 8 thực phẩm tốt cho da bạn nên biết',
+    excerpt: 'Skincare chăm sóc từ bên ngoài, còn bữa ăn nuôi dưỡng da từ bên trong. Thêm những thực phẩm này vào thực đơn mỗi tuần.',
+    products: ['stemc-2', 'stemc-6', 'neura-16'],
+    content: `
+      <p>Làn da phản ánh chế độ ăn uống. Bổ sung <strong>thực phẩm tốt cho da</strong> giúp cung cấp nguyên liệu để da tổng hợp collagen, chống oxy hóa và giữ ẩm.</p>
+
+      <h2>8 thực phẩm nên ăn</h2>
+      <ol>
+        <li><strong>Cá hồi, cá thu:</strong> giàu omega-3 giúp giảm viêm, giữ ẩm.</li>
+        <li><strong>Bơ:</strong> chất béo tốt và vitamin E bảo vệ da.</li>
+        <li><strong>Cam, ổi, ớt chuông:</strong> vitamin C cần cho tổng hợp collagen.</li>
+        <li><strong>Cà chua:</strong> lycopene hỗ trợ bảo vệ da trước tác hại ánh nắng.</li>
+        <li><strong>Cà rốt, khoai lang:</strong> beta-carotene giúp da khỏe, đều màu.</li>
+        <li><strong>Các loại hạt:</strong> hạnh nhân, óc chó giàu kẽm và vitamin E.</li>
+        <li><strong>Trà xanh:</strong> polyphenol chống oxy hóa.</li>
+        <li><strong>Sữa chua, kim chi:</strong> lợi khuẩn hỗ trợ cân bằng đường ruột — liên quan mật thiết đến làn da.</li>
+      </ol>
+
+      <h2>Những món nên hạn chế</h2>
+      ${fig('/assets/images/catalog/medipharm/stemc-2.jpg', 'Kem dưỡng cấp ẩm MediPharm TBG Stem C bổ trợ chế độ ăn lành mạnh')}
+      <ul>
+        <li>Đồ ngọt, nước có đường: gây glycation làm collagen cứng, giòn.</li>
+        <li>Đồ chiên rán nhiều dầu: tăng viêm.</li>
+        <li>Sữa bò với da dễ mụn: có thể khiến mụn nặng hơn ở một số người.</li>
+        <li>Rượu bia: gây mất nước và giãn mao mạch.</li>
+      </ul>
+
+      <h2>Uống đủ nước</h2>
+      <p>Khoảng 1,5 – 2 lít mỗi ngày tùy thể trạng và mức vận động. Nước giúp quá trình trao đổi chất diễn ra tốt hơn.</p>
+
+      <h2>Kết luận</h2>
+      <p>Không có thực phẩm "thần kỳ", nhưng chế độ ăn đa dạng, nhiều rau quả và chất béo tốt sẽ giúp skincare phát huy hiệu quả cao hơn.</p>
+    `,
+    faq: [
+      { q: 'Ăn nhiều đồ ngọt có gây lão hóa da không?', a: 'Có. Đường dư thừa gây glycation, làm sợi collagen kém đàn hồi và đẩy nhanh nếp nhăn.' },
+      { q: 'Bao lâu thì thấy da thay đổi khi ăn uống lành mạnh?', a: 'Thường sau 4 – 6 tuần, tương đương một chu kỳ thay mới của da.' }
+    ]
+  },
+
+  {
+    slug: 'meo-trang-diem-nhe-ma-khong-bi-bit-tac',
+    keyword: 'trang điểm không bít tắc lỗ chân lông',
+    category: 'meo-lam-dep',
+    date: '2026-10-21',
+    readTime: 4,
+    cover: '/assets/images/catalog/medipharm/stemc-1.jpg',
+    seoTitle: 'Mẹo trang điểm nhẹ mà không bị bít tắc lỗ chân lông',
+    metaDescription: 'Mẹo trang điểm không bít tắc lỗ chân lông: chọn BB cream nhẹ, dưỡng ẩm đúng, vệ sinh cọ và tẩy trang kỹ giúp da đẹp tự nhiên, ít nổi mụn.',
+    title: 'Mẹo trang điểm nhẹ mà không bị bít tắc lỗ chân lông',
+    excerpt: 'Lớp nền mỏng, da vẫn thở và không nổi mụn sau một ngày dài — hoàn toàn làm được với vài thay đổi nhỏ.',
+    products: ['stemc-1', 'stemc-3', 'stemc-5'],
+    content: `
+      <p>Trang điểm hằng ngày không đồng nghĩa với việc da phải chịu bít tắc. Những mẹo <strong>trang điểm không bít tắc lỗ chân lông</strong> sau giúp bạn giữ lớp nền tự nhiên mà da vẫn khỏe.</p>
+
+      <h2>1. Dưỡng ẩm trước khi trang điểm</h2>
+      <p>Da đủ ẩm giúp lớp nền bám mịn, cần ít sản phẩm hơn và không bị mốc. Chờ kem dưỡng thấm 3 – 5 phút.</p>
+
+      <h2>2. Chọn kem nền mỏng nhẹ</h2>
+      ${fig('/assets/images/catalog/medipharm/stemc-1.jpg', 'Kem nền dưỡng Stem C BB Cream cho lớp trang điểm nhẹ')}
+      <p>BB cream hoặc cushion mỏng thay cho foundation dày. Ưu tiên sản phẩm có ghi "non-comedogenic" (không gây mụn).</p>
+
+      <h2>3. Kem chống nắng là lớp lót</h2>
+      <p>Chọn kem chống nắng kết cấu nhẹ làm lớp lót thay vì thêm primer silicon dày. Xem <a href="#/blog/cach-dung-kem-chong-nang-dung">cách dùng kem chống nắng đúng</a>.</p>
+
+      <h2>4. Vệ sinh cọ và bông mút</h2>
+      <p>Rửa bông mút 2 – 3 lần/tuần, cọ 1 lần/tuần. Dụng cụ bẩn là nơi vi khuẩn sinh sôi.</p>
+
+      <h2>5. Chỉ che khuyết điểm tại chỗ</h2>
+      <p>Dùng concealer cho vùng thâm, mụn thay vì phủ dày toàn mặt.</p>
+
+      <h2>6. Tẩy trang kỹ mỗi tối</h2>
+      <p>Đây là bước quan trọng nhất. Xem <a href="#/blog/cach-tay-trang-dung-cach">cách tẩy trang đúng cách</a>.</p>
+
+      <h2>Kết luận</h2>
+      <p>Lớp nền nhẹ, dụng cụ sạch và tẩy trang kỹ là bộ ba giúp bạn trang điểm mỗi ngày mà không lo mụn ẩn. Hãy cho da "nghỉ" trang điểm 1 – 2 ngày mỗi tuần nếu có thể.</p>
+    `,
+    faq: [
+      { q: 'Da mụn có nên trang điểm không?', a: 'Có thể trang điểm nhẹ với sản phẩm không gây bít tắc, nhưng cần tẩy trang thật kỹ và tránh lớp nền dày.' },
+      { q: 'BB cream có thay được kem chống nắng không?', a: 'Không nên. Lượng BB cream thường dùng không đủ để đạt chỉ số SPF ghi trên bao bì; hãy thoa kem chống nắng riêng.' }
+    ]
+  },
+
+  {
+    slug: 'cham-soc-vung-mat-moi-ngay',
+    keyword: 'chăm sóc vùng mắt',
+    category: 'meo-lam-dep',
+    date: '2026-10-14',
+    readTime: 4,
+    cover: '/assets/images/catalog/neuraderm/neura-17.jpg',
+    seoTitle: 'Chăm sóc vùng mắt mỗi ngày: giảm thâm, bọng và nếp nhăn',
+    metaDescription: 'Mẹo chăm sóc vùng mắt mỗi ngày giúp giảm quầng thâm, bọng mắt và nếp nhăn: thoa kem mắt đúng cách, chống nắng, ngủ đủ và massage nhẹ.',
+    title: 'Chăm sóc vùng mắt mỗi ngày: giảm thâm, bọng và nếp nhăn',
+    excerpt: 'Da vùng mắt mỏng hơn các vùng khác tới 4 lần, nên cũng là nơi lộ dấu hiệu mệt mỏi và lão hóa sớm nhất.',
+    products: ['neura-17', 'neura-3', 'neura-5'],
+    content: `
+      <p>Vùng da quanh mắt mỏng, ít tuyến dầu và chuyển động liên tục khi chớp mắt, cười. <strong>Chăm sóc vùng mắt</strong> đều đặn giúp hạn chế quầng thâm, bọng mắt và nếp nhăn vết chân chim.</p>
+
+      <h2>1. Thoa kem mắt bằng ngón áp út</h2>
+      ${fig('/assets/images/catalog/neuraderm/neura-17.jpg', 'Sáp dưỡng bảo vệ Neuraderm Protective Facial Balm cho vùng da khô mỏng')}
+      <p>Lấy lượng bằng hạt gạo cho mỗi mắt, chấm quanh xương hốc mắt và vỗ nhẹ từ trong ra ngoài. Ngón áp út có lực nhẹ nhất, tránh kéo giãn da.</p>
+
+      <h2>2. Chống nắng cả vùng mắt</h2>
+      <p>Thoa kem chống nắng nhẹ nhàng tới sát vùng mắt và đeo kính râm khi ra ngoài để giảm nheo mắt.</p>
+
+      <h2>3. Giảm bọng mắt buổi sáng</h2>
+      <ul>
+        <li>Chườm thìa lạnh hoặc túi trà xanh đã làm lạnh 5 phút.</li>
+        <li>Kê gối cao hơn một chút khi ngủ.</li>
+        <li>Hạn chế ăn mặn vào buổi tối.</li>
+      </ul>
+
+      <h2>4. Massage nhẹ thúc đẩy lưu thông</h2>
+      <p>Dùng đầu ngón tay ấn nhẹ theo đường từ góc trong mắt ra thái dương, 5 – 10 lần mỗi tối.</p>
+
+      <h2>5. Tẩy trang mắt nhẹ nhàng</h2>
+      <p>Áp bông tẩy trang 10 giây cho mascara tan, rồi lau nhẹ một chiều. Không chà xát mạnh.</p>
+
+      <h2>6. Ngủ đủ và giảm thời gian nhìn màn hình</h2>
+      <p>Áp dụng quy tắc 20-20-20: cứ 20 phút nhìn màn hình, nhìn xa 20 feet (khoảng 6m) trong 20 giây. Xem thêm <a href="#/blog/meo-ngu-dung-cach-de-da-dep-hon">mẹo ngủ đúng cách để da đẹp hơn</a>.</p>
+
+      <h2>Kết luận</h2>
+      <p>Chăm sóc vùng mắt không cần quá cầu kỳ — nhẹ tay, đều đặn và chống nắng là đủ để đôi mắt trông tươi tắn, trẻ trung hơn.</p>
+    `,
+    faq: [
+      { q: 'Có thể dùng kem dưỡng mặt cho vùng mắt không?', a: 'Có thể nếu kem không chứa hương liệu và hoạt chất mạnh. Kem mắt chuyên dụng thường dịu nhẹ và có kết cấu phù hợp hơn.' },
+      { q: 'Quầng thâm do di truyền có cải thiện được không?', a: 'Có thể giảm nhẹ bằng chăm sóc và che khuyết điểm, nhưng khó xóa hoàn toàn; nên tham khảo bác sĩ da liễu nếu muốn điều trị.' }
+    ]
+  },
+
+  /* ---------------- Xu hướng làm đẹp ---------------- */
+  {
+    slug: 'xu-huong-skin-cycling-luan-phien-skincare',
+    keyword: 'skin cycling',
+    category: 'xu-huong',
+    date: '2026-11-08',
+    readTime: 5,
+    cover: '/assets/images/catalog/neuraderm/neura-9.jpg',
+    seoTitle: 'Skin cycling là gì? Xu hướng luân phiên skincare 4 đêm',
+    metaDescription: 'Skin cycling là xu hướng luân phiên skincare theo chu kỳ 4 đêm: tẩy tế bào chết, retinoid và 2 đêm phục hồi. Cách áp dụng cho người mới.',
+    title: 'Skin cycling: xu hướng luân phiên skincare 4 đêm cho da khỏe',
+    excerpt: 'Thay vì dồn mọi hoạt chất vào một tối, skin cycling chia routine thành chu kỳ 4 đêm để da vừa được treatment vừa có thời gian nghỉ.',
+    products: ['neura-9', 'drbargo-3', 'neura-16'],
+    content: `
+      <p><strong>Skin cycling</strong> là phương pháp luân phiên sản phẩm theo chu kỳ, phổ biến nhất là 4 đêm. Mục tiêu là tận dụng hoạt chất mạnh nhưng vẫn cho hàng rào da thời gian phục hồi, giảm kích ứng.</p>
+
+      <h2>Chu kỳ 4 đêm cơ bản</h2>
+      <ol>
+        <li><strong>Đêm 1 – Tẩy tế bào chết:</strong> AHA/BHA giúp làm sạch lỗ chân lông, da sáng mịn.</li>
+        <li><strong>Đêm 2 – Retinoid:</strong> retinol hoặc retinal kích thích tái tạo, chống lão hóa.</li>
+        <li><strong>Đêm 3 – Phục hồi:</strong> chỉ dùng sản phẩm cấp ẩm, Ceramide, Panthenol.</li>
+        <li><strong>Đêm 4 – Phục hồi:</strong> tiếp tục nuôi dưỡng, làm dịu.</li>
+      </ol>
+      <p>Sau đó lặp lại từ đêm 1.</p>
+
+      <h2>Vì sao skin cycling được yêu thích?</h2>
+      ${fig('/assets/images/catalog/neuraderm/neura-9.jpg', 'Tinh chất Neuraderm Coretime Synergy Essence dùng trong đêm phục hồi')}
+      <ul>
+        <li>Đơn giản, dễ nhớ, không cần nhiều sản phẩm.</li>
+        <li>Giảm nguy cơ dùng chồng hoạt chất gây kích ứng.</li>
+        <li>Phù hợp người mới bắt đầu treatment.</li>
+      </ul>
+
+      <h2>Cách điều chỉnh theo loại da</h2>
+      <ul>
+        <li><strong>Da nhạy cảm:</strong> kéo dài thành chu kỳ 5 – 6 đêm với 3 – 4 đêm phục hồi.</li>
+        <li><strong>Da dầu mụn:</strong> có thể dùng BHA thay AHA ở đêm 1.</li>
+        <li><strong>Da đã quen retinol:</strong> có thể rút ngắn số đêm phục hồi.</li>
+      </ul>
+
+      <h2>Ban ngày thì sao?</h2>
+      <p>Buổi sáng giữ routine đơn giản: làm sạch, dưỡng ẩm và <a href="#/blog/cach-dung-kem-chong-nang-dung">kem chống nắng</a> — bắt buộc khi dùng AHA và retinoid.</p>
+
+      <h2>Kết luận</h2>
+      <p>Skin cycling là cách thông minh để cân bằng giữa treatment và phục hồi. Các sản phẩm chứa Ceramide, lợi khuẩn như <a href="#/thuong-hieu/dr-bargo">Dr.BARGO 31°C</a> rất hợp cho các đêm phục hồi. Xem thêm <a href="#/blog/ceramide-ket-hop-panthenol-b5-phuc-hoi-da-treatment">Ceramide kết hợp Panthenol B5</a>.</p>
+    `,
+    faq: [
+      { q: 'Người mới có nên skin cycling không?', a: 'Có. Đây là cách an toàn để làm quen với AHA/BHA và retinol vì da có nhiều đêm nghỉ phục hồi.' },
+      { q: 'Bao lâu thấy hiệu quả skin cycling?', a: 'Thường sau 4 – 8 tuần da sẽ sáng mịn và đều màu hơn, ít kích ứng hơn so với dùng hoạt chất mỗi tối.' }
+    ]
+  },
+
+  {
+    slug: 'xu-huong-skincare-cho-da-dau-scalp-care',
+    keyword: 'chăm sóc da đầu scalp care',
+    category: 'xu-huong',
+    date: '2026-11-03',
+    readTime: 4,
+    cover: '/assets/images/catalog/smib/smib-7.jpg',
+    seoTitle: 'Scalp care: xu hướng "skincare cho da đầu" lên ngôi',
+    metaDescription: 'Scalp care – chăm sóc da đầu như chăm sóc da mặt – đang là xu hướng. Lợi ích, các bước scalp care cơ bản và cách chọn sản phẩm phù hợp.',
+    title: 'Scalp care: khi da đầu cũng cần một routine skincare',
+    excerpt: 'Tóc khỏe bắt đầu từ da đầu khỏe. Đó là lý do "skincare cho da đầu" trở thành một trong những xu hướng làm đẹp nổi bật nhất.',
+    products: ['smib-7', 'smib-5', 'smib-3'],
+    content: `
+      <p>Da đầu cũng là da — thậm chí có nhiều tuyến bã nhờn và nang lông hơn da mặt. Xu hướng <strong>chăm sóc da đầu scalp care</strong> áp dụng tư duy skincare: làm sạch, tẩy tế bào chết, cân bằng và dưỡng.</p>
+
+      <h2>Vì sao scalp care thành xu hướng?</h2>
+      <ul>
+        <li>Rụng tóc, gàu, ngứa da đầu ngày càng phổ biến do căng thẳng, ô nhiễm.</li>
+        <li>Người dùng hiểu rằng tóc mọc từ nang tóc dưới da đầu.</li>
+        <li>Nhiều thành phần skincare (lợi khuẩn, peptide, niacinamide) được ứng dụng cho da đầu.</li>
+      </ul>
+
+      <h2>Routine scalp care cơ bản</h2>
+      ${fig('/assets/images/catalog/smib/smib-7.jpg', 'Tinh chất da đầu SMIB innaBi Scalp Essence mang lại cảm giác sảng khoái')}
+      <ol>
+        <li><strong>Làm sạch:</strong> dầu gội phù hợp tình trạng da đầu, massage bằng đầu ngón tay.</li>
+        <li><strong>Tẩy tế bào chết da đầu:</strong> 1 lần/tuần để loại bỏ bã nhờn, gàu tích tụ.</li>
+        <li><strong>Serum / tinh chất da đầu:</strong> thoa trực tiếp lên chân tóc khi tóc khô hoặc hơi ẩm.</li>
+        <li><strong>Massage:</strong> 3 – 5 phút giúp tăng tuần hoàn máu nuôi nang tóc.</li>
+        <li><strong>Bảo vệ:</strong> đội mũ khi ra nắng, hạn chế sấy nhiệt cao sát da đầu.</li>
+      </ol>
+
+      <h2>Thành phần nổi bật trong xu hướng scalp care</h2>
+      <ul>
+        <li>Lợi khuẩn (probiotics, postbiotics) cân bằng hệ vi sinh da đầu.</li>
+        <li>Biotin, Caffeine hỗ trợ giảm rụng.</li>
+        <li>Menthol, tràm trà làm sạch, sảng khoái.</li>
+      </ul>
+
+      <h2>Kết luận</h2>
+      <p>Đầu tư cho da đầu là đầu tư cho mái tóc lâu dài. Bắt đầu với dầu gội phù hợp và một tinh chất da đầu như dòng <a href="#/thuong-hieu/smib">SMIB innaBi</a>. Xem thêm <a href="#/blog/goi-dau-dung-cach-da-dau-dau-gau-rung-toc">gội đầu đúng cách</a>.</p>
+    `,
+    faq: [
+      { q: 'Tẩy tế bào chết da đầu bao lâu một lần?', a: 'Khoảng 1 lần/tuần với da đầu dầu, 2 tuần/lần với da đầu khô hoặc nhạy cảm.' },
+      { q: 'Serum da đầu có làm tóc bết không?', a: 'Đa số serum da đầu có kết cấu lỏng nhẹ, thấm nhanh; chỉ thoa lên chân tóc, tránh thân tóc để không bết.' }
+    ]
+  },
+
+  {
+    slug: 'xu-huong-mat-na-sinh-hoc-bio-cellulose',
+    keyword: 'mặt nạ sinh học bio cellulose',
+    category: 'xu-huong',
+    date: '2026-10-27',
+    readTime: 4,
+    cover: '/assets/images/catalog/neuraderm/neura-11.jpg',
+    seoTitle: 'Mặt nạ sinh học Bio Cellulose: xu hướng spa tại nhà',
+    metaDescription: 'Mặt nạ sinh học Bio Cellulose ôm sát da, giữ dưỡng chất tốt hơn mặt nạ giấy. Tìm hiểu ưu điểm, cách dùng và ai nên dùng mặt nạ sinh học.',
+    title: 'Mặt nạ sinh học Bio Cellulose: xu hướng "spa tại nhà"',
+    excerpt: 'Mỏng như lớp da thứ hai, ôm khít từng đường nét — mặt nạ sinh học đang thay thế dần mặt nạ giấy trong routine chăm sóc chuyên sâu.',
+    products: ['neura-11', 'neura-4', 'neura-15'],
+    content: `
+      <p><strong>Mặt nạ sinh học Bio Cellulose</strong> được tạo từ sợi cellulose do vi khuẩn lên men (thường từ nước dừa), có cấu trúc siêu mịn giống "lớp da thứ hai". Đây là xu hướng mang trải nghiệm spa về nhà với chi phí hợp lý.</p>
+
+      <h2>Bio Cellulose khác mặt nạ giấy thế nào?</h2>
+      <ul>
+        <li><strong>Ôm sát hơn:</strong> sợi siêu nhỏ bám khít từng đường nét khuôn mặt.</li>
+        <li><strong>Giữ dưỡng chất tốt hơn:</strong> khả năng giữ nước gấp nhiều lần trọng lượng, hạn chế bay hơi.</li>
+        <li><strong>Dịu nhẹ:</strong> phù hợp da nhạy cảm, da sau treatment.</li>
+        <li><strong>Mát lạnh:</strong> giảm cảm giác nóng rát tức thì.</li>
+      </ul>
+
+      <h2>Ai nên dùng mặt nạ sinh học?</h2>
+      ${fig('/assets/images/catalog/neuraderm/neura-11.jpg', 'Mặt nạ chống lão hóa Neuraderm Age Defence Bio Mask Pack')}
+      <ul>
+        <li>Da khô, thiếu nước cần cấp ẩm sâu.</li>
+        <li>Da vừa laser, peel cần làm dịu. Xem <a href="#/blog/cham-soc-da-sau-laser-peel">chăm sóc da sau laser, peel</a>.</li>
+        <li>Người cần da căng bóng nhanh trước sự kiện.</li>
+      </ul>
+
+      <h2>Cách dùng hiệu quả</h2>
+      <ol>
+        <li>Làm sạch và thoa toner.</li>
+        <li>Tách lớp lót cẩn thận, đắp mặt nạ và vuốt nhẹ cho bám sát.</li>
+        <li>Giữ 20 – 30 phút, không để mặt nạ khô.</li>
+        <li>Gỡ ra, vỗ nhẹ phần tinh chất còn lại và khóa bằng kem dưỡng.</li>
+      </ol>
+
+      <h2>Kết luận</h2>
+      <p>Mặt nạ sinh học là bước chăm sóc chuyên sâu 1 – 2 lần/tuần đáng đầu tư. Kết hợp với routine hằng ngày, da sẽ ẩm mượt và khỏe hơn. Xem thêm <a href="#/blog/dap-mat-na-giay-bao-nhieu-lan-mot-tuan">đắp mặt nạ bao nhiêu lần một tuần</a>.</p>
+    `,
+    faq: [
+      { q: 'Mặt nạ sinh học có dùng lại được không?', a: 'Không. Mặt nạ sinh học là loại dùng một lần để đảm bảo vệ sinh và hiệu quả.' },
+      { q: 'Có nên để mặt nạ trong tủ lạnh?', a: 'Có thể làm mát 15 – 30 phút trước khi đắp để tăng cảm giác dịu, nhưng không để ngăn đá.' }
+    ]
+  },
+
+  {
+    slug: 'xu-huong-chong-nang-the-he-moi',
+    keyword: 'kem chống nắng thế hệ mới',
+    category: 'xu-huong',
+    date: '2026-10-19',
+    readTime: 4,
+    cover: '/assets/images/catalog/neuraderm/neura-5.jpg',
+    seoTitle: 'Kem chống nắng thế hệ mới: mỏng nhẹ, dưỡng da',
+    metaDescription: 'Xu hướng kem chống nắng thế hệ mới: màng lọc phổ rộng, kết cấu mỏng nhẹ, kết hợp dưỡng da và chống ánh sáng xanh. Cách chọn phù hợp loại da.',
+    title: 'Kem chống nắng thế hệ mới: không chỉ chống nắng mà còn dưỡng da',
+    excerpt: 'Không còn bết dính hay vệt trắng, kem chống nắng thế hệ mới mỏng như serum và bổ sung thêm cả thành phần dưỡng da.',
+    products: ['neura-5', 'stemc-3', 'stemc-1'],
+    content: `
+      <p>Kem chống nắng là bước chống lão hóa quan trọng nhất. Xu hướng <strong>kem chống nắng thế hệ mới</strong> giải quyết những điểm trừ cũ: nặng mặt, vệt trắng, cay mắt — đồng thời bổ sung dưỡng chất.</p>
+
+      <h2>Đặc điểm của kem chống nắng thế hệ mới</h2>
+      <ul>
+        <li><strong>Phổ rộng:</strong> bảo vệ cả UVA (lão hóa) và UVB (cháy nắng), nhiều sản phẩm có thêm bảo vệ ánh sáng xanh.</li>
+        <li><strong>Kết cấu mỏng nhẹ:</strong> dạng essence, gel, fluid thấm nhanh.</li>
+        <li><strong>"Skincare hóa":</strong> thêm Niacinamide, Ceramide, Panthenol, chiết xuất làm dịu.</li>
+        <li><strong>Không vệt trắng:</strong> màng lọc vật lý dạng hạt siêu mịn hoặc màng lọc hóa học thế hệ mới.</li>
+      </ul>
+
+      <h2>Chọn kem chống nắng theo loại da</h2>
+      ${fig('/assets/images/catalog/neuraderm/neura-5.jpg', 'Kem chống nắng phổ rộng Neuraderm Intensive Suncream')}
+      <ul>
+        <li><strong>Da dầu:</strong> gel hoặc fluid kiềm dầu.</li>
+        <li><strong>Da khô:</strong> dạng cream có thành phần dưỡng ẩm.</li>
+        <li><strong>Da nhạy cảm:</strong> ưu tiên màng lọc vật lý, không hương liệu.</li>
+        <li><strong>Da cần che phủ nhẹ:</strong> kem chống nắng có màu (tinted).</li>
+      </ul>
+
+      <h2>Dùng đúng mới hiệu quả</h2>
+      <p>Thoa đủ lượng (khoảng 2 ngón tay cho mặt và cổ), trước khi ra ngoài 15 phút và thoa lại sau mỗi 2 – 3 giờ khi ở ngoài trời. Xem chi tiết <a href="#/blog/cach-dung-kem-chong-nang-dung">cách dùng kem chống nắng đúng</a>.</p>
+
+      <h2>Kết luận</h2>
+      <p>Kem chống nắng thế hệ mới giúp việc chống nắng mỗi ngày dễ dàng và dễ chịu hơn. Một sản phẩm phù hợp là sản phẩm bạn muốn thoa mỗi sáng — đó mới là chìa khóa.</p>
+    `,
+    faq: [
+      { q: 'Ở trong nhà có cần kem chống nắng không?', a: 'Nên dùng, vì tia UVA có thể xuyên qua cửa kính và gây lão hóa da theo thời gian.' },
+      { q: 'SPF bao nhiêu là đủ dùng hằng ngày?', a: 'SPF 30 – 50 kèm PA+++ trở lên là phù hợp cho hầu hết hoạt động hằng ngày tại Việt Nam.' }
+    ]
+  },
+
+  {
+    slug: 'xu-huong-glass-skin-da-cang-bong',
+    keyword: 'glass skin',
+    category: 'xu-huong',
+    date: '2026-10-12',
+    readTime: 4,
+    cover: '/assets/images/catalog/dr-bargo/drbargo-1-g1.jpg',
+    seoTitle: 'Glass skin là gì? Cách có làn da căng bóng như kính',
+    metaDescription: 'Glass skin – làn da căng bóng, trong suốt như kính – là xu hướng làm đẹp Hàn Quốc. Bí quyết cấp ẩm nhiều lớp, phục hồi và chống nắng để đạt glass skin.',
+    title: 'Glass skin: bí quyết làn da căng bóng như kính kiểu Hàn',
+    excerpt: 'Glass skin không phải lớp highlight bóng loáng, mà là làn da đủ ẩm, khỏe từ bên trong và phản chiếu ánh sáng tự nhiên.',
+    products: ['drbargo-1', 'drbargo-4', 'neura-8'],
+    content: `
+      <p><strong>Glass skin</strong> là khái niệm làm đẹp xuất phát từ Hàn Quốc, chỉ làn da mịn màng, đều màu, căng mọng và trong như kính. Đây là kết quả của việc cấp ẩm đủ và hàng rào da khỏe, không phải lớp trang điểm.</p>
+
+      <h2>Các bước tiến tới glass skin</h2>
+      <h3>1. Làm sạch dịu nhẹ</h3>
+      <p>Làm sạch kép buổi tối với sữa rửa mặt pH thấp để không làm mất độ ẩm tự nhiên.</p>
+      <h3>2. Tẩy tế bào chết đều đặn</h3>
+      <p>AHA/PHA nhẹ 1 – 2 lần/tuần giúp bề mặt da mịn, phản chiếu ánh sáng tốt hơn.</p>
+      <h3>3. Cấp ẩm nhiều lớp</h3>
+      ${fig('/assets/images/catalog/dr-bargo/drbargo-1-g1.jpg', 'Sữa dưỡng Dr.BARGO Emulsion cân bằng màng ẩm cho làn da căng bóng')}
+      <p>Kỹ thuật "7 skin method" — thoa toner nhiều lớp mỏng — là bí quyết nổi tiếng. Sau đó dùng essence, serum cấp ẩm và emulsion để khóa lại.</p>
+      <h3>4. Phục hồi hàng rào da</h3>
+      <p>Da khỏe mới giữ được nước. Ceramide, Panthenol, lợi khuẩn giúp da ổn định. Xem <a href="#/blog/xu-huong-phuc-hoi-da-da-tang-cong-nghe-liposome">xu hướng phục hồi da đa tầng</a>.</p>
+      <h3>5. Chống nắng mỗi ngày</h3>
+      <p>Đốm nâu và sạm màu là "kẻ thù" của glass skin.</p>
+
+      <h2>Hiểu đúng về glass skin</h2>
+      <ul>
+        <li>Không có nghĩa là da không có lỗ chân lông — đó là điều không thể.</li>
+        <li>Không cần dùng 10 bước nếu da bạn không cần; tối giản vẫn đạt được.</li>
+        <li>Lối sống (ngủ, ăn, nước) đóng vai trò quan trọng ngang skincare.</li>
+      </ul>
+
+      <h2>Kết luận</h2>
+      <p>Glass skin là đích đến của làn da đủ ẩm và khỏe mạnh. Kiên trì cấp ẩm, phục hồi và chống nắng, bạn sẽ thấy da căng bóng tự nhiên sau vài tuần. Dòng <a href="#/thuong-hieu/dr-bargo">Dr.BARGO 31°C</a> với toner và emulsion cân bằng là lựa chọn phù hợp cho kỹ thuật cấp ẩm nhiều lớp.</p>
+    `,
+    faq: [
+      { q: 'Da dầu có đạt được glass skin không?', a: 'Có. Da dầu cần tập trung cấp nước nhẹ và kiểm soát dầu, tránh kem quá đặc; độ căng bóng sẽ đến từ độ ẩm chứ không phải dầu.' },
+      { q: '7 skin method có làm bí da không?', a: 'Nếu dùng toner không cồn, kết cấu lỏng nhẹ và mỗi lớp thấm trước khi thoa lớp tiếp theo thì hiếm khi gây bí da.' }
+    ]
   }
 
 ];

@@ -4779,7 +4779,7 @@ header.site-header {
   display: flex;
   flex-direction: column;
   flex: 1;
-  padding: 14px 16px 16px;
+  padding: 12px 16px 14px;
 }
 
 .pcard-cat {
@@ -4788,7 +4788,7 @@ header.site-header {
   letter-spacing: 0.8px;
   text-transform: uppercase;
   color: var(--accent-gold);
-  margin-bottom: 4px;
+  margin-bottom: 2px;
 }
 
 .pcard-title {
@@ -4801,7 +4801,6 @@ header.site-header {
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  min-height: 2.8em;
 }
 
 .pcard:hover .pcard-title {
@@ -4811,8 +4810,8 @@ header.site-header {
 .pcard-tag {
   font-size: 0.78rem;
   color: var(--text-muted);
-  line-height: 1.45;
-  margin-top: 4px;
+  line-height: 1.4;
+  margin-top: 2px;
   display: -webkit-box;
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
@@ -4821,7 +4820,7 @@ header.site-header {
 
 .pcard-spec {
   align-self: flex-start;
-  margin-top: 8px;
+  margin-top: 6px;
   padding: 2px 8px;
   border-radius: var(--radius-xs);
   background-color: var(--bg-sand-light);
@@ -4835,7 +4834,7 @@ header.site-header {
 
 .pcard-foot {
   margin-top: auto;
-  padding-top: 14px;
+  padding-top: 10px;
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
@@ -9361,5 +9360,423 @@ main.is-subpage > section:not(.page-hero) {
 
   .spot-item {
     grid-template-columns: 110px minmax(0, 1fr);
+  }
+}
+
+/* ==========================================================================
+   Home showcases: "Sản phẩm bán chạy" + Dr.BARGO slider
+   ========================================================================== */
+.showcase-section {
+  padding-bottom: 8px;
+}
+
+/* Endless slider driven by the arrows (no native scrolling) */
+.product-catalog-grid.is-carousel.showcase-track {
+  overflow: hidden;
+  scroll-snap-type: none;
+  padding: 6px 0 14px;
+}
+
+.showcase-track > .pcard {
+  will-change: transform;
+}
+
+/* Home: keep the category rail + brand tabs bar; the endless slider replaces the native carousel */
+.products-section:not(.is-page) .catalog-main > .catalog-carousel:not(.showcase-carousel) {
+  display: none;
+}
+
+.showcase-empty {
+  grid-column: 1 / -1;
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.products-section.is-page #homeOfficial {
+  display: none;
+}
+
+/* ==========================================================================
+   Best sellers: highlighted band, eyebrow, TOP ribbons, glowing cards
+   ========================================================================== */
+.bestseller-section {
+  position: relative;
+  overflow: hidden;
+  margin: 24px 0 8px;
+  padding: 56px 0 48px;
+  background:
+    radial-gradient(120% 90% at 0% 0%, rgba(75, 207, 214, 0.18) 0%, rgba(75, 207, 214, 0) 55%),
+    radial-gradient(90% 80% at 100% 100%, rgba(26, 80, 146, 0.14) 0%, rgba(26, 80, 146, 0) 60%),
+    linear-gradient(180deg, #e8f5fc 0%, #f5fafd 100%);
+  border-top: 1px solid var(--border-light);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.bestseller-section > .container {
+  position: relative;
+  z-index: 1;
+}
+
+/* soft floating light orbs */
+.bestseller-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(6px);
+  pointer-events: none;
+  animation: bestsellerFloat 9s ease-in-out infinite;
+}
+
+.bestseller-orb.orb-1 {
+  width: 220px;
+  height: 220px;
+  top: -70px;
+  right: 8%;
+  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.9), rgba(75, 207, 214, 0.25) 60%, rgba(75, 207, 214, 0) 72%);
+}
+
+.bestseller-orb.orb-2 {
+  width: 150px;
+  height: 150px;
+  bottom: -40px;
+  left: 4%;
+  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.85), rgba(26, 80, 146, 0.18) 60%, rgba(26, 80, 146, 0) 72%);
+  animation-delay: -4s;
+}
+
+@keyframes bestsellerFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(14px); }
+}
+
+.bestseller-head {
+  position: relative;
+  padding-top: 76px;
+  border-bottom-color: rgba(26, 80, 146, 0.15);
+}
+
+/* "Best Seller" badge centred above the heading row */
+.bestseller-head .bestseller-eyebrow {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  white-space: nowrap;
+}
+
+.bestseller-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 10px;
+  padding: 11px 30px;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(90deg, #0f2a4a 0%, var(--accent-crimson) 45%, #2fa8d8 100%);
+  background-size: 200% 100%;
+  color: #fff;
+  font-size: 1.25rem;
+  font-weight: 900;
+  letter-spacing: 2.6px;
+  text-transform: uppercase;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  border: 2px solid rgba(255, 255, 255, 0.75);
+  box-shadow: 0 10px 26px rgba(26, 80, 146, 0.38), 0 0 0 5px rgba(75, 207, 214, 0.18);
+  overflow: hidden;
+  animation: bestsellerBadgeGlow 2.6s ease-in-out infinite;
+}
+
+/* light streak sweeping across the badge */
+.bestseller-eyebrow::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -60%;
+  width: 40%;
+  background: linear-gradient(110deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.55) 50%, rgba(255, 255, 255, 0) 100%);
+  animation: bestsellerBadgeShine 3.2s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes bestsellerBadgeGlow {
+  0%, 100% { box-shadow: 0 10px 26px rgba(26, 80, 146, 0.38), 0 0 0 5px rgba(75, 207, 214, 0.18); }
+  50% { box-shadow: 0 12px 32px rgba(26, 80, 146, 0.5), 0 0 0 10px rgba(75, 207, 214, 0.10); }
+}
+
+@keyframes bestsellerBadgeShine {
+  0%, 55% { left: -60%; }
+  100% { left: 130%; }
+}
+
+.bestseller-eyebrow svg {
+  color: #ffd27a;
+}
+
+/* two twinkling sparkles either side of the text */
+.bestseller-eyebrow .bs-spark {
+  color: #fff3b0;
+  filter: drop-shadow(0 0 4px rgba(255, 236, 150, 0.9));
+  animation: bsBlink 0.8s linear infinite;
+}
+
+.bestseller-eyebrow .bs-spark.spark-r {
+  animation-delay: -0.4s;
+}
+
+/* flame flickers too */
+.bestseller-eyebrow .bs-flame {
+  animation: bsFlame 0.6s ease-in-out infinite alternate;
+}
+
+/* clear on / off blink */
+@keyframes bsBlink {
+  0%, 45% { opacity: 1; transform: scale(1.15) rotate(0deg); }
+  50%, 95% { opacity: 0; transform: scale(0.5) rotate(45deg); }
+  100% { opacity: 1; transform: scale(1.15) rotate(0deg); }
+}
+
+@keyframes bsFlame {
+  0% { opacity: 1; transform: scale(1); color: #ffd27a; }
+  100% { opacity: 0.35; transform: scale(0.82); color: #fff; }
+}
+
+.bestseller-head .block-title em {
+  font-style: normal;
+  background: linear-gradient(90deg, var(--accent-crimson) 0%, #2fa8d8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.bestseller-sub {
+  margin-top: 6px;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+}
+
+/* Cards */
+.pcard--bestseller {
+  border-color: rgba(26, 80, 146, 0.18);
+  box-shadow: 0 10px 30px rgba(26, 80, 146, 0.10);
+}
+
+.pcard--bestseller:hover,
+.pcard--bestseller:focus-visible {
+  border-color: #6cc3e6;
+  box-shadow: 0 18px 40px rgba(26, 80, 146, 0.20), 0 0 0 3px rgba(75, 207, 214, 0.18);
+}
+
+.pcard-rank {
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 3px;
+  padding: 5px 11px 5px 10px;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(90deg, #0f2a4a 0%, var(--accent-crimson) 60%, #2fa8d8 100%);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 800;
+  line-height: 1;
+  box-shadow: 0 6px 14px rgba(15, 42, 74, 0.3);
+}
+
+.pcard-rank small {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  opacity: 0.85;
+}
+
+/* shine sweep across the image on hover */
+.pcard--bestseller .pcard-media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, rgba(255, 255, 255, 0) 35%, rgba(255, 255, 255, 0.45) 50%, rgba(255, 255, 255, 0) 65%);
+  transform: translateX(-120%);
+  transition: transform 0.8s ease;
+  pointer-events: none;
+}
+
+.pcard--bestseller:hover .pcard-media::after {
+  transform: translateX(120%);
+}
+
+@media (max-width: 860px) {
+  .bestseller-section {
+    padding: 40px 0 32px;
+  }
+
+  .bestseller-head .bestseller-eyebrow {
+    font-size: 1.05rem;
+    padding: 9px 22px;
+  }
+
+  .bestseller-head {
+    padding-top: 66px;
+  }
+
+  .bestseller-orb.orb-1 {
+    width: 140px;
+    height: 140px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bestseller-orb,
+  .bestseller-eyebrow,
+  .bestseller-eyebrow::after,
+  .bestseller-eyebrow .bs-spark,
+  .bestseller-eyebrow .bs-flame {
+    animation: none;
+  }
+}
+
+/* ==========================================================================
+   Top tìm kiếm: round product image + name
+   ========================================================================== */
+.topsearch-section {
+  padding-top: 32px;
+}
+
+.topsearch-box {
+  padding: 20px 18px 22px;
+  border-radius: var(--radius-md, 14px);
+  background: #fff;
+  border: 1px solid var(--border-light);
+}
+
+.topsearch-title {
+  margin-bottom: 18px;
+  font-family: var(--font-serif);
+  font-size: clamp(1.5rem, 2.4vw, 2rem);
+  font-weight: 700;
+  color: var(--text-ink);
+}
+
+.topsearch-track {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: calc((100% - 3 * 16px) / 4);
+  gap: 16px;
+  overflow: hidden;
+  padding: 4px 2px 8px;
+}
+
+.tcard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 12px 16px;
+  border-radius: 14px;
+  background: var(--bg-sand-light, #f4f6f8);
+  cursor: pointer;
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+  will-change: transform;
+}
+
+.tcard:hover,
+.tcard:focus-visible {
+  box-shadow: 0 10px 24px rgba(26, 80, 146, 0.14);
+}
+
+.tcard-media {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.tcard-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.tcard:hover .tcard-media img {
+  transform: scale(1.06);
+}
+
+.tcard-name {
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  font-weight: 500;
+  line-height: 1.45;
+  text-align: center;
+  color: var(--text-ink);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.tcard:hover .tcard-name {
+  color: var(--accent-crimson);
+}
+
+@media (max-width: 860px) {
+  .topsearch-track {
+    grid-auto-columns: calc((100% - 2 * 12px) / 3);
+    gap: 12px;
+  }
+}
+
+@media (max-width: 560px) {
+  .topsearch-track {
+    grid-auto-columns: calc((100% - 12px) / 2);
+  }
+}
+
+/* "MUA NGAY" sticker, top-right of each best-seller card */
+.pcard-buynow {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  z-index: 3;
+  width: 68px;
+  height: 68px;
+  transform: rotate(-14deg);
+  filter: drop-shadow(0 4px 8px rgba(15, 42, 74, 0.25));
+  pointer-events: none;
+  transition: transform 0.3s ease;
+}
+
+.pcard-buynow svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.pcard-buynow text {
+  fill: #fff;
+  font-family: var(--font-sans);
+  font-size: 17px;
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: 0.5px;
+}
+
+.pcard--bestseller:hover .pcard-buynow {
+  transform: rotate(-4deg) scale(1.08);
+}
+
+/* the sticker takes the top-right corner: move the Video tag to the bottom-right */
+.pcard--bestseller .pcard-badge-video {
+  top: auto;
+  bottom: 10px;
+}
+
+@media (max-width: 560px) {
+  .pcard-buynow {
+    width: 54px;
+    height: 54px;
   }
 }

@@ -4,7 +4,7 @@
  */
 import { i18nData, brandsData, servicesDetailsData } from './translations.js';
 import { blogPosts, blogCategories, popularSlugs, trendCategoryIds } from './blog.js';
-import { productPrices, PRICE_LIST_DATE, WHOLESALE_DISCOUNT, formatVnd } from './prices.js';
+import { productPrices, PRICE_LIST_DATE, WHOLESALE_DISCOUNT, formatVnd, BEST_SELLER_IDS, BEST_SELLER_IMAGES, HOME_OFFICIAL_BRAND } from './prices.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   // --- State ---
@@ -419,7 +419,97 @@ document.addEventListener('DOMContentLoaded', () => {
   /**
    * Product catalogue: carousel by default, grid when expanded / filtered by search
    */
+  /**
+   * Home showcases: "Sản phẩm bán chạy" + Dr.BARGO slider in "Sản phẩm phân phối chính hãng"
+   */
+  // Few products would leave a gap in the endless slider: repeat them to fill it
+  const loopFill = (list) => (list.length && list.length < 8 ? [...list, ...list] : list);
+
+  function renderHomeShowcases() {
+    const best = document.getElementById('bestSellerTrack');
+    if (best) {
+      const list = BEST_SELLER_IDS
+        .map((id) => productIndex.find((e) => e.id === id))
+        .filter(Boolean)
+        .map((e) => (BEST_SELLER_IMAGES[e.id] ? { ...e, image: BEST_SELLER_IMAGES[e.id] } : e));
+      // Rank ribbon (TOP 1, TOP 2…) follows the order in BEST_SELLER_IDS
+      best.innerHTML = loopFill(list).map((e) => {
+        const rank = BEST_SELLER_IDS.indexOf(e.id) + 1;
+        return productCardHtml(e)
+          .replace('class="pcard"', 'class="pcard pcard--bestseller"')
+          .replace('<div class="pcard-media">', `<div class="pcard-media"><span class="pcard-rank"><small>TOP</small>${rank}</span><span class="pcard-buynow" aria-hidden="true"><svg viewBox="0 0 100 100"><path d="M50.0 2.0 L59.3 9.1 L70.8 6.8 L76.2 17.2 L87.5 20.1 L87.8 31.8 L96.8 39.3 L92.0 50.0 L96.8 60.7 L87.8 68.2 L87.5 79.9 L76.2 82.8 L70.8 93.2 L59.3 90.9 L50.0 98.0 L40.7 90.9 L29.2 93.2 L23.8 82.8 L12.5 79.9 L12.2 68.2 L3.2 60.7 L8.0 50.0 L3.2 39.3 L12.2 31.8 L12.5 20.1 L23.8 17.2 L29.2 6.8 L40.7 9.1 Z" fill="#e53935" stroke="#e53935" stroke-width="6" stroke-linejoin="round"/><circle cx="50" cy="50" r="35" fill="none" stroke="#fff" stroke-width="1.6" stroke-dasharray="3 3"/><text x="50" y="46" text-anchor="middle">MUA</text><text x="50" y="66" text-anchor="middle">NGAY</text></svg></span>`);
+      }).join('');
+    }
+    // "Top tìm kiếm": Dr.BARGO products as round image + name
+    const top = document.getElementById('topSearchTrack');
+    if (top) {
+      const list = productIndex.filter((e) => e.brandId === HOME_OFFICIAL_BRAND).map(localized);
+      top.innerHTML = loopFill(list).map((p) => `
+        <article class="tcard" data-action="product-modal" data-product-id="${p.id}" tabindex="0">
+          <div class="tcard-media"><img src="${p.image}" alt="${escapeHtml(p.name)}" loading="lazy"></div>
+          <h3 class="tcard-name">${p.name}</h3>
+        </article>`).join('');
+    }
+    const official = document.getElementById('homeOfficialTrack');
+    if (official) {
+      const list = getFilteredProducts();
+      official.innerHTML = list.length
+        ? loopFill(list).map(productCardHtml).join('')
+        : `<p class="showcase-empty">${currentLang === 'vi' ? 'Chưa có sản phẩm phù hợp.' : '해당 제품이 없습니다.'}</p>`;
+    }
+  }
+
+  // Endless slider: next moves the first card to the end, prev brings the last card to the front
+  function slideShowcase(track, dir) {
+    if (!track || track.dataset.busy) return;
+    const items = Array.from(track.children);
+    if (items.length < 2) return;
+    const gap = parseFloat(getComputedStyle(track).columnGap) || 20;
+    const step = items[0].getBoundingClientRect().width + gap;
+    const ease = 'transform 0.45s cubic-bezier(0.65, 0, 0.35, 1)';
+    track.dataset.busy = '1';
+    if (dir > 0) {
+      items.forEach((c) => { c.style.transition = ease; c.style.transform = `translateX(${-step}px)`; });
+      setTimeout(() => {
+        items.forEach((c) => { c.style.transition = 'none'; c.style.transform = ''; });
+        track.appendChild(items[0]);
+        void track.offsetWidth;
+        items.forEach((c) => { c.style.transition = ''; });
+        delete track.dataset.busy;
+      }, 460);
+    } else {
+      track.insertBefore(items[items.length - 1], items[0]);
+      const now = Array.from(track.children);
+      now.forEach((c) => { c.style.transition = 'none'; c.style.transform = `translateX(${-step}px)`; });
+      void track.offsetWidth;
+      now.forEach((c) => { c.style.transition = ease; c.style.transform = ''; });
+      setTimeout(() => {
+        now.forEach((c) => { c.style.transition = ''; });
+        delete track.dataset.busy;
+      }, 460);
+    }
+  }
+
+  document.querySelectorAll('[data-showcase-dir]').forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      slideShowcase(document.getElementById(btn.getAttribute('data-showcase-target')), Number(btn.getAttribute('data-showcase-dir')));
+    });
+  });
+  // Swipe on touch screens
+  document.querySelectorAll('.showcase-track').forEach((track) => {
+    let startX = null;
+    track.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; }, { passive: true });
+    track.addEventListener('touchend', (e) => {
+      if (startX === null) return;
+      const dx = e.changedTouches[0].clientX - startX;
+      startX = null;
+      if (Math.abs(dx) > 40) slideShowcase(track, dx < 0 ? 1 : -1);
+    });
+  });
+
   function renderProductCatalog() {
+    renderHomeShowcases();
     if (!productCatalogGrid) return;
     if (isFilterPage()) { renderFilterPage(); return; }
     const isVi = currentLang === 'vi';
@@ -484,7 +574,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const viewAllBtn = document.getElementById('catalogViewAllBtn');
     if (viewAllBtn) {
-      viewAllBtn.hidden = !!selectedBrand;
+      viewAllBtn.hidden = !!selectedBrand && currentRoute.page !== 'home';
       viewAllBtn.textContent = useGrid
         ? (isVi ? 'Thu gọn ↑' : '접기 ↑')
         : (isVi ? `Xem tất cả (${list.length}) →` : `전체 보기 (${list.length}) →`);
@@ -2115,7 +2205,7 @@ document.addEventListener('DOMContentLoaded', () => {
           `   ${message.replace(/\n/g, '\n   ')}`,
           `=========================================`,
           `Gửi trực tiếp đến beVIBE:`,
-          `Hotline/Zalo: 036 8822112 | Email: bevibevn@gmail.com`
+          `Hotline/Zalo: 033 828 2112 | Email: bevibevn@gmail.com`
         ].filter(Boolean).join('\n');
       } else {
         summaryText = [
@@ -2137,7 +2227,7 @@ document.addEventListener('DOMContentLoaded', () => {
           `   ${message.replace(/\n/g, '\n   ')}`,
           `=========================================`,
           `beVIBE 공식 접수처:`,
-          `전화/Zalo: (+84) 36 8822112 | 이메일: bevibevn@gmail.com`
+          `전화/Zalo: (+84) 33 828 2112 | 이메일: bevibevn@gmail.com`
         ].filter(Boolean).join('\n');
       }
 
@@ -2192,7 +2282,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (sendZaloBtn) {
     sendZaloBtn.addEventListener('click', () => {
       const isVi = currentLang === 'vi';
-      const zaloUrl = `https://zalo.me/0368822112`;
+      const zaloUrl = `https://zalo.me/0338282112`;
       window.open(zaloUrl, '_blank');
       showToast(isVi ? 'Đang mở cửa sổ Zalo beVIBE...' : 'beVIBE Zalo 창을 엽니다...');
     });
@@ -3012,8 +3102,8 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="osc-metric"><span>Ngày đặt:</span> <strong>Hôm nay</strong></div>
           <div class="osc-metric"><span>Người đặt:</span> <strong>${orderName}</strong></div>
           <div class="osc-metric"><span>Tổng thanh toán:</span> <strong class="text-gold">${grandTotalText}</strong></div>
-          <div class="osc-metric"><span>Trạng thái:</span> <strong class="text-gold">Đã chuyển sang Kho Seoul & TP.HCM</strong></div>
-          <div class="osc-metric"><span>Hỗ trợ VIP:</span> <strong>Ms. Kim Yến (036 8822112)</strong></div>
+          <div class="osc-metric"><span>Trạng thái:</span> <strong class="text-gold">Đã chuyển sang Kho Hà Nội</strong></div>
+          <div class="osc-metric"><span>Hỗ trợ VIP:</span> <strong>Ms. Kim Yến (033 828 2112)</strong></div>
         </div>
         <div class="osc-foot">
           <button type="button" class="btn-action-sm" onclick="alert('Đã tải hóa đơn điện tử VAT của đơn hàng ${orderCode}!')">📄 Tải Hóa đơn VAT (PDF)</button>
@@ -3042,7 +3132,7 @@ document.addEventListener('DOMContentLoaded', () => {
         reqId: orderCode.replace('#', ''),
         partner: orderName,
         clinic: currentUser?.clinic || 'Phòng khám / Clinic Đối tác',
-        phone: currentUser?.phone || '036 8822112',
+        phone: currentUser?.phone || '033 828 2112',
         content: `Đơn hàng sỉ B2B (${grandTotalText})`,
         budget: grandTotalText,
         status: 'pending'
@@ -3412,7 +3502,7 @@ document.addEventListener('DOMContentLoaded', () => {
     } else if (route.page === 'brand') {
       Object.assign(catalogState, { brand: route.brandId, line: p.line || 'all', category: 'all', query: '', expanded: true });
     } else {
-      Object.assign(catalogState, { brand: 'all', line: 'all', category: 'all', query: '', expanded: false });
+      Object.assign(catalogState, { brand: HOME_OFFICIAL_BRAND, line: 'all', category: 'all', query: '', expanded: false });
     }
     if (headerSearchInput) headerSearchInput.value = catalogState.query;
     if (productsSection) {

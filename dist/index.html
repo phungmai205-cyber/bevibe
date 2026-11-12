@@ -19,8 +19,8 @@
     rel="stylesheet">
 
   <!-- Main Stylesheet -->
-  <script type="module" crossorigin src="/assets/index-CsU8bcxY.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/index-CDzjH84H.css">
+  <script type="module" crossorigin src="/assets/index-LwzSG8jy.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-CBwmKj7v.css">
 </head>
 
 <body>
@@ -54,13 +54,13 @@
         </form>
 
         <div class="header-actions">
-          <a href="tel:0368822112" class="header-hotline">
+          <a href="tel:0338282112" class="header-hotline">
             <span class="header-hotline-icon">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
             </span>
             <span class="header-hotline-text">
               <small data-i18n="hotlineLabel">Hotline đối tác</small>
-              <strong>036 8822112</strong>
+              <strong>033 828 2112</strong>
             </span>
           </a>
           <a href="#contact" class="btn-nav-cta" data-i18n="headerQuote">Nhận báo giá ↗</a>
@@ -351,6 +351,51 @@
       </div>
     </section>
 
+    <!-- ================= Best sellers (home only) ================= -->
+    <section class="products-section showcase-section bestseller-section" id="bestSellers">
+      <span class="bestseller-orb orb-1" aria-hidden="true"></span>
+      <span class="bestseller-orb orb-2" aria-hidden="true"></span>
+      <div class="container">
+        <div class="block-head bestseller-head">
+          <div>
+            <span class="bestseller-eyebrow"><svg class="bs-spark spark-l" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0c.6 5.6 2.6 10.2 12 12-9.4 1.8-11.4 6.4-12 12-.6-5.6-2.6-10.2-12-12C9.4 10.2 11.4 5.6 12 0z"/></svg><svg class="bs-flame" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 1.5s.9 3.2-1.4 6.1C10.6 9.5 9 10.8 9 13.3c0 1.6 1.1 2.9 2.6 3.2-.7-.6-1-1.5-.9-2.4.2-1.6 1.6-2.6 2.2-4 1.9 1.6 3.1 3.6 3.1 5.6 0 3-2.7 5.3-6 5.3s-6-2.4-6-5.8c0-4.6 4-6.9 5.8-10.4.4.9.5 1.9.3 2.9 1.9-1.6 3.6-3.9 3.4-6.2z"/></svg> Best Seller<svg class="bs-spark spark-r" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0c.6 5.6 2.6 10.2 12 12-9.4 1.8-11.4 6.4-12 12-.6-5.6-2.6-10.2-12-12C9.4 10.2 11.4 5.6 12 0z"/></svg></span>
+            <h2 class="block-title">Sản phẩm <em>bán chạy</em></h2>
+            <p class="bestseller-sub">Những sản phẩm được khách hàng và đối tác tin chọn nhiều nhất tại beVIBE.</p>
+          </div>
+          <div class="block-head-actions">
+            <a href="#/san-pham" class="block-link">Xem tất cả →</a>
+          </div>
+        </div>
+        <div class="catalog-carousel showcase-carousel">
+          <button type="button" class="carousel-arrow carousel-arrow-side prev" data-showcase-dir="-1" data-showcase-target="bestSellerTrack" aria-label="Sản phẩm trước">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6" /></svg>
+          </button>
+          <div class="product-catalog-grid is-carousel showcase-track" id="bestSellerTrack"><!-- Rendered by app.js --></div>
+          <button type="button" class="carousel-arrow carousel-arrow-side next" data-showcase-dir="1" data-showcase-target="bestSellerTrack" aria-label="Sản phẩm tiếp theo">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6" /></svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= Top searches (home only): round image + product name ================= -->
+    <section class="products-section showcase-section topsearch-section" id="topSearch">
+      <div class="container">
+        <div class="topsearch-box">
+          <h2 class="topsearch-title">Top tìm kiếm</h2>
+          <div class="catalog-carousel showcase-carousel">
+            <button type="button" class="carousel-arrow carousel-arrow-side prev" data-showcase-dir="-1" data-showcase-target="topSearchTrack" aria-label="Sản phẩm trước">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6" /></svg>
+            </button>
+            <div class="topsearch-track showcase-track" id="topSearchTrack"><!-- Rendered by app.js --></div>
+            <button type="button" class="carousel-arrow carousel-arrow-side next" data-showcase-dir="1" data-showcase-target="topSearchTrack" aria-label="Sản phẩm tiếp theo">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6" /></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- ================= Product Catalogue: categories + carousel ================= -->
     <section class="products-section" id="products">
       <div class="container">
@@ -378,6 +423,19 @@
             <div class="catalog-toolbar">
               <div class="catalog-tabs-group" id="catalogTabsGroup"><!-- Rendered by app.js --></div>
               <div class="catalog-result-meta" id="catalogResultMeta"></div>
+            </div>
+
+            <!-- Home only: endless slider of the products picked in the bar above (Dr.BARGO by default) -->
+            <div class="home-official" id="homeOfficial">
+              <div class="catalog-carousel showcase-carousel">
+              <button type="button" class="carousel-arrow carousel-arrow-side prev" data-showcase-dir="-1" data-showcase-target="homeOfficialTrack" aria-label="Sản phẩm trước">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6" /></svg>
+              </button>
+              <div class="product-catalog-grid is-carousel showcase-track" id="homeOfficialTrack"><!-- Rendered by app.js --></div>
+              <button type="button" class="carousel-arrow carousel-arrow-side next" data-showcase-dir="1" data-showcase-target="homeOfficialTrack" aria-label="Sản phẩm tiếp theo">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6" /></svg>
+              </button>
+            </div>
             </div>
 
             <div class="catalog-carousel">
@@ -459,7 +517,7 @@
           <h2>Đối tác của chúng tôi</h2>
           <p>beVIBE hợp tác với nhà bán sỉ, cửa hàng và chuỗi mỹ phẩm, spa, clinic da liễu cũng như các doanh nghiệp và nhà sáng lập thương hiệu đang muốn phát triển dòng sản phẩm riêng tại Việt Nam.</p>
 
-          <blockquote><strong>Liên hệ hợp tác:</strong> hotline <a href="tel:0368822112">036 8822112</a> · email <a href="mailto:bevibevn@gmail.com">bevibevn@gmail.com</a> — hoặc <a href="#contact">gửi yêu cầu hợp tác</a> để chuyên viên beVIBE liên hệ lại.</blockquote>
+          <blockquote><strong>Liên hệ hợp tác:</strong> hotline <a href="tel:0338282112">033 828 2112</a> · email <a href="mailto:bevibevn@gmail.com">bevibevn@gmail.com</a> — hoặc <a href="#contact">gửi yêu cầu hợp tác</a> để chuyên viên beVIBE liên hệ lại.</blockquote>
         </article>
       </div>
     </section>
@@ -855,11 +913,11 @@
   <!-- ================= Floating Quick Action Bar ================= -->
   <div class="floating-quick-bar">
     <div class="quick-contacts" id="quickContacts">
-    <a href="tel:0368822112" class="quick-btn phone" aria-label="Gọi hotline beVIBE: 036 8822112">
+    <a href="tel:0338282112" class="quick-btn phone" aria-label="Gọi hotline beVIBE: 033 828 2112">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
     </a>
-    <a href="https://zalo.me/0368822112" target="_blank" rel="noopener noreferrer" class="quick-btn zalo"
-      aria-label="Chat Zalo cùng chuyên viên beVIBE: 036 8822112">
+    <a href="https://zalo.me/0338282112" target="_blank" rel="noopener noreferrer" class="quick-btn zalo"
+      aria-label="Chat Zalo cùng chuyên viên beVIBE: 033 828 2112">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="white">
         <path
           d="M12 2C6.48 2 2 6.48 2 12c0 1.82.49 3.53 1.34 5L2 22l5.17-1.31c1.42.79 3.06 1.31 4.83 1.31 5.52 0 10-4.48 10-10S17.52 2 12 2zm1 14h-2v-2h2v2zm0-4h-2V7h2v5z" />
@@ -934,22 +992,15 @@
               <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
               <circle cx="12" cy="10" r="3" />
             </svg>
-            <span data-i18n="footerAddressSeoul">Seoul: Gangnam-gu, Teheran-ro 152, Seoul, Korea</span>
-          </div>
-          <div class="footer-contact-item">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-              <circle cx="12" cy="10" r="3" />
-            </svg>
-            <span data-i18n="footerAddressVn">HCMC: Landmark 81, Bình Thạnh, TP. HCM</span>
+            <span data-i18n="footerAddressVn">Văn phòng: 26A Galaxy 1, KĐT Ngân Hà, P. Tố Hữu, Phường Đại Mỗ, Hà Nội</span>
           </div>
           <div class="footer-contact-item">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path
                 d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
             </svg>
-            <a href="tel:0368822112" class="footer-contact-link" style="color: inherit; text-decoration: none;">
-              <span data-i18n="footerHotline">Hotline / Zalo: 036 8822112</span>
+            <a href="tel:0338282112" class="footer-contact-link" style="color: inherit; text-decoration: none;">
+              <span data-i18n="footerHotline">Hotline / Zalo: 033 828 2112</span>
             </a>
           </div>
           <div class="footer-contact-item">
@@ -974,7 +1025,7 @@
         <div>
           <span data-i18n="footerCopy">© 2026 beVIBE. Bản quyền thuộc về beVIBE Korea & Vietnam. All rights reserved.</span>
           <div class="footer-bottom-contact-meta" style="margin-top: 6px; font-size: 0.82rem; color: var(--text-muted); display: flex; gap: 16px; flex-wrap: wrap;">
-            <span>📞 Điện thoại: <a href="tel:0368822112" style="color: var(--accent-gold); text-decoration: none; font-weight: 600;">036 8822112</a></span>
+            <span>📞 Điện thoại: <a href="tel:0338282112" style="color: var(--accent-gold); text-decoration: none; font-weight: 600;">033 828 2112</a></span>
             <span>✉️ Email: <a href="mailto:bevibevn@gmail.com" style="color: var(--accent-gold); text-decoration: none; font-weight: 600;">bevibevn@gmail.com</a></span>
           </div>
         </div>
@@ -1091,8 +1142,8 @@
                 <h3>Ms. Kim Yến — Chuyên viên Tư vấn Chiến lược B2B</h3>
                 <p>Hỗ trợ riêng cho Quý đối tác & Clinic: Xử lý đơn hàng sỉ, cung cấp hồ sơ kiểm định da liễu, hỗ trợ đào tạo và bảo hộ độc quyền khu vực.</p>
                 <div class="manager-contacts">
-                  <a href="tel:0368822112" class="btn-manager-contact">📞 Hotline VIP: 036 8822112</a>
-                  <a href="https://zalo.me/0368822112" target="_blank" rel="noopener noreferrer" class="btn-manager-contact zalo">💬 Zalo VIP Trực tiếp</a>
+                  <a href="tel:0338282112" class="btn-manager-contact">📞 Hotline VIP: 033 828 2112</a>
+                  <a href="https://zalo.me/0338282112" target="_blank" rel="noopener noreferrer" class="btn-manager-contact zalo">💬 Zalo VIP Trực tiếp</a>
                 </div>
               </div>
               <div class="manager-stats-box">
