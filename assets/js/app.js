@@ -4,13 +4,18 @@
  */
 import { i18nData, brandsData, servicesDetailsData } from './translations.js';
 import { blogPosts, blogCategories, popularSlugs, trendCategoryIds } from './blog.js';
-import { productPrices, PRICE_LIST_DATE, WHOLESALE_DISCOUNT, formatVnd, BEST_SELLER_IDS, BEST_SELLER_IMAGES, HOME_OFFICIAL_BRAND } from './prices.js';
+import { productPrices, formatVnd, BEST_SELLER_IDS, BEST_SELLER_IMAGES, BEST_SELLER_HOVER, BEST_SELLER_TABS, HOME_EXPLORE_LINES, HOME_OFFICIAL_BRAND } from './prices.js';
+import { CONCERN_DEFS, CONCERN_TAGS, initShop } from './shop.js';
+import { initAccount } from './account.js';
+import { buildSearchEntry, searchIndex } from './search.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   // --- State ---
   let currentLang = localStorage.getItem('bevibe_lang') || 'vi';
   let currentActiveBrandId = 'dr-bargo';
   let currentActiveServiceId = 'distribution';
+  let account = null; // customer accounts (account.js) — set by initAccount()
+  let shop = null; // storefront module (cart, product page, skin concerns) — set by initShop()
 
   // --- Elements ---
   const langToggleBtn = document.getElementById('langToggle');
@@ -28,14 +33,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const sendZaloBtn = document.getElementById('sendZaloBtn');
   const sendEmailBtn = document.getElementById('sendEmailBtn');
   const toastNotification = document.getElementById('toastNotification');
-
-  // OEM Calculator Elements
-  const calcProduct = document.getElementById('calcProduct');
-  const calcPackaging = document.getElementById('calcPackaging');
-  const calcQuantity = document.getElementById('calcQuantity');
-  const calcEstCost = document.getElementById('calcEstCost');
-  const calcEstTime = document.getElementById('calcEstTime');
-  const calcApplyBtn = document.getElementById('calcApplyBtn');
 
   // OEM Steps
   const stepItems = document.querySelectorAll('.step-card');
@@ -108,9 +105,8 @@ document.addEventListener('DOMContentLoaded', () => {
     renderTrendTags();
     if (searchDropdown && !searchDropdown.hidden) renderSearchDropdown();
     if (typeof renderPageHero === 'function') renderPageHero();
-
-    // Re-calculate OEM estimate with localized currency/text
-    calculateOemEstimate();
+    if (shop) shop.refresh(currentRoute && currentRoute.page === 'product' ? currentRoute.productId : null);
+    if (account) account.refresh();
 
     // Update modal if currently opened
     if (brandDetailModal && brandDetailModal.classList.contains('active')) {
@@ -144,7 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const catalogState = { brand: 'all', line: 'all', category: 'all', query: '', expanded: false };
   // Products page sidebar filters (multi-select)
-  const pageFilter = { cats: new Set(), brands: new Set(), lines: new Set() };
+  const pageFilter = { cats: new Set(), brands: new Set(), lines: new Set(), concerns: new Set() };
 
   function getLine(brandId, lineId) {
     const brand = brandsData.find((b) => b.id === brandId);
@@ -213,29 +209,41 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  // Skin-concern tags (shop.js) — used by the products filter, search and the skin-care section
+  productIndex.forEach((e) => {
+    e.concerns = CONCERN_TAGS[e.id] || [];
+    e.medium += ' ' + normalizeText(e.concerns.map((cid) => {
+      const c = CONCERN_DEFS.find((d) => d.id === cid);
+      return c ? `${c.vi} ${c.ko}` : '';
+    }).join(' '));
+  });
+
   function localized(entry) {
     const p = currentLang === 'vi' ? entry.vi : entry.ko;
     // Quy cách theo bảng giá (nếu có) để giá và dung tích luôn khớp nhau
     return { ...entry, name: p.name, tag: p.tag, spec: entry.priceUnit || p.spec };
   }
 
+  // Search index (search.js): product names, type line, concerns and descriptions in both languages
+  const searchItems = productIndex.map((e) => {
+    const brand = brandsData.find((b) => b.id === e.brandId) || {};
+    const line = (brand.lines || []).find((l) => l.id === e.line) || {};
+    const def = CATEGORY_DEFS.find((c) => c.id === e.category) || {};
+    const concernLabels = e.concerns.map((cid) => CONCERN_DEFS.find((d) => d.id === cid)).filter(Boolean).flatMap((c) => [c.vi, c.ko]);
+    return {
+      entry: e,
+      s: buildSearchEntry({
+        name: [e.vi.name, e.ko.name, e.brandName, line.nameVi, line.nameKo],
+        type: [e.vi.tag, e.ko.tag, def.vi, def.ko],
+        meta: [brand.badge, e.vi.spec, e.ko.spec, e.priceUnit, ...concernLabels],
+        body: [e.vi.desc, e.ko.desc],
+        kind: [e.vi.name, e.ko.name, e.vi.tag, e.ko.tag]
+      }, e.category)
+    };
+  });
+
   function searchProducts(query) {
-    const terms = normalizeText(query).split(/\s+/).filter(Boolean);
-    if (!terms.length) return [];
-    return productIndex
-      .map((e) => {
-        let score = 0;
-        for (const t of terms) {
-          if (e.strong.includes(t)) score += 3;
-          else if (e.medium.includes(t)) score += 2;
-          else if (e.weak.includes(t)) score += 0.5;
-          else return null; // every term must match somewhere
-        }
-        return { e, score };
-      })
-      .filter(Boolean)
-      .sort((a, b) => b.score - a.score)
-      .map((r) => r.e);
+    return searchIndex(searchItems, query);
   }
 
   function getFilteredProducts() {
@@ -407,9 +415,14 @@ document.addEventListener('DOMContentLoaded', () => {
               <small>${isVi ? 'Giá niêm yết' : '정가'}</small>
               <strong>${p.price ? formatVnd(p.price) : (isVi ? 'Liên hệ' : '문의')}</strong>
             </div>
-            <button type="button" class="pcard-quote" data-action="product-quote" data-product-name="${escapeHtml(p.name)}" data-brand-name="${p.brandName}">
-              ${isVi ? 'Báo giá sỉ' : '견적 요청'}
-            </button>
+            ${p.price ? `
+              <button type="button" class="pcard-cart" data-shop="add" data-product-id="${p.id}" aria-label="${isVi ? 'Thêm vào giỏ' : '장바구니 담기'}">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>
+                <span>${isVi ? 'Thêm vào giỏ' : '담기'}</span>
+              </button>` : `
+              <button type="button" class="pcard-quote" data-action="product-quote" data-product-name="${escapeHtml(p.name)}" data-brand-name="${p.brandName}">
+                ${isVi ? 'Báo giá sỉ' : '견적 요청'}
+              </button>`}
           </div>
         </div>
       </article>
@@ -425,21 +438,89 @@ document.addEventListener('DOMContentLoaded', () => {
   // Few products would leave a gap in the endless slider: repeat them to fill it
   const loopFill = (list) => (list.length && list.length < 8 ? [...list, ...list] : list);
 
-  function renderHomeShowcases() {
-    const best = document.getElementById('bestSellerTrack');
-    if (best) {
-      const list = BEST_SELLER_IDS
-        .map((id) => productIndex.find((e) => e.id === id))
-        .filter(Boolean)
-        .map((e) => (BEST_SELLER_IMAGES[e.id] ? { ...e, image: BEST_SELLER_IMAGES[e.id] } : e));
-      // Rank ribbon (TOP 1, TOP 2…) follows the order in BEST_SELLER_IDS
-      best.innerHTML = loopFill(list).map((e) => {
-        const rank = BEST_SELLER_IDS.indexOf(e.id) + 1;
-        return productCardHtml(e)
-          .replace('class="pcard"', 'class="pcard pcard--bestseller"')
-          .replace('<div class="pcard-media">', `<div class="pcard-media"><span class="pcard-rank"><small>TOP</small>${rank}</span><span class="pcard-buynow" aria-hidden="true"><svg viewBox="0 0 100 100"><path d="M50.0 2.0 L59.3 9.1 L70.8 6.8 L76.2 17.2 L87.5 20.1 L87.8 31.8 L96.8 39.3 L92.0 50.0 L96.8 60.7 L87.8 68.2 L87.5 79.9 L76.2 82.8 L70.8 93.2 L59.3 90.9 L50.0 98.0 L40.7 90.9 L29.2 93.2 L23.8 82.8 L12.5 79.9 L12.2 68.2 L3.2 60.7 L8.0 50.0 L3.2 39.3 L12.2 31.8 L12.5 20.1 L23.8 17.2 L29.2 6.8 L40.7 9.1 Z" fill="#e53935" stroke="#e53935" stroke-width="6" stroke-linejoin="round"/><circle cx="50" cy="50" r="35" fill="none" stroke="#fff" stroke-width="1.6" stroke-dasharray="3 3"/><text x="50" y="46" text-anchor="middle">MUA</text><text x="50" y="66" text-anchor="middle">NGAY</text></svg></span>`);
-      }).join('');
+  // ---------- Home (whoo-style): line stickers · Best Sellers with tabs · explore line tiles ----------
+  let bestSellerTab = 'all';
+
+  function renderHomeLines() {
+    const track = document.getElementById('homeLinesTrack');
+    if (!track) return;
+    const isVi = currentLang === 'vi';
+    const items = [];
+    brandsData.forEach((b) => (b.lines || []).forEach((l) => {
+      const first = productIndex.find((e) => e.brandId === b.id && e.line === l.id);
+      if (!first) return;
+      const img = BEST_SELLER_IMAGES[first.id] || first.image;
+      items.push(`
+        <button type="button" class="hline" data-action="line" data-brand-id="${b.id}" data-line="${l.id}">
+          <span class="hline-img"><img src="${img}" alt="" loading="lazy"></span>
+          <span class="hline-brand">${escapeHtml(b.name)}</span>
+          <span class="hline-name">${escapeHtml(isVi ? l.nameVi : l.nameKo)}</span>
+        </button>`);
+    }));
+    track.innerHTML = items.join('');
+  }
+
+  function bestCardHtml(entry, rank) {
+    const isVi = currentLang === 'vi';
+    const p = localized(entry);
+    const img = BEST_SELLER_IMAGES[p.id] || p.image;
+    const hover = BEST_SELLER_HOVER[p.id];
+    return `
+      <article class="bs-card" data-action="product-modal" data-product-id="${p.id}" tabindex="0">
+        <div class="bs-card-media ${hover ? 'has-hover' : ''}">
+          <img class="bs-img-main" src="${img}" alt="${escapeHtml(p.name)}" loading="lazy">
+          ${hover ? `<img class="bs-img-hover" src="${hover}" alt="" loading="lazy">` : ''}
+          <span class="bs-rank">TOP ${rank}</span>
+          ${p.price ? `<button type="button" class="bs-cart" data-shop="add" data-product-id="${p.id}" aria-label="${isVi ? 'Thêm vào giỏ' : '장바구니 담기'}">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>
+          </button>` : ''}
+        </div>
+        <div class="bs-card-body">
+          <span class="bs-card-brand">${escapeHtml(p.brandName)}</span>
+          <h3 class="bs-card-name">${p.name}</h3>
+          <p class="bs-card-price">${p.price ? formatVnd(p.price) : (isVi ? 'Liên hệ' : '문의')}${p.spec ? `<small>${escapeHtml(p.spec)}</small>` : ''}</p>
+          <div class="bs-card-actions">
+            <button type="button" class="bs-btn bs-btn-detail">${isVi ? 'Xem chi tiết' : '상세 보기'}</button>
+            <button type="button" class="bs-btn bs-btn-quick" data-action="product-quick" data-product-id="${p.id}">${isVi ? 'Xem nhanh' : '빠른 보기'}</button>
+          </div>
+        </div>
+      </article>`;
+  }
+
+  function renderBestSellers() {
+    const grid = document.getElementById('bestSellerTrack');
+    if (!grid) return;
+    const isVi = currentLang === 'vi';
+    const tabsEl = document.getElementById('bestSellerTabs');
+    const all = BEST_SELLER_IDS.map((id) => productIndex.find((e) => e.id === id)).filter(Boolean);
+    if (tabsEl) {
+      tabsEl.innerHTML = BEST_SELLER_TABS.map((t) => `
+        <button type="button" role="tab" class="bs-tab ${bestSellerTab === t.id ? 'active' : ''}" aria-selected="${bestSellerTab === t.id}" data-action="bs-tab" data-tab="${t.id}">${isVi ? t.vi : t.ko}</button>`).join('');
     }
+    const tab = BEST_SELLER_TABS.find((t) => t.id === bestSellerTab) || BEST_SELLER_TABS[0];
+    const list = tab.ids ? all.filter((e) => tab.ids.includes(e.id)) : all;
+    grid.innerHTML = list.map((e) => bestCardHtml(e, BEST_SELLER_IDS.indexOf(e.id) + 1)).join('');
+  }
+
+  function renderExploreLines() {
+    const grid = document.getElementById('exploreGrid');
+    if (!grid) return;
+    const isVi = currentLang === 'vi';
+    grid.innerHTML = HOME_EXPLORE_LINES.map((t) => `
+      <button type="button" class="explore-tile" data-action="line" data-brand-id="${t.brand}" data-line="${t.line}">
+        <img src="${t.image}" alt="${escapeHtml(isVi ? t.vi : t.ko)}" loading="lazy">
+        <span class="explore-tile-body">
+          <strong>${escapeHtml(isVi ? t.vi : t.ko)}</strong>
+          <small>${escapeHtml(isVi ? t.subVi : t.subKo)}</small>
+          <span class="explore-tile-cta">${isVi ? 'Khám phá' : '자세히 보기'} →</span>
+        </span>
+      </button>`).join('');
+  }
+
+  function renderHomeShowcases() {
+    renderHomeLines();
+    renderBestSellers();
+    renderExploreLines();
     // "Top tìm kiếm": Dr.BARGO products as round image + name
     const top = document.getElementById('topSearchTrack');
     if (top) {
@@ -736,7 +817,7 @@ document.addEventListener('DOMContentLoaded', () => {
   /**
    * Inquiry form helpers (select by index so they also work after KO translation)
    */
-  const SERVICE_OPTION = { distribution: 0, partnership: 1, oem: 2, sample: 3 };
+  const SERVICE_OPTION = { distribution: 0, partnership: 1, oem: 2 };
   function setServiceOption(key) {
     const serviceSelect = document.getElementById('formService');
     if (serviceSelect && serviceSelect.options[SERVICE_OPTION[key]]) {
@@ -744,27 +825,28 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  function prefillSampleRequest(email) {
+  // Catalogue & wholesale price-list request (from the "Nhận Catalogue & bảng giá sỉ" form)
+  function prefillCatalogRequest(email) {
     const isVi = currentLang === 'vi';
-    setServiceOption('sample');
+    setServiceOption('distribution');
     const messageInput = document.getElementById('formMessage');
     if (messageInput && !messageInput.value.trim()) {
       messageInput.value = isVi
-        ? 'Tôi muốn đăng ký nhận mẫu thử và catalogue sản phẩm cùng chính sách đại lý mới nhất của beVIBE.'
-        : 'beVIBE 제품 샘플, 카탈로그 및 최신 대리점 정책을 요청합니다.';
+        ? 'Tôi muốn nhận catalogue sản phẩm, bảng giá sỉ và chính sách đại lý mới nhất của beVIBE.'
+        : 'beVIBE 제품 카탈로그, 도매 단가표 및 최신 대리점 정책을 요청합니다.';
     }
     if (email) {
       const emailInput = document.getElementById('formEmail');
       if (emailInput) emailInput.value = email;
     }
     openContactModal();
-    showToast(isVi ? 'Đã chọn “Đăng ký mẫu thử & Catalogue” — vui lòng hoàn tất thông tin liên hệ.' : '샘플 & 카탈로그 신청이 선택되었습니다. 연락처를 입력해 주세요.');
+    showToast(isVi ? 'Đã điền yêu cầu nhận catalogue & bảng giá sỉ — vui lòng hoàn tất thông tin liên hệ.' : '카탈로그 & 도매 단가표 요청이 입력되었습니다. 연락처를 입력해 주세요.');
   }
 
   document.getElementById('catalogSignupForm')?.addEventListener('submit', (e) => {
     e.preventDefault();
     const emailInput = document.getElementById('signupEmail');
-    prefillSampleRequest(emailInput ? emailInput.value.trim() : '');
+    prefillCatalogRequest(emailInput ? emailInput.value.trim() : '');
     if (emailInput) emailInput.value = '';
   });
 
@@ -796,7 +878,8 @@ document.addEventListener('DOMContentLoaded', () => {
     return base.filter((e) =>
       (pageFilter.cats.size === 0 || pageFilter.cats.has(e.category)) &&
       (pageFilter.brands.size === 0 || pageFilter.brands.has(e.brandId)) &&
-      (pageFilter.lines.size === 0 || pageFilter.lines.has(`${e.brandId}|${e.line}`))
+      (pageFilter.lines.size === 0 || pageFilter.lines.has(`${e.brandId}|${e.line}`)) &&
+      (pageFilter.concerns.size === 0 || (e.concerns || []).some((c) => pageFilter.concerns.has(c)))
     );
   }
 
@@ -811,6 +894,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     if (group === 'brands') {
       return brandsData.map((b) => ({ value: b.id, label: b.name, count: b.productsVi.length }));
+    }
+    if (group === 'concerns') {
+      return CONCERN_DEFS.map((c) => ({
+        value: c.id,
+        label: isVi ? c.vi : c.ko,
+        count: productIndex.filter((e) => (e.concerns || []).includes(c.id)).length
+      }));
     }
     // lines: only for the selected brands (all brands when none selected)
     const brands = pageFilter.brands.size ? brandsData.filter((b) => pageFilter.brands.has(b.id)) : brandsData;
@@ -835,9 +925,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const sidebar = document.getElementById('catalogSidebar');
     if (!sidebar) return;
     const isVi = currentLang === 'vi';
-    const active = pageFilter.cats.size + pageFilter.brands.size + pageFilter.lines.size;
+    const active = pageFilter.cats.size + pageFilter.brands.size + pageFilter.lines.size + pageFilter.concerns.size;
     const groups = [
       { key: 'cats', title: isVi ? 'Danh mục' : '카테고리' },
+      { key: 'concerns', title: isVi ? 'Vấn đề da' : '피부 고민' },
       { key: 'brands', title: isVi ? 'Thương hiệu' : '브랜드' },
       { key: 'lines', title: isVi ? 'Dòng sản phẩm' : '제품 라인' }
     ];
@@ -892,7 +983,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (catalogState.query) {
         chips.push(`<button type="button" class="filter-chip" data-action="clear-filter" data-filter="query">“${escapeHtml(catalogState.query)}” <span aria-hidden="true">✕</span></button>`);
       }
-      ['cats', 'brands', 'lines'].forEach((g) => {
+      ['cats', 'concerns', 'brands', 'lines'].forEach((g) => {
         pageFilter[g].forEach((v) => {
           chips.push(`<button type="button" class="filter-chip" data-action="pf-remove" data-group="${g}" data-value="${escapeHtml(v)}">${escapeHtml(filterLabel(g, v))} <span aria-hidden="true">✕</span></button>`);
         });
@@ -909,7 +1000,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const toggle = document.getElementById('catalogFilterToggle');
     if (toggle) {
-      const n = pageFilter.cats.size + pageFilter.brands.size + pageFilter.lines.size;
+      const n = pageFilter.cats.size + pageFilter.brands.size + pageFilter.lines.size + pageFilter.concerns.size;
       toggle.querySelector('span').textContent = (isVi ? 'Bộ lọc' : '필터') + (n ? ` (${n})` : '');
     }
   }
@@ -1214,6 +1305,10 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function pageSeo(route) {
+    if (route.page === 'product' && shop) {
+      const seo = shop.productSeo(route.productId, absoluteUrl);
+      if (seo) { setSeo(seo); return; }
+    }
     if (route.page === 'post') {
       const post = blogPosts.find((p) => p.slug === route.slug);
       if (post) { postSeo(post); return; }
@@ -1244,7 +1339,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* ==========================================================================
      Partnership form as a popup (the inline contact section was removed).
-     Opened by every "#contact" link and by the quote / sample / calculator actions.
+     Opened by every "#contact" link and by the quote / catalogue actions.
      ========================================================================== */
   const contactSection = document.getElementById('contact');
   let contactCloseBtn = null;
@@ -1383,6 +1478,7 @@ document.addEventListener('DOMContentLoaded', () => {
         pageFilter.cats.clear();
         pageFilter.brands.clear();
         pageFilter.lines.clear();
+        pageFilter.concerns.clear();
         catalogState.query = '';
         if (headerSearchInput) headerSearchInput.value = '';
         renderProductCatalog();
@@ -1398,8 +1494,16 @@ document.addEventListener('DOMContentLoaded', () => {
         runSearch();
         break;
       case 'product-modal':
-        if (e.target.closest('[data-action="product-quote"]')) return;
+        if (e.target.closest('[data-action="product-quote"]') || e.target.closest('[data-action="product-quick"]') || e.target.closest('[data-shop]')) return;
+        navigate(`san-pham/${el.getAttribute('data-product-id')}`);
+        break;
+      case 'product-quick':
+        e.stopPropagation();
         openProductModal(el.getAttribute('data-product-id'));
+        break;
+      case 'bs-tab':
+        bestSellerTab = el.getAttribute('data-tab') || 'all';
+        renderBestSellers();
         break;
       case 'product-quote':
         e.stopPropagation();
@@ -1407,9 +1511,6 @@ document.addEventListener('DOMContentLoaded', () => {
         break;
       case 'service-modal':
         openServiceModal(el.getAttribute('data-service'));
-        break;
-      case 'sample-request':
-        prefillSampleRequest();
         break;
       default:
         break;
@@ -1419,7 +1520,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Keyboard support for focusable product cards
   document.addEventListener('keydown', (e) => {
     if (e.key !== 'Enter') return;
-    const card = e.target.closest && e.target.closest('.pcard');
+    const card = e.target.closest && e.target.closest('.pcard, .bs-card');
     if (card && e.target === card) openProductModal(card.getAttribute('data-product-id'));
   });
 
@@ -1938,55 +2039,6 @@ document.addEventListener('DOMContentLoaded', () => {
   window.closeProductModal = closeProductModal;
 
   /**
-   * OEM Cost Calculator Engine
-   */
-  function calculateOemEstimate() {
-    if (!calcProduct || !calcQuantity || !calcEstCost) return;
-    const isVi = currentLang === 'vi';
-
-    // Đơn giá gia công tham khảo (bao bì tiêu chuẩn, lô 1.000 sp) ≈ 12% giá bán lẻ trung bình
-    // của cùng nhóm sản phẩm trong bảng giá beVIBE 27/08/2026. Dầu gội chưa có giá → tạm tính như sữa rửa mặt.
-    const baseUnitCosts = {
-      serum: 143000,
-      cream: 115000,
-      sun: 62000,
-      cleanser: 52000,
-      toner: 60000,
-      scalp: 52000
-    };
-
-    const packagingMultipliers = {
-      standard: 1.0,
-      premium: 1.35,
-      custom: 1.65
-    };
-
-    const qty = parseInt(calcQuantity.value, 10) || 1000;
-    const productKey = calcProduct.value;
-    const packKey = calcPackaging ? calcPackaging.value : 'standard'; // packaging selector removed → standard
-
-    const unitBase = (baseUnitCosts[productKey] || 60000) * (packagingMultipliers[packKey] || 1.0);
-    let discount = 1.0;
-    if (qty >= 10000) discount = 0.82;
-    else if (qty >= 5000) discount = 0.88;
-    else if (qty >= 3000) discount = 0.94;
-
-    const finalUnit = Math.round(unitBase * discount);
-    const totalMin = Math.round(finalUnit * qty * 0.95);
-    const totalMax = Math.round(finalUnit * qty * 1.15);
-
-    if (isVi) {
-      calcEstCost.textContent = `${(totalMin / 1000000).toFixed(0)} - ${(totalMax / 1000000).toFixed(0)} triệu VNĐ (~${finalUnit.toLocaleString('vi-VN')} đ/sp)`;
-      calcEstTime.textContent = qty >= 5000 ? '40 - 50 ngày (sản xuất & thông quan)' : '35 - 42 ngày (chuẩn CGMP)';
-    } else {
-      const krwMin = Math.round(totalMin * 0.054 / 10000);
-      const krwMax = Math.round(totalMax * 0.054 / 10000);
-      calcEstCost.textContent = `약 ${krwMin.toLocaleString()}만 ~ ${krwMax.toLocaleString()}만 원 (개당 약 ${(finalUnit * 0.054).toFixed(0)}원)`;
-      calcEstTime.textContent = qty >= 5000 ? '약 40~50일 (생산 및 베트남 통관)' : '약 35~42일 (CGMP 생산)';
-    }
-  }
-
-  /**
    * Toast notification helper
    */
   function showToast(message) {
@@ -2126,40 +2178,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // OEM Calculator Change Events
-  if (calcProduct) calcProduct.addEventListener('change', calculateOemEstimate);
-  if (calcPackaging) calcPackaging.addEventListener('change', calculateOemEstimate);
-  if (calcQuantity) calcQuantity.addEventListener('input', calculateOemEstimate);
-
-  // Apply Calculator to Contact Form
-  if (calcApplyBtn) {
-    calcApplyBtn.addEventListener('click', () => {
-      const isVi = currentLang === 'vi';
-      const prodText = calcProduct.options[calcProduct.selectedIndex].text;
-      const qtyText = calcQuantity.value;
-      const estText = calcEstCost.textContent;
-
-      const serviceSelect = document.getElementById('formService');
-      const messageInput = document.getElementById('formMessage');
-
-      if (serviceSelect) {
-        setServiceOption('oem');
-      }
-
-      const noteText = isVi
-        ? `[DỰ TOÁN OEM BEVIBE]\n• Sản phẩm: ${prodText}\n• Số lượng dự kiến: ${parseInt(qtyText).toLocaleString('vi-VN')} chai/hộp\n• Mức dự toán: ${estText}\n\n[GHI CHÚ DỰ ÁN]: `
-        : `[beVIBE OEM 시뮬레이션 결과]\n• 제품군: ${prodText}\n• 희망 수량: ${parseInt(qtyText).toLocaleString()}개\n• 예상 견적: ${estText}\n\n[문의 내용]: `;
-
-      if (messageInput) {
-        messageInput.value = noteText;
-        messageInput.focus();
-      }
-
-      openContactModal();
-      showToast(isVi ? 'Đã điền thông số dự toán vào biểu mẫu!' : '시뮬레이션 견적이 문의 양식에 적용되었습니다!');
-    });
-  }
-
   // Interactive Process Step Click
   stepItems.forEach(step => {
     step.addEventListener('click', () => {
@@ -2237,19 +2255,6 @@ document.addEventListener('DOMContentLoaded', () => {
       if (formResultArea) {
         formResultArea.classList.remove('hidden');
         formResultArea.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
-
-      // Forward real customer inquiry to Admin Portal
-      if (typeof window.addRealOrderToAdmin === 'function') {
-        window.addRealOrderToAdmin({
-          reqId: `INQ-${Math.floor(1000 + Math.random() * 9000)}`,
-          partner: name,
-          clinic: company,
-          phone: phone,
-          content: `${service}${budget ? ` (${budget})` : ''}`,
-          budget: budget || 'Liên hệ báo giá',
-          status: 'pending'
-        });
       }
 
       showToast(isVi ? 'Đã tạo bản yêu cầu hợp tác thành công! ✓' : '상담 신청서가 성공적으로 생성되었습니다! ✓');
@@ -2474,859 +2479,9 @@ document.addEventListener('DOMContentLoaded', () => {
     updateSlide(0);
   }
 
-  /**
-   * =========================================================================
-   * MULTI-PORTAL & AUTHENTICATION SUBSYSTEM (Pharmicell Vietnam Inspired)
-   * =========================================================================
-   */
-  function initAuthAndPortals() {
-    // --- State ---
-    let currentUser = null;
-    try {
-      const storedUser = localStorage.getItem('bevibe_current_user');
-      if (storedUser) {
-        currentUser = JSON.parse(storedUser);
-        // Clear old fake demo user if present in local storage
-        if (currentUser && (currentUser.name?.includes('Mai Phương') || currentUser.clinic?.includes('DermaCare'))) {
-          currentUser = null;
-          localStorage.removeItem('bevibe_current_user');
-        }
-      }
-    } catch (e) {
-      currentUser = null;
-    }
-
-    let currentPortal = localStorage.getItem('bevibe_current_portal') || 'public';
-    // If URL hash requests portal, honor it
-    if (window.location.hash === '#portal-customer') currentPortal = 'customer';
-    if (window.location.hash === '#portal-admin') currentPortal = 'admin';
-
-    // Elements
-    const publicView = document.getElementById('publicWebsiteView');
-    const customerView = document.getElementById('customerPortalView');
-    const adminView = document.getElementById('adminPortalView');
-    const authModal = document.getElementById('authModal');
-    const closeAuthModalBtn = document.getElementById('closeAuthModalBtn');
-
-    const topbarAuth = document.getElementById('topbarAuth');
-    const headerAuthBtn = document.getElementById('headerAuthBtn');
-    const headerAuthText = document.getElementById('headerAuthText');
-    const headerUserMenu = document.getElementById('headerUserMenu');
-    const mobileAuthCard = document.getElementById('mobileAuthCard');
-
-    const authLoginForm = document.getElementById('authLoginForm');
-    const authRegisterForm = document.getElementById('authRegisterForm');
-    const authTabBtns = document.querySelectorAll('.auth-tab-btn');
-
-    const custLogoutBtn = document.getElementById('custLogoutBtn');
-    const adminLogoutBtn = document.getElementById('adminLogoutBtn');
-
-    // --- Modal Open / Close ---
-    function openAuthModal(defaultTab = 'login') {
-      if (!authModal) return;
-      authModal.classList.add('active');
-      authModal.setAttribute('aria-hidden', 'false');
-      switchAuthTab(defaultTab);
-    }
-
-    function closeAuthModal() {
-      if (!authModal) return;
-      authModal.classList.remove('active');
-      authModal.setAttribute('aria-hidden', 'true');
-    }
-
-    if (closeAuthModalBtn) {
-      closeAuthModalBtn.addEventListener('click', closeAuthModal);
-    }
-
-    if (authModal) {
-      authModal.addEventListener('click', (e) => {
-        if (e.target === authModal) closeAuthModal();
-      });
-    }
-
-    // Tab Switcher inside Auth Modal
-    function switchAuthTab(tabKey) {
-      authTabBtns.forEach(btn => {
-        btn.classList.toggle('active', btn.getAttribute('data-auth-tab') === tabKey);
-      });
-      if (authLoginForm) authLoginForm.classList.toggle('active', tabKey === 'login');
-      if (authRegisterForm) authRegisterForm.classList.toggle('active', tabKey === 'register');
-    }
-
-    authTabBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        switchAuthTab(btn.getAttribute('data-auth-tab'));
-      });
-    });
-
-    // --- Password Toggle & Admin Credentials Auto-Fill ---
-    const togglePasswordBtn = document.getElementById('togglePasswordBtn');
-    const loginPasswordInput = document.getElementById('loginPassword');
-    if (togglePasswordBtn && loginPasswordInput) {
-      togglePasswordBtn.addEventListener('click', () => {
-        const isPassword = loginPasswordInput.type === 'password';
-        loginPasswordInput.type = isPassword ? 'text' : 'password';
-        const eyeOpen = togglePasswordBtn.querySelector('.eye-open');
-        const eyeClosed = togglePasswordBtn.querySelector('.eye-closed');
-        if (eyeOpen) eyeOpen.style.display = isPassword ? 'none' : 'block';
-        if (eyeClosed) eyeClosed.style.display = isPassword ? 'block' : 'none';
-      });
-    }
-
-    const btnFillAdminCred = document.getElementById('btnFillAdminCred');
-    if (btnFillAdminCred) {
-      btnFillAdminCred.addEventListener('click', () => {
-        const emailInput = document.getElementById('loginEmail');
-        const pwdInput = document.getElementById('loginPassword');
-        if (emailInput) emailInput.value = 'bevibevn@gmail.com';
-        if (pwdInput) pwdInput.value = 'Bevibe123@';
-        showToast(currentLang === 'vi' ? 'Đã điền thông tin tài khoản Admin beVIBE!' : '관리자 계정 정보가 입력되었습니다!');
-      });
-    }
-
-    // --- Standard Forms Submission ---
-    if (authLoginForm) {
-      authLoginForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const email = document.getElementById('loginEmail')?.value.trim().toLowerCase() || '';
-        const password = document.getElementById('loginPassword')?.value || '';
-
-        // Check Admin credentials requested by user
-        if (email === 'bevibevn@gmail.com') {
-          if (password === 'Bevibe123@') {
-            loginUser({
-              name: 'Ban Quản Trị beVIBE',
-              email: 'bevibevn@gmail.com',
-              role: 'admin',
-              clinic: 'beVIBE HQ Korea & Vietnam',
-              tier: '🛡️ System Administrator'
-            });
-            closeAuthModal();
-            switchPortal('admin');
-            showToast(currentLang === 'vi' ? 'Đăng nhập thành công Phân hệ Admin Quản Trị Hệ Thống! ✓' : 'beVIBE 관리자 포털에 로그인되었습니다! ✓');
-          } else {
-            showToast(currentLang === 'vi' ? 'Mật khẩu Admin không chính xác (mật khẩu chuẩn: Bevibe123@)!' : '관리자 비밀번호가 올바르지 않습니다!');
-            return;
-          }
-        } else {
-          // Customer / Clinic partner login
-          const nameFromEmail = email ? email.split('@')[0] : 'Đối tác beVIBE';
-          loginUser({
-            name: nameFromEmail,
-            email: email || 'partner@clinic.vn',
-            role: 'customer',
-            clinic: 'Đại lý B2B',
-            tier: '🥈 Đại lý Mới (Chờ duyệt)'
-          });
-          closeAuthModal();
-          switchPortal('customer');
-          showToast(currentLang === 'vi' ? 'Đăng nhập thành công Phân hệ Khách hàng / Đại lý B2B! ✓' : '고객/대리점 포털에 로그인되었습니다! ✓');
-        }
-      });
-    }
-
-    if (authRegisterForm) {
-      authRegisterForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const fullName = document.getElementById('regFullName')?.value.trim() || 'Đối tác beVIBE';
-        const clinic = document.getElementById('regClinic')?.value.trim() || 'Phòng khám / Spa đối tác';
-        const phone = document.getElementById('regPhone')?.value.trim() || '';
-        const email = document.getElementById('regEmail')?.value.trim() || '';
-        const interest = document.getElementById('regInterest')?.value || 'distribution';
-
-        const newUser = {
-          name: fullName,
-          email: email,
-          phone: phone,
-          role: 'customer',
-          clinic: clinic,
-          tier: '🥈 Đại lý Mới (Chờ duyệt)'
-        };
-        loginUser(newUser);
-
-        // Record real partner in Admin CRM table
-        addRealPartnerToAdmin(newUser, interest);
-
-        closeAuthModal();
-        switchPortal('customer');
-        showToast(currentLang === 'vi' ? 'Đăng ký tài khoản Đối tác thành công! ✓' : '파트너 회원가입이 완료되었습니다! ✓');
-      });
-    }
-
-    function loginUser(userObj) {
-      currentUser = userObj;
-      try {
-        localStorage.setItem('bevibe_current_user', JSON.stringify(currentUser));
-      } catch (e) {}
-      renderAuthUI();
-    }
-
-    function logoutUser() {
-      currentUser = null;
-      try {
-        localStorage.removeItem('bevibe_current_user');
-      } catch (e) {}
-      renderAuthUI();
-      switchPortal('public');
-      showToast(currentLang === 'vi' ? 'Đã đăng xuất khỏi tài khoản.' : '로그아웃되었습니다.');
-    }
-
-    if (custLogoutBtn) custLogoutBtn.addEventListener('click', logoutUser);
-    if (adminLogoutBtn) adminLogoutBtn.addEventListener('click', logoutUser);
-
-    // --- Render Auth UI in Header, Topbar & Mobile ---
-    function renderAuthUI() {
-      const isVi = currentLang === 'vi';
-
-      // 1. Topbar Auth Area
-      if (topbarAuth) {
-        if (currentUser) {
-          const roleLabel = currentUser.role === 'admin' 
-            ? (isVi ? '🛡️ Admin HQ' : '🛡️ 관리자')
-            : (isVi ? '⭐ Đại lý B2B' : '⭐ B2B 파트너');
-          topbarAuth.innerHTML = `
-            <div class="topbar-user-chip" id="topbarUserChip">
-              <span>${currentUser.name}</span>
-              <span class="chip-role ${currentUser.role}">${roleLabel}</span>
-            </div>
-            <button type="button" class="topbar-auth-btn" id="topbarLogoutBtn" style="color: #a7dcef; margin-left: 6px;">
-              <span>${isVi ? 'Đăng xuất' : '로그아웃'}</span>
-            </button>
-          `;
-          document.getElementById('topbarLogoutBtn')?.addEventListener('click', logoutUser);
-          document.getElementById('topbarUserChip')?.addEventListener('click', () => {
-            switchPortal(currentUser.role === 'admin' ? 'admin' : 'customer');
-          });
-        } else {
-          topbarAuth.innerHTML = `
-            <button type="button" class="topbar-auth-btn" id="topbarLoginBtn">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
-              <span>${isVi ? 'Đăng nhập' : '로그인'}</span>
-            </button>
-            <span class="topbar-auth-sep">/</span>
-            <button type="button" class="topbar-auth-btn register" id="topbarRegisterBtn">
-              <span>${isVi ? 'Đăng ký đối tác' : '파트너 가입'}</span>
-            </button>
-          `;
-          document.getElementById('topbarLoginBtn')?.addEventListener('click', () => openAuthModal('login'));
-          document.getElementById('topbarRegisterBtn')?.addEventListener('click', () => openAuthModal('register'));
-        }
-      }
-
-      // 2. Header Main Auth Button & Dropdown
-      if (headerAuthBtn && headerAuthText) {
-        if (currentUser) {
-          headerAuthBtn.classList.add('logged-in');
-          const shortRole = currentUser.role === 'admin' ? 'Admin' : 'Đại lý';
-          headerAuthText.innerHTML = `${currentUser.name} <span class="auth-role-tag">${shortRole}</span>`;
-        } else {
-          headerAuthBtn.classList.remove('logged-in');
-          headerAuthText.textContent = isVi ? 'Tài khoản' : '로그인';
-        }
-      }
-
-      if (headerUserMenu) {
-        if (currentUser) {
-          headerUserMenu.innerHTML = `
-            <div style="padding: 10px 16px; border-bottom: 1px solid var(--border-subtle);">
-              <strong style="display:block; font-size:0.85rem;">${currentUser.name}</strong>
-              <small style="color:var(--text-muted); font-size:0.72rem;">${currentUser.clinic || currentUser.email}</small>
-            </div>
-            <button type="button" data-portal-action="customer">
-              <span>👤 Phân hệ Khách hàng / Đại lý</span>
-            </button>
-            <button type="button" data-portal-action="admin">
-              <span>🛡️ Phân hệ Quản trị Admin</span>
-            </button>
-            <button type="button" data-portal-action="public">
-              <span>🌐 Trở về Trang chủ Website</span>
-            </button>
-            <div class="menu-divider"></div>
-            <button type="button" id="headerDropdownLogout" style="color: var(--accent-crimson);">
-              <span>🚪 Đăng xuất tài khoản</span>
-            </button>
-          `;
-          document.getElementById('headerDropdownLogout')?.addEventListener('click', logoutUser);
-          headerUserMenu.querySelectorAll('[data-portal-action]').forEach(b => {
-            b.addEventListener('click', () => {
-              switchPortal(b.getAttribute('data-portal-action'));
-              headerUserMenu.setAttribute('hidden', '');
-            });
-          });
-        }
-      }
-
-      // 3. Mobile Drawer Auth Card
-      if (mobileAuthCard) {
-        if (currentUser) {
-          mobileAuthCard.innerHTML = `
-            <div style="background:var(--bg-sand-light); padding:12px; border-radius:var(--radius-sm); margin-bottom:10px;">
-              <strong style="display:block; font-size:0.85rem;">${currentUser.name}</strong>
-              <span style="font-size:0.72rem; color:var(--accent-gold); font-weight:700;">${currentUser.tier || 'Đối tác beVIBE'}</span>
-            </div>
-            <button type="button" class="btn-mobile-login" id="mobileLogoutBtn" style="background: #991b1b;">
-              <span>🚪 Đăng xuất</span>
-            </button>
-          `;
-          document.getElementById('mobileLogoutBtn')?.addEventListener('click', logoutUser);
-        } else {
-          mobileAuthCard.innerHTML = `
-            <button type="button" class="btn-mobile-login" id="mobileLoginBtn">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
-              <span>${isVi ? 'Đăng nhập tài khoản B2B' : 'B2B 로그인'}</span>
-            </button>
-          `;
-          document.getElementById('mobileLoginBtn')?.addEventListener('click', () => {
-            openAuthModal('login');
-            mobileNavDrawer?.classList.remove('open');
-            mobileNavOverlay?.classList.remove('open');
-          });
-        }
-      }
-
-      // 4. Update Customer Portal Header details if logged in
-      const custPortalNameEl = document.getElementById('custPortalName');
-      const custPortalTierEl = document.getElementById('custPortalTier');
-      const custAvatarEl = document.getElementById('custAvatar');
-      if (currentUser && currentUser.role === 'customer') {
-        if (custPortalNameEl) {
-          custPortalNameEl.textContent = currentUser.clinic ? `${currentUser.name} (${currentUser.clinic})` : currentUser.name;
-        }
-        if (custPortalTierEl) {
-          custPortalTierEl.textContent = currentUser.tier || 'Đại lý Mới (Đang hoàn thiện hồ sơ)';
-        }
-        if (custAvatarEl) {
-          const initials = (currentUser.name || 'KH').trim().split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase();
-          custAvatarEl.textContent = initials || 'KH';
-        }
-      } else if (!currentUser || currentUser.role !== 'customer') {
-        if (custPortalNameEl) custPortalNameEl.textContent = 'Tài khoản Đối tác B2B';
-        if (custPortalTierEl) custPortalTierEl.textContent = 'Đại lý Mới (Đang hoàn thiện hồ sơ)';
-        if (custAvatarEl) custAvatarEl.textContent = 'B2B';
-      }
-    }
-
-    // Toggle user dropdown on header click
-    if (headerAuthBtn) {
-      headerAuthBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        if (!currentUser) {
-          openAuthModal('login');
-        } else if (headerUserMenu) {
-          const isHidden = headerUserMenu.hasAttribute('hidden');
-          if (isHidden) {
-            headerUserMenu.removeAttribute('hidden');
-          } else {
-            headerUserMenu.setAttribute('hidden', '');
-          }
-        }
-      });
-    }
-
-    document.addEventListener('click', () => {
-      if (headerUserMenu && !headerUserMenu.hasAttribute('hidden')) {
-        headerUserMenu.setAttribute('hidden', '');
-      }
-    });
-
-    // Listen to all buttons with data-action="auth-modal"
-    document.querySelectorAll('[data-action="auth-modal"]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        openAuthModal('register');
-      });
-    });
-
-    // --- Portal Switcher Core Function ---
-    function switchPortal(targetPortal) {
-      // Auto-authenticate as default user if entering portals without an account
-      if (targetPortal === 'customer' && (!currentUser || currentUser.role !== 'customer')) {
-        currentUser = {
-          name: 'Đối tác beVIBE',
-          email: 'partner@clinic.vn',
-          role: 'customer',
-          clinic: 'Đại lý B2B mới',
-          tier: '🥈 Đại lý Mới (Chờ duyệt)'
-        };
-        try { localStorage.setItem('bevibe_current_user', JSON.stringify(currentUser)); } catch (e) {}
-        renderAuthUI();
-      } else if (targetPortal === 'admin' && (!currentUser || currentUser.role !== 'admin')) {
-        currentUser = {
-          name: 'Ban Quản Trị beVIBE',
-          email: 'admin@bevibe.vn',
-          role: 'admin',
-          clinic: 'beVIBE HQ Korea & Vietnam',
-          tier: '🛡️ System Administrator'
-        };
-        try { localStorage.setItem('bevibe_current_user', JSON.stringify(currentUser)); } catch (e) {}
-        renderAuthUI();
-      }
-
-      currentPortal = targetPortal;
-      try {
-        localStorage.setItem('bevibe_current_portal', targetPortal);
-      } catch (e) {}
-
-      // Update Views Display
-      if (publicView) {
-        if (targetPortal === 'public') {
-          publicView.removeAttribute('hidden');
-          publicView.classList.add('active');
-        } else {
-          publicView.setAttribute('hidden', '');
-          publicView.classList.remove('active');
-        }
-      }
-
-      if (customerView) {
-        if (targetPortal === 'customer') {
-          customerView.removeAttribute('hidden');
-          customerView.classList.add('active');
-        } else {
-          customerView.setAttribute('hidden', '');
-          customerView.classList.remove('active');
-        }
-      }
-
-      if (adminView) {
-        if (targetPortal === 'admin') {
-          adminView.removeAttribute('hidden');
-          adminView.classList.add('active');
-        } else {
-          adminView.setAttribute('hidden', '');
-          adminView.classList.remove('active');
-        }
-      }
-
-      // Update Main Header Dropdown Items
-      document.querySelectorAll('[data-portal-action]').forEach(el => {
-        el.classList.toggle('active', el.getAttribute('data-portal-action') === targetPortal);
-      });
-
-      // Update Mobile Drawer Portal Buttons
-      document.querySelectorAll('.mobile-portal-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.getAttribute('data-portal-action') === targetPortal);
-      });
-
-      // Close mobile drawer if open
-      mobileNavDrawer?.classList.remove('open');
-      mobileNavOverlay?.classList.remove('open');
-
-      // Scroll to top
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-
-      // Update hash
-      if (targetPortal === 'public') {
-        history.replaceState(null, '', ' ');
-      } else {
-        history.replaceState(null, '', `#portal-${targetPortal}`);
-      }
-    }
-
-    // Attach click listeners to all portal triggers
-    document.addEventListener('click', (e) => {
-      const trigger = e.target.closest('[data-portal-action]');
-      if (trigger) {
-        e.preventDefault();
-        const portal = trigger.getAttribute('data-portal-action');
-        switchPortal(portal);
-      }
-    });
-
-    // --- Customer Portal Tabs & Interactions ---
-    const custTabBtns = document.querySelectorAll('[data-cust-tab]');
-    const custPanes = {
-      overview: document.getElementById('custPaneOverview'),
-      wholesale: document.getElementById('custPaneWholesale'),
-      orders: document.getElementById('custPaneOrders'),
-      documents: document.getElementById('custPaneDocuments'),
-      training: document.getElementById('custPaneTraining')
-    };
-
-    function switchCustTab(tabKey) {
-      custTabBtns.forEach(btn => {
-        btn.classList.toggle('active', btn.getAttribute('data-cust-tab') === tabKey);
-      });
-      Object.keys(custPanes).forEach(k => {
-        if (custPanes[k]) {
-          custPanes[k].classList.toggle('active', k === tabKey);
-        }
-      });
-    }
-
-    custTabBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        switchCustTab(btn.getAttribute('data-cust-tab'));
-      });
-    });
-
-    document.querySelectorAll('[data-cust-switch-tab]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        switchCustTab(btn.getAttribute('data-cust-switch-tab'));
-      });
-    });
-
-    // Bảng báo giá sỉ (B2B) + bảng sản phẩm Admin: dựng từ bảng giá thật (prices.js)
-    (function renderPriceTables() {
-      const priced = productIndex.filter((e) => e.price);
-      const pct = Math.round(WHOLESALE_DISCOUNT * 100);
-      document.querySelectorAll('[data-wholesale-pct]').forEach((el) => { el.textContent = `-${pct}%`; });
-      const wsBody = document.querySelector('#wholesaleTable tbody');
-      if (wsBody) {
-        wsBody.innerHTML = priced.map((e) => {
-          const ws = Math.round(e.price * (1 - WHOLESALE_DISCOUNT) / 100) * 100;
-          return `
-            <tr data-prod-id="${e.id}" data-price="${e.price}" data-wholesale="${ws}">
-              <td>
-                <div class="table-prod-cell">
-                  <img src="${e.image}" alt="${escapeHtml(e.vi.name)}" class="table-prod-thumb">
-                  <div><strong>${escapeHtml(e.vi.name)}</strong><small>${escapeHtml(e.vi.tag || '')}</small></div>
-                </div>
-              </td>
-              <td><span class="badge-brand ${e.brandId}">${e.brandName}</span></td>
-              <td>${e.priceUnit}</td>
-              <td>${formatVnd(e.price)}</td>
-              <td class="text-gold font-bold">${formatVnd(ws)}</td>
-              <td>
-                <div class="qty-counter">
-                  <button type="button" class="qty-btn minus">-</button>
-                  <input type="number" class="qty-input" value="0" min="0" max="500">
-                  <button type="button" class="qty-btn plus">+</button>
-                </div>
-              </td>
-              <td class="row-subtotal font-bold">0 đ</td>
-            </tr>`;
-        }).join('');
-      }
-      const adminBody = document.querySelector('#adminProductsTable tbody');
-      if (adminBody) {
-        adminBody.innerHTML = priced.map((e) => {
-          const ws = Math.round(e.price * (1 - WHOLESALE_DISCOUNT) / 100) * 100;
-          return `
-            <tr>
-              <td><strong>${escapeHtml(e.vi.name)}</strong><br><small>${e.priceUnit}</small></td>
-              <td><span class="badge-brand ${e.brandId}">${e.brandName}</span></td>
-              <td>${formatVnd(e.price)}</td>
-              <td class="text-gold">${formatVnd(ws)}</td>
-              <td><span class="stock-pill in-stock">—</span></td>
-              <td>—</td>
-              <td><button type="button" class="btn-tbl-action" data-action="product-modal" data-product-id="${e.id}">Xem</button></td>
-            </tr>`;
-        }).join('');
-      }
-      document.querySelectorAll('[data-price-list-date]').forEach((el) => { el.textContent = PRICE_LIST_DATE; });
-    })();
-
-    // Wholesale Table Calculator
-    function updateWholesaleTotals() {
-      const rows = document.querySelectorAll('#wholesaleTable tbody tr');
-      let totalRetail = 0;
-      let totalWholesale = 0;
-
-      rows.forEach(row => {
-        const price = parseInt(row.getAttribute('data-price') || '0', 10);
-        const wholesalePrice = parseInt(row.getAttribute('data-wholesale') || '0', 10);
-        const qtyInput = row.querySelector('.qty-input');
-        const qty = parseInt(qtyInput?.value || '0', 10);
-
-        const subtotal = wholesalePrice * qty;
-        totalRetail += price * qty;
-        totalWholesale += subtotal;
-
-        const subtotalEl = row.querySelector('.row-subtotal');
-        if (subtotalEl) {
-          subtotalEl.textContent = `${subtotal.toLocaleString('vi-VN')} đ`;
-        }
-      });
-
-      const totalDiscount = totalRetail - totalWholesale;
-
-      const wsTotalRetailEl = document.getElementById('wsTotalRetail');
-      const wsTotalDiscountEl = document.getElementById('wsTotalDiscount');
-      const wsGrandTotalEl = document.getElementById('wsGrandTotal');
-
-      if (wsTotalRetailEl) wsTotalRetailEl.textContent = `${totalRetail.toLocaleString('vi-VN')} đ`;
-      if (wsTotalDiscountEl) wsTotalDiscountEl.textContent = `-${totalDiscount.toLocaleString('vi-VN')} đ`;
-      if (wsGrandTotalEl) wsGrandTotalEl.textContent = `${totalWholesale.toLocaleString('vi-VN')} đ`;
-    }
-
-    // Plus/Minus Quantity Listeners
-    document.querySelectorAll('.qty-counter').forEach(counter => {
-      const minusBtn = counter.querySelector('.qty-btn.minus');
-      const plusBtn = counter.querySelector('.qty-btn.plus');
-      const input = counter.querySelector('.qty-input');
-
-      minusBtn?.addEventListener('click', () => {
-        let val = parseInt(input.value || '0', 10);
-        if (val > 0) {
-          input.value = val - 1;
-          updateWholesaleTotals();
-        }
-      });
-
-      plusBtn?.addEventListener('click', () => {
-        let val = parseInt(input.value || '0', 10);
-        input.value = val + 1;
-        updateWholesaleTotals();
-      });
-
-      input?.addEventListener('change', () => {
-        let val = parseInt(input.value || '0', 10);
-        if (isNaN(val) || val < 0) input.value = 0;
-        updateWholesaleTotals();
-      });
-    });
-
-    // Order Submit Handlers in Customer Portal
-    function handleCreateWholesaleOrder() {
-      // Remove empty state if present
-      const emptyState = document.getElementById('customerEmptyOrdersState');
-      if (emptyState) emptyState.remove();
-
-      const newOrderCard = document.createElement('div');
-      newOrderCard.className = 'order-status-card';
-      const orderCode = `#BV-B2B-${Math.floor(1000 + Math.random() * 9000)}`;
-      const orderName = currentUser?.name || 'Đối tác B2B beVIBE';
-      const grandTotalEl = document.getElementById('wsGrandTotal');
-      const grandTotalText = grandTotalEl ? grandTotalEl.textContent : '32.314.400 đ';
-
-      newOrderCard.innerHTML = `
-        <div class="osc-head">
-          <div class="osc-title">
-            <span class="osc-code">${orderCode}</span>
-            <strong>Đơn hàng sỉ B2B vừa tạo (Đang điều phối xuất kho)</strong>
-          </div>
-          <span class="order-badge in-transit">⏳ Đang xử lý</span>
-        </div>
-        <div class="osc-body">
-          <div class="osc-metric"><span>Ngày đặt:</span> <strong>Hôm nay</strong></div>
-          <div class="osc-metric"><span>Người đặt:</span> <strong>${orderName}</strong></div>
-          <div class="osc-metric"><span>Tổng thanh toán:</span> <strong class="text-gold">${grandTotalText}</strong></div>
-          <div class="osc-metric"><span>Trạng thái:</span> <strong class="text-gold">Đã chuyển sang Kho Hà Nội</strong></div>
-          <div class="osc-metric"><span>Hỗ trợ VIP:</span> <strong>Ms. Kim Yến (033 828 2112)</strong></div>
-        </div>
-        <div class="osc-foot">
-          <button type="button" class="btn-action-sm" onclick="alert('Đã tải hóa đơn điện tử VAT của đơn hàng ${orderCode}!')">📄 Tải Hóa đơn VAT (PDF)</button>
-        </div>
-      `;
-
-      const ordersList = document.getElementById('customerOrdersList');
-      if (ordersList) {
-        ordersList.prepend(newOrderCard);
-      }
-
-      // Update Customer order counters
-      const custOrdersCount = document.getElementById('custOrdersCount');
-      if (custOrdersCount) {
-        let count = parseInt(custOrdersCount.textContent || '0', 10);
-        custOrdersCount.textContent = count + 1;
-      }
-      const custKpiOrders = document.getElementById('custKpiOrders');
-      if (custKpiOrders) {
-        let count = parseInt(document.getElementById('custOrdersCount')?.textContent || '1', 10);
-        custKpiOrders.innerHTML = `0${count} <small>đơn</small>`;
-      }
-
-      // Forward real order to Admin Orders table
-      addRealOrderToAdmin({
-        reqId: orderCode.replace('#', ''),
-        partner: orderName,
-        clinic: currentUser?.clinic || 'Phòng khám / Clinic Đối tác',
-        phone: currentUser?.phone || '033 828 2112',
-        content: `Đơn hàng sỉ B2B (${grandTotalText})`,
-        budget: grandTotalText,
-        status: 'pending'
-      });
-
-      switchCustTab('orders');
-      showToast(currentLang === 'vi' ? 'Đã tạo đơn hàng sỉ B2B thành công! Đang điều phối xuất kho. ✓' : 'B2B 도매 주문이 접수되었습니다! ✓');
-    }
-
-    document.getElementById('btnSubmitWholesaleOrder')?.addEventListener('click', handleCreateWholesaleOrder);
-    document.getElementById('btnConfirmB2BOrder')?.addEventListener('click', handleCreateWholesaleOrder);
-
-    // Customer Training Form
-    document.getElementById('custTrainingForm')?.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const studentName = document.getElementById('custTrainingName')?.value.trim() || currentUser?.name || 'Học viên';
-      const studentTitle = document.getElementById('custTrainingTitle')?.value.trim() || 'Bác sĩ / Kỹ thuật viên';
-      const courseSelect = document.getElementById('custCourseSelect');
-      const courseName = courseSelect ? courseSelect.options[courseSelect.selectedIndex].text : 'Khóa Đào tạo Mesotherapy';
-
-      // Forward to Admin Training CMS
-      const tbody = document.getElementById('adminTrainingTbody');
-      const emptyRow = document.getElementById('adminNoTrainingRow');
-      if (emptyRow) emptyRow.remove();
-
-      if (tbody) {
-        const tr = document.createElement('tr');
-        const todayStr = new Date().toLocaleDateString('vi-VN');
-        tr.innerHTML = `
-          <td><strong>${studentName}</strong></td>
-          <td>${currentUser?.clinic || 'Phòng khám đối tác'}</td>
-          <td>${courseName.split('(')[0].trim()}</td>
-          <td>${todayStr}</td>
-          <td><span class="status-pill pending">Chờ xếp lớp</span></td>
-          <td><button type="button" class="btn-tbl-action" onclick="alert('Đã xác nhận suất đào tạo cho học viên ${studentName}!')">Xác nhận suất</button></td>
-        `;
-        tbody.prepend(tr);
-      }
-
-      const custKpiCerts = document.getElementById('custKpiCerts');
-      if (custKpiCerts) {
-        custKpiCerts.innerHTML = `01 <small>đang đăng ký</small>`;
-      }
-
-      showToast(currentLang === 'vi' ? 'Đã ghi nhận đăng ký khóa đào tạo Mesotherapy! Chuyên viên beVIBE sẽ liên hệ xác nhận trong 24h. ✓' : '메소테라피 교육 신청이 완료되었습니다! ✓');
-    });
-
-    // --- Dynamic Real Admin Data Functions ---
-    function addRealOrderToAdmin(order) {
-      const tbody = document.getElementById('adminOrdersTbody');
-      const emptyRow = document.getElementById('adminNoOrdersRow');
-      if (emptyRow) emptyRow.remove();
-
-      if (tbody) {
-        const tr = document.createElement('tr');
-        tr.setAttribute('data-order-id', order.reqId);
-        tr.innerHTML = `
-          <td><strong>#${order.reqId}</strong></td>
-          <td>
-            <strong>${order.partner}</strong>
-            <small>${order.clinic}</small>
-          </td>
-          <td>${order.phone || 'Chưa cập nhật'}</td>
-          <td>${order.content}</td>
-          <td>${order.budget || 'Thỏa thuận'}</td>
-          <td><span class="status-pill pending">Chờ phê duyệt</span></td>
-          <td>
-            <button type="button" class="btn-tbl-action approve" onclick="window.approveAdminOrder('${order.reqId}')">✓ Duyệt đơn</button>
-          </td>
-        `;
-        tbody.prepend(tr);
-      }
-
-      // Update counters in Admin
-      const adminPendingCount = document.getElementById('adminPendingCount');
-      if (adminPendingCount) {
-        let count = parseInt(adminPendingCount.textContent || '0', 10);
-        adminPendingCount.textContent = count + 1;
-        adminPendingCount.classList.add('alert');
-      }
-      const adminTotalReqCount = document.getElementById('adminTotalReqCount');
-      if (adminTotalReqCount) {
-        let count = parseInt(adminTotalReqCount.textContent || '0', 10);
-        adminTotalReqCount.innerHTML = `${count + 1} <small>yêu cầu</small>`;
-      }
-      const adminPendingNote = document.getElementById('adminPendingNote');
-      if (adminPendingNote) {
-        let count = parseInt(document.getElementById('adminPendingCount')?.textContent || '1', 10);
-        adminPendingNote.textContent = `${count} đơn chờ duyệt chiết khấu`;
-      }
-    }
-    window.addRealOrderToAdmin = addRealOrderToAdmin;
-
-    function addRealPartnerToAdmin(user, interest) {
-      const tbody = document.getElementById('adminPartnersTbody');
-      const emptyRow = document.getElementById('adminNoPartnersRow');
-      if (emptyRow) emptyRow.remove();
-
-      if (tbody) {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td><strong>${user.clinic}</strong></td>
-          <td>${user.name}</td>
-          <td>Việt Nam</td>
-          <td><span class="tier-pill silver">🥈 Đại lý Mới</span></td>
-          <td><strong>Chờ duyệt</strong></td>
-          <td>0 đ</td>
-          <td>
-            <button type="button" class="btn-tbl-action" onclick="alert('Đã phê duyệt đối tác ${user.clinic} làm Đại lý Vàng (-38%)!')">Duyệt Đại lý Vàng</button>
-          </td>
-        `;
-        tbody.prepend(tr);
-      }
-
-      const partnersCount = document.getElementById('adminTotalPartnersCount');
-      if (partnersCount) {
-        let count = parseInt(partnersCount.textContent || '0', 10);
-        partnersCount.innerHTML = `0${count + 1} <small>cơ sở</small>`;
-      }
-    }
-    window.addRealPartnerToAdmin = addRealPartnerToAdmin;
-
-    // --- Admin Portal Tabs & Actions ---
-    const adminTabBtns = document.querySelectorAll('[data-admin-tab]');
-    const adminPanes = {
-      dashboard: document.getElementById('adminPaneDashboard'),
-      orders: document.getElementById('adminPaneOrders'),
-      catalog: document.getElementById('adminPaneCatalog'),
-      partners: document.getElementById('adminPanePartners'),
-      training: document.getElementById('adminPaneTraining')
-    };
-
-    function switchAdminTab(tabKey) {
-      adminTabBtns.forEach(btn => {
-        btn.classList.toggle('active', btn.getAttribute('data-admin-tab') === tabKey);
-      });
-      Object.keys(adminPanes).forEach(k => {
-        if (adminPanes[k]) {
-          adminPanes[k].classList.toggle('active', k === tabKey);
-        }
-      });
-    }
-
-    adminTabBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        switchAdminTab(btn.getAttribute('data-admin-tab'));
-      });
-    });
-
-    // Global Admin Approval function
-    window.approveAdminOrder = function(reqId) {
-      const row = document.querySelector(`tr[data-order-id="${reqId}"]`);
-      if (row) {
-        const statusPill = row.querySelector('.status-pill');
-        if (statusPill) {
-          statusPill.className = 'status-pill completed';
-          statusPill.textContent = 'Đã duyệt báo giá';
-        }
-        const actionBtn = row.querySelector('.btn-tbl-action');
-        if (actionBtn) {
-          actionBtn.className = 'btn-tbl-action';
-          actionBtn.textContent = '✓ Hoàn tất';
-          actionBtn.disabled = true;
-        }
-        const pendingBadge = document.getElementById('adminPendingCount');
-        if (pendingBadge) {
-          let count = parseInt(pendingBadge.textContent || '0', 10);
-          if (count > 0) {
-            count = count - 1;
-            pendingBadge.textContent = count;
-            if (count === 0) pendingBadge.classList.remove('alert');
-          }
-        }
-        const adminPendingNote = document.getElementById('adminPendingNote');
-        if (adminPendingNote) {
-          let count = parseInt(document.getElementById('adminPendingCount')?.textContent || '0', 10);
-          adminPendingNote.textContent = `${count} đơn chờ duyệt chiết khấu`;
-        }
-      }
-      showToast(currentLang === 'vi' ? `Đã phê duyệt và chuyển đơn #${reqId} sang bộ phận xuất kho! ✓` : `#${reqId} 요청이 승인되었습니다! ✓`);
-    };
-
-    // Initial render
-    renderAuthUI();
-    updateWholesaleTotals();
-    if (currentPortal !== 'public') {
-      switchPortal(currentPortal);
-    }
-  }
-
-
   /* ==========================================================================
      Page router (hash based). Each header menu item opens its own page:
-     #/san-pham, #/thuong-hieu, #/thuong-hieu/<brandId>, #/du-toan, #/ve-bevibe, #/blog.
+     #/san-pham, #/thuong-hieu, #/thuong-hieu/<brandId>, #/ve-bevibe, #/blog.
      Empty hash shows the home page; plain anchors (#contact…) just scroll.
      ========================================================================== */
   const publicMain = document.querySelector('#publicWebsiteView > main');
@@ -3352,15 +2507,18 @@ document.addEventListener('DOMContentLoaded', () => {
     'post': {
       sections: ['#blogPost']
     },
-    'du-toan': {
-      sections: ['#oemGuide', '#calculator'],
-      vi: { eyebrow: 'OEM COST ESTIMATOR', title: 'Dự toán chi phí', desc: 'Ước tính nhanh chi phí và thời gian sản xuất OEM theo loại sản phẩm, bao bì và số lượng đặt hàng.' },
-      ko: { eyebrow: 'OEM COST ESTIMATOR', title: '비용 견적', desc: 'OEM 생산 비용과 기간을 제품 유형, 패키지, 수량별로 빠르게 산출하세요.' }
+    'product': {
+      sections: ['#productPage']
     },
     've-bevibe': {
-      sections: ['#aboutStory', '#about', '.usp-strip'],
-      vi: { eyebrow: 'ABOUT US', title: 'Về beVIBE', desc: 'Đối tác phân phối mỹ phẩm Hàn Quốc chính ngạch, đồng hành cùng nhà bán lẻ, spa, clinic và doanh nghiệp tại Việt Nam.' },
-      ko: { eyebrow: 'ABOUT US', title: '비바이브 소개', desc: '베트남 소매점, 스파, 클리닉, 기업과 함께하는 한국 화장품 공식 유통 파트너.' }
+      sections: ['#about', '#aboutStory', '.usp-strip'],
+      vi: { eyebrow: 'ABOUT US', title: 'Về beVIBE', desc: 'Sản xuất và phân phối độc quyền mỹ phẩm Hàn Quốc – được hơn 5000 TMV, Spa, Phòng khám da liễu Hàn Quốc và Việt Nam tin yêu.' },
+      ko: { eyebrow: 'ABOUT US', title: '비바이브 소개', desc: '한국 화장품 제조 및 독점 유통 – 한국과 베트남 5,000곳 이상의 성형외과·스파·클리닉이 신뢰합니다.' }
+    },
+    'lien-he': {
+      sections: ['#contactPage'],
+      vi: { eyebrow: 'CONTACT', title: 'Liên hệ', desc: 'Hotline, Zalo, email và địa chỉ văn phòng beVIBE – chọn kênh phù hợp để được hỗ trợ nhanh nhất.' },
+      ko: { eyebrow: 'CONTACT', title: '연락처', desc: '비바이브 핫라인, Zalo, 이메일 및 사무소 주소 – 알맞은 채널로 빠르게 문의하세요.' }
     },
     'blog': {
       sections: ['#blog'],
@@ -3379,6 +2537,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (parts[0] === 'blog' && parts[1] && blogPosts.some((p) => p.slug === parts[1])) {
       return { page: 'post', slug: parts[1], params };
     }
+    if (parts[0] === 'san-pham' && parts[1] && productIndex.some((e) => e.id === parts[1])) {
+      return { page: 'product', productId: parts[1], params };
+    }
     if (parts[0] === 'thuong-hieu' && parts[1] && brandsData.some((b) => b.id === parts[1])) {
       return { page: 'brand', brandId: parts[1], params };
     }
@@ -3392,7 +2553,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function renderPageHero() {
-    if (!pageHero || currentRoute.page === 'home') return;
+    if (!pageHero || currentRoute.page === 'home' || currentRoute.page === 'product') return;
     const isVi = currentLang === 'vi';
     const crumbs = [`<a href="#">${isVi ? 'Trang chủ' : '홈'}</a>`];
     let eyebrow = '';
@@ -3418,10 +2579,6 @@ document.addEventListener('DOMContentLoaded', () => {
       media = b.coverImage ? `<div class="page-hero-media"><img src="${b.coverImage}" alt="${escapeHtml(b.name)}"></div>` : '';
       meta.push(`${b.productsVi.length} ${isVi ? 'sản phẩm' : '개 제품'}`);
       if ((b.lines || []).length) meta.push(`${b.lines.length} ${isVi ? 'dòng sản phẩm' : '제품 라인'}`);
-      actions = `
-        <div class="page-hero-actions">
-          <button type="button" class="page-hero-btn primary" data-action="brand-quote" data-brand-name="${escapeHtml(b.name)}">${isVi ? 'Nhận báo giá ↗' : '견적 요청 ↗'}</button>
-        </div>`;
       const story = isVi ? b.storyVi : b.storyKo;
       const tech = isVi ? b.techVi : b.techKo;
       const infoCard = (icon, heading, text) => text ? `
@@ -3499,6 +2656,7 @@ document.addEventListener('DOMContentLoaded', () => {
       pageFilter.cats = new Set(p.cat ? [p.cat] : []);
       pageFilter.brands = new Set(p.brand ? [p.brand] : []);
       pageFilter.lines = new Set();
+      pageFilter.concerns = new Set(p.concern && CONCERN_DEFS.some((c) => c.id === p.concern) ? [p.concern] : []);
     } else if (route.page === 'brand') {
       Object.assign(catalogState, { brand: route.brandId, line: p.line || 'all', category: 'all', query: '', expanded: true });
     } else {
@@ -3513,13 +2671,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     renderProductCatalog();
 
+    if (route.page === 'product') {
+      if (pageHero) pageHero.hidden = true;
+      if (shop) shop.renderProductPage(route.productId);
+    } else if (shop) {
+      shop.leaveProductPage();
+    }
+
     if (isHome) document.title = baseTitle;
     else renderPageHero();
     if (route.page === 'blog') renderBlogPage();
     if (route.page === 'post') renderBlogPost(blogPosts.find((p) => p.slug === route.slug));
     pageSeo(route);
 
-    const navKey = route.page === 'brand' ? 'thuong-hieu' : route.page === 'post' ? 'blog' : route.page;
+    const navKey = route.page === 'brand' ? 'thuong-hieu' : route.page === 'post' ? 'blog' : route.page === 'product' ? 'san-pham' : route.page;
     document.querySelectorAll('.hnav-link, .mobile-nav-link').forEach((a) => {
       a.classList.toggle('is-active', !isHome && a.getAttribute('href') === `#/${navKey}`);
     });
@@ -3529,19 +2694,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.addEventListener('hashchange', () => renderRoute());
 
-  // Cost estimate page: expand / collapse the guide article ("Xem thêm" / "Thu gọn")
-  const oemArticleToggle = document.getElementById('oemArticleToggle');
-  const oemArticleBody = document.getElementById('oemArticleBody');
-  if (oemArticleToggle && oemArticleBody) {
-    oemArticleToggle.addEventListener('click', () => {
-      const open = oemArticleBody.classList.toggle('expanded');
-      oemArticleToggle.setAttribute('aria-expanded', String(open));
-      oemArticleToggle.innerHTML = open
-        ? 'Thu gọn <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg>'
-        : 'Xem thêm <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>';
-      if (!open) oemArticleToggle.closest('.oem-article')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
-  }
   // Clicking the link of the page you are already on still resets it to the top
   document.addEventListener('click', (e) => {
     const a = e.target.closest('a[href^="#/"]');
@@ -3549,10 +2701,23 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Initial Initialization
+  shop = initShop({
+    productIndex,
+    brandsData,
+    getLang: () => currentLang,
+    localized,
+    formatVnd,
+    escapeHtml,
+    showToast,
+    navigate,
+    lineLabel,
+    categoryLabel,
+    productCardHtml,
+    prefillProductInquiry
+  });
+  account = initAccount({ shop, getLang: () => currentLang, showToast, escapeHtml });
   applyTranslations();
-  calculateOemEstimate();
   initHeroSlideshow();
-  initAuthAndPortals();
   renderBlogFeatured();
   renderRoute({ initial: true });
 
@@ -3580,8 +2745,6 @@ document.addEventListener('DOMContentLoaded', () => {
     try { seen = sessionStorage.getItem(SEEN_KEY) === '1'; } catch (e) {}
     if (seen) return;
     setTimeout(() => {
-      const publicView = document.getElementById('publicWebsiteView');
-      if (publicView && publicView.hidden) return; // not on the B2B / admin portals
       popup.hidden = false;
       requestAnimationFrame(() => popup.classList.add('open'));
       document.addEventListener('keydown', onKey);

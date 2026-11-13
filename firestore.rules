@@ -1,0 +1,20 @@
+rules_version = '2';
+
+// beVIBE customer accounts — paste into Firebase console → Firestore Database → Rules → Publish.
+// Each customer can read and write only their own cart; nothing else is readable.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /carts/{uid} {
+      allow read, delete: if request.auth != null && request.auth.uid == uid;
+      allow create, update: if request.auth != null
+        && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['items', 'updatedAt'])
+        && request.resource.data.items is list
+        && request.resource.data.items.size() <= 100;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

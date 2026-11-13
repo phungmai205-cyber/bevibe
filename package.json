@@ -6,9 +6,13 @@
   "scripts": {
     "dev": "vite --open",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "sync-prices": "node scripts/sync-order-prices.mjs"
   },
   "devDependencies": {
     "vite": "^6.0.0"
+  },
+  "dependencies": {
+    "firebase": "^11.10.0"
   }
 }
