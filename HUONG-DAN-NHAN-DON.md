@@ -59,6 +59,10 @@ Không cần máy chủ, không tốn phí. Chỉ cần làm **một lần** (~5
 
 ## Khi thay đổi giá sản phẩm
 
+**Cách nên dùng:** vào trang `admin.html` → **Chi phí & giá vốn** → sửa giá bán / khuyến mãi / trạng thái → **Lưu bảng giá**. Website và hệ thống tính tiền dùng ngay bảng giá này, không cần sửa code (xem `HUONG-DAN-ADMIN.md`).
+
+Cách cũ, chỉ để đổi **giá mặc định** khi sheet "Bảng giá" chưa có dữ liệu:
+
 1. Sửa giá trong `assets/js/prices.js`.
 2. Chạy `npm run sync-prices` (cập nhật bảng giá vào `google-apps-script/Code.gs`).
 3. Dán lại toàn bộ `Code.gs` vào Apps Script → **Lưu**.

@@ -10979,3 +10979,149 @@ body.acct-open { overflow: hidden; }
   .ct-info-row { grid-template-columns: 1fr; padding: 22px 18px; }
   .ct-map, .ct-map iframe { min-height: 280px; }
 }
+
+/* Checkout: who is ordering (retail / wholesale / consultant) */
+.checkout-ctype {
+  border: none;
+  margin: 0 0 16px;
+  padding: 0;
+}
+
+.checkout-ctype legend {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text-ink);
+  margin-bottom: 8px;
+}
+
+.ctype-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ctype-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 14px;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-pill);
+  font-size: 0.86rem;
+  color: var(--text-ink);
+  cursor: pointer;
+}
+
+.ctype-option:has(input:checked) {
+  border-color: var(--accent-crimson);
+  background-color: var(--accent-crimson-light);
+  font-weight: 600;
+}
+
+.ctype-option input {
+  accent-color: var(--accent-crimson);
+  margin: 0;
+}
+
+.ctype-org {
+  margin-top: 12px;
+}
+
+.ctype-org[hidden] {
+  display: none;
+}
+
+/* ==========================================================================
+   Live price list from the admin: promotion and out-of-stock
+   ========================================================================== */
+.pcard-badge-sale,
+.pcard-badge-stock {
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  z-index: 2;
+  padding: 3px 9px;
+  border-radius: var(--radius-xs);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+}
+
+.pcard-badge-sale {
+  background: #e53935;
+  color: #fff;
+}
+
+.pcard-badge-stock {
+  background: rgba(14, 34, 56, 0.82);
+  color: #fff;
+}
+
+.bs-sale,
+.bs-stock {
+  top: 12px;
+  right: 12px;
+  left: auto;
+  bottom: auto;
+}
+
+.pcard.is-soldout .pcard-media img {
+  opacity: 0.55;
+  filter: grayscale(0.4);
+}
+
+.pcard-price small del,
+.bs-card-price del {
+  color: var(--text-light);
+  font-weight: 400;
+}
+
+.bs-card-price del {
+  margin-left: 6px;
+  font-size: 0.85em;
+}
+
+.pcard-price strong.is-sale {
+  color: #e53935;
+}
+
+.pcard-cart.is-disabled {
+  background: var(--bg-sand-light);
+  border-color: var(--border-light);
+  color: var(--text-light);
+  cursor: not-allowed;
+}
+
+.pd-list-price {
+  margin-left: 10px;
+  font-size: 1rem;
+  color: var(--text-light);
+}
+
+.pd-sale-badge {
+  margin-left: 8px;
+  padding: 2px 8px;
+  border-radius: var(--radius-xs);
+  background: #e53935;
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 800;
+  vertical-align: middle;
+}
+
+.pd-sale-note {
+  display: block;
+  margin-top: 4px;
+  color: #c62828 !important;
+  font-weight: 600;
+}
+
+.pd-soldout {
+  width: 100%;
+  margin: 0 0 4px;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  background: #fdecea;
+  color: #8a1f1f;
+  font-size: 0.88rem;
+}

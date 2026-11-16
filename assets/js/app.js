@@ -8,7 +8,12 @@ import { productPrices, formatVnd, BEST_SELLER_IDS, BEST_SELLER_IMAGES, BEST_SEL
 import { CONCERN_DEFS, CONCERN_TAGS, initShop } from './shop.js';
 import { initAccount } from './account.js';
 import { buildSearchEntry, searchIndex } from './search.js';
+<<<<<<< Updated upstream
 import { ORDER_ENDPOINT, sendOrderToSupabase } from './order-config.js';
+=======
+import { ORDER_ENDPOINT } from './order-config.js';
+import { CATEGORY_DEFS, detectCategory } from './catalog-defs.js';
+>>>>>>> Stashed changes
 
 document.addEventListener('DOMContentLoaded', () => {
   // --- State ---
@@ -124,15 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ==========================================================================
      Catalogue model: categories, product index, filters & search
      ========================================================================== */
-  const CATEGORY_DEFS = [
-    { id: 'cleanser', vi: 'Sữa rửa mặt', ko: '클렌저' },
-    { id: 'toner', vi: 'Toner & Xịt khoáng', ko: '토너 & 미스트' },
-    { id: 'serum', vi: 'Serum & Ampoule', ko: '세럼 & 앰플' },
-    { id: 'moisturizer', vi: 'Kem & Sữa dưỡng', ko: '크림 & 에멀전' },
-    { id: 'sun', vi: 'Chống nắng & BB', ko: '선케어 & BB' },
-    { id: 'mask', vi: 'Mặt nạ', ko: '마스크팩' },
-    { id: 'hair', vi: 'Tóc & Da đầu', ko: '헤어 & 두피' }
-  ];
+  // CATEGORY_DEFS and detectCategory come from catalog-defs.js (shared with the admin page)
 
   const TREND_TERMS = {
     vi: ['Kem chống nắng', 'Serum phục hồi', 'Dầu gội', 'Men vi sinh', 'Tế bào gốc', 'Mặt nạ', 'Ceramide', 'Toner'],
@@ -166,17 +163,6 @@ document.addEventListener('DOMContentLoaded', () => {
       .replace(/đ/g, 'd');
   }
 
-  function detectCategory(viName, brandId) {
-    if (brandId === 'smib') return 'hair';
-    const n = viName.toLowerCase();
-    if (/sun|bb cream/.test(n)) return 'sun';
-    if (/mask/.test(n)) return 'mask';
-    if (/cleansing|foam/.test(n)) return 'cleanser';
-    if (/toner|mist/.test(n)) return 'toner';
-    if (/serum|ampoule|essence/.test(n)) return 'serum';
-    return 'moisturizer';
-  }
-
   function categoryLabel(catId) {
     const def = CATEGORY_DEFS.find((c) => c.id === catId);
     if (!def) return '';
@@ -185,38 +171,39 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Bilingual index: one entry per product id, built once.
   const productIndex = [];
-  brandsData.forEach((brand) => {
-    brand.productsVi.forEach((pVi) => {
-      const pKo = (brand.productsKo || []).find((x) => x.id === pVi.id) || pVi;
-      const category = detectCategory(pVi.name, brand.id);
-      const def = CATEGORY_DEFS.find((c) => c.id === category);
-      const line = (brand.lines || []).find((l) => l.id === pVi.line) || {};
-      productIndex.push({
-        id: pVi.id,
-        brandId: brand.id,
-        brandName: brand.name,
-        line: pVi.line || '',
-        category,
-        vi: pVi,
-        ko: pKo,
-        price: productPrices[pVi.id] ? productPrices[pVi.id].price : null,
-        priceUnit: productPrices[pVi.id] ? productPrices[pVi.id].unit : '',
-        image: pVi.image || pKo.image || brand.coverImage || '/assets/images/hero.jpg',
-        hasVideo: !!(pVi.video || pKo.video),
-        strong: normalizeText([pVi.name, pKo.name, brand.name, line.nameVi, line.nameKo].join(' ')),
-        medium: normalizeText([pVi.tag, pKo.tag, def.vi, def.ko, brand.badge].join(' ')),
-        weak: normalizeText([pVi.desc, pKo.desc, pVi.spec].join(' '))
-      });
-    });
-  });
-
-  // Skin-concern tags (shop.js) — used by the products filter, search and the skin-care section
-  productIndex.forEach((e) => {
+  function makeEntry(brand, pVi, pKo, categoryOverride) {
+    const category = CATEGORY_DEFS.some((c) => c.id === categoryOverride) ? categoryOverride : detectCategory(pVi.name, brand.id);
+    const def = CATEGORY_DEFS.find((c) => c.id === category);
+    const line = (brand.lines || []).find((l) => l.id === pVi.line) || {};
+    const e = {
+      id: pVi.id,
+      brandId: brand.id,
+      brandName: brand.name,
+      line: pVi.line || '',
+      category,
+      vi: pVi,
+      ko: pKo,
+      price: productPrices[pVi.id] ? productPrices[pVi.id].price : null,
+      priceUnit: productPrices[pVi.id] ? productPrices[pVi.id].unit : '',
+      image: pVi.image || pKo.image || brand.coverImage || '/assets/images/hero.jpg',
+      hasVideo: !!(pVi.video || pKo.video),
+      strong: normalizeText([pVi.name, pKo.name, brand.name, line.nameVi, line.nameKo].join(' ')),
+      medium: normalizeText([pVi.tag, pKo.tag, def.vi, def.ko, brand.badge].join(' ')),
+      weak: normalizeText([pVi.desc, pKo.desc, pVi.spec].join(' '))
+    };
+    // Skin-concern tags (shop.js) — used by the products filter, search and the skin-care section
     e.concerns = CONCERN_TAGS[e.id] || [];
     e.medium += ' ' + normalizeText(e.concerns.map((cid) => {
       const c = CONCERN_DEFS.find((d) => d.id === cid);
       return c ? `${c.vi} ${c.ko}` : '';
     }).join(' '));
+    return e;
+  }
+  brandsData.forEach((brand) => {
+    brand.productsVi.forEach((pVi) => {
+      const pKo = (brand.productsKo || []).find((x) => x.id === pVi.id) || pVi;
+      productIndex.push(makeEntry(brand, pVi, pKo));
+    });
   });
 
   function localized(entry) {
@@ -226,7 +213,8 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Search index (search.js): product names, type line, concerns and descriptions in both languages
-  const searchItems = productIndex.map((e) => {
+  const searchItems = productIndex.map(makeSearchItem);
+  function makeSearchItem(e) {
     const brand = brandsData.find((b) => b.id === e.brandId) || {};
     const line = (brand.lines || []).find((l) => l.id === e.line) || {};
     const def = CATEGORY_DEFS.find((c) => c.id === e.category) || {};
@@ -241,7 +229,63 @@ document.addEventListener('DOMContentLoaded', () => {
         kind: [e.vi.name, e.ko.name, e.vi.tag, e.ko.tag]
       }, e.category)
     };
-  });
+  }
+
+  /**
+   * Brands and products added from the admin page (order system → sheets "Thương hiệu" / "Sản phẩm").
+   * They join brandsData / productIndex / search like the built-in ones. Calling it again replaces them.
+   */
+  const extraBrandIds = new Set();
+  const extraProductIds = new Set();
+  function applyCatalogExtras(brands, products) {
+    if (!Array.isArray(brands) && !Array.isArray(products)) return false;
+    // Remove what a previous call added
+    brandsData.forEach((b) => {
+      b.productsVi = b.productsVi.filter((p) => !extraProductIds.has(p.id));
+      if (b.productsKo) b.productsKo = b.productsKo.filter((p) => !extraProductIds.has(p.id));
+    });
+    for (let i = brandsData.length - 1; i >= 0; i--) if (extraBrandIds.has(brandsData[i].id)) brandsData.splice(i, 1);
+    for (let i = productIndex.length - 1; i >= 0; i--) if (extraProductIds.has(productIndex[i].id)) productIndex.splice(i, 1);
+    for (let i = searchItems.length - 1; i >= 0; i--) if (extraProductIds.has(searchItems[i].entry.id)) searchItems.splice(i, 1);
+    extraBrandIds.clear();
+    extraProductIds.clear();
+
+    // Admin text is put into HTML by the catalogue templates (some escape it, some don't):
+    // drop the characters that could open a tag or close an attribute, so both kinds stay safe
+    const t = (v) => String(v == null ? '' : v).replace(/[<>]/g, '').replace(/"/g, '”').replace(/'/g, '’');
+    (brands || []).forEach((raw) => {
+      if (!raw || !raw.id || brandsData.some((x) => x.id === raw.id)) return;
+      const b = { ...raw, name: t(raw.name), origin: t(raw.origin), tagline: t(raw.tagline), badge: t(raw.badge), desc: t(raw.desc), story: t(raw.story) };
+      brandsData.push({
+        id: b.id, name: b.name, category: '', origin: b.origin || '', tagline: b.tagline || '', badge: b.badge || '',
+        coverImage: b.image || '/assets/images/hero.jpg', driveFolder: '',
+        descVi: b.desc || '', descKo: b.desc || '', highlightsVi: [], highlightsKo: [],
+        storyVi: b.story || '', storyKo: b.story || '', techVi: '', techKo: '', policyVi: '', policyKo: '',
+        productsVi: [], productsKo: [], lines: [], custom: true
+      });
+      extraBrandIds.add(b.id);
+    });
+    (products || []).forEach((raw) => {
+      const p = raw && {
+        ...raw, name: t(raw.name), nameKo: raw.nameKo ? t(raw.nameKo) : '', spec: t(raw.spec), tag: t(raw.tag), desc: t(raw.desc), usage: t(raw.usage),
+        benefits: (raw.benefits || []).map(t), ingredients: (raw.ingredients || []).map((x) => ({ name: t(x.name), desc: t(x.desc) }))
+      };
+      const brand = p && brandsData.find((b) => b.id === p.brandId);
+      if (!brand || !p.id || productIndex.some((e) => e.id === p.id)) return;
+      const pVi = {
+        id: p.id, name: p.name, spec: p.spec || '', image: p.image, tag: p.tag || '', desc: p.desc || '',
+        gallery: p.gallery || [], ingredients: p.ingredients || [], benefits: p.benefits || [], usage: p.usage || '', line: p.line || ''
+      };
+      const pKo = { ...pVi, name: p.nameKo || p.name };
+      brand.productsVi.push(pVi);
+      (brand.productsKo || (brand.productsKo = [])).push(pKo);
+      const entry = makeEntry(brand, pVi, pKo, p.category);
+      productIndex.push(entry);
+      searchItems.push(makeSearchItem(entry));
+      extraProductIds.add(p.id);
+    });
+    return true;
+  }
 
   function searchProducts(query) {
     return searchIndex(searchItems, query);
@@ -396,14 +440,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // Price-list status set by the admin: promotion and "Hết hàng" / "Ngừng bán"
+  const isSoldOut = (e) => !!(e.price && e.stock && e.stock !== 'Đang bán');
+  const salePct = (e) => (e.listPrice && e.price ? Math.round((1 - e.price / e.listPrice) * 100) : 0);
+
   function productCardHtml(entry) {
     const isVi = currentLang === 'vi';
     const p = localized(entry);
+    const soldOut = isSoldOut(entry);
+    const pct = salePct(entry);
     return `
-      <article class="pcard" data-action="product-modal" data-product-id="${p.id}" tabindex="0">
+      <article class="pcard ${soldOut ? 'is-soldout' : ''}" data-action="product-modal" data-product-id="${p.id}" tabindex="0">
         <div class="pcard-media">
           <img src="${p.image}" alt="${escapeHtml(p.name)}" loading="lazy">
           <span class="pcard-badge-brand">${p.brandName}</span>
+          ${soldOut ? `<span class="pcard-badge-stock">${isVi ? escapeHtml(entry.stock) : '품절'}</span>` : pct ? `<span class="pcard-badge-sale">-${pct}%</span>` : ''}
           ${p.hasVideo ? `<span class="pcard-badge-video"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg> Video</span>` : ''}
         </div>
         <div class="pcard-body">
@@ -413,10 +464,13 @@ document.addEventListener('DOMContentLoaded', () => {
           <span class="pcard-spec">${p.spec || ''}</span>
           <div class="pcard-foot">
             <div class="pcard-price">
-              <small>${isVi ? 'Giá niêm yết' : '정가'}</small>
-              <strong>${p.price ? formatVnd(p.price) : (isVi ? 'Liên hệ' : '문의')}</strong>
+              <small>${entry.listPrice ? `<del>${formatVnd(entry.listPrice)}</del>` : (isVi ? 'Giá niêm yết' : '정가')}</small>
+              <strong class="${entry.listPrice ? 'is-sale' : ''}">${p.price ? formatVnd(p.price) : (isVi ? 'Liên hệ' : '문의')}</strong>
             </div>
-            ${p.price ? `
+            ${soldOut ? `
+              <button type="button" class="pcard-cart is-disabled" disabled aria-disabled="true">
+                <span>${isVi ? escapeHtml(entry.stock) : '품절'}</span>
+              </button>` : p.price ? `
               <button type="button" class="pcard-cart" data-shop="add" data-product-id="${p.id}" aria-label="${isVi ? 'Thêm vào giỏ' : '장바구니 담기'}">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>
                 <span>${isVi ? 'Thêm vào giỏ' : '담기'}</span>
@@ -472,14 +526,15 @@ document.addEventListener('DOMContentLoaded', () => {
           <img class="bs-img-main" src="${img}" alt="${escapeHtml(p.name)}" loading="lazy">
           ${hover ? `<img class="bs-img-hover" src="${hover}" alt="" loading="lazy">` : ''}
           <span class="bs-rank">TOP ${rank}</span>
-          ${p.price ? `<button type="button" class="bs-cart" data-shop="add" data-product-id="${p.id}" aria-label="${isVi ? 'Thêm vào giỏ' : '장바구니 담기'}">
+          ${isSoldOut(entry) ? `<span class="pcard-badge-stock bs-stock">${isVi ? escapeHtml(entry.stock) : '품절'}</span>` : salePct(entry) ? `<span class="pcard-badge-sale bs-sale">-${salePct(entry)}%</span>` : ''}
+          ${p.price && !isSoldOut(entry) ? `<button type="button" class="bs-cart" data-shop="add" data-product-id="${p.id}" aria-label="${isVi ? 'Thêm vào giỏ' : '장바구니 담기'}">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>
           </button>` : ''}
         </div>
         <div class="bs-card-body">
           <span class="bs-card-brand">${escapeHtml(p.brandName)}</span>
           <h3 class="bs-card-name">${p.name}</h3>
-          <p class="bs-card-price">${p.price ? formatVnd(p.price) : (isVi ? 'Liên hệ' : '문의')}${p.spec ? `<small>${escapeHtml(p.spec)}</small>` : ''}</p>
+          <p class="bs-card-price">${p.price ? formatVnd(p.price) : (isVi ? 'Liên hệ' : '문의')}${entry.listPrice ? ` <del>${formatVnd(entry.listPrice)}</del>` : ''}${p.spec ? `<small>${escapeHtml(p.spec)}</small>` : ''}</p>
           <div class="bs-card-actions">
             <button type="button" class="bs-btn bs-btn-detail">${isVi ? 'Xem chi tiết' : '상세 보기'}</button>
             <button type="button" class="bs-btn bs-btn-quick" data-action="product-quick" data-product-id="${p.id}">${isVi ? 'Xem nhanh' : '빠른 보기'}</button>
@@ -2792,6 +2847,66 @@ document.addEventListener('DOMContentLoaded', () => {
     if (a && a.getAttribute('href') === window.location.hash) renderRoute();
   });
 
+  /**
+   * Live price list set by the admin (selling price, promotion, stock status) from the order system.
+   * The last list is kept on this browser so a return visit shows it straight away.
+   */
+  const LIVE_PRICES_KEY = 'bevibe_live_prices_v1';
+  function applyLivePrices(map) {
+    if (!map || typeof map !== 'object') return false;
+    productIndex.forEach((e) => {
+      const m = map[e.id];
+      if (m && Number(m.price) > 0) {
+        e.price = Number(m.price);
+        e.listPrice = Number(m.listPrice) > e.price ? Number(m.listPrice) : 0;
+        e.saleTo = m.saleTo || '';
+        e.stock = m.status || 'Đang bán';
+        if (m.unit) e.priceUnit = m.unit;
+        productPrices[e.id] = { ...(productPrices[e.id] || {}), price: e.price, unit: e.priceUnit };
+      } else {
+        // No price in the admin list = "Liên hệ"
+        e.price = null;
+        e.listPrice = 0;
+        e.stock = '';
+        delete productPrices[e.id];
+      }
+    });
+    return true;
+  }
+  try {
+    const cached = JSON.parse(localStorage.getItem(LIVE_PRICES_KEY) || 'null');
+    if (cached) applyCatalogExtras(cached.brands, cached.products);
+    if (cached && cached.prices) applyLivePrices(cached.prices);
+  } catch (e) { /* storage blocked: keep the built-in prices */ }
+
+  async function loadLivePrices() {
+    if (!ORDER_ENDPOINT) return;
+    const ctrl = typeof AbortController === 'function' ? new AbortController() : null;
+    const timer = ctrl ? setTimeout(() => ctrl.abort(), 8000) : null;
+    try {
+      const res = await fetch(`${ORDER_ENDPOINT}?action=prices`, { signal: ctrl ? ctrl.signal : undefined });
+      const data = await res.json();
+      if (!data || !data.ok || !data.prices) return;
+      applyCatalogExtras(data.brands || [], data.products || []);
+      applyLivePrices(data.prices);
+      try { localStorage.setItem(LIVE_PRICES_KEY, JSON.stringify({ prices: data.prices, products: data.products || [], brands: data.brands || [], at: data.at })); } catch (e) { /* ignore */ }
+      renderNavigation();
+      renderBrands();
+      // A link straight to a brand / product added from admin: open it now that it exists
+      const want = (window.location.hash || '').replace(/^#\/?/, '').split('?')[0].split('/');
+      const missed = (want[0] === 'thuong-hieu' && want[1] && currentRoute && currentRoute.page !== 'brand')
+        || (want[0] === 'san-pham' && want[1] && currentRoute && currentRoute.page !== 'product');
+      if (missed) { renderRoute({ initial: true }); return; }
+      // Repaint what is on screen with the new prices, keeping filters and scroll position
+      renderProductCatalog();
+      if (shop) shop.refresh(currentRoute && currentRoute.page === 'product' ? currentRoute.productId : null);
+    } catch (err) {
+      // Order system not reachable (or an older deployment without the price list): keep current prices
+    } finally {
+      if (timer) clearTimeout(timer);
+    }
+  }
+
   // Initial Initialization
   shop = initShop({
     productIndex,
@@ -2812,6 +2927,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initHeroSlideshow();
   renderBlogFeatured();
   renderRoute({ initial: true });
+  loadLivePrices();
 
   /**
    * Thank-you promo popup: shows once per browser session on the public site.

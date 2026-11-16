@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>beVIBE Admin</title>
+  <link rel="icon" type="image/png" href="/assets/images/logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/admin.css">
+</head>
+
+<body>
+  <!-- ================= Login ================= -->
+  <section class="adm-login" id="admLogin" hidden>
+    <form class="adm-login-card" id="admLoginForm" autocomplete="on">
+      <img src="/assets/images/logo.png" alt="beVIBE" class="adm-login-logo">
+      <h1>Phân hệ quản trị</h1>
+      <p class="adm-muted">Đơn hàng, khách hàng, chi phí và báo cáo doanh thu.</p>
+      <label class="adm-field">
+        <span>Mật khẩu admin</span>
+        <input type="password" name="password" id="admPassword" autocomplete="current-password" required>
+      </label>
+      <p class="adm-error" id="admLoginError" role="alert" hidden></p>
+      <button type="submit" class="adm-btn adm-btn-primary adm-btn-block" id="admLoginBtn">Đăng nhập</button>
+      <button type="button" class="adm-btn adm-btn-ghost adm-btn-block" id="admDemoBtn">Xem thử với dữ liệu mẫu</button>
+      <p class="adm-fineprint" id="admEndpointNote"></p>
+    </form>
+  </section>
+
+  <!-- ================= App shell ================= -->
+  <div class="adm-shell" id="admShell" hidden>
+    <aside class="adm-sidebar" id="admSidebar">
+      <a href="/" class="adm-brand" title="Về trang chủ beVIBE">
+        <img src="/assets/images/logo.png" alt="beVIBE">
+        <span>Admin</span>
+      </a>
+      <nav class="adm-nav" aria-label="Phân hệ quản trị">
+        <a href="#/don-hang" data-view="don-hang">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4zM3 6h18M16 10a4 4 0 0 1-8 0" /></svg>Đơn hàng
+          <b class="adm-nav-badge" id="admNewOrders" hidden></b>
+        </a>
+        <a href="#/khach-hang" data-view="khach-hang">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM23 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8" /></svg>Khách hàng
+        </a>
+        <a href="#/huy-hoan" data-view="huy-hoan">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5M9 9l6 6M15 9l-6 6" /></svg>Hủy &amp; hoàn hàng
+        </a>
+        <a href="#/tiem-nang" data-view="tiem-nang">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 3H2l8 9.5V19l4 2v-8.5z" /></svg>Khách tiềm năng
+          <b class="adm-nav-badge" id="admNewLeads" hidden></b>
+        </a>
+        <a href="#/chi-phi" data-view="chi-phi">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></svg>Chi phí &amp; giá vốn
+        </a>
+        <a href="#/bao-cao" data-view="bao-cao">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2" /></svg>Báo cáo
+        </a>
+      </nav>
+      <div class="adm-sidebar-foot">
+        <span class="adm-demo-tag" id="admDemoTag" hidden>Dữ liệu mẫu</span>
+        <a class="adm-link" id="admSheetLink" href="#" target="_blank" rel="noopener noreferrer" hidden>Mở Google Sheet ↗</a>
+        <button type="button" class="adm-btn adm-btn-ghost adm-btn-sm" id="admChangePw">Đổi mật khẩu</button>
+        <button type="button" class="adm-btn adm-btn-ghost adm-btn-sm" id="admLogout">Đăng xuất</button>
+      </div>
+    </aside>
+
+    <main class="adm-main">
+      <header class="adm-topbar">
+        <div>
+          <h1 class="adm-page-title" id="admTitle">Đơn hàng</h1>
+          <p class="adm-muted adm-updated" id="admUpdated"></p>
+        </div>
+        <div class="adm-topbar-actions">
+          <div class="adm-period" id="admPeriodWrap">
+            <select id="admPeriod" aria-label="Khoảng thời gian">
+              <option value="today">Hôm nay</option>
+              <option value="7d">7 ngày qua</option>
+              <option value="30d" selected>30 ngày qua</option>
+              <option value="month">Tháng này</option>
+              <option value="lastmonth">Tháng trước</option>
+              <option value="year">Năm nay</option>
+              <option value="all">Toàn bộ</option>
+              <option value="custom">Tùy chọn…</option>
+            </select>
+            <span class="adm-period-custom" id="admPeriodCustom">
+              <label><span>Từ</span><input type="date" id="admFrom" aria-label="Từ ngày"></label>
+              <label><span>Đến</span><input type="date" id="admTo" aria-label="Đến ngày"></label>
+            </span>
+          </div>
+          <button type="button" class="adm-btn adm-btn-ghost" id="admRefresh" title="Tải lại dữ liệu">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23 4v6h-6M1 20v-6h6M3.5 9a9 9 0 0 1 14.9-3.4L23 10M1 14l4.6 4.4A9 9 0 0 0 20.5 15" /></svg>
+            <span>Tải lại</span>
+          </button>
+        </div>
+      </header>
+
+      <div class="adm-content" id="admContent" aria-live="polite"></div>
+    </main>
+  </div>
+
+  <!-- Detail drawer (order / customer / lead) -->
+  <div class="adm-drawer-backdrop" id="admDrawerBackdrop" hidden></div>
+  <aside class="adm-drawer" id="admDrawer" aria-hidden="true" tabindex="-1">
+    <button type="button" class="adm-drawer-close" id="admDrawerClose" aria-label="Đóng">×</button>
+    <div class="adm-drawer-body" id="admDrawerBody"></div>
+  </aside>
+
+  <div class="adm-toast" id="admToast" role="status" hidden></div>
+
+  <script type="module" src="assets/js/admin.js"></script>
+</body>
+
+</html>

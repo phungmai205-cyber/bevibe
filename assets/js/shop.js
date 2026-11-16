@@ -71,6 +71,18 @@ export function routineStepOf(category) {
    ========================================================================== */
 const CART_KEY = 'bevibe_cart_v1';
 const CUSTOMER_KEY = 'bevibe_checkout_info_v1';
+
+// Who is ordering: sent with the order so the admin can split retail / wholesale / consultant sales
+const CUSTOMER_TYPES = [
+  { id: 'b2c', vi: 'Khách lẻ', ko: '개인 고객' },
+  { id: 'wholesale', vi: 'Khách sỉ (Spa, Clinic, Đại lý)', ko: '도매 (스파·클리닉·대리점)' },
+  { id: 'consultant', vi: 'Tư vấn viên', ko: '컨설턴트' }
+];
+
+function orgLabel(type, vi) {
+  if (type === 'consultant') return vi ? 'Mã hoặc tên tư vấn viên' : '컨설턴트 코드 또는 이름';
+  return vi ? 'Tên Spa / Clinic / Cửa hàng' : '스파 / 클리닉 / 매장 이름';
+}
 // Last signed-in account on this browser: its cart is shown at once while the login is restored
 const LAST_UID_KEY = 'bevibe_last_uid';
 const ORDER_ZALO = '0338282112';
@@ -183,6 +195,12 @@ export function initShop(ctx) {
 
   function addToCart(id, qty = 1, { silent = false } = {}) {
     if (!priceOf(id)) return false;
+    // Admin marked it "Hết hàng" / "Ngừng bán" in the price list
+    const stockEntry = entryOf(id);
+    if (stockEntry && stockEntry.stock && stockEntry.stock !== 'Đang bán') {
+      if (!silent) showToast(isVi() ? `Sản phẩm này hiện ${stockEntry.stock.toLowerCase()}.` : '현재 품절된 상품입니다.');
+      return false;
+    }
     const q = Math.max(1, Math.min(99, parseInt(qty, 10) || 1));
     const found = cart.find((it) => it.id === id);
     if (found) found.qty = Math.min(99, found.qty + q);
@@ -311,6 +329,12 @@ export function initShop(ctx) {
   /* ---------------- Checkout ---------------- */
   let lastOrder = null;
 
+  // Unique id for one checkout: lets the order system drop a second copy of the same order
+  function requestId() {
+    if (window.crypto && typeof window.crypto.randomUUID === 'function') return window.crypto.randomUUID();
+    return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 12)}`;
+  }
+
   function orderCode() {
     const d = new Date();
     const pad = (n) => String(n).padStart(2, '0');
@@ -342,6 +366,13 @@ export function initShop(ctx) {
       <div class="checkout-grid">
         <form class="checkout-form" id="checkoutForm" novalidate>
           <h2 class="checkout-title" id="checkoutTitle">${vi ? 'Thông tin đặt hàng' : '주문 정보'}</h2>
+          <fieldset class="checkout-ctype">
+            <legend>${vi ? 'Bạn đặt hàng với tư cách' : '주문 유형'}</legend>
+            <div class="ctype-options">
+              ${CUSTOMER_TYPES.map((t) => `<label class="ctype-option"><input type="radio" name="customerType" value="${t.id}" ${(info.customerType || 'b2c') === t.id ? 'checked' : ''}><span>${vi ? t.vi : t.ko}</span></label>`).join('')}
+            </div>
+            <label class="cf-field full ctype-org" ${(info.customerType || 'b2c') === 'b2c' ? 'hidden' : ''}><span class="ctype-org-label">${orgLabel(info.customerType, vi)}</span><input name="org" value="${v('org')}" autocomplete="organization"></label>
+          </fieldset>
           <div class="checkout-fields">
             <label class="cf-field"><span>${vi ? 'Họ và tên' : '이름'} *</span><input name="name" required autocomplete="name" value="${v('name')}"></label>
             <label class="cf-field"><span>${vi ? 'Số điện thoại' : '전화번호'} *</span><input name="phone" required inputmode="tel" autocomplete="tel" value="${v('phone')}" placeholder="VD: 0912 345 678"></label>
@@ -353,8 +384,8 @@ export function initShop(ctx) {
           </div>
           <fieldset class="checkout-pay">
             <legend>${vi ? 'Phương thức thanh toán' : '결제 방법'}</legend>
+            <label class="pay-option"><input type="radio" name="pay" value="bank"><span><strong>${vi ? 'Thanh toán ngay (chuyển khoản)' : '즉시 결제 (계좌 이체)'}</strong><small>${vi ? 'beVIBE gửi thông tin tài khoản khi xác nhận đơn.' : '주문 확인 시 계좌 정보를 보내드립니다.'}</small></span></label>
             <label class="pay-option"><input type="radio" name="pay" value="cod" checked><span><strong>${vi ? 'Thanh toán khi nhận hàng (COD)' : '착불 결제 (COD)'}</strong><small>${vi ? 'Trả tiền mặt cho nhân viên giao hàng.' : '배송 기사에게 현금 결제.'}</small></span></label>
-            <label class="pay-option"><input type="radio" name="pay" value="bank"><span><strong>${vi ? 'Chuyển khoản ngân hàng' : '계좌 이체'}</strong><small>${vi ? 'beVIBE gửi thông tin tài khoản khi xác nhận đơn.' : '주문 확인 시 계좌 정보를 보내드립니다.'}</small></span></label>
           </fieldset>
           <label class="hp-field" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>
           <p class="checkout-error" id="checkoutError" role="alert" hidden></p>
@@ -365,7 +396,14 @@ export function initShop(ctx) {
         </form>
         ${summaryHtml(cart)}
       </div>`;
-    checkout.querySelector('#checkoutForm').addEventListener('submit', onCheckoutSubmit);
+    const form = checkout.querySelector('#checkoutForm');
+    form.addEventListener('submit', onCheckoutSubmit);
+    // Shop / clinic name for wholesale, consultant code for consultants
+    form.querySelectorAll('input[name="customerType"]').forEach((r) => r.addEventListener('change', () => {
+      const org = form.querySelector('.ctype-org');
+      org.hidden = r.value === 'b2c';
+      org.querySelector('.ctype-org-label').textContent = orgLabel(r.value, isVi());
+    }));
   }
 
   async function sendOrder(payload) {
@@ -388,19 +426,24 @@ export function initShop(ctx) {
     if (!ORDER_ENDPOINT) return { ok: true, status: 'success' };
     const ctrl = typeof AbortController === 'function' ? new AbortController() : null;
     const timer = ctrl ? setTimeout(() => ctrl.abort(), ORDER_TIMEOUT_MS) : null;
+    const init = {
+      method: 'POST',
+      // text/plain keeps this a "simple" request (no CORS preflight), which Apps Script requires
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload),
+      signal: ctrl ? ctrl.signal : undefined
+    };
     try {
-      // mode: 'no-cors' guarantees browser sends the POST to Google Apps Script without CORS blockage
-      await fetch(ORDER_ENDPOINT, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify(payload),
-        signal: ctrl ? ctrl.signal : undefined
-      });
-      return { ok: true, status: 'success' };
+      // Read the answer to get the real order code (BV…) and any validation message
+      const res = await fetch(ORDER_ENDPOINT, init);
+      try { return await res.json(); } catch (parseErr) { return { ok: true, unverified: true }; }
     } catch (err) {
-      console.warn('Lỗi gửi đơn hàng:', err);
-      return { ok: true, status: 'success' };
+      if (err && err.name === 'AbortError') throw err;
+      // The answer could not be read (deployment without CORS): send without reading it.
+      // The order carries a requestId, so the order system ignores it if the first try already arrived.
+      console.warn('Order answer unreadable, resending without reading it:', err);
+      await fetch(ORDER_ENDPOINT, { ...init, mode: 'no-cors' });
+      return { ok: true, unverified: true };
     } finally {
       if (timer) clearTimeout(timer);
     }
@@ -427,13 +470,17 @@ export function initShop(ctx) {
       return;
     }
     err.hidden = true;
-    safeSet(customerKey, { name: data.name, phone: data.phone, email: data.email, city: data.city, district: data.district, address: data.address });
+    const customerType = CUSTOMER_TYPES.some((t) => t.id === data.customerType) ? data.customerType : 'b2c';
+    const org = customerType === 'b2c' ? '' : (data.org || '');
+    safeSet(customerKey, { name: data.name, phone: data.phone, email: data.email, city: data.city, district: data.district, address: data.address, customerType, org });
 
     const items = cart.map((it) => ({ ...it }));
     let code = orderCode();
     const payLabel = data.pay === 'bank'
-      ? (vi ? 'Chuyển khoản ngân hàng' : '계좌 이체')
+      ? (vi ? 'Thanh toán ngay (chuyển khoản)' : '즉시 결제 (계좌 이체)')
       : (vi ? 'Thanh toán khi nhận hàng (COD)' : '착불 결제 (COD)');
+    const typeDef = CUSTOMER_TYPES.find((t) => t.id === customerType);
+    const typeLine = `${vi ? typeDef.vi : typeDef.ko}${org ? ` – ${org}` : ''}`;
     const lines = items.map((it, i) => {
       const p = localized(entryOf(it.id));
       return `${i + 1}. ${p.name}${p.priceUnit ? ` (${p.priceUnit})` : ''} x${it.qty} = ${formatVnd(priceOf(it.id) * it.qty)}`;
@@ -448,12 +495,15 @@ export function initShop(ctx) {
 
     const orderPayload = {
       idToken: '',
-      type: 'Đơn mua hàng bán lẻ',
+      type: customerType === 'wholesale' ? 'Đơn mua sỉ' : customerType === 'consultant' ? 'Đơn tư vấn viên' : 'Đơn mua hàng bán lẻ',
+      requestId: requestId(),
+      customerType,
+      org,
       name: data.name,
       phone: data.phone,
       email: data.email || '',
       clinic: address || 'Khách đặt trực tuyến',
-      interest: `Mua lẻ (${items.reduce((s, it) => s + it.qty, 0)} sp): ${productNames}`,
+      interest: `${customerType === 'b2c' ? 'Mua lẻ' : customerType === 'wholesale' ? 'Mua sỉ' : 'Tư vấn viên'} (${items.reduce((s, it) => s + it.qty, 0)} sp): ${productNames}`,
       note: `Tổng: ${formatVnd(total)} | Hình thức: ${payLabel} | Ghi chú: ${data.note || 'Không'} | Chi tiết: ${lines.join('; ')}`,
       customer: { name: data.name, phone: data.phone, email: data.email, city: data.city, district: data.district, address: data.address, note: data.note },
       pay: data.pay === 'bank' ? 'bank' : 'cod',
@@ -505,6 +555,7 @@ export function initShop(ctx) {
         'KHÁCH HÀNG',
         `- Họ tên: ${data.name}`,
         `- Điện thoại: ${data.phone}`,
+        `- Loại khách: ${typeLine}`,
         data.email ? `- Email: ${data.email}` : '',
         `- Địa chỉ: ${address}`,
         '',
@@ -523,6 +574,7 @@ export function initShop(ctx) {
         '고객 정보',
         `- 이름: ${data.name}`,
         `- 전화: ${data.phone}`,
+        `- 유형: ${typeLine}`,
         data.email ? `- 이메일: ${data.email}` : '',
         `- 주소: ${address}`,
         '',
@@ -662,6 +714,7 @@ export function initShop(ctx) {
     const images = [entry.image, ...((raw.gallery && raw.gallery.length ? raw.gallery : entry.vi.gallery) || [])].filter((v, i, a) => v && a.indexOf(v) === i);
     const video = raw.video || entry.vi.video || null;
     const price = entry.price;
+    const soldOut = !!(entry.stock && entry.stock !== 'Đang bán');
     const ingredients = raw.ingredients || [];
     const benefits = raw.benefits || [];
     const related = productIndex.filter((e) => e.id !== id && e.brandId === entry.brandId && e.line === entry.line).slice(0, 4);
@@ -709,8 +762,9 @@ export function initShop(ctx) {
 
             <div class="pd-price-box">
               ${price
-                ? `<span class="pd-price">${formatVnd(price)}</span>${entry.priceUnit ? `<span class="pd-unit">/ ${escapeHtml(entry.priceUnit)}</span>` : ''}`
+                ? `<span class="pd-price">${formatVnd(price)}</span>${entry.listPrice ? `<del class="pd-list-price">${formatVnd(entry.listPrice)}</del><span class="pd-sale-badge">-${Math.round((1 - price / entry.listPrice) * 100)}%</span>` : ''}${entry.priceUnit ? `<span class="pd-unit">/ ${escapeHtml(entry.priceUnit)}</span>` : ''}`
                 : `<span class="pd-price contact">${vi ? 'Giá: Liên hệ' : '가격: 문의'}</span>`}
+              ${entry.listPrice && entry.saleTo ? `<small class="pd-sale-note">${vi ? `Giá khuyến mãi đến hết ngày ${entry.saleTo.split('-').reverse().join('/')}` : `할인가 ${entry.saleTo} 까지`}</small>` : ''}
               <small>${vi ? 'Giá niêm yết bán lẻ. Đại lý, spa, clinic vui lòng nhận báo giá sỉ.' : '소비자 정가입니다. 대리점·스파·클리닉은 도매 견적을 요청해 주세요.'}</small>
             </div>
 
@@ -728,7 +782,10 @@ export function initShop(ctx) {
               </div>` : ''}
 
             <div class="pd-buy" id="pdBuy">
-              ${price ? `
+              ${price && soldOut ? `
+                <p class="pd-soldout">${vi ? `Sản phẩm hiện <b>${escapeHtml(entry.stock.toLowerCase())}</b>. Liên hệ beVIBE để được báo khi có hàng.` : '현재 품절된 상품입니다. 입고 알림은 문의해 주세요.'}</p>
+                <button type="button" class="btn-primary pd-add" data-action="product-quote" data-product-name="${escapeHtml(p.name)}" data-brand-name="${escapeHtml(brand.name)}">${vi ? 'Liên hệ khi có hàng' : '입고 문의'}</button>
+              ` : price ? `
                 ${qtyControl(id, 1, 'pd')}
                 <button type="button" class="btn-primary pd-add" data-shop="pd-add" data-product-id="${id}">${ICON_CART}<span>${vi ? 'Thêm vào giỏ' : '장바구니 담기'}</span></button>
                 <button type="button" class="pd-buynow" data-shop="pd-buynow" data-product-id="${id}">${vi ? 'Mua ngay' : '바로 구매'}</button>
