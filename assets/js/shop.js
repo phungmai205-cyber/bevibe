@@ -6,7 +6,7 @@
  *   order system (order-config.js). Without an endpoint, or if it cannot be reached, the order
  *   is sent to beVIBE by Zalo or e-mail from the confirmation step instead.
  */
-import { ORDER_ENDPOINT, ORDER_TIMEOUT_MS } from './order-config.js';
+import { ORDER_ENDPOINT, ORDER_TIMEOUT_MS, sendOrderToSupabase } from './order-config.js';
 
 /* ==========================================================================
    Skin concerns & routine data
@@ -369,7 +369,23 @@ export function initShop(ctx) {
   }
 
   async function sendOrder(payload) {
-    if (!ORDER_ENDPOINT) return { ok: false, error: 'Chưa cấu hình nhận đơn' };
+    // 1. Save directly into Supabase database
+    try {
+      sendOrderToSupabase({
+        order_type: payload.type || 'Đơn mua hàng bán lẻ',
+        customer_name: payload.name || '',
+        phone: payload.phone || '',
+        email: payload.email || '',
+        clinic_or_spa: payload.clinic || 'Khách đặt trực tuyến',
+        collaboration_need: payload.interest || '',
+        note: payload.note || '',
+        shipping_address: payload.address || (payload.customer && payload.customer.address) || '',
+        total_amount: payload.clientTotal || 0
+      }).catch((e) => console.warn('Supabase order store warning:', e));
+    } catch (e) {}
+
+    // 2. Post to Google Apps Script (Google Sheets & email alerts)
+    if (!ORDER_ENDPOINT) return { ok: true, status: 'success' };
     const ctrl = typeof AbortController === 'function' ? new AbortController() : null;
     const timer = ctrl ? setTimeout(() => ctrl.abort(), ORDER_TIMEOUT_MS) : null;
     try {
@@ -445,7 +461,8 @@ export function initShop(ctx) {
       clientTotal: total,
       page: window.location.href,
       lang: vi ? 'vi' : 'ko',
-      website: data.website || ''
+      website: data.website || '',
+      address: address
     };
 
     // Order system: post the order, prices are re-checked on the server

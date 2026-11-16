@@ -8,7 +8,7 @@ import { productPrices, formatVnd, BEST_SELLER_IDS, BEST_SELLER_IMAGES, BEST_SEL
 import { CONCERN_DEFS, CONCERN_TAGS, initShop } from './shop.js';
 import { initAccount } from './account.js';
 import { buildSearchEntry, searchIndex } from './search.js';
-import { ORDER_ENDPOINT } from './order-config.js';
+import { ORDER_ENDPOINT, sendOrderToSupabase } from './order-config.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   // --- State ---
@@ -279,9 +279,9 @@ document.addEventListener('DOMContentLoaded', () => {
               <div class="brand-tile-lines">
                 <span class="brand-tile-lines-label">${isVi ? 'Dòng sản phẩm' : '제품 라인'}</span>
                 ${b.lines.map((l) => {
-                  const n = b.productsVi.filter((p) => p.line === l.id).length;
-                  return `<button type="button" class="line-chip" data-action="line" data-brand-id="${b.id}" data-line="${l.id}">${isVi ? l.nameVi : l.nameKo} <span>${n}</span></button>`;
-                }).join('')}
+        const n = b.productsVi.filter((p) => p.line === l.id).length;
+        return `<button type="button" class="line-chip" data-action="line" data-brand-id="${b.id}" data-line="${l.id}">${isVi ? l.nameVi : l.nameKo} <span>${n}</span></button>`;
+      }).join('')}
               </div>
             ` : ''}
             <div class="brand-tile-actions">
@@ -364,7 +364,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (tabs) {
       const unit = isVi ? 'SP' : '개';
       const tabItems = [{ id: 'all', name: isVi ? 'Tất cả' : '전체', count: productIndex.length },
-        ...brandsData.map((b) => ({ id: b.id, name: b.name, count: b.productsVi.length }))];
+      ...brandsData.map((b) => ({ id: b.id, name: b.name, count: b.productsVi.length }))];
       tabs.innerHTML = tabItems.map((t) => `
         <button type="button" class="catalog-tab-btn ${catalogState.brand === t.id ? 'active' : ''}" data-action="brand-tab" data-brand-id="${t.id}">
           ${t.name} <span class="catalog-tab-count">${t.count} ${unit}</span>
@@ -738,14 +738,14 @@ document.addEventListener('DOMContentLoaded', () => {
       ${results.length ? `
         <div class="search-group-title">${isVi ? 'Sản phẩm' : '제품'}</div>
         ${results.slice(0, 5).map((e) => {
-          const p = localized(e);
-          return `
+      const p = localized(e);
+      return `
             <button type="button" class="search-result" data-action="product-modal" data-product-id="${p.id}">
               <img src="${p.image}" alt="" loading="lazy">
               <span><strong>${p.name}</strong><small>${[p.brandName, p.spec, p.price ? formatVnd(p.price) : ''].filter(Boolean).join(" · ")}</small></span>
             </button>
           `;
-        }).join('')}
+    }).join('')}
         <button type="button" class="search-see-all" data-action="search-submit">
           ${isVi ? `Xem tất cả ${results.length} kết quả cho “${escapeHtml(q)}” →` : `“${escapeHtml(q)}” 결과 ${results.length}개 모두 보기 →`}
         </button>
@@ -939,9 +939,9 @@ document.addEventListener('DOMContentLoaded', () => {
         ${active ? `<button type="button" class="filter-clear" data-action="pf-clear">${isVi ? 'Xóa tất cả' : '전체 해제'}</button>` : ''}
       </div>
       ${groups.map((g) => {
-        const opts = filterOptionsFor(g.key);
-        if (!opts.length) return '';
-        return `
+      const opts = filterOptionsFor(g.key);
+      if (!opts.length) return '';
+      return `
           <section class="filter-group">
             <h3 class="filter-group-title">${g.title}</h3>
             <ul class="filter-list">
@@ -957,7 +957,7 @@ document.addEventListener('DOMContentLoaded', () => {
             </ul>
           </section>
         `;
-      }).join('')}
+    }).join('')}
     `;
   }
 
@@ -1533,7 +1533,7 @@ document.addEventListener('DOMContentLoaded', () => {
       setServiceOption('distribution');
     }
     if (messageInput) {
-      messageInput.value = isVi 
+      messageInput.value = isVi
         ? `Tôi quan tâm đến sản phẩm [${productName}] thuộc hãng ${brandName}. Vui lòng cung cấp bảng giá đại lý, số lượng đặt hàng tối thiểu (MOQ) và hồ sơ kiểm nghiệm sản phẩm.`
         : `beVIBE의 [${productName}] (${brandName}) 제품에 관심이 있습니다. 도매 단가표, 최소 발주 수량(MOQ) 및 위생허가 서류를 요청합니다.`;
     }
@@ -1552,7 +1552,7 @@ document.addEventListener('DOMContentLoaded', () => {
       setServiceOption('partnership');
     }
     if (messageInput) {
-      messageInput.value = isVi 
+      messageInput.value = isVi
         ? `Tôi quan tâm đến thương hiệu ${brandName} của beVIBE. Vui lòng gửi bảng báo giá sỉ, chính sách đại lý và catalogue sản phẩm chi tiết.`
         : `beVIBE의 ${brandName} 브랜드에 관심이 있습니다. 도매 공급가, 파트너십 정책 및 상세 카탈로그를 요청합니다.`;
     }
@@ -1645,7 +1645,8 @@ document.addEventListener('DOMContentLoaded', () => {
               <span>${isVi ? `Dòng sản phẩm phân phối (${products.length} SP)` : `대표 주력 제품군 (${products.length}개)`}</span>
             </div>
             <div class="modal-products-list">
-              ${(brand.lines && brand.lines.length ? brand.lines : [null]).map(line => { const items = line ? products.filter(p => p.line === line.id) : products; return (line ? `<div class="modal-line-head"><strong>${isVi ? line.nameVi : line.nameKo}</strong><span>${items.length} ${isVi ? "SP" : "개"}</span><p>${isVi ? line.descVi : line.descKo}</p></div>` : "") + items.map(p => `
+              ${(brand.lines && brand.lines.length ? brand.lines : [null]).map(line => {
+        const items = line ? products.filter(p => p.line === line.id) : products; return (line ? `<div class="modal-line-head"><strong>${isVi ? line.nameVi : line.nameKo}</strong><span>${items.length} ${isVi ? "SP" : "개"}</span><p>${isVi ? line.descVi : line.descKo}</p></div>` : "") + items.map(p => `
                 <div class="modal-product-card ${p.image ? 'has-img' : ''}" style="cursor: pointer;" onclick="window.openProductModal('${p.id}')" title="${isVi ? 'Bấm để xem video & chi tiết' : '영상 및 상세 정보 보기'}">
                   ${p.image ? `
                     <div class="modal-product-thumb-wrap">
@@ -1666,7 +1667,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     ` : ''}
                   </div>
                 </div>
-              `).join(''); }).join('')}
+              `).join('');
+      }).join('')}
             </div>
 
             <div class="modal-section-title" style="margin-top: 24px;">
@@ -1689,7 +1691,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (modalRequestBrandQuoteBtn) {
-      modalRequestBrandQuoteBtn.querySelector('span').textContent = isVi 
+      modalRequestBrandQuoteBtn.querySelector('span').textContent = isVi
         ? `Nhận bảng báo giá ${brand.name} ↗`
         : `${brand.name} 공급 단가 및 정책 문의 ↗`;
     }
@@ -1740,7 +1742,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <div style="display: flex; flex-direction: column; gap: 16px;">
           ${points.map((pt, idx) => `
             <div style="background-color: var(--bg-porcelain); border: 1px solid var(--border-light); border-radius: var(--radius-sm); padding: 20px 24px;">
-              <h4 style="font-size: 1.05rem; font-weight: 700; color: var(--accent-crimson); margin-bottom: 6px;">0${idx+1}. ${pt.title}</h4>
+              <h4 style="font-size: 1.05rem; font-weight: 700; color: var(--accent-crimson); margin-bottom: 6px;">0${idx + 1}. ${pt.title}</h4>
               <p style="font-size: 0.92rem; color: var(--text-body);">${pt.desc}</p>
             </div>
           `).join('')}
@@ -1749,7 +1751,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (modalRequestServiceQuoteBtn) {
-      modalRequestServiceQuoteBtn.querySelector('span').textContent = isVi 
+      modalRequestServiceQuoteBtn.querySelector('span').textContent = isVi
         ? `Tư vấn hợp tác: ${title} ↗`
         : `${title} 상담 신청하기 ↗`;
     }
@@ -1777,7 +1779,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function openProductModal(productId) {
     const isVi = currentLang === 'vi';
     currentActiveProductId = productId;
-    
+
     // Find product across all brands
     let foundProduct = null;
     let foundBrand = null;
@@ -1967,7 +1969,7 @@ document.addEventListener('DOMContentLoaded', () => {
           wrapperVideo.style.display = 'flex';
           wrapperPhoto.style.display = 'none';
           if (videoPlayer) {
-            videoPlayer.play().catch(() => {});
+            videoPlayer.play().catch(() => { });
           }
         });
 
@@ -2187,8 +2189,24 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Helper to send lead & inquiry data to Google Sheet webhook
+  // Helper to send lead & inquiry data to Google Sheet webhook & Supabase database
   async function sendLeadWebhook(payload) {
+    // 1. Also store in Supabase
+    try {
+      sendOrderToSupabase({
+        order_type: payload.type || 'Yêu cầu hợp tác / Báo giá sỉ',
+        customer_name: payload.name || '',
+        phone: payload.phone || '',
+        email: payload.email || '',
+        clinic_or_spa: payload.clinic || '',
+        collaboration_need: payload.interest || '',
+        note: payload.note || '',
+        shipping_address: '',
+        total_amount: 0
+      }).catch((e) => console.warn('Supabase lead store warning:', e));
+    } catch (e) { }
+
+    // 2. Post to Google Sheet Webhook
     if (!ORDER_ENDPOINT) return false;
     try {
       await fetch(ORDER_ENDPOINT, {
@@ -2545,7 +2563,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // Expose globally for convenience
-    window.heroGoToSlide = function(idx) {
+    window.heroGoToSlide = function (idx) {
       updateSlide(idx);
     };
 
@@ -2663,9 +2681,9 @@ document.addEventListener('DOMContentLoaded', () => {
       extra = (story || tech) ? `
         <div class="brand-info-grid">
           ${infoCard('<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>',
-            isVi ? 'Câu chuyện thương hiệu' : '브랜드 히스토리', story)}
+        isVi ? 'Câu chuyện thương hiệu' : '브랜드 히스토리', story)}
           ${infoCard('<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>',
-            isVi ? 'Công nghệ sinh học & hoạt chất độc quyền' : '핵심 독자 기술 및 유효 성분', tech)}
+          isVi ? 'Công nghệ sinh học & hoạt chất độc quyền' : '핵심 독자 기술 및 유효 성분', tech)}
         </div>` : '';
     } else {
       const t = PAGE_DEFS[currentRoute.page][isVi ? 'vi' : 'ko'];
@@ -2803,7 +2821,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const popup = document.getElementById('promoPopup');
     if (!popup) return;
     const SEEN_KEY = 'bevibe_promo_seen';
-    const markSeen = () => { try { sessionStorage.setItem(SEEN_KEY, '1'); } catch (e) {} };
+    const markSeen = () => { try { sessionStorage.setItem(SEEN_KEY, '1'); } catch (e) { } };
     const close = () => {
       popup.classList.remove('open');
       markSeen();
@@ -2816,7 +2834,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('promoCardLink')?.addEventListener('click', () => close());
 
     let seen = false;
-    try { seen = sessionStorage.getItem(SEEN_KEY) === '1'; } catch (e) {}
+    try { seen = sessionStorage.getItem(SEEN_KEY) === '1'; } catch (e) { }
     if (seen) return;
     setTimeout(() => {
       popup.hidden = false;

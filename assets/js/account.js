@@ -7,7 +7,7 @@
  * ctx: { shop, getLang, showToast, escapeHtml }
  */
 import { FIREBASE_CONFIG } from './auth-config.js';
-import { ORDER_ENDPOINT } from './order-config.js';
+import { ORDER_ENDPOINT, sendOrderToSupabase } from './order-config.js';
 
 const T = {
   vi: {
@@ -404,6 +404,19 @@ export function initAccount(ctx) {
           renderButton();
           shop.setCustomerDefaults({ name: user.name, email: user.email });
         }
+
+        // Store into Supabase database
+        sendOrderToSupabase({
+          order_type: 'Đăng ký tài khoản mới',
+          customer_name: name,
+          phone: '',
+          email: email,
+          clinic_or_spa: 'Tài khoản website beVIBE',
+          collaboration_need: 'Đăng ký tài khoản khách hàng',
+          note: 'Khách hàng tạo tài khoản thành công trên website beVIBE',
+          shipping_address: '',
+          total_amount: 0
+        }).catch(() => {});
 
         // Notify Google Sheet & send email notification
         if (ORDER_ENDPOINT) {

@@ -4,3 +4,6 @@ dist
 .DS_Store
 
 catalog_drive_chuan
+*.zip
+temp_update/
+temp_update_dir/
