@@ -32,3 +32,4 @@ fs.rmSync(updateDir, { recursive: true, force: true });
 
 const stat = fs.statSync(zipOut);
 console.log(`ZIP CREATED: ${zipOut} (${(stat.size / 1024).toFixed(2)} KB)`);
+
