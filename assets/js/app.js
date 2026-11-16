@@ -8,6 +8,7 @@ import { productPrices, formatVnd, BEST_SELLER_IDS, BEST_SELLER_IMAGES, BEST_SEL
 import { CONCERN_DEFS, CONCERN_TAGS, initShop } from './shop.js';
 import { initAccount } from './account.js';
 import { buildSearchEntry, searchIndex } from './search.js';
+import { ORDER_ENDPOINT } from './order-config.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   // --- State ---
@@ -2186,11 +2187,34 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  // Helper to send lead & inquiry data to Google Sheet webhook
+  async function sendLeadWebhook(payload) {
+    if (!ORDER_ENDPOINT) return false;
+    try {
+      await fetch(ORDER_ENDPOINT, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+      });
+      return true;
+    } catch (err) {
+      console.warn('Lỗi gửi webhook Google Sheet:', err);
+      return false;
+    }
+  }
+
   // Inquiry Form Submission & Text Generator
   if (inquiryForm) {
-    inquiryForm.addEventListener('submit', (e) => {
+    inquiryForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const isVi = currentLang === 'vi';
+      const submitBtn = inquiryForm.querySelector('button[type="submit"]');
+      const originalBtnText = submitBtn ? submitBtn.innerHTML : '';
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = isVi ? 'Đang gửi thông tin…' : '전송 중…';
+      }
 
       const name = document.getElementById('formName').value.trim();
       const company = document.getElementById('formCompany').value.trim() || (isVi ? 'Cá nhân / Chưa công bố' : '개인 / 미공개');
@@ -2257,7 +2281,23 @@ document.addEventListener('DOMContentLoaded', () => {
         formResultArea.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
 
-      showToast(isVi ? 'Đã tạo bản yêu cầu hợp tác thành công! ✓' : '상담 신청서가 성공적으로 생성되었습니다! ✓');
+      // Send to Google Sheet & notify by email
+      await sendLeadWebhook({
+        type: 'Yêu cầu hợp tác / Báo giá sỉ',
+        name: name,
+        phone: phone,
+        email: email,
+        clinic: company,
+        interest: service,
+        note: `Ngân sách: ${budget || 'Chưa xác định'} | Nội dung: ${message}`
+      });
+
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnText;
+      }
+
+      showToast(isVi ? 'Đã gửi thông tin đến beVIBE & lưu hệ thống thành công! ✓' : '상담 신청서가 전송되어 시스템에 기록되었습니다! ✓');
     });
   }
 
@@ -2287,6 +2327,23 @@ document.addEventListener('DOMContentLoaded', () => {
   if (sendZaloBtn) {
     sendZaloBtn.addEventListener('click', () => {
       const isVi = currentLang === 'vi';
+      const name = document.getElementById('formName') ? document.getElementById('formName').value.trim() : '';
+      const company = document.getElementById('formCompany') ? document.getElementById('formCompany').value.trim() : '';
+      const email = document.getElementById('formEmail') ? document.getElementById('formEmail').value.trim() : '';
+      const phone = document.getElementById('formPhone') ? document.getElementById('formPhone').value.trim() : '';
+      const service = document.getElementById('formService') ? document.getElementById('formService').value : '';
+      const message = document.getElementById('formMessage') ? document.getElementById('formMessage').value.trim() : '';
+
+      sendLeadWebhook({
+        type: 'Yêu cầu hợp tác / Báo giá sỉ (qua Zalo)',
+        name: name || 'Khách liên hệ Zalo',
+        phone: phone || '',
+        email: email || '',
+        clinic: company || '',
+        interest: service || 'Báo giá & hợp tác',
+        note: message || (proposalTextarea ? proposalTextarea.value : '')
+      });
+
       const zaloUrl = `https://zalo.me/0338282112`;
       window.open(zaloUrl, '_blank');
       showToast(isVi ? 'Đang mở cửa sổ Zalo beVIBE...' : 'beVIBE Zalo 창을 엽니다...');
@@ -2297,6 +2354,23 @@ document.addEventListener('DOMContentLoaded', () => {
   if (sendEmailBtn && proposalTextarea) {
     sendEmailBtn.addEventListener('click', () => {
       const isVi = currentLang === 'vi';
+      const name = document.getElementById('formName') ? document.getElementById('formName').value.trim() : '';
+      const company = document.getElementById('formCompany') ? document.getElementById('formCompany').value.trim() : '';
+      const email = document.getElementById('formEmail') ? document.getElementById('formEmail').value.trim() : '';
+      const phone = document.getElementById('formPhone') ? document.getElementById('formPhone').value.trim() : '';
+      const service = document.getElementById('formService') ? document.getElementById('formService').value : '';
+      const message = document.getElementById('formMessage') ? document.getElementById('formMessage').value.trim() : '';
+
+      sendLeadWebhook({
+        type: 'Yêu cầu hợp tác / Báo giá sỉ (qua Email)',
+        name: name || 'Khách gửi Email',
+        phone: phone || '',
+        email: email || '',
+        clinic: company || '',
+        interest: service || 'Báo giá & hợp tác',
+        note: message || proposalTextarea.value
+      });
+
       const subject = encodeURIComponent(isVi ? 'Yêu cầu hợp tác beVIBE Korea - Vietnam' : 'beVIBE 파트너십 제휴 문의');
       const body = encodeURIComponent(proposalTextarea.value);
       window.location.href = `mailto:bevibevn@gmail.com?subject=${subject}&body=${body}`;

@@ -7,6 +7,7 @@
  * ctx: { shop, getLang, showToast, escapeHtml }
  */
 import { FIREBASE_CONFIG } from './auth-config.js';
+import { ORDER_ENDPOINT } from './order-config.js';
 
 const T = {
   vi: {
@@ -403,6 +404,27 @@ export function initAccount(ctx) {
           renderButton();
           shop.setCustomerDefaults({ name: user.name, email: user.email });
         }
+
+        // Notify Google Sheet & send email notification
+        if (ORDER_ENDPOINT) {
+          try {
+            fetch(ORDER_ENDPOINT, {
+              method: 'POST',
+              mode: 'no-cors',
+              headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+              body: JSON.stringify({
+                type: 'Đăng ký tài khoản khách hàng mới',
+                name: name,
+                email: email,
+                phone: '',
+                clinic: 'Tài khoản website beVIBE',
+                interest: 'Đăng ký tài khoản khách hàng',
+                note: 'Khách hàng tạo tài khoản thành công trên website beVIBE'
+              })
+            }).catch(() => {});
+          } catch (e) {}
+        }
+
         closeModal();
         showToast(t().createdToast);
       });

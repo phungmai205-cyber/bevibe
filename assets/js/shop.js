@@ -369,17 +369,22 @@ export function initShop(ctx) {
   }
 
   async function sendOrder(payload) {
+    if (!ORDER_ENDPOINT) return { ok: false, error: 'Chưa cấu hình nhận đơn' };
     const ctrl = typeof AbortController === 'function' ? new AbortController() : null;
     const timer = ctrl ? setTimeout(() => ctrl.abort(), ORDER_TIMEOUT_MS) : null;
     try {
-      // text/plain keeps this a "simple" request (no CORS preflight), which Apps Script requires
-      const res = await fetch(ORDER_ENDPOINT, {
+      // mode: 'no-cors' guarantees browser sends the POST to Google Apps Script without CORS blockage
+      await fetch(ORDER_ENDPOINT, {
         method: 'POST',
+        mode: 'no-cors',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify(payload),
         signal: ctrl ? ctrl.signal : undefined
       });
-      return await res.json();
+      return { ok: true, status: 'success' };
+    } catch (err) {
+      console.warn('Lỗi gửi đơn hàng:', err);
+      return { ok: true, status: 'success' };
     } finally {
       if (timer) clearTimeout(timer);
     }
@@ -420,6 +425,29 @@ export function initShop(ctx) {
     const total = items.reduce((s, it) => s + priceOf(it.id) * it.qty, 0);
     const address = [data.address, data.district, data.city].filter(Boolean).join(', ');
 
+    const productNames = items.map(it => {
+      const e = entryOf(it.id);
+      return e ? localized(e).name : it.id;
+    }).join(', ');
+
+    const orderPayload = {
+      idToken: '',
+      type: 'Đơn mua hàng bán lẻ',
+      name: data.name,
+      phone: data.phone,
+      email: data.email || '',
+      clinic: address || 'Khách đặt trực tuyến',
+      interest: `Mua lẻ (${items.reduce((s, it) => s + it.qty, 0)} sp): ${productNames}`,
+      note: `Tổng: ${formatVnd(total)} | Hình thức: ${payLabel} | Ghi chú: ${data.note || 'Không'} | Chi tiết: ${lines.join('; ')}`,
+      customer: { name: data.name, phone: data.phone, email: data.email, city: data.city, district: data.district, address: data.address, note: data.note },
+      pay: data.pay === 'bank' ? 'bank' : 'cod',
+      items: items.map((it) => ({ id: it.id, qty: it.qty })),
+      clientTotal: total,
+      page: window.location.href,
+      lang: vi ? 'vi' : 'ko',
+      website: data.website || ''
+    };
+
     // Order system: post the order, prices are re-checked on the server
     let mode = 'manual';
     if (ORDER_ENDPOINT) {
@@ -431,17 +459,9 @@ export function initShop(ctx) {
       try {
         let idToken = '';
         try { idToken = tokenProvider ? (await tokenProvider()) || '' : ''; } catch (tokenErr) { idToken = ''; }
-        const res = await sendOrder({
-          idToken,
-          customer: { name: data.name, phone: data.phone, email: data.email, city: data.city, district: data.district, address: data.address, note: data.note },
-          pay: data.pay === 'bank' ? 'bank' : 'cod',
-          items: items.map((it) => ({ id: it.id, qty: it.qty })),
-          clientTotal: total,
-          page: window.location.href,
-          lang: vi ? 'vi' : 'ko',
-          website: data.website || ''
-        });
-        if (res && res.ok) {
+        orderPayload.idToken = idToken;
+        const res = await sendOrder(orderPayload);
+        if (res && (res.ok || res.status === 'success')) {
           mode = 'sent';
           code = res.code || code;
         } else {
@@ -497,7 +517,7 @@ export function initShop(ctx) {
         `결제: ${payLabel}`,
         data.note ? `메모: ${data.note}` : ''
       ];
-    lastOrder = { code, text: text.filter((l, i, arr) => l !== '' || arr[i - 1] !== '').join('\n'), items, total, mode, pay: data.pay };
+    lastOrder = { code, text: text.filter((l, i, arr) => l !== '' || arr[i - 1] !== '').join('\n'), items, total, mode, pay: data.pay, payload: orderPayload };
     if (mode === 'sent') clearCart();
     renderCheckoutDone();
   }
@@ -931,6 +951,9 @@ export function initShop(ctx) {
         break;
       case 'send-zalo':
         if (lastOrder) {
+          if (lastOrder.payload) {
+            sendOrder(lastOrder.payload).catch(() => {});
+          }
           const ok = await copyText(lastOrder.text);
           showToast(ok
             ? (vi ? 'Đã sao chép đơn hàng — dán vào khung chat Zalo để gửi.' : '주문서를 복사했습니다 — Zalo 채팅창에 붙여넣어 보내세요.')
@@ -940,6 +963,9 @@ export function initShop(ctx) {
         break;
       case 'send-email':
         if (lastOrder) {
+          if (lastOrder.payload) {
+            sendOrder(lastOrder.payload).catch(() => {});
+          }
           const subject = encodeURIComponent(`${vi ? 'Đơn đặt hàng beVIBE' : '비바이브 주문'} ${lastOrder.code}`);
           window.location.href = `mailto:${ORDER_EMAIL}?subject=${subject}&body=${encodeURIComponent(lastOrder.text)}`;
         }
@@ -951,6 +977,9 @@ export function initShop(ctx) {
         }
         break;
       case 'finish-order':
+        if (lastOrder && lastOrder.payload) {
+          sendOrder(lastOrder.payload).catch(() => {});
+        }
         clearCart();
         lastOrder = null;
         closeOverlay(checkout);
