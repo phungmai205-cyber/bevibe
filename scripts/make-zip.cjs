@@ -12,8 +12,11 @@ if (fs.existsSync(updateDir)) {
 }
 fs.mkdirSync(path.join(updateDir, 'assets'), { recursive: true });
 
-// Copy index.html
+// Copy index.html and admin.html
 fs.copyFileSync(path.join(dist, 'index.html'), path.join(updateDir, 'index.html'));
+if (fs.existsSync(path.join(dist, 'admin.html'))) {
+  fs.copyFileSync(path.join(dist, 'admin.html'), path.join(updateDir, 'admin.html'));
+}
 
 // Copy all files in dist/assets (only files, skip images/videos subdirs so it stays lightweight)
 const assetFiles = fs.readdirSync(path.join(dist, 'assets'), { withFileTypes: true });
@@ -27,7 +30,12 @@ if (fs.existsSync(zipOut)) {
   fs.unlinkSync(zipOut);
 }
 
-execSync(`tar -a -c -f "${zipOut}" -C "${updateDir}" index.html assets`);
+const entries = ['index.html', 'assets'];
+if (fs.existsSync(path.join(updateDir, 'admin.html'))) {
+  entries.push('admin.html');
+}
+
+execSync(`tar -a -c -f "${zipOut}" -C "${updateDir}" ${entries.join(' ')}`);
 fs.rmSync(updateDir, { recursive: true, force: true });
 
 const stat = fs.statSync(zipOut);
