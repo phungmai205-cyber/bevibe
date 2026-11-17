@@ -8,12 +8,8 @@ import { productPrices, formatVnd, BEST_SELLER_IDS, BEST_SELLER_IMAGES, BEST_SEL
 import { CONCERN_DEFS, CONCERN_TAGS, initShop } from './shop.js';
 import { initAccount } from './account.js';
 import { buildSearchEntry, searchIndex } from './search.js';
-<<<<<<< Updated upstream
 import { ORDER_ENDPOINT, sendOrderToSupabase } from './order-config.js';
-=======
-import { ORDER_ENDPOINT } from './order-config.js';
 import { CATEGORY_DEFS, detectCategory } from './catalog-defs.js';
->>>>>>> Stashed changes
 
 document.addEventListener('DOMContentLoaded', () => {
   // --- State ---
