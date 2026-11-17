@@ -146,7 +146,7 @@ const state = {
     processing: { q: '', status: '', type: '', pay: '', payStatus: '', reason: '', page: 1 },
     success: { q: '', status: '', type: '', pay: '', payStatus: '', reason: '', page: 1 },
     failed: { q: '', status: '', type: '', pay: '', payStatus: '', reason: '', page: 1 },
-    customers: { q: '', type: '', seg: '', mode: 'list', page: 1 },
+    customers: { q: '', type: '', seg: '', mode: 'directory', page: 1 },
     leads: { q: '', status: '', source: '', page: 1 },
     pricing: { q: '', brand: '', show: '', page: 1 }
   }
@@ -194,11 +194,14 @@ async function api(action, payload = {}) {
 /* ==========================================================================
    Derived data (recomputed after each load / change)
    ========================================================================== */
-function contactKey(phone, email) {
+function contactKey(phone, email, name, fallbackId) {
   const p = String(phone || '').replace(/[^\d]/g, '');
   if (p.length >= 9) return `p:${p}`;
   const e = String(email || '').trim().toLowerCase();
-  return e ? `e:${e}` : '';
+  if (e) return `e:${e}`;
+  const n = String(name || '').trim().toLowerCase();
+  if (n) return `n:${n}`;
+  return fallbackId ? `id:${fallbackId}` : '';
 }
 
 function derive() {
@@ -211,22 +214,22 @@ function derive() {
     o.net = Math.max(0, o.subtotal - o.discount);
     o.total = o.net + o.shipping;
     o.typeKey = typeKey(o.customerType);
-    o.key = contactKey(o.phone, o.email);
+    o.key = contactKey(o.phone, o.email, o.name, o.code);
     o.items = itemsByCode[o.code] || [];
     o.cogs = o.items.reduce((s, it) => s + (Number(d.costs[it.id]) || 0) * it.qty, 0);
   });
   d.orders.sort((a, b) => (b._date ? b._date.getTime() : 0) - (a._date ? a._date.getTime() : 0));
-  d.leads.forEach((l) => { l._date = toDate(l.time); l.key = contactKey(l.phone, l.email); });
+  d.leads.forEach((l) => { l._date = toDate(l.time); l.key = contactKey(l.phone, l.email, l.name, l.id); });
   d.leads.sort((a, b) => (b._date ? b._date.getTime() : 0) - (a._date ? a._date.getTime() : 0));
   d.expenses.forEach((x) => { x._date = toDate(x.date); });
   d.expenses.sort((a, b) => (b._date ? b._date.getTime() : 0) - (a._date ? a._date.getTime() : 0));
 
-  // Customers: one row per phone number (or email), all time
+  // Customers: one row per contact, all time
   const customers = {};
   const touch = (key, info) => {
     if (!key) return null;
-    const c = customers[key] || (customers[key] = { key, name: '', phone: '', email: '', type: '', org: '', city: '', orders: [], leads: [] });
-    ['name', 'phone', 'email', 'org', 'city'].forEach((k) => { if (!c[k] && info[k]) c[k] = info[k]; });
+    const c = customers[key] || (customers[key] = { key, name: '', phone: '', email: '', type: '', org: '', city: '', address: '', orders: [], leads: [] });
+    ['name', 'phone', 'email', 'org', 'city', 'address'].forEach((k) => { if (!c[k] && info[k]) c[k] = info[k]; });
     return c;
   };
   // Newest first, so the latest name / type wins
@@ -252,6 +255,8 @@ function derive() {
       revenue: done.reduce((s, o) => s + o.net, 0),
       ordered: valid.reduce((s, o) => s + o.net, 0),
       lastDate: c.orders.length ? c.orders[0]._date : (c.leads[0] ? c.leads[0]._date : null),
+      latestStatus: c.orders.length ? c.orders[0].status : (c.leads[0] ? c.leads[0].status : 'Mới'),
+      latestOrder: c.orders[0] || null,
       firstOrder,
       seg: !c.orders.length ? 'lead' : done.length >= 2 ? 'repeat' : 'buyer'
     };
@@ -849,18 +854,26 @@ function renderOrderList(group, opts = {}) {
           </tr>`).join('')}</tbody>
       </table></div>${pager(list.length, page, group)}` : rows.length || reqs.length ? `
       <div class="adm-table-wrap"><table class="adm-table">
-        <thead><tr><th>Mã đơn</th><th>Thời gian</th><th>Khách hàng</th><th>${orgHead}</th><th class="num">Tổng tiền</th>${failed ? '<th>Lý do</th>' : '<th>Thanh toán</th>'}<th>Trạng thái</th></tr></thead>
+        <thead><tr><th>Mã đơn</th><th>Thời gian</th><th>Khách hàng</th><th>${orgHead}</th><th class="num">Tổng tiền</th>${failed ? '<th>Lý do</th>' : '<th>Thanh toán</th>'}<th>Trạng thái</th>${processing ? '<th style="min-width:180px">Thao tác nhanh</th>' : ''}</tr></thead>
         <tbody>${pageItems.map(({ o, l }) => (l ? requestRowHtml(l, orgTab) : `
           <tr data-act="open-order" data-code="${esc(o.code)}" tabindex="0">
             <td><b>${esc(o.code)}</b></td>
             <td>${fmtDateTime(o._date)}</td>
             <td><span class="adm-cell-main">${esc(o.name)}</span><small>${esc(o.phone)}${o.city ? ` · ${esc(o.city)}` : ''}</small></td>
             <td>${orgCell(o)}</td>
-            <td class="num"><b>${money(o.total)}</b><small>${o.qty} sp</small></td>
+            <td class="num"><b>${money(o.total)}</b></td>
             ${failed
               ? `<td>${esc(o.failReason || 'Chưa ghi lý do')}${o.payStatus !== 'Chưa thanh toán' ? `<br>${chip(o.payStatus, PAY_CLASS[o.payStatus])}` : ''}</td>`
               : `<td>${o.pay === 'bank' ? 'Thanh toán ngay' : 'COD'}<br>${chip(o.payStatus, PAY_CLASS[o.payStatus])}</td>`}
             <td>${chip(o.status, STATUS_CLASS[o.status])}</td>
+            ${processing ? `
+            <td onclick="event.stopPropagation()">
+              <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+                ${o.status === 'Mới' ? `<button type="button" class="adm-btn adm-btn-ghost adm-btn-xs" data-act="quick-status-inline" data-code="${esc(o.code)}" data-status="Đã xác nhận" title="Xác nhận đơn">Duyệt</button>` : ''}
+                ${o.status === 'Đã xác nhận' ? `<button type="button" class="adm-btn adm-btn-ghost adm-btn-xs" data-act="quick-status-inline" data-code="${esc(o.code)}" data-status="Đang giao" title="Bàn giao đơn cho bưu tá / shipper">Giao hàng</button>` : ''}
+                <button type="button" class="adm-btn adm-btn-xs adm-btn-success" data-act="quick-complete-inline" data-code="${esc(o.code)}" title="Shipper đã giao xong và thu tiền COD (ghi nhận doanh thu)">✓ Thu tiền & Hoàn tất</button>
+              </div>
+            </td>` : ''}
           </tr>`)).join('')}</tbody>
       </table></div>${pager(merged.length, page, group)}` : `<p class="adm-empty">${opts.empty || 'Không có đơn nào phù hợp.'}</p>`}
     </section>
@@ -974,7 +987,7 @@ function orderDrawer(code) {
       <div class="adm-d-actions">
         ${o.status === 'Mới' ? '<button type="button" class="adm-btn adm-btn-ghost" data-act="quick-status" data-status="Đã xác nhận">Xác nhận đơn</button>' : ''}
         ${o.status === 'Đã xác nhận' ? '<button type="button" class="adm-btn adm-btn-ghost" data-act="quick-status" data-status="Đang giao">Chuyển sang đang giao</button>' : ''}
-        ${o.status === 'Đang giao' ? '<button type="button" class="adm-btn adm-btn-ghost" data-act="quick-status" data-status="Hoàn tất">Đã giao xong</button>' : ''}
+        ${o.status !== 'Hoàn tất' && !isFailed ? '<button type="button" class="adm-btn adm-btn-success" data-act="quick-complete-drawer" style="font-weight:700">✓ Đã thu tiền & Hoàn tất</button>' : ''}
         ${o.status === 'Mới' || o.status === 'Đã xác nhận' ? '<button type="button" class="adm-btn adm-btn-danger" data-act="mark-failed" data-status="Đã hủy">Hủy đơn</button>' : ''}
         ${o.status === 'Đang giao' ? '<button type="button" class="adm-btn adm-btn-danger" data-act="mark-failed" data-status="Hoàn hàng" data-reason="Khách không nhận hàng khi giao">Khách không nhận (hoàn hàng)</button>' : ''}
         <button type="submit" class="adm-btn adm-btn-primary">Lưu thay đổi</button>
@@ -1046,6 +1059,84 @@ async function saveOrder(form, overrides = {}) {
   }
 }
 
+async function quickCompleteOrder(code) {
+  const o = state.data.orders.find((x) => x.code === code);
+  if (!o) return;
+  const oldStatus = o.status;
+  const oldPayStatus = o.payStatus;
+  o.status = 'Hoàn tất';
+  o.payStatus = 'Đã thanh toán';
+  o.failReason = '';
+  o.updatedAt = new Date().toISOString();
+  derive();
+  render();
+  closeDrawer();
+  toast(`Đang cập nhật đơn ${code}…`);
+
+  try {
+    if (o.sbId) {
+      await updateOrderInSupabase(o.sbId, { status: 'Hoàn tất', pay_status: 'Đã thanh toán' });
+    }
+    await api('admin.updateOrder', {
+      code,
+      fields: {
+        status: 'Hoàn tất',
+        payStatus: 'Đã thanh toán',
+        customerType: o.typeKey,
+        shipping: o.shipping || 0,
+        discount: o.discount || 0,
+        internalNote: o.internalNote || '',
+        failReason: ''
+      }
+    }).catch(() => {});
+    derive();
+    render();
+    toast(`✓ Đã thu tiền & hoàn tất đơn ${code}! Doanh thu +${money(o.net)} đã được ghi nhận.`);
+  } catch (err) {
+    o.status = oldStatus;
+    o.payStatus = oldPayStatus;
+    derive();
+    render();
+    toast(`Lỗi khi cập nhật đơn: ${err.message}`, true);
+  }
+}
+
+async function quickStatusOrder(code, newStatus) {
+  const o = state.data.orders.find((x) => x.code === code);
+  if (!o) return;
+  const oldStatus = o.status;
+  o.status = newStatus;
+  o.updatedAt = new Date().toISOString();
+  derive();
+  render();
+
+  try {
+    if (o.sbId) {
+      await updateOrderInSupabase(o.sbId, { status: newStatus });
+    }
+    await api('admin.updateOrder', {
+      code,
+      fields: {
+        status: newStatus,
+        payStatus: o.payStatus,
+        customerType: o.typeKey,
+        shipping: o.shipping || 0,
+        discount: o.discount || 0,
+        internalNote: o.internalNote || '',
+        failReason: ''
+      }
+    }).catch(() => {});
+    derive();
+    render();
+    toast(`Đơn ${code} đã chuyển sang "${newStatus}".`);
+  } catch (err) {
+    o.status = oldStatus;
+    derive();
+    render();
+    toast(`Lỗi khi cập nhật: ${err.message}`, true);
+  }
+}
+
 function exportOrders(group) {
   const list = filteredOrders(group);
   const head = ['Mã đơn', 'Thời gian', 'Trạng thái', 'Lý do hủy / hoàn', 'Họ tên', 'Điện thoại', 'Email', 'Loại khách', 'Cơ sở / Mã TVV', 'Tỉnh/TP', 'Địa chỉ', 'Hình thức TT', 'Trạng thái TT', 'Tạm tính', 'Giảm giá', 'Phí vận chuyển', 'Tổng thanh toán', 'Sản phẩm', 'Ghi chú nội bộ'];
@@ -1073,74 +1164,141 @@ const LOYAL_MIN_ORDERS = 2; // "Khách hàng trung thành" = at least this many 
 
 function renderCustomers() {
   const f = state.filters.customers;
-  const loyalMode = f.mode === 'loyal';
+  const mode = f.mode || 'directory';
+  const allCustCount = state.derived.customers.length;
+  const loyalCustCount = state.derived.customers.filter((c) => c.doneCount >= LOYAL_MIN_ORDERS || c.orders.length >= LOYAL_MIN_ORDERS).length;
+  const successOrderCount = state.data.orders.filter((o) => o.status === 'Hoàn tất').length;
+
   const modeTabs = `<div class="adm-mode-switch" role="tablist">
-      <button type="button" role="tab" class="${!loyalMode ? 'is-active' : ''}" aria-selected="${!loyalMode}" data-act="customer-mode" data-mode="list">Danh sách khách hàng</button>
-      <button type="button" role="tab" class="${loyalMode ? 'is-active' : ''}" aria-selected="${loyalMode}" data-act="customer-mode" data-mode="loyal">Khách hàng trung thành</button>
+      <button type="button" role="tab" class="${mode === 'directory' || mode === 'list' ? 'is-active' : ''}" aria-selected="${mode === 'directory' || mode === 'list'}" data-act="customer-mode" data-mode="directory">Danh bạ khách hàng (${allCustCount})</button>
+      <button type="button" role="tab" class="${mode === 'success' ? 'is-active' : ''}" aria-selected="${mode === 'success'}" data-act="customer-mode" data-mode="success">Đơn mua thành công (${successOrderCount})</button>
+      <button type="button" role="tab" class="${mode === 'loyal' ? 'is-active' : ''}" aria-selected="${mode === 'loyal'}" data-act="customer-mode" data-mode="loyal">Khách thân thiết (${loyalCustCount})</button>
     </div>`;
 
-  // 1) Every successful purchase: customer A bought this, customer A bought that…
-  if (!loyalMode) {
+  // 1) Successful orders list
+  if (mode === 'success') {
     return renderOrderList('success', {
       before: modeTabs,
       purchase: true,
-      note: `khách mua từ ${LOYAL_MIN_ORDERS} lần trở lên được tổng hợp ở "Khách hàng trung thành"`,
-      empty: 'Chưa có khách mua thành công trong khoảng thời gian này.'
+      note: `khách mua từ ${LOYAL_MIN_ORDERS} lần trở lên được tổng hợp ở "Khách thân thiết"`,
+      empty: 'Chưa có đơn hàng nào hoàn tất trong kỳ. Khi bạn bấm "✓ Thu tiền & Hoàn tất" ở mục Đơn hàng đang xử lý, đơn sẽ xuất hiện tại đây và doanh thu được ghi nhận.'
     });
   }
 
-  // 2) Loyal customers: one row per person who bought successfully again and again (all time),
-  //    shown when they bought in the chosen period
-  const range = periodRange();
+  // 2) Loyal customers mode
+  if (mode === 'loyal') {
+    const range = periodRange();
+    const q = f.q.trim().toLowerCase();
+    const all = state.derived.customers.filter((c) => (c.doneCount >= LOYAL_MIN_ORDERS || c.orders.length >= LOYAL_MIN_ORDERS)
+      && c.orders.some((o) => inRange(o._date, range)));
+    const groups = {};
+    TYPE_TABS.forEach((t) => { groups[t.key] = { count: all.filter((c) => !t.key || typeKey(c.type) === t.key).length }; });
+    const inTab = all.filter((c) => !f.type || typeKey(c.type) === f.type);
+    const list = inTab.filter((c) => !q || [c.name, c.phone, c.email, c.org, c.city, c.address].some((v) => String(v || '').toLowerCase().includes(q)))
+      .sort((a, b) => b.doneCount - a.doneCount || b.orders.length - a.orders.length || b.revenue - a.revenue);
+    const page = Math.min(f.page, Math.max(1, Math.ceil(list.length / PAGE_SIZE)));
+    const rows = list.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+    const buyersInTab = state.derived.customers.filter((c) => c.doneCount > 0
+      && c.orders.some((o) => inRange(o._date, range))
+      && (!f.type || typeKey(c.type) === f.type)).length;
+    const topProducts = (c) => {
+      const m = {};
+      c.orders.forEach((o) => {
+        if (o.items && o.items.length) {
+          o.items.forEach((it) => { m[it.name] = (m[it.name] || 0) + it.qty; });
+        } else if (o.products) {
+          m[o.products] = (m[o.products] || 0) + 1;
+        }
+      });
+      return Object.entries(m).sort((a, b) => b[1] - a[1]).slice(0, 3);
+    };
+
+    return `
+      ${modeTabs}
+      ${typeTabs('customers', f.type, groups)}
+      <section class="adm-card adm-card-tabbed">
+        <div class="adm-tab-summary">
+          ${summaryBox('Khách thân thiết', inTab.length)}
+          ${summaryBox('Trên tổng khách có đơn', pct(inTab.length, buyersInTab || inTab.length))}
+          ${summaryBox('Tổng chi tiêu', money(inTab.reduce((s, c) => s + c.revenue, 0)))}
+          ${summaryBox('Số lần đặt trung bình', inTab.length ? (inTab.reduce((s, c) => s + c.orders.length, 0) / inTab.length).toFixed(1).replace('.', ',') : '0')}
+        </div>
+        <div class="adm-toolbar" data-scope="customers">
+          <input type="search" data-filter="q" value="${esc(f.q)}" placeholder="Tìm tên, SĐT, email, cơ sở…" aria-label="Tìm khách thân thiết">
+        </div>
+        <p class="adm-muted adm-result-meta">${list.length} khách hàng có từ ${LOYAL_MIN_ORDERS} đơn trở lên · xếp theo số đơn đặt</p>
+        ${rows.length ? `
+        <div class="adm-table-wrap"><table class="adm-table">
+          <thead><tr><th>Khách hàng</th><th>Loại khách</th><th class="num">Số đơn</th><th class="num">Tổng chi tiêu</th><th>Sản phẩm hay đặt</th><th>Lần đầu · gần nhất</th></tr></thead>
+          <tbody>${rows.map((c) => {
+            const first = c.firstOrder ? fmtDate(c.firstOrder) : '—';
+            const last = c.lastDate ? fmtDate(c.lastDate) : '—';
+            return `
+            <tr data-act="open-customer" data-key="${esc(c.key)}" tabindex="0">
+              <td><span class="adm-cell-main">${esc(c.name || '(chưa có tên)')}</span><small>${esc(c.phone)}${c.email ? ` · ${esc(c.email)}` : ''}</small></td>
+              <td>${esc(c.type)}${c.org ? `<small>${esc(c.org)}</small>` : ''}</td>
+              <td class="num"><b>${c.orders.length}</b><small>đơn (${c.doneCount} xong)</small></td>
+              <td class="num"><b>${money(c.revenue || c.ordered)}</b></td>
+              <td class="adm-products-cell">${topProducts(c).map(([n, qty]) => `<span>${esc(n)} <b>×${qty}</b></span>`).join('')}</td>
+              <td>${first}<small>gần nhất ${last}</small></td>
+            </tr>`;
+          }).join('')}</tbody>
+        </table></div>${pager(list.length, page, 'customers')}` : `<p class="adm-empty">Chưa có khách nào đặt từ ${LOYAL_MIN_ORDERS} đơn trở lên trong khoảng thời gian này.</p>`}
+      </section>`;
+  }
+
+  // 3) Default: Directory of ALL customers (all people who ordered or inquired from Supabase)
   const q = f.q.trim().toLowerCase();
-  const all = state.derived.customers.filter((c) => c.doneCount >= LOYAL_MIN_ORDERS
-    && c.orders.some((o) => o.status === 'Hoàn tất' && inRange(o._date, range)));
+  const all = state.derived.customers;
   const groups = {};
   TYPE_TABS.forEach((t) => { groups[t.key] = { count: all.filter((c) => !t.key || typeKey(c.type) === t.key).length }; });
   const inTab = all.filter((c) => !f.type || typeKey(c.type) === f.type);
-  const list = inTab.filter((c) => !q || [c.name, c.phone, c.email, c.org, c.city].some((v) => String(v || '').toLowerCase().includes(q)))
-    .sort((a, b) => b.doneCount - a.doneCount || b.revenue - a.revenue);
+  const list = inTab.filter((c) => !q || [c.name, c.phone, c.email, c.org, c.city, c.address].some((v) => String(v || '').toLowerCase().includes(q)))
+    .sort((a, b) => (b.lastDate ? b.lastDate.getTime() : 0) - (a.lastDate ? a.lastDate.getTime() : 0));
   const page = Math.min(f.page, Math.max(1, Math.ceil(list.length / PAGE_SIZE)));
   const rows = list.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
-  const buyersInTab = state.derived.customers.filter((c) => c.doneCount > 0
-    && c.orders.some((o) => o.status === 'Hoàn tất' && inRange(o._date, range))
-    && (!f.type || typeKey(c.type) === f.type)).length;
-  const topProducts = (c) => {
-    const m = {};
-    c.orders.filter((o) => o.status === 'Hoàn tất').forEach((o) => o.items.forEach((it) => { m[it.name] = (m[it.name] || 0) + it.qty; }));
-    return Object.entries(m).sort((a, b) => b[1] - a[1]).slice(0, 3);
-  };
+
+  const totalOrdered = inTab.reduce((s, c) => s + c.ordered, 0);
+  const totalRevenue = inTab.reduce((s, c) => s + c.revenue, 0);
+  const buyersCount = inTab.filter((c) => c.doneCount > 0).length;
+  const pendingCount = inTab.filter((c) => c.orders.some((o) => o.status !== 'Hoàn tất' && !FAILED_STATUSES.includes(o.status))).length;
 
   return `
     ${modeTabs}
     ${typeTabs('customers', f.type, groups)}
     <section class="adm-card adm-card-tabbed">
       <div class="adm-tab-summary">
-        ${summaryBox('Khách trung thành', inTab.length)}
-        ${summaryBox('Trên tổng khách đã mua', pct(inTab.length, buyersInTab))}
-        ${summaryBox('Tổng chi tiêu', money(inTab.reduce((s, c) => s + c.revenue, 0)))}
-        ${summaryBox('Số lần mua trung bình', inTab.length ? (inTab.reduce((s, c) => s + c.doneCount, 0) / inTab.length).toFixed(1).replace('.', ',') : '0')}
+        ${summaryBox('Tổng khách hàng', inTab.length)}
+        ${summaryBox('Khách đã mua xong', buyersCount)}
+        ${summaryBox('Đang có đơn xử lý', pendingCount, pendingCount ? 'adm-warn-text' : '')}
+        ${summaryBox('Tổng tiền đã đặt', money(totalOrdered))}
+        ${summaryBox('Doanh thu thực thu', money(totalRevenue), 'adm-good-text')}
       </div>
       <div class="adm-toolbar" data-scope="customers">
-        <input type="search" data-filter="q" value="${esc(f.q)}" placeholder="Tìm tên, SĐT, email, cơ sở…" aria-label="Tìm khách hàng trung thành">
+        <input type="search" data-filter="q" value="${esc(f.q)}" placeholder="Tìm tên, SĐT, email, địa chỉ, cơ sở…" aria-label="Tìm khách hàng">
       </div>
-      <p class="adm-muted adm-result-meta">${list.length} khách đã mua thành công từ ${LOYAL_MIN_ORDERS} lần trở lên (có mua trong kỳ đang xem) · xếp theo số lần mua</p>
+      <p class="adm-muted adm-result-meta">${list.length} khách hàng trong danh bạ · hiển thị người mới tương tác gần nhất trước</p>
       ${rows.length ? `
       <div class="adm-table-wrap"><table class="adm-table">
-        <thead><tr><th>Khách hàng</th><th>Loại khách</th><th class="num">Số lần mua</th><th class="num">Tổng chi tiêu</th><th>Sản phẩm hay mua</th><th>Lần đầu · gần nhất</th></tr></thead>
+        <thead><tr><th>Khách hàng</th><th>Địa chỉ / Tỉnh thành</th><th>Phân loại</th><th class="num">Số đơn</th><th class="num">Tổng tiền đặt</th><th>Đơn gần nhất</th><th>Thao tác</th></tr></thead>
         <tbody>${rows.map((c) => {
-          const done = c.orders.filter((o) => o.status === 'Hoàn tất');
+          const tel = String(c.phone || '').replace(/[^\d+]/g, '');
+          const addrDisplay = c.city || c.address || '—';
           return `
           <tr data-act="open-customer" data-key="${esc(c.key)}" tabindex="0">
-            <td><span class="adm-cell-main">${esc(c.name || '(chưa có tên)')}</span><small>${esc(c.phone)}${c.email ? ` · ${esc(c.email)}` : ''}</small></td>
+            <td>
+              <span class="adm-cell-main">${esc(c.name || '(chưa có tên)')}</span>
+              <small>${c.phone ? `<a href="tel:${esc(tel)}" onclick="event.stopPropagation()">${esc(c.phone)}</a> · <a href="https://zalo.me/${esc(tel)}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">Zalo</a>` : 'Chưa có SĐT'}${c.email ? ` · ${esc(c.email)}` : ''}</small>
+            </td>
+            <td><span class="adm-cell-main">${esc(addrDisplay)}</span>${c.address && c.city && c.address !== c.city ? `<small>${esc(c.address)}</small>` : ''}</td>
             <td>${esc(c.type)}${c.org ? `<small>${esc(c.org)}</small>` : ''}</td>
-            <td class="num"><b>${c.doneCount}</b><small>lần</small></td>
-            <td class="num"><b>${money(c.revenue)}</b></td>
-            <td class="adm-products-cell">${topProducts(c).map(([n, qty]) => `<span>${esc(n)} <b>×${qty}</b></span>`).join('')}</td>
-            <td>${fmtDate(done[done.length - 1]._date)}<small>gần nhất ${fmtDate(done[0]._date)}</small></td>
+            <td class="num"><b>${c.orders.length}</b><small>đơn (${c.doneCount} xong)</small></td>
+            <td class="num"><b>${money(c.ordered)}</b>${c.revenue > 0 ? `<small>Đã thu: ${money(c.revenue)}</small>` : ''}</td>
+            <td>${c.lastDate ? fmtDate(c.lastDate) : '—'}<br>${chip(c.latestStatus, STATUS_CLASS[c.latestStatus])}</td>
+            <td onclick="event.stopPropagation()"><button type="button" class="adm-btn adm-btn-ghost adm-btn-xs" data-act="open-customer" data-key="${esc(c.key)}">Chi tiết →</button></td>
           </tr>`;
         }).join('')}</tbody>
-      </table></div>${pager(list.length, page, 'customers')}` : `<p class="adm-empty">Chưa có khách nào mua thành công từ ${LOYAL_MIN_ORDERS} lần trở lên trong khoảng thời gian này.</p>`}
+      </table></div>${pager(list.length, page, 'customers')}` : `<p class="adm-empty">Chưa có khách hàng nào trong hệ thống.</p>`}
     </section>`;
 }
 
@@ -2046,6 +2204,15 @@ function bindEvents() {
     } else if (act === 'quick-status') {
       const form = el.closest('form');
       saveOrder(form, { status: el.dataset.status });
+    } else if (act === 'quick-status-inline') {
+      e.stopPropagation();
+      quickStatusOrder(el.dataset.code, el.dataset.status);
+    } else if (act === 'quick-complete-inline') {
+      e.stopPropagation();
+      quickCompleteOrder(el.dataset.code);
+    } else if (act === 'quick-complete-drawer') {
+      const form = el.closest('form');
+      if (form) quickCompleteOrder(form.dataset.code);
     } else if (act === 'delete-expense') deleteExpense(el.dataset.id);
   };
   content().addEventListener('click', clickHandler);
@@ -2218,13 +2385,17 @@ function buildDefaultAdminData() {
 function mergeSupabaseRows(data, sbRows) {
   if (!Array.isArray(sbRows) || !data) return;
   sbRows.forEach((row) => {
-    // Skip test data so only real customers appear
-    if (row.order_type === 'TEST' || (row.customer_name && row.customer_name.toLowerCase().includes('test')) || row.customer_name === 'Nguyễn Văn A') {
+    // Skip explicit test data only
+    if (row.order_type === 'TEST' || (row.customer_name && row.customer_name.toLowerCase().trim() === 'test')) {
       return;
     }
     const typeStr = String(row.order_type || '').toLowerCase();
     const isWholesale = typeStr.includes('wholesale') || typeStr.includes('sỉ') || typeStr.includes('hợp tác') || typeStr.includes('đối tác');
     const isAccount = typeStr.includes('tài khoản');
+
+    const addr = row.shipping_address || '';
+    const addrParts = addr.split(',').map((s) => s.trim()).filter(Boolean);
+    const city = addrParts.length > 1 ? addrParts[addrParts.length - 1] : addr;
 
     if (isWholesale || isAccount) {
       const leadId = `LD${row.id}`;
@@ -2238,6 +2409,8 @@ function mergeSupabaseRows(data, sbRows) {
           phone: row.phone || '',
           email: row.email || '',
           org: row.clinic_or_spa || '',
+          address: addr,
+          city: city,
           interest: row.collaboration_need || '',
           note: row.note || '',
           internalNote: '',
@@ -2247,21 +2420,29 @@ function mergeSupabaseRows(data, sbRows) {
     } else {
       const code = `DH${row.id}`;
       if (!data.orders.some((o) => o.code === code || (o.sbId && o.sbId === row.id))) {
+        const noteStr = String(row.note || '').toLowerCase();
+        const isBank = noteStr.includes('chuyển khoản') || noteStr.includes('chuyen khoan') || noteStr.includes('bank');
+        const subtotal = Number(row.total_amount) || 0;
+
         data.orders.push({
           code: code,
           time: row.created_at,
-          customerType: 'Khách lẻ',
+          customerType: isWholesale ? 'Khách sỉ' : 'Khách lẻ',
           name: row.customer_name || 'Khách hàng',
           phone: row.phone || '',
           email: row.email || '',
           clinic: row.clinic_or_spa || '',
-          address: row.shipping_address || '',
+          org: row.clinic_or_spa || '',
+          address: addr,
+          city: city,
           status: row.status || 'Mới',
+          pay: isBank ? 'bank' : 'cod',
           payStatus: row.pay_status || 'Chưa thanh toán',
-          subtotal: Number(row.total_amount) || 0,
+          subtotal: subtotal,
           shipping: 0,
           discount: 0,
-          total: Number(row.total_amount) || 0,
+          total: subtotal,
+          products: row.collaboration_need || row.note || 'Sản phẩm Bevibe',
           note: row.note || '',
           items: [],
           sbId: row.id
