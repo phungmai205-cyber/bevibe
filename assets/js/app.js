@@ -9,11 +9,7 @@ import { CONCERN_DEFS, CONCERN_TAGS, initShop } from './shop.js';
 import { initAccount } from './account.js';
 import { buildSearchEntry, searchIndex } from './search.js';
 import { ORDER_ENDPOINT, sendOrderToSupabase } from './order-config.js';
-<<<<<<< HEAD
 import { CATEGORY_DEFS, TPCN_CATEGORY_DEFS, detectCategory } from './catalog-defs.js';
-=======
-import { CATEGORY_DEFS, detectCategory } from './catalog-defs.js';
->>>>>>> bdebc31bd4ea19419236814141bc6e4e51c6b72d
 
 document.addEventListener('DOMContentLoaded', () => {
   // --- State ---
