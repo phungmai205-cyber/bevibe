@@ -27,8 +27,6 @@ export const CONCERN_TAGS = {
   'drbargo-3': ['repair', 'antiaging', 'soothing'],
   'drbargo-1': ['repair', 'hydration', 'soothing'],
   'neura-3': ['antiaging'],
-  'neura-9': ['hydration'],
-  'neura-10': ['repair', 'hydration'],
   'neura-6': ['repair', 'hydration'],
   'neura-11': ['antiaging'],
   'neura-12': ['repair', 'antiaging'],

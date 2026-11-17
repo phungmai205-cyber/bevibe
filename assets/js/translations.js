@@ -905,38 +905,6 @@ export const brandsData = [
         "line": "neura-basic"
       },
       {
-        "id": "neura-9",
-        "name": "Neuraderm Coretime Synergy Essence",
-        "spec": "Chai 150ml",
-        "tag": "Tinh chất nền dòng Coretime",
-        "desc": "Essence dạng lỏng thuộc dòng Coretime của Medytox, dùng sau bước làm sạch để cấp ẩm và chuẩn bị nền da trước khi dùng Coretime Ampoule.",
-        "usage": "Sau khi rửa mặt, lấy lượng vừa đủ ra lòng bàn tay hoặc bông tẩy trang, vỗ nhẹ lên da mặt và cổ.",
-        "ingredients": [],
-        "benefits": [],
-        "video": null,
-        "driveVideoId": null,
-        "driveVideoUrl": null,
-        "image": "/assets/images/catalog/neuraderm/neura-9.jpg",
-        "gallery": [],
-        "line": "neura-basic"
-      },
-      {
-        "id": "neura-10",
-        "name": "Neuraderm Derma Cream MD",
-        "spec": "Tuýp 100g",
-        "tag": "Kem dưỡng phục hồi M.Biome™",
-        "desc": "Kem dưỡng dòng Derma với phức hợp M.Biome™ BTI + V-Naive của Medytox, giúp dưỡng ẩm và hỗ trợ củng cố hàng rào da.",
-        "usage": "Bước cuối chu trình dưỡng, lấy lượng vừa đủ thoa đều lên mặt và cổ, sáng và tối.",
-        "ingredients": [],
-        "benefits": [],
-        "video": null,
-        "driveVideoId": null,
-        "driveVideoUrl": null,
-        "image": "/assets/images/catalog/neuraderm/neura-10.jpg",
-        "gallery": [],
-        "line": "neura-basic"
-      },
-      {
         "id": "neura-6",
         "name": "Neuraderm MD Cream",
         "spec": "Tuýp 180g (Thiết bị y tế Loại 1)",
@@ -1381,38 +1349,6 @@ export const brandsData = [
           "/assets/images/catalog/neuraderm/neura-3-g2.jpg",
           "/assets/images/catalog/neuraderm/neura-3-g3.jpg"
         ],
-        "line": "neura-basic"
-      },
-      {
-        "id": "neura-9",
-        "name": "뉴라덤 코어타임 시너지 에센스",
-        "spec": "150ml",
-        "tag": "코어타임 라인 퍼스트 에센스",
-        "desc": "메디톡스 코어타임 라인의 워터 타입 에센스로, 세안 후 피부에 수분을 공급하고 코어타임 앰플 사용 전 피부 결을 정돈합니다.",
-        "usage": "세안 후 적당량을 손바닥이나 화장솜에 덜어 얼굴과 목에 가볍게 두드려 줍니다.",
-        "ingredients": [],
-        "benefits": [],
-        "video": null,
-        "driveVideoId": null,
-        "driveVideoUrl": null,
-        "image": "/assets/images/catalog/neuraderm/neura-9.jpg",
-        "gallery": [],
-        "line": "neura-basic"
-      },
-      {
-        "id": "neura-10",
-        "name": "뉴라덤 더마 크림 MD",
-        "spec": "100g 튜브",
-        "tag": "M.Biome™ 장벽 케어 크림",
-        "desc": "메디톡스 M.Biome™ BTI + V-Naive 복합체를 담은 더마 크림으로, 보습과 피부 장벽 강화를 돕습니다.",
-        "usage": "스킨케어 마지막 단계에서 적당량을 얼굴과 목에 펴 발라 줍니다. (아침·저녁)",
-        "ingredients": [],
-        "benefits": [],
-        "video": null,
-        "driveVideoId": null,
-        "driveVideoUrl": null,
-        "image": "/assets/images/catalog/neuraderm/neura-10.jpg",
-        "gallery": [],
         "line": "neura-basic"
       },
       {

@@ -538,7 +538,7 @@ export const blogPosts = [
     metaDescription: 'Giải thích vì sao nên dùng serum buổi tối và kem chống nắng buổi sáng theo nhịp sinh học của da, kèm gợi ý routine sáng – tối dễ áp dụng.',
     title: 'Vì sao nên dùng serum đặc trị buổi tối và kem chống nắng buổi sáng?',
     excerpt: 'Không phải ngẫu nhiên mà chuyên gia khuyên dùng serum buổi tối. Cùng tìm hiểu nhịp sinh học của làn da để chăm sóc đúng thời điểm.',
-    products: ['neura-3', 'neura-9', 'stemc-3'],
+    products: ['neura-3', 'stemc-3'],
     content: `
       <p><strong>Nên dùng serum buổi tối</strong> — nhất là serum đặc trị — vì đây là lúc da nghỉ ngơi, tập trung phục hồi và không bị ánh nắng làm giảm hiệu quả hoạt chất. Ngược lại, ban ngày da liên tục tiếp xúc tia UV nên cần ưu tiên <strong>kem chống nắng</strong> để bảo vệ. Hiểu nhịp sinh học này giúp bạn chọn đúng sản phẩm cho từng thời điểm.</p>
 
@@ -590,12 +590,12 @@ export const blogPosts = [
     category: 'kien-thuc',
     date: '2026-11-01',
     readTime: 6,
-    cover: '/assets/images/catalog/neuraderm/neura-10.jpg',
+    cover: '/assets/images/catalog/neuraderm/neura-6.jpg',
     seoTitle: 'Chăm sóc da sau laser, peel đúng cách để phục hồi nhanh',
     metaDescription: 'Cách chăm sóc da sau laser, peel trong 1 – 2 tuần đầu: làm sạch dịu nhẹ, phục hồi hàng rào da, chống nắng và những điều cần tránh.',
     title: 'Da nhạy cảm sau laser, peel: chăm sóc thế nào để phục hồi nhanh?',
     excerpt: 'Sau liệu trình xâm lấn, hàng rào bảo vệ da rất yếu. Chăm sóc da sau laser đúng cách trong 1 – 2 tuần đầu quyết định kết quả liệu trình.',
-    products: ['drbargo-3', 'drbargo-1', 'neura-10', 'neura-6'],
+    products: ['drbargo-3', 'drbargo-1', 'neura-6'],
     content: `
       <p><strong>Chăm sóc da sau laser, peel</strong> cần tuân theo ba nguyên tắc: làm sạch thật dịu nhẹ, phục hồi hàng rào bảo vệ da và chống nắng nghiêm ngặt. Trong 1 – 2 tuần đầu, da thường đỏ, khô, căng rát và rất dễ kích ứng, nên cần tránh hoạt chất mạnh và tuân thủ hướng dẫn của bác sĩ điều trị.</p>
 
@@ -621,7 +621,7 @@ export const blogPosts = [
       <blockquote><strong>Quan trọng:</strong> mỗi liệu trình có hướng dẫn chăm sóc riêng. Luôn tuân theo chỉ định của bác sĩ; nếu da sưng, nóng, chảy dịch hoặc đau tăng dần, hãy liên hệ ngay cơ sở điều trị.</blockquote>
 
       <h2>Routine phục hồi da sau laser gợi ý</h2>
-      ${fig('/assets/images/catalog/neuraderm/neura-10.jpg', 'Kem dưỡng phục hồi Neuraderm Derma Cream MD cho giai đoạn sau laser, peel')}
+      ${fig('/assets/images/catalog/neuraderm/neura-6.jpg', 'Kem dưỡng phục hồi Neuraderm MD Cream cho giai đoạn sau laser, peel')}
       <h3>Buổi sáng</h3>
       <ol>
         <li>Rửa mặt bằng nước mát hoặc sữa rửa mặt dịu nhẹ.</li>
@@ -633,7 +633,7 @@ export const blogPosts = [
       <ol>
         <li>Sữa rửa mặt dịu nhẹ.</li>
         <li>Serum phục hồi (ví dụ <a href="#/thuong-hieu/dr-bargo">Dr.BARGO Serum dòng 31°C</a>).</li>
-        <li>Kem dưỡng phục hồi chuyên sâu (ví dụ <a href="#/thuong-hieu/neuraderm">Neuraderm Derma Cream MD</a>).</li>
+        <li>Kem dưỡng phục hồi chuyên sâu (ví dụ <a href="#/thuong-hieu/neuraderm">Neuraderm MD Cream</a>).</li>
       </ol>
       <p>Khi da đã ổn định, hãy quay lại routine thường ngày từ từ — tham khảo <a href="#/blog/thu-tu-skincare-sang-toi">thứ tự skincare chuẩn</a> và <a href="#/blog/cach-dung-kem-chong-nang-dung">cách dùng kem chống nắng đúng</a>.</p>
 
@@ -921,17 +921,17 @@ export const blogPosts = [
     category: 'kien-thuc',
     date: '2026-10-30',
     readTime: 5,
-    cover: '/assets/images/catalog/neuraderm/neura-9.jpg',
+    cover: '/assets/images/catalog/neuraderm/neura-3.jpg',
     seoTitle: 'Peptide là gì? Công dụng chống lão hóa và cách dùng',
     metaDescription: 'Peptide là gì, vì sao peptide được dùng trong mỹ phẩm chống lão hóa, peptide có kết hợp được với retinol, vitamin C không và cách dùng đúng.',
     title: 'Peptide là gì? Công dụng chống lão hóa và cách dùng đúng',
     excerpt: 'Peptide xuất hiện ngày càng nhiều trong serum chống lão hóa. Peptide là gì, có tác dụng thế nào và ai nên dùng?',
-    products: ['neura-3', 'neura-9', 'neura-7'],
+    products: ['neura-3', 'neura-7'],
     content: `
       <p><strong>Peptide là gì?</strong> Peptide là chuỗi ngắn các axit amin — đơn vị cấu tạo nên protein như collagen và elastin trong da. Trong mỹ phẩm, peptide đóng vai trò như “tín hiệu” hỗ trợ da duy trì độ săn chắc, đàn hồi và làm mờ nếp nhăn. Peptide dịu nhẹ, ít gây kích ứng nên phù hợp cả với da nhạy cảm.</p>
 
       <h2>Peptide hoạt động như thế nào trên da?</h2>
-      ${fig('/assets/images/catalog/neuraderm/neura-9.jpg', 'Tinh chất Neuraderm Coretime Synergy Essence chứa phức hợp peptide')}
+      ${fig('/assets/images/catalog/neuraderm/neura-3.jpg', 'Neuraderm Coretime Ampoule chứa phức hợp peptide và M.Biome BTX™')}
       <p>Theo tuổi tác, lượng collagen trong da giảm dần khiến da chảy xệ và xuất hiện nếp nhăn. Các peptide trong mỹ phẩm hỗ trợ da duy trì cấu trúc, cải thiện độ ẩm và độ mịn bề mặt. Mỗi loại peptide có cơ chế riêng, vì vậy nhiều sản phẩm kết hợp nhiều peptide trong cùng một công thức.</p>
 
       <h2>Các nhóm peptide phổ biến</h2>
@@ -1252,7 +1252,7 @@ export const blogPosts = [
     metaDescription: 'Collagen giảm từ tuổi 25 khiến da chảy xệ, nếp nhăn xuất hiện. Tìm hiểu mối liên hệ giữa collagen và lão hóa da, cách kích thích collagen tự nhiên.',
     title: 'Collagen và lão hóa da: hiểu đúng để chăm sóc đúng',
     excerpt: 'Từ tuổi 25, mỗi năm da mất khoảng 1% collagen. Biết điều gì phá hủy collagen và cách kích thích nó giúp làm chậm lão hóa hiệu quả.',
-    products: ['neura-3', 'neura-9', 'stemc-2'],
+    products: ['neura-3', 'stemc-2'],
     content: `
       <p><strong>Collagen</strong> là protein chiếm khoảng 75% trọng lượng khô của lớp trung bì, giữ cho da căng, đàn hồi. Mối liên hệ giữa <strong>collagen và lão hóa da</strong> rất rõ: collagen giảm đến đâu, nếp nhăn và chảy xệ xuất hiện đến đó.</p>
 
@@ -1449,7 +1449,7 @@ export const blogPosts = [
     metaDescription: 'Hướng dẫn cách dùng kem dưỡng ẩm: lượng dùng, thời điểm thoa, kỹ thuật massage và cách chọn kết cấu kem phù hợp da dầu, da khô, da nhạy cảm.',
     title: 'Cách dùng kem dưỡng ẩm hiệu quả cho mọi loại da',
     excerpt: 'Kem dưỡng là bước khóa lại mọi dưỡng chất phía trước. Thoa đúng thời điểm và đúng lượng giúp da mềm mịn cả ngày.',
-    products: ['neura-16', 'neura-10', 'drbargo-1'],
+    products: ['neura-16', 'drbargo-1'],
     content: `
       <p>Dù da dầu hay da khô, kem dưỡng ẩm đều là bước không thể thiếu. Biết <strong>cách dùng kem dưỡng ẩm</strong> đúng giúp da giữ nước, củng cố hàng rào bảo vệ và tăng hiệu quả của serum.</p>
 
@@ -1602,7 +1602,7 @@ export const blogPosts = [
     metaDescription: 'Giấc ngủ ảnh hưởng trực tiếp đến làn da. Những mẹo ngủ đủ giấc đẹp da: giờ ngủ, vỏ gối, tư thế và routine trước khi ngủ.',
     title: 'Mẹo ngủ đúng cách để da đẹp hơn mỗi sáng',
     excerpt: 'Ban đêm là lúc da tái tạo mạnh nhất. Ngủ đúng cách là "liệu trình" miễn phí mà ai cũng nên tận dụng.',
-    products: ['neura-12', 'neura-10', 'drbargo-3'],
+    products: ['neura-12', 'drbargo-3'],
     content: `
       <p>Khi ngủ, cơ thể tăng tiết hormone tăng trưởng, tăng lưu thông máu tới da và đẩy nhanh quá trình sửa chữa tế bào. Đó là lý do <strong>ngủ đủ giấc đẹp da</strong> không chỉ là lời khuyên suông.</p>
 
@@ -1779,12 +1779,12 @@ export const blogPosts = [
     category: 'xu-huong',
     date: '2026-11-08',
     readTime: 5,
-    cover: '/assets/images/catalog/neuraderm/neura-9.jpg',
+    cover: '/assets/images/catalog/neuraderm/neura-16.jpg',
     seoTitle: 'Skin cycling là gì? Xu hướng luân phiên skincare 4 đêm',
     metaDescription: 'Skin cycling là xu hướng luân phiên skincare theo chu kỳ 4 đêm: tẩy tế bào chết, retinoid và 2 đêm phục hồi. Cách áp dụng cho người mới.',
     title: 'Skin cycling: xu hướng luân phiên skincare 4 đêm cho da khỏe',
     excerpt: 'Thay vì dồn mọi hoạt chất vào một tối, skin cycling chia routine thành chu kỳ 4 đêm để da vừa được treatment vừa có thời gian nghỉ.',
-    products: ['neura-9', 'drbargo-3', 'neura-16'],
+    products: ['drbargo-3', 'neura-16'],
     content: `
       <p><strong>Skin cycling</strong> là phương pháp luân phiên sản phẩm theo chu kỳ, phổ biến nhất là 4 đêm. Mục tiêu là tận dụng hoạt chất mạnh nhưng vẫn cho hàng rào da thời gian phục hồi, giảm kích ứng.</p>
 
@@ -1798,7 +1798,7 @@ export const blogPosts = [
       <p>Sau đó lặp lại từ đêm 1.</p>
 
       <h2>Vì sao skin cycling được yêu thích?</h2>
-      ${fig('/assets/images/catalog/neuraderm/neura-9.jpg', 'Tinh chất Neuraderm Coretime Synergy Essence dùng trong đêm phục hồi')}
+      ${fig('/assets/images/catalog/neuraderm/neura-16.jpg', 'Kem dưỡng ẩm Neuraderm Neuro Lacto Moisturizer dùng trong đêm phục hồi')}
       <ul>
         <li>Đơn giản, dễ nhớ, không cần nhiều sản phẩm.</li>
         <li>Giảm nguy cơ dùng chồng hoạt chất gây kích ứng.</li>
