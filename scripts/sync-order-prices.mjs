@@ -10,10 +10,11 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const { productPrices } = await import(pathToFileURL(path.join(root, 'assets/js/prices.js')).href);
-const { brandsData } = await import(pathToFileURL(path.join(root, 'assets/js/translations.js')).href);
+const { brandsData, tpcnData = [] } = await import(pathToFileURL(path.join(root, 'assets/js/translations.js')).href);
 
 const names = {};
-brandsData.forEach((b) => b.productsVi.forEach((p) => { names[p.id] = p.name; }));
+// Cosmetics + functional food (TPCN)
+[...brandsData, ...tpcnData].forEach((b) => b.productsVi.forEach((p) => { names[p.id] = p.name; }));
 
 const missing = Object.keys(productPrices).filter((id) => !names[id]);
 if (missing.length) {

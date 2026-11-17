@@ -11125,3 +11125,42 @@ body.acct-open { overflow: hidden; }
   color: #8a1f1f;
   font-size: 0.88rem;
 }
+
+/* ==========================================================================
+   "HẾT HÀNG" stamp on out-of-stock products (cards, best sellers, product page)
+   ========================================================================== */
+.soldout-stamp {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 3;
+  transform: translate(-50%, -50%) rotate(-14deg);
+  padding: 0.28em 0.7em;
+  border: 4px solid #e01b1b;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.82);
+  color: #e01b1b;
+  font-family: 'Arial Black', 'Segoe UI', Arial, sans-serif;
+  font-size: clamp(0.95rem, 1.6vw, 1.35rem);
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  pointer-events: none;
+  /* double frame like a rubber stamp */
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.82), inset 0 0 0 4px #e01b1b;
+}
+
+.soldout-stamp-lg {
+  font-size: clamp(1.6rem, 4vw, 2.6rem);
+  border-width: 6px;
+  box-shadow: inset 0 0 0 3px rgba(255, 255, 255, 0.82), inset 0 0 0 6px #e01b1b;
+}
+
+.pcard.is-soldout .pcard-media img,
+.bs-card.is-soldout .bs-card-media img,
+.pd-stage.is-soldout img {
+  opacity: 0.55;
+  filter: grayscale(0.5);
+}

@@ -9,6 +9,13 @@ export const PRICE_LIST_DATE = '27/08/2026';
 // Chiết khấu sỉ tham khảo (không còn hiển thị trên web sau khi gỡ Phân hệ B2B).
 export const WHOLESALE_DISCOUNT = 0.38;
 
+/**
+ * Danh mục đang HẾT HÀNG: mọi sản phẩm thuộc danh mục này hiện dấu "Hết hàng" và không đặt mua được.
+ * Có hàng trở lại: xóa id danh mục khỏi danh sách (vd. để trống []).
+ * Id danh mục: cleanser, toner, serum, moisturizer, sun, mask, hair (xem catalog-defs.js).
+ */
+export const SOLD_OUT_CATEGORIES = ['mask'];
+
 export const productPrices = {
   // NEURADERM
   'neura-6':  { price: 1350000, unit: 'Tuýp 180g' },      // #1 Medical Device Cream MD
@@ -32,8 +39,14 @@ export const productPrices = {
   // DR.BARGO (31°C)
   'drbargo-1': { price: 420000, unit: 'Chai 150ml' },     // #22 Emulsion
   'drbargo-2': { price: 420000, unit: 'Chai 150ml' },     // #23 Sữa rửa mặt
-  'drbargo-3': { price: 960000, unit: 'Lọ 50ml' },        // #26 Serum (Niacinamide 20% + 5 Cica)
-  'drbargo-4': { price: 420000, unit: 'Chai 400ml' }      // #24 Toner
+  'drbargo-3': { price: 660000, unit: 'Lọ 50ml' },        // #26 Serum (Niacinamide 20% + 5 Cica)
+  'drbargo-4': { price: 420000, unit: 'Chai 400ml' },     // #24 Toner
+
+  // THỰC PHẨM CHỨC NĂNG · VN Healing Farm
+  'hoat-luc-truong-tho': { price: 3500000, unit: '3,75g × 50 viên / hộp' },
+  'd-tox-slim':          { price: 2800000, unit: '80ml × 30 gói / hộp' },
+  'hong-sam-6-nam-tuoi': { price: 1200000, unit: '10g × 30 gói / hộp' },
+  'khop-chac-khoe':      { price: 3000000, unit: '70ml × 30 gói / hộp' },
 };
 
 /**

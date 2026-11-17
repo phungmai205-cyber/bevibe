@@ -2,18 +2,14 @@
  * beVIBE - Interactive Web Application Logic
  * Korean Aesthetic & B2B Cosmetic Partnership Platform
  */
-import { i18nData, brandsData, servicesDetailsData } from './translations.js';
+import { i18nData, brandsData, servicesDetailsData, tpcnData } from './translations.js';
 import { blogPosts, blogCategories, popularSlugs, trendCategoryIds } from './blog.js';
-import { productPrices, formatVnd, BEST_SELLER_IDS, BEST_SELLER_IMAGES, BEST_SELLER_HOVER, BEST_SELLER_TABS, HOME_EXPLORE_LINES, HOME_OFFICIAL_BRAND } from './prices.js';
+import { productPrices, SOLD_OUT_CATEGORIES, formatVnd, BEST_SELLER_IDS, BEST_SELLER_IMAGES, BEST_SELLER_HOVER, BEST_SELLER_TABS, HOME_EXPLORE_LINES, HOME_OFFICIAL_BRAND } from './prices.js';
 import { CONCERN_DEFS, CONCERN_TAGS, initShop } from './shop.js';
 import { initAccount } from './account.js';
 import { buildSearchEntry, searchIndex } from './search.js';
-<<<<<<< Updated upstream
 import { ORDER_ENDPOINT, sendOrderToSupabase } from './order-config.js';
-=======
-import { ORDER_ENDPOINT } from './order-config.js';
-import { CATEGORY_DEFS, detectCategory } from './catalog-defs.js';
->>>>>>> Stashed changes
+import { CATEGORY_DEFS, TPCN_CATEGORY_DEFS, detectCategory } from './catalog-defs.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   // --- State ---
@@ -163,20 +159,30 @@ document.addEventListener('DOMContentLoaded', () => {
       .replace(/đ/g, 'd');
   }
 
+  // Cosmetics categories + functional food (TPCN) categories
+  const ALL_CATEGORY_DEFS = [...CATEGORY_DEFS, ...TPCN_CATEGORY_DEFS];
+
   function categoryLabel(catId) {
-    const def = CATEGORY_DEFS.find((c) => c.id === catId);
+    const def = ALL_CATEGORY_DEFS.find((c) => c.id === catId);
     if (!def) return '';
     return currentLang === 'vi' ? def.vi : def.ko;
+  }
+
+  // Categories marked sold out in prices.js (SOLD_OUT_CATEGORIES) stay "Hết hàng", whatever the price list says
+  function keepSoldOut(e) {
+    if (SOLD_OUT_CATEGORIES.includes(e.category)) e.stock = 'Hết hàng';
   }
 
   // Bilingual index: one entry per product id, built once.
   const productIndex = [];
   function makeEntry(brand, pVi, pKo, categoryOverride) {
-    const category = CATEGORY_DEFS.some((c) => c.id === categoryOverride) ? categoryOverride : detectCategory(pVi.name, brand.id);
-    const def = CATEGORY_DEFS.find((c) => c.id === category);
+    const category = ALL_CATEGORY_DEFS.some((c) => c.id === categoryOverride) ? categoryOverride : detectCategory(pVi.name, brand.id);
+    const def = ALL_CATEGORY_DEFS.find((c) => c.id === category);
     const line = (brand.lines || []).find((l) => l.id === pVi.line) || {};
     const e = {
       id: pVi.id,
+      // 'tpcn' = Thực phẩm chức năng (own page #/thuc-pham-chuc-nang), otherwise cosmetics (#/san-pham)
+      kind: TPCN_CATEGORY_DEFS.some((c) => c.id === category) ? 'tpcn' : 'cosmetics',
       brandId: brand.id,
       brandName: brand.name,
       line: pVi.line || '',
@@ -191,6 +197,7 @@ document.addEventListener('DOMContentLoaded', () => {
       medium: normalizeText([pVi.tag, pKo.tag, def.vi, def.ko, brand.badge].join(' ')),
       weak: normalizeText([pVi.desc, pKo.desc, pVi.spec].join(' '))
     };
+    keepSoldOut(e);
     // Skin-concern tags (shop.js) — used by the products filter, search and the skin-care section
     e.concerns = CONCERN_TAGS[e.id] || [];
     e.medium += ' ' + normalizeText(e.concerns.map((cid) => {
@@ -205,6 +212,19 @@ document.addEventListener('DOMContentLoaded', () => {
       productIndex.push(makeEntry(brand, pVi, pKo));
     });
   });
+  // Functional food (TPCN): same cards, product page, cart and search as cosmetics,
+  // listed on #/thuc-pham-chuc-nang instead of #/san-pham. Their brands are not cosmetics brands.
+  tpcnData.forEach((brand) => {
+    brand.productsVi.forEach((pVi) => {
+      const pKo = (brand.productsKo || []).find((x) => x.id === pVi.id) || pVi;
+      productIndex.push(makeEntry(brand, pVi, pKo, pVi.category));
+    });
+  });
+  const isTpcn = (e) => e.kind === 'tpcn';
+  const cosmeticsIndex = () => productIndex.filter((e) => !isTpcn(e));
+  const tpcnIndex = () => productIndex.filter(isTpcn);
+  // Brand of any product (cosmetics brands + TPCN brands)
+  const brandOf = (id) => brandsData.find((b) => b.id === id) || tpcnData.find((b) => b.id === id) || null;
 
   function localized(entry) {
     const p = currentLang === 'vi' ? entry.vi : entry.ko;
@@ -215,9 +235,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // Search index (search.js): product names, type line, concerns and descriptions in both languages
   const searchItems = productIndex.map(makeSearchItem);
   function makeSearchItem(e) {
-    const brand = brandsData.find((b) => b.id === e.brandId) || {};
+    const brand = brandOf(e.brandId) || {};
     const line = (brand.lines || []).find((l) => l.id === e.line) || {};
-    const def = CATEGORY_DEFS.find((c) => c.id === e.category) || {};
+    const def = ALL_CATEGORY_DEFS.find((c) => c.id === e.category) || {};
     const concernLabels = e.concerns.map((cid) => CONCERN_DEFS.find((d) => d.id === cid)).filter(Boolean).flatMap((c) => [c.vi, c.ko]);
     return {
       entry: e,
@@ -292,7 +312,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function getFilteredProducts() {
-    const base = catalogState.query ? searchProducts(catalogState.query) : productIndex;
+    const base = catalogState.query ? searchProducts(catalogState.query) : cosmeticsIndex();
     return base.filter((e) =>
       (catalogState.brand === 'all' || e.brandId === catalogState.brand) &&
       (catalogState.line === 'all' || e.line === catalogState.line) &&
@@ -372,6 +392,18 @@ document.addEventListener('DOMContentLoaded', () => {
       }).join('');
     }
 
+    const navTPCNMenu = document.getElementById('navTPCNMenu');
+    if (navTPCNMenu) {
+      navTPCNMenu.innerHTML = [{ id: 'all', vi: 'Tất cả sản phẩm', ko: '전체 제품' }, ...TPCN_CATEGORY_DEFS].map((c) => {
+        const count = c.id === 'all' ? tpcnIndex().length : productIndex.filter((e) => e.category === c.id).length;
+        return `
+          <button type="button" class="hnav-dd-item" data-action="tpcn-category" data-category="${c.id}">
+            <span>${isVi ? c.vi : c.ko}</span><span class="hnav-dd-badge">${count}</span>
+          </button>
+        `;
+      }).join('');
+    }
+
     const drawerBrandList = document.getElementById('drawerBrandList');
     if (drawerBrandList) {
       drawerBrandList.innerHTML = brandsData.map((b) => `
@@ -392,7 +424,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (rail) {
       const items = [{ id: 'all', vi: 'Tất cả', ko: '전체' }, ...CATEGORY_DEFS];
       rail.innerHTML = items.map((c) => {
-        const inCat = c.id === 'all' ? productIndex : productIndex.filter((e) => e.category === c.id);
+        const inCat = c.id === 'all' ? cosmeticsIndex() : productIndex.filter((e) => e.category === c.id);
         const thumb = inCat[0] ? inCat[0].image : '/assets/images/lineup.jpg';
         return `
           <button type="button" class="category-chip ${catalogState.category === c.id ? 'active' : ''}" data-action="category" data-category="${c.id}">
@@ -407,7 +439,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const tabs = document.getElementById('catalogTabsGroup');
     if (tabs) {
       const unit = isVi ? 'SP' : '개';
-      const tabItems = [{ id: 'all', name: isVi ? 'Tất cả' : '전체', count: productIndex.length },
+      const tabItems = [{ id: 'all', name: isVi ? 'Tất cả' : '전체', count: cosmeticsIndex().length },
       ...brandsData.map((b) => ({ id: b.id, name: b.name, count: b.productsVi.length }))];
       tabs.innerHTML = tabItems.map((t) => `
         <button type="button" class="catalog-tab-btn ${catalogState.brand === t.id ? 'active' : ''}" data-action="brand-tab" data-brand-id="${t.id}">
@@ -441,7 +473,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Price-list status set by the admin: promotion and "Hết hàng" / "Ngừng bán"
-  const isSoldOut = (e) => !!(e.price && e.stock && e.stock !== 'Đang bán');
+  const isSoldOut = (e) => !!(e.stock && e.stock !== 'Đang bán');
   const salePct = (e) => (e.listPrice && e.price ? Math.round((1 - e.price / e.listPrice) * 100) : 0);
 
   function productCardHtml(entry) {
@@ -454,7 +486,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="pcard-media">
           <img src="${p.image}" alt="${escapeHtml(p.name)}" loading="lazy">
           <span class="pcard-badge-brand">${p.brandName}</span>
-          ${soldOut ? `<span class="pcard-badge-stock">${isVi ? escapeHtml(entry.stock) : '품절'}</span>` : pct ? `<span class="pcard-badge-sale">-${pct}%</span>` : ''}
+          ${soldOut ? `<span class="soldout-stamp">${isVi ? escapeHtml(entry.stock) : '품절'}</span>` : pct ? `<span class="pcard-badge-sale">-${pct}%</span>` : ''}
           ${p.hasVideo ? `<span class="pcard-badge-video"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg> Video</span>` : ''}
         </div>
         <div class="pcard-body">
@@ -521,12 +553,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const img = BEST_SELLER_IMAGES[p.id] || p.image;
     const hover = BEST_SELLER_HOVER[p.id];
     return `
-      <article class="bs-card" data-action="product-modal" data-product-id="${p.id}" tabindex="0">
+      <article class="bs-card ${isSoldOut(entry) ? 'is-soldout' : ''}" data-action="product-modal" data-product-id="${p.id}" tabindex="0">
         <div class="bs-card-media ${hover ? 'has-hover' : ''}">
           <img class="bs-img-main" src="${img}" alt="${escapeHtml(p.name)}" loading="lazy">
           ${hover ? `<img class="bs-img-hover" src="${hover}" alt="" loading="lazy">` : ''}
           <span class="bs-rank">TOP ${rank}</span>
-          ${isSoldOut(entry) ? `<span class="pcard-badge-stock bs-stock">${isVi ? escapeHtml(entry.stock) : '품절'}</span>` : salePct(entry) ? `<span class="pcard-badge-sale bs-sale">-${salePct(entry)}%</span>` : ''}
+          ${isSoldOut(entry) ? `<span class="soldout-stamp">${isVi ? escapeHtml(entry.stock) : '품절'}</span>` : salePct(entry) ? `<span class="pcard-badge-sale bs-sale">-${salePct(entry)}%</span>` : ''}
           ${p.price && !isSoldOut(entry) ? `<button type="button" class="bs-cart" data-shop="add" data-product-id="${p.id}" aria-label="${isVi ? 'Thêm vào giỏ' : '장바구니 담기'}">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>
           </button>` : ''}
@@ -929,8 +961,12 @@ document.addEventListener('DOMContentLoaded', () => {
     return !!(section && section.classList.contains('is-filter-page'));
   }
 
+  // Which products the filter page lists: cosmetics (#/san-pham) or functional food (#/thuc-pham-chuc-nang)
+  const isTpcnPage = () => currentRoute.page === 'thuc-pham-chuc-nang';
+
   function getPageFilteredProducts() {
-    const base = catalogState.query ? searchProducts(catalogState.query) : productIndex;
+    // A search shows every matching product, cosmetics and TPCN alike
+    const base = catalogState.query ? searchProducts(catalogState.query) : (isTpcnPage() ? tpcnIndex() : cosmeticsIndex());
     return base.filter((e) =>
       (pageFilter.cats.size === 0 || pageFilter.cats.has(e.category)) &&
       (pageFilter.brands.size === 0 || pageFilter.brands.has(e.brandId)) &&
@@ -942,7 +978,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function filterOptionsFor(group) {
     const isVi = currentLang === 'vi';
     if (group === 'cats') {
-      return CATEGORY_DEFS.map((c) => ({
+      return (isTpcnPage() ? TPCN_CATEGORY_DEFS : CATEGORY_DEFS).map((c) => ({
         value: c.id,
         label: isVi ? c.vi : c.ko,
         count: productIndex.filter((e) => e.category === c.id).length
@@ -982,12 +1018,14 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!sidebar) return;
     const isVi = currentLang === 'vi';
     const active = pageFilter.cats.size + pageFilter.brands.size + pageFilter.lines.size + pageFilter.concerns.size;
-    const groups = [
-      { key: 'cats', title: isVi ? 'Danh mục' : '카테고리' },
-      { key: 'concerns', title: isVi ? 'Vấn đề da' : '피부 고민' },
-      { key: 'brands', title: isVi ? 'Thương hiệu' : '브랜드' },
-      { key: 'lines', title: isVi ? 'Dòng sản phẩm' : '제품 라인' }
-    ];
+    const groups = isTpcnPage()
+      ? [{ key: 'cats', title: isVi ? 'Nhu cầu sức khỏe' : '건강 고민' }]
+      : [
+        { key: 'cats', title: isVi ? 'Danh mục' : '카테고리' },
+        { key: 'concerns', title: isVi ? 'Vấn đề da' : '피부 고민' },
+        { key: 'brands', title: isVi ? 'Thương hiệu' : '브랜드' },
+        { key: 'lines', title: isVi ? 'Dòng sản phẩm' : '제품 라인' }
+      ];
     sidebar.innerHTML = `
       <div class="filter-head">
         <strong>${isVi ? 'Bộ lọc' : '필터'}</strong>
@@ -1496,6 +1534,11 @@ document.addEventListener('DOMContentLoaded', () => {
           const cat = el.getAttribute('data-category');
           navigate(cat && cat !== 'all' ? `san-pham?cat=${encodeURIComponent(cat)}` : 'san-pham');
         }
+        break;
+      }
+      case 'tpcn-category': {
+        const cat = el.getAttribute('data-category');
+        navigate(cat && cat !== 'all' ? `thuc-pham-chuc-nang?cat=${encodeURIComponent(cat)}` : 'thuc-pham-chuc-nang');
         break;
       }
       case 'clear-filter': {
@@ -2671,6 +2714,11 @@ document.addEventListener('DOMContentLoaded', () => {
       sections: ['#blog'],
       vi: { eyebrow: 'BLOG', title: 'Blog', desc: 'Tin tức, kiến thức K-Beauty và cập nhật mới nhất từ beVIBE.' },
       ko: { eyebrow: 'BLOG', title: '블로그', desc: 'K-뷰티 소식과 비바이브의 최신 업데이트.' }
+    },
+    'thuc-pham-chuc-nang': {
+      sections: ['#products'],
+      vi: { eyebrow: 'HEALTH FOOD', title: 'Thực phẩm chức năng', desc: 'Thực phẩm chức năng Hàn Quốc chính hãng từ VN Healing Farm, sản xuất theo chuẩn GMP. Lọc theo nhu cầu sức khỏe để tìm đúng sản phẩm bạn cần.' },
+      ko: { eyebrow: 'HEALTH FOOD', title: '건강기능식품', desc: 'VN Healing Farm의 GMP 인증 한국 건강기능식품. 건강 고민별로 찾아보세요.' }
     }
   };
 
@@ -2686,6 +2734,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     if (parts[0] === 'san-pham' && parts[1] && productIndex.some((e) => e.id === parts[1])) {
       return { page: 'product', productId: parts[1], params };
+    }
+    if (parts[0] === 'thuc-pham-chuc-nang') {
+      // Old links #/thuc-pham-chuc-nang/<product id> open the product page
+      if (parts[1] && productIndex.some((e) => e.id === parts[1])) return { page: 'product', productId: parts[1], params };
+      return { page: 'thuc-pham-chuc-nang', params };
     }
     if (parts[0] === 'thuong-hieu' && parts[1] && brandsData.some((b) => b.id === parts[1])) {
       return { page: 'brand', brandId: parts[1], params };
@@ -2745,14 +2798,20 @@ document.addEventListener('DOMContentLoaded', () => {
       eyebrow = t.eyebrow;
       title = t.title;
       desc = t.desc;
-      if (currentRoute.page === 'san-pham') {
+      if (currentRoute.page === 'thuc-pham-chuc-nang') {
         meta.push(
-          `${productIndex.length} ${isVi ? 'sản phẩm' : '개 제품'}`,
+          `${tpcnIndex().length} ${isVi ? 'sản phẩm' : '개 제품'}`,
+          `${TPCN_CATEGORY_DEFS.length} ${isVi ? 'nhu cầu sức khỏe' : '개 건강 고민'}`,
+          isVi ? 'Chuẩn GMP Hàn Quốc' : '한국 GMP 인증'
+        );
+      } else if (currentRoute.page === 'san-pham') {
+        meta.push(
+          `${cosmeticsIndex().length} ${isVi ? 'sản phẩm' : '개 제품'}`,
           `${brandsData.length} ${isVi ? 'thương hiệu' : '개 브랜드'}`,
           `${CATEGORY_DEFS.length} ${isVi ? 'danh mục' : '개 카테고리'}`
         );
       } else if (currentRoute.page === 'thuong-hieu') {
-        meta.push(`${brandsData.length} ${isVi ? 'thương hiệu' : '개 브랜드'}`, `${productIndex.length} ${isVi ? 'sản phẩm' : '개 제품'}`);
+        meta.push(`${brandsData.length} ${isVi ? 'thương hiệu' : '개 브랜드'}`, `${cosmeticsIndex().length} ${isVi ? 'sản phẩm' : '개 제품'}`);
       }
     }
     crumbs.push(`<span>${escapeHtml(title)}</span>`);
@@ -2798,7 +2857,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Catalogue state for the products / brand pages; home goes back to the carousel
     const p = route.params || {};
-    if (route.page === 'san-pham') {
+    if (route.page === 'thuc-pham-chuc-nang') {
+      Object.assign(catalogState, { brand: 'all', line: 'all', category: 'all', query: '', expanded: true });
+      pageFilter.cats = new Set(p.cat && TPCN_CATEGORY_DEFS.some((c) => c.id === p.cat) ? [p.cat] : []);
+      pageFilter.brands = new Set();
+      pageFilter.lines = new Set();
+      pageFilter.concerns = new Set();
+    } else if (route.page === 'san-pham') {
       Object.assign(catalogState, { brand: 'all', line: 'all', category: 'all', query: p.q || '', expanded: true });
       pageFilter.cats = new Set(p.cat ? [p.cat] : []);
       pageFilter.brands = new Set(p.brand ? [p.brand] : []);
@@ -2811,9 +2876,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     if (headerSearchInput) headerSearchInput.value = catalogState.query;
     if (productsSection) {
-      productsSection.classList.toggle('is-page', route.page === 'san-pham' || route.page === 'brand');
+      const filterPage = route.page === 'san-pham' || route.page === 'thuc-pham-chuc-nang';
+      productsSection.classList.toggle('is-page', filterPage || route.page === 'brand');
       productsSection.classList.toggle('is-brand-page', route.page === 'brand');
-      productsSection.classList.toggle('is-filter-page', route.page === 'san-pham');
+      productsSection.classList.toggle('is-filter-page', filterPage);
       document.getElementById('catalogLayout')?.classList.remove('filters-open');
     }
     renderProductCatalog();
@@ -2831,7 +2897,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (route.page === 'post') renderBlogPost(blogPosts.find((p) => p.slug === route.slug));
     pageSeo(route);
 
-    const navKey = route.page === 'brand' ? 'thuong-hieu' : route.page === 'post' ? 'blog' : route.page === 'product' ? 'san-pham' : route.page;
+    const productEntry = route.page === 'product' ? productIndex.find((e) => e.id === route.productId) : null;
+    const navKey = route.page === 'brand' ? 'thuong-hieu' : route.page === 'post' ? 'blog'
+      : route.page === 'product' ? (productEntry && isTpcn(productEntry) ? 'thuc-pham-chuc-nang' : 'san-pham') : route.page;
     document.querySelectorAll('.hnav-link, .mobile-nav-link').forEach((a) => {
       a.classList.toggle('is-active', !isHome && a.getAttribute('href') === `#/${navKey}`);
     });
@@ -2870,6 +2938,7 @@ document.addEventListener('DOMContentLoaded', () => {
         e.stock = '';
         delete productPrices[e.id];
       }
+      keepSoldOut(e);
     });
     return true;
   }
@@ -2910,7 +2979,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initial Initialization
   shop = initShop({
     productIndex,
-    brandsData,
+    // Product page / SEO look up the brand of any product, TPCN included
+    brandsData: { find: (fn) => brandsData.find(fn) || tpcnData.find(fn) },
     getLang: () => currentLang,
     localized,
     formatVnd,

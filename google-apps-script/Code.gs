@@ -91,8 +91,12 @@ const PRICES = {
   "stemc-2": { "name": "MediPharm Stem C Revitalizing Cream", "unit": "Hũ 50ml", "price": 1400000 },
   "drbargo-1": { "name": "Dr.BARGO Emulsion", "unit": "Chai 150ml", "price": 420000 },
   "drbargo-2": { "name": "Dr.BARGO Foam Cleansing", "unit": "Chai 150ml", "price": 420000 },
-  "drbargo-3": { "name": "Dr.BARGO Serum", "unit": "Lọ 50ml", "price": 960000 },
-  "drbargo-4": { "name": "Dr.BARGO Toner", "unit": "Chai 400ml", "price": 420000 }
+  "drbargo-3": { "name": "Dr.BARGO Serum", "unit": "Lọ 50ml", "price": 660000 },
+  "drbargo-4": { "name": "Dr.BARGO Toner", "unit": "Chai 400ml", "price": 420000 },
+  "hoat-luc-truong-tho": { "name": "Hoạt Lực Trường Thọ Cung Thần Hoàn (활력장수공진환)", "unit": "3,75g × 50 viên / hộp", "price": 3500000 },
+  "d-tox-slim": { "name": "D-Tox Slim", "unit": "80ml × 30 gói / hộp", "price": 2800000 },
+  "hong-sam-6-nam-tuoi": { "name": "Tinh chất hồng sâm Hàn Quốc 6 năm tuổi Premium, dạng thanh", "unit": "10g × 30 gói / hộp", "price": 1200000 },
+  "khop-chac-khoe": { "name": "Khớp Chắc Khỏe (Strong Joint)", "unit": "70ml × 30 gói / hộp", "price": 3000000 }
 };
 // <PRICES:END>
 

@@ -49,7 +49,7 @@ export const CONCERN_TAGS = {
   'stemc-2': ['antiaging', 'hydration'],
   'stemc-3': ['hydration', 'brightening'],
   'stemc-1': ['hydration'],
-  'smib-3': ['scalp'], 'smib-4': ['scalp'], 'smib-8': ['scalp'], 'smib-9': ['scalp'],
+  'smib-3': ['scalp'], 'smib-8': ['scalp'],
   'smib-1': ['scalp'], 'smib-2': ['scalp'], 'smib-5': ['scalp'], 'smib-6': ['scalp'], 'smib-7': ['scalp']
 };
 
@@ -122,6 +122,8 @@ export function initShop(ctx) {
      (CART_KEY:<uid> on this browser, synced to their account by account.js). */
   const cleanItems = (list) => (Array.isArray(list) ? list : [])
     .filter((it) => it && typeof it.id === 'string' && priceOf(it.id) && it.qty > 0)
+    // Out-of-stock products leave the cart
+    .filter((it) => { const e = entryOf(it.id); return !(e && e.stock && e.stock !== 'Đang bán'); })
     .map((it) => ({ id: it.id, qty: Math.max(1, Math.min(99, parseInt(it.qty, 10) || 1)) }));
   const lastUid = (() => { try { return localStorage.getItem(LAST_UID_KEY) || ''; } catch (e) { return ''; } })();
   let cartKey = lastUid ? `${CART_KEY}:${lastUid}` : CART_KEY;
@@ -709,6 +711,10 @@ export function initShop(ctx) {
     const raw = vi ? entry.vi : entry.ko;
     const brand = brandsData.find((b) => b.id === entry.brandId);
     const line = lineLabel(entry.brandId, entry.line);
+    // Functional food (TPCN) lives on its own page, cosmetics on #/san-pham
+    const tpcn = entry.kind === 'tpcn';
+    const listHref = tpcn ? '#/thuc-pham-chuc-nang' : '#/san-pham';
+    const listLabel = tpcn ? (vi ? 'Thực phẩm chức năng' : '건강기능식품') : (vi ? 'Sản phẩm' : '제품');
     const step = routineStepOf(entry.category);
     const concerns = (entry.concerns || []).map((cid) => CONCERN_DEFS.find((c) => c.id === cid)).filter(Boolean);
     const images = [entry.image, ...((raw.gallery && raw.gallery.length ? raw.gallery : entry.vi.gallery) || [])].filter((v, i, a) => v && a.indexOf(v) === i);
@@ -735,15 +741,16 @@ export function initShop(ctx) {
       <div class="container">
         <nav class="page-breadcrumb pd-breadcrumb" aria-label="Breadcrumb">
           <a href="#">${vi ? 'Trang chủ' : '홈'}</a><span class="sep">/</span>
-          <a href="#/san-pham">${vi ? 'Sản phẩm' : '제품'}</a><span class="sep">/</span>
-          <a href="#/thuong-hieu/${brand.id}">${brand.name}</a><span class="sep">/</span>
+          <a href="${listHref}">${listLabel}</a><span class="sep">/</span>
+          ${tpcn ? '' : `<a href="#/thuong-hieu/${brand.id}">${brand.name}</a><span class="sep">/</span>`}
           <span>${p.name}</span>
         </nav>
 
         <div class="pd-main">
           <div class="pd-gallery">
-            <div class="pd-stage" id="pdStage">
+            <div class="pd-stage ${soldOut ? 'is-soldout' : ''}" id="pdStage">
               <img src="${images[0]}" alt="${escapeHtml(p.name)}" id="pdMainImg">
+              ${soldOut ? `<span class="soldout-stamp soldout-stamp-lg">${vi ? escapeHtml(entry.stock) : '품절'}</span>` : ''}
               ${video ? `<button type="button" class="pd-video-badge" data-shop="pd-tab" data-tab="vid">▶ Video</button>` : ''}
             </div>
             ${images.length > 1 ? `
@@ -770,7 +777,7 @@ export function initShop(ctx) {
 
             <dl class="pd-specs">
               <div><dt>${vi ? 'Quy cách' : '규격'}</dt><dd>${escapeHtml(entry.priceUnit || p.spec || '—')}</dd></div>
-              <div><dt>${vi ? 'Danh mục' : '카테고리'}</dt><dd><a href="#/san-pham?cat=${entry.category}">${categoryLabel(entry.category)}</a></dd></div>
+              <div><dt>${vi ? 'Danh mục' : '카테고리'}</dt><dd><a href="${listHref}?cat=${entry.category}">${categoryLabel(entry.category)}</a></dd></div>
               ${step ? `<div><dt>${vi ? 'Bước dùng' : '사용 단계'}</dt><dd>${vi ? `Bước ${step.step} · ${step.vi}` : `${step.step}단계 · ${step.ko}`}</dd></div>` : ''}
               <div><dt>${vi ? 'Xuất xứ' : '원산지'}</dt><dd>${escapeHtml(brand.origin || 'Korea')}</dd></div>
             </dl>

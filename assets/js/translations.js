@@ -194,7 +194,8 @@ export const i18nData = {
     "hotlineLabel": "Hotline đối tác",
     "headerQuote": "Nhận báo giá ↗",
     "navBrandsMega": "Thương hiệu",
-    "navCategories": "Danh mục sản phẩm",
+    "navCategories": "Mỹ phẩm",
+    "navTPCN": "Thực phẩm chức năng",
     "navServices": "Dịch vụ",
     "drawerExplore": "Khám phá",
     "sb1Tag": "EBOOK CATALOGUE",
@@ -420,6 +421,7 @@ export const i18nData = {
     "headerQuote": "견적 문의 ↗",
     "navBrandsMega": "브랜드",
     "navCategories": "제품 카테고리",
+    "navTPCN": "건강기능식품",
     "navServices": "서비스",
     "drawerExplore": "둘러보기",
     "sb1Tag": "EBOOK CATALOGUE",
@@ -2307,42 +2309,6 @@ export const brandsData = [
         "line": "smib-lactobio"
       },
       {
-        "id": "smib-4",
-        "name": "SMIB LactoBio Repair Shampoo (Travel Size)",
-        "spec": "Tuýp 70ml / 2.37 fl.oz",
-        "image": "/assets/images/catalog/smib/smib-4.jpg",
-        "ebookPage": "https://bevibe-smib-ebook.quiettoad513.chatgpt.site/#page-4",
-        "tag": "Dầu gội du lịch bỏ túi",
-        "desc": "Phiên bản dạng tuýp 70ml nhỏ gọn tiện lợi mang theo khi đi công tác, du lịch, bảo vệ da đầu và nuôi dưỡng mái tóc chuẩn salon mọi lúc mọi nơi.",
-        "video": null,
-        "driveVideoId": null,
-        "ingredients": [
-          {
-            "name": "100 Tỷ Postbiotic lợi khuẩn",
-            "desc": "Cân bằng vi sinh da đầu, củng cố hàng rào bảo vệ màng da đầu."
-          },
-          {
-            "name": "Phức hợp Protein & Amino Acid tơ tằm",
-            "desc": "Tái tạo biểu bì sợi tóc, phục hồi độ đàn hồi bồng bềnh tự nhiên."
-          },
-          {
-            "name": "Zinc Pyrithione & Dexpanthenol",
-            "desc": "Kháng viêm làm sạch nang tóc, kích thích mọc tóc và nuôi nang tóc dày khỏe."
-          }
-        ],
-        "benefits": [
-          "Công nghệ độc quyền 100 Tỷ Postbiotic chuẩn salon tóc cao cấp Hàn Quốc.",
-          "Làm sạch sâu bã nhờn, gàu ngứa, giảm rụng tóc và nuôi dưỡng sợi tóc chắc khỏe.",
-          "Kiểm nghiệm da liễu an toàn, không kích ứng cho da đầu nhạy cảm."
-        ],
-        "usage": "Lấy một lượng vừa đủ massage đều khắp da đầu và thân tóc, để 2-3 phút rồi xả sạch với nước.",
-        "driveVideoUrl": null,
-        "gallery": [
-          "/assets/images/catalog/smib/smib-4-g1.jpg"
-        ],
-        "line": "smib-lactobio"
-      },
-      {
         "id": "smib-8",
         "name": "SMIB LactoBio Silk Treatment (Hũ lớn)",
         "spec": "Hũ 400g / 14.10 oz",
@@ -2365,42 +2331,6 @@ export const brandsData = [
         "driveVideoUrl": null,
         "gallery": [
           "/assets/images/catalog/smib/smib-8-g1.jpg"
-        ],
-        "line": "smib-lactobio"
-      },
-      {
-        "id": "smib-9",
-        "name": "SMIB LactoBio Silk Treatment (Travel Size)",
-        "spec": "Tuýp 70g / 2.46 oz",
-        "image": "/assets/images/catalog/smib/smib-9.jpg",
-        "ebookPage": "https://bevibe-smib-ebook.quiettoad513.chatgpt.site/#page-9",
-        "tag": "Kem ủ tóc tuýp du lịch",
-        "desc": "Dạng tuýp nhỏ gọn 70g tiện bỏ túi mang theo mọi hành trình, cung cấp 100 tỷ lợi khuẩn phục hồi tóc hư tổn bóng mượt tức thì.",
-        "video": null,
-        "driveVideoId": null,
-        "ingredients": [
-          {
-            "name": "100 Tỷ Postbiotic lợi khuẩn",
-            "desc": "Cân bằng vi sinh da đầu, củng cố hàng rào bảo vệ màng da đầu."
-          },
-          {
-            "name": "Phức hợp Protein & Amino Acid tơ tằm",
-            "desc": "Tái tạo biểu bì sợi tóc, phục hồi độ đàn hồi bồng bềnh tự nhiên."
-          },
-          {
-            "name": "Zinc Pyrithione & Dexpanthenol",
-            "desc": "Kháng viêm làm sạch nang tóc, kích thích mọc tóc và nuôi nang tóc dày khỏe."
-          }
-        ],
-        "benefits": [
-          "Công nghệ độc quyền 100 Tỷ Postbiotic chuẩn salon tóc cao cấp Hàn Quốc.",
-          "Làm sạch sâu bã nhờn, gàu ngứa, giảm rụng tóc và nuôi dưỡng sợi tóc chắc khỏe.",
-          "Kiểm nghiệm da liễu an toàn, không kích ứng cho da đầu nhạy cảm."
-        ],
-        "usage": "Lấy một lượng vừa đủ massage đều khắp da đầu và thân tóc, để 2-3 phút rồi xả sạch với nước.",
-        "driveVideoUrl": null,
-        "gallery": [
-          "/assets/images/catalog/smib/smib-9-g1.jpg"
         ],
         "line": "smib-lactobio"
       },
@@ -2614,42 +2544,6 @@ export const brandsData = [
         "line": "smib-lactobio"
       },
       {
-        "id": "smib-4",
-        "name": "SMIB 락토바이오 리페어 샴푸 (트래블)",
-        "spec": "70ml / 2.37 fl.oz",
-        "image": "/assets/images/catalog/smib/smib-4.jpg",
-        "ebookPage": "https://bevibe-smib-ebook.quiettoad513.chatgpt.site/#page-4",
-        "tag": "휴대용 여행용 튜브 샴푸",
-        "desc": "출장 및 여행 시 간편하게 휴대할 수 있는 70ml 튜브 타입, 살롱급 두피 케어를 언제 어디서나.",
-        "video": null,
-        "driveVideoId": null,
-        "ingredients": [
-          {
-            "name": "1000억 포스트바이오틱스 유익균",
-            "desc": "두피 마이크로바이옴 생태계를 회복하고 장벽을 튼튼하게 강화합니다."
-          },
-          {
-            "name": "실크 단백질 & 아미노산 복합체",
-            "desc": "손상된 큐티클을 매끄럽게 메워주고 탄력 있는 모발을 가꿔줍니다."
-          },
-          {
-            "name": "징크피리치온 & 덱스판테놀",
-            "desc": "모공을 정화하고 모근을 강화하여 탈모 증상을 집중 완화합니다."
-          }
-        ],
-        "benefits": [
-          "한국 프리미엄 살롱 기술력이 응집된 1000억 포스트바이오틱스 두피 처방.",
-          "과다 피지와 비듬을 말끔히 세정하고 모근에 직접 영양을 공급합니다.",
-          "민감성 두피를 위한 저자극 피부과 테스트 완료."
-        ],
-        "usage": "적당량을 취해 두피와 모발에 마사지하듯 거품을 낸 뒤 2~3분 후 미온수로 깨끗이 헹궈냅니다.",
-        "driveVideoUrl": null,
-        "gallery": [
-          "/assets/images/catalog/smib/smib-4-g1.jpg"
-        ],
-        "line": "smib-lactobio"
-      },
-      {
         "id": "smib-8",
         "name": "SMIB 락토바이오 실크 트리트먼트 (대용량)",
         "spec": "400g / 14.10 oz",
@@ -2672,42 +2566,6 @@ export const brandsData = [
         "driveVideoUrl": null,
         "gallery": [
           "/assets/images/catalog/smib/smib-8-g1.jpg"
-        ],
-        "line": "smib-lactobio"
-      },
-      {
-        "id": "smib-9",
-        "name": "SMIB 락토바이오 실크 트리트먼트 (트래블)",
-        "spec": "70g / 2.46 oz",
-        "image": "/assets/images/catalog/smib/smib-9.jpg",
-        "ebookPage": "https://bevibe-smib-ebook.quiettoad513.chatgpt.site/#page-9",
-        "tag": "휴대용 여행용 실크 트리트먼트",
-        "desc": "휴대용 70g 튜브 타입 실크 트리트먼트로 이동 중에도 언제 어디서나 부드럽고 건강한 머릿결 유지.",
-        "video": null,
-        "driveVideoId": null,
-        "ingredients": [
-          {
-            "name": "1000억 포스트바이오틱스 유익균",
-            "desc": "두피 마이크로바이옴 생태계를 회복하고 장벽을 튼튼하게 강화합니다."
-          },
-          {
-            "name": "실크 단백질 & 아미노산 복합체",
-            "desc": "손상된 큐티클을 매끄럽게 메워주고 탄력 있는 모발을 가꿔줍니다."
-          },
-          {
-            "name": "징크피리치온 & 덱스판테놀",
-            "desc": "모공을 정화하고 모근을 강화하여 탈모 증상을 집중 완화합니다."
-          }
-        ],
-        "benefits": [
-          "한국 프리미엄 살롱 기술력이 응집된 1000억 포스트바이오틱스 두피 처방.",
-          "과다 피지와 비듬을 말끔히 세정하고 모근에 직접 영양을 공급합니다.",
-          "민감성 두피를 위한 저자극 피부과 테스트 완료."
-        ],
-        "usage": "적당량을 취해 두피와 모발에 마사지하듯 거품을 낸 뒤 2~3분 후 미온수로 깨끗이 헹궈냅니다.",
-        "driveVideoUrl": null,
-        "gallery": [
-          "/assets/images/catalog/smib/smib-9-g1.jpg"
         ],
         "line": "smib-lactobio"
       },
@@ -3036,4 +2894,131 @@ if (typeof window !== 'undefined') {
   window.i18nData = i18nData;
   window.brandsData = brandsData;
   window.servicesDetailsData = servicesDetailsData;
+}
+
+export const tpcnData = [
+  {
+    "id": "healing-farm",
+    "name": "VN Healing Farm",
+    "category": "tpcn",
+    "origin": "Korea",
+    "tagline": "Thực phẩm chức năng Hàn Quốc",
+    "badge": "TPCN - GMP Korea",
+    "coverImage": "/assets/images/catalog/healing-farm/hoat-luc-truong-tho.jpg",
+    "descVi": "VN Healing Farm cung cấp các sản phẩm thực phẩm chức năng (TPCN) chính hãng Hàn Quốc, được sản xuất theo tiêu chuẩn GMP, giúp hỗ trợ sức khoẻ toàn diện.",
+    "descKo": "VN Healing Farm은 GMP 기준에 따라 제조된 한국 건강기능식품을 제공합니다.",
+    "productsVi": [
+      {
+        "id": "hoat-luc-truong-tho",
+        "name": "Hoạt Lực Trường Thọ Cung Thần Hoàn (활력장수공진환)",
+        "spec": "3,75g × 50 viên / hộp",
+        "image": "/assets/images/catalog/healing-farm/hoat-luc-truong-tho.jpg",
+        "tag": "Viên hoàn bổ khí huyết, tăng cường sinh lực",
+        "category": "tpcn-suc-khoe",
+        "price": 3500000,
+        "desc": "Thực phẩm chức năng dạng viên hoàn, thành phần chính từ hồng sâm, bạch thược, táo đỏ, ngũ vị tử… Hỗ trợ tăng cường sinh lực, bổ khí huyết và cải thiện sức đề kháng.",
+        "ingredients": [
+          { "name": "Bạch thược (Paeoniflorin)", "desc": "Hỗ trợ điều hòa khí huyết, giảm mệt mỏi." },
+          { "name": "Trần bì (Hesperidin)", "desc": "Chống oxy hóa, hỗ trợ tuần hoàn máu." },
+          { "name": "Táo đỏ (Carbohydrate · Chất xơ)", "desc": "Cung cấp năng lượng, hỗ trợ tiêu hóa." },
+          { "name": "Hồng sâm (Ginsenoside)", "desc": "Tăng cường miễn dịch, bổ khí, chống mệt mỏi." },
+          { "name": "Mật ong từ ong nuôi bằng đường (Glucose · Fructose)", "desc": "Cung cấp năng lượng tự nhiên." },
+          { "name": "Ngũ vị tử (Lignan)", "desc": "Chống oxy hóa, bảo vệ tế bào gan." },
+          { "name": "Quế (Cinnamaldehyde)", "desc": "Hỗ trợ tuần hoàn, kháng khuẩn tự nhiên." }
+        ],
+        "benefits": [
+          "Hỗ trợ tăng cường sinh lực, giảm mệt mỏi.",
+          "Bổ khí huyết, cải thiện sức đề kháng.",
+          "Hàm lượng kẽm gluconat hỗ trợ miễn dịch.",
+          "Sản xuất tại Hàn Quốc, đạt chuẩn GMP."
+        ],
+        "usage": "Dùng 2 viên/ngày. Nuốt trực tiếp hoặc nhai. Bảo quản nơi khô ráo, thoáng mát.",
+        "gallery": [],
+        "video": null,
+        "driveVideoId": null,
+        "driveVideoUrl": null
+      },
+      {
+        "id": "d-tox-slim",
+        "name": "D-Tox Slim",
+        "spec": "80ml × 30 gói / hộp",
+        "image": "/assets/images/catalog/healing-farm/d-tox-slim.jpg",
+        "tag": "Hỗ trợ tiêu hóa & kiểm soát cân nặng",
+        "category": "tpcn-tieu-hoa",
+        "price": 2800000,
+        "desc": "Thực phẩm chức năng dạng lỏng, chứa Polydextrose, Kẽm và Fructooligosaccharide (FOS). Hỗ trợ tiêu hóa, phát triển lợi khuẩn đường ruột và hỗ trợ kiểm soát cân nặng.",
+        "ingredients": [
+          { "name": "Polydextrose", "desc": "Có thể giúp đi tiêu dễ dàng hơn." },
+          { "name": "Kẽm", "desc": "Cần thiết cho chức năng miễn dịch và quá trình phân chia tế bào bình thường." },
+          { "name": "Fructooligosaccharide (FOS)", "desc": "Có thể hỗ trợ phát triển lợi khuẩn đường ruột và giúp đi tiêu dễ dàng hơn." }
+        ],
+        "benefits": [
+          "Hỗ trợ tiêu hóa, giảm táo bón.",
+          "Nuôi dưỡng lợi khuẩn đường ruột.",
+          "Hỗ trợ chức năng miễn dịch.",
+          "Dạng lỏng tiện lợi, dễ uống."
+        ],
+        "usage": "Uống 1 gói/ngày. Có thể uống trực tiếp hoặc pha với nước. Bảo quản nơi khô ráo, thoáng mát.",
+        "gallery": [],
+        "video": null,
+        "driveVideoId": null,
+        "driveVideoUrl": null
+      },
+      {
+        "id": "hong-sam-6-nam-tuoi",
+        "name": "Tinh chất hồng sâm Hàn Quốc 6 năm tuổi Premium, dạng thanh",
+        "spec": "10g × 30 gói / hộp",
+        "image": "/assets/images/catalog/healing-farm/hong-sam-6-nam-tuoi.jpg",
+        "tag": "Cao hồng sâm 6 năm tuổi dạng gói cao cấp",
+        "category": "tpcn-hong-sam",
+        "price": 1200000,
+        "desc": "Cao hồng sâm Hàn Quốc 6 năm tuổi premium dạng thanh gói tiện lợi. Tổng ginsenoside Rg1, Rb1 và Rg3: 10mg/gói. Hỗ trợ tăng cường miễn dịch, cải thiện trí nhớ và chống oxy hóa.",
+        "ingredients": [
+          { "name": "Cao hồng sâm Hàn Quốc 6 năm tuổi", "desc": "Nguồn ginsenoside phong phú, hỗ trợ toàn diện sức khỏe." },
+          { "name": "Ginsenoside Rg1, Rb1 & Rg3 (10mg/gói)", "desc": "Các hoạt chất chính của hồng sâm, tăng cường miễn dịch và chống mệt mỏi." }
+        ],
+        "benefits": [
+          "Hỗ trợ tăng cường miễn dịch và giảm mệt mỏi.",
+          "Hỗ trợ lưu thông máu nhờ ức chế kết tập tiểu cầu.",
+          "Hỗ trợ cải thiện trí nhớ và chống oxy hóa.",
+          "Đạt chứng nhận GMP, nguồn gốc Hàn Quốc."
+        ],
+        "usage": "Dùng 1 gói/ngày. Có thể dùng trực tiếp hoặc pha loãng với nước ấm. Bảo quản nơi khô ráo, thoáng mát.",
+        "gallery": [],
+        "video": null,
+        "driveVideoId": null,
+        "driveVideoUrl": null
+      },
+      {
+        "id": "khop-chac-khoe",
+        "name": "Khớp Chắc Khỏe (Strong Joint)",
+        "spec": "70ml × 30 gói / hộp",
+        "image": "/assets/images/catalog/healing-farm/khop-chac-khoe.jpg",
+        "tag": "Hỗ trợ sức khỏe khớp và sụn",
+        "category": "tpcn-xuong-khop",
+        "price": 3000000,
+        "desc": "Thực phẩm chức năng dạng lỏng hỗ trợ sức khoẻ khớp và sụn. Thành phần gồm MSM 1.500mg, N-acetylglucosamine (NAG) 1.000mg và Canxi 270mg trong mỗi 140ml.",
+        "ingredients": [
+          { "name": "MSM · 1.500 mg", "desc": "Có thể hỗ trợ sức khỏe khớp và sụn." },
+          { "name": "N-acetylglucosamine (NAG) · 1.000 mg", "desc": "Có thể hỗ trợ sức khỏe khớp và sụn." },
+          { "name": "Canxi · 270 mg", "desc": "Cần thiết cho sự hình thành xương và răng." }
+        ],
+        "benefits": [
+          "Hỗ trợ sức khỏe khớp và sụn.",
+          "Cung cấp Canxi giúp xương chắc khỏe.",
+          "Dạng lỏng hấp thu nhanh.",
+          "Sản phẩm Healing Farm, chuẩn GMP Hàn Quốc."
+        ],
+        "usage": "Uống 1 gói/lần, 1 lần/ngày. Lắc đều trước khi uống. Bảo quản nơi khô ráo, thoáng mát.",
+        "gallery": [],
+        "video": null,
+        "driveVideoId": null,
+        "driveVideoUrl": null
+      }
+    ]
+  }
+];
+
+if (typeof window !== 'undefined') {
+  window.tpcnData = tpcnData;
 }

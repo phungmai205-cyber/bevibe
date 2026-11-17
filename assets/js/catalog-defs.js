@@ -12,6 +12,13 @@ export const CATEGORY_DEFS = [
   { id: 'hair', vi: 'Tóc & Da đầu', ko: '헤어 & 두피' }
 ];
 
+export const TPCN_CATEGORY_DEFS = [
+  { id: 'tpcn-suc-khoe', vi: 'Tăng cường sức khỏe', ko: '건강 증진' },
+  { id: 'tpcn-xuong-khop', vi: 'Xương & Khớp', ko: '뼈 & 관절' },
+  { id: 'tpcn-tieu-hoa', vi: 'Tiêu hóa & Giảm cân', ko: '소화 & 다이어트' },
+  { id: 'tpcn-hong-sam', vi: 'Hồng sâm & Thảo dược', ko: '홍삼 & 한방' }
+];
+
 // Same rule the website uses for built-in products without an explicit category
 export function detectCategory(viName, brandId) {
   if (brandId === 'smib') return 'hair';
