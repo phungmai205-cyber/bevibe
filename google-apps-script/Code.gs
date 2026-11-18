@@ -430,7 +430,7 @@ function handleLead_(body) {
       const confirmUrl = body.confirmUrl || (origin + '/#/xac-nhan-counselor?code=' + encodeURIComponent(cCode) + '&email=' + encodeURIComponent(lead.email));
       MailApp.sendEmail({
         to: lead.email,
-        subject: '[' + CONFIG.SHOP_NAME + '] Chúc mừng bạn đã đăng ký Counselor — Mã số & Mật khẩu kích hoạt tài khoản',
+        subject: '[' + CONFIG.SHOP_NAME + '] Kích hoạt tài khoản Counselor — Mã số: ' + cCode + ' | Mật khẩu: ' + cCode,
         htmlBody:
           '<div style="max-width:600px;margin:0 auto;font-family:Arial,sans-serif;color:#1e293b;line-height:1.6;border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;background:#fff;">' +
             '<div style="background:#0f2347;color:#fff;padding:24px;text-align:center;">' +
@@ -440,12 +440,26 @@ function handleLead_(body) {
             '<div style="padding:28px 24px;">' +
               '<p style="font-size:16px;">Xin chào <b>' + esc_(lead.name) + '</b>,</p>' +
               '<p>Chúc mừng bạn đã gia nhập mạng lưới <b>Counselor (Tư vấn viên &amp; Đại lý sỉ)</b> của beVIBE!</p>' +
-              '<div style="background:#fef3c7;border:2px dashed #f59e0b;border-radius:10px;padding:18px;margin:20px 0;text-align:center;">' +
-                '<p style="margin:0 0 8px;font-size:13px;color:#92400e;text-transform:uppercase;font-weight:700;">Thông tin tài khoản đăng nhập của bạn</p>' +
-                '<p style="margin:6px 0;font-size:17px;color:#78350f;">Mã Counselor: <b style="font-size:22px;color:#b45309;font-family:monospace;letter-spacing:1px;">' + esc_(cCode) + '</b></p>' +
-                '<p style="margin:6px 0;font-size:17px;color:#78350f;">Mật khẩu đăng nhập: <b style="font-size:22px;color:#b45309;font-family:monospace;letter-spacing:1px;">' + esc_(cCode) + '</b></p>' +
-                '<p style="margin:8px 0 0;font-size:12px;color:#a16207;">(Mật khẩu được đặt trùng khớp với Mã Counselor để bạn dễ dàng kiểm soát &amp; đăng nhập)</p>' +
-              '</div>' +
+              '<table style="width:100%;max-width:480px;margin:22px auto;border-collapse:separate;border-spacing:0;background:#fff8e6;border:2px solid #f59e0b;border-radius:10px;overflow:hidden;">' +
+                '<tr>' +
+                  '<td colspan="2" style="background:#fef3c7;padding:12px 16px;text-align:center;border-bottom:1.5px solid #fde68a;font-weight:bold;color:#92400e;text-transform:uppercase;font-size:13px;letter-spacing:1px;">' +
+                    '🔑 THÔNG TIN TÀI KHOẢN ĐĂNG NHẬP' +
+                  '</td>' +
+                '</tr>' +
+                '<tr>' +
+                  '<td style="padding:14px 18px;border-bottom:1px solid #fed7aa;font-weight:600;color:#78350f;width:45%;font-size:15px;">Mã số Counselor:</td>' +
+                  '<td style="padding:14px 18px;border-bottom:1px solid #fed7aa;font-size:22px;font-weight:bold;color:#b45309;font-family:monospace;letter-spacing:1px;">' + esc_(cCode) + '</td>' +
+                '</tr>' +
+                '<tr>' +
+                  '<td style="padding:14px 18px;font-weight:600;color:#78350f;font-size:15px;">Mật khẩu đăng nhập:</td>' +
+                  '<td style="padding:14px 18px;font-size:22px;font-weight:bold;color:#dc2626;font-family:monospace;letter-spacing:1px;">' + esc_(cCode) + '</td>' +
+                '</tr>' +
+                '<tr>' +
+                  '<td colspan="2" style="background:#fef9ee;padding:10px 16px;font-size:12px;color:#a16207;text-align:center;border-top:1px dashed #fed7aa;">' +
+                    '📌 <em>Mật khẩu đăng nhập được đặt chính là mã Counselor của bạn (' + esc_(cCode) + ') để bạn kiểm soát và đăng nhập dễ dàng nhất.</em>' +
+                  '</td>' +
+                '</tr>' +
+              '</table>' +
               '<p>Để bắt đầu nhận <b>chiết khấu giảm sỉ 55%</b> và <b>tích lũy 5% doanh số thưởng năm</b>, vui lòng bấm vào nút bên dưới để xác nhận kích hoạt tài khoản:</p>' +
               '<div style="text-align:center;margin:30px 0;">' +
                 '<a href="' + confirmUrl + '" style="display:inline-block;background:#16a34a;color:#ffffff;text-decoration:none;padding:14px 28px;font-size:16px;font-weight:700;border-radius:8px;box-shadow:0 4px 12px rgba(22,163,74,0.35);">' +

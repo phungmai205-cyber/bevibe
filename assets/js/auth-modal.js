@@ -462,8 +462,15 @@ export function showCounselorEmailSentNotice(counselor, confirmUrl = '') {
           <strong class="auth-notice-email">${counselor.email}</strong>
         </div>
         <div class="auth-notice-row">
-          <span class="auth-notice-lbl">Mã Counselor / Mật khẩu:</span>
+          <span class="auth-notice-lbl">Mã Counselor:</span>
           <span class="auth-notice-code">${counselor.code}</span>
+        </div>
+        <div class="auth-notice-row">
+          <span class="auth-notice-lbl">Mật khẩu đăng nhập:</span>
+          <span class="auth-notice-code" style="background: #fee2e2; color: #dc2626;">${counselor.code}</span>
+        </div>
+        <div style="font-size: 0.8rem; color: #78350f; text-align: center; border-top: 1px dashed #fed7aa; padding-top: 6px; margin-top: 4px;">
+          📌 <em>Mật khẩu được đặt chính là mã số Counselor <strong>${counselor.code}</strong> để bạn dễ dàng quản lý &amp; đăng nhập.</em>
         </div>
       </div>
 
@@ -695,12 +702,77 @@ export function handleCounselorActivationRoute() {
 
   const activated = activateCounselorByCode(code);
 
-  // Hiển thị thông báo thành công
+  // Hiển thị modal chúc mừng kích hoạt thành công kèm mật khẩu và tài khoản
   setTimeout(() => {
-    alert(`🎉 KÍCH HOẠT TÀI KHOẢN COUNSELOR THÀNH CÔNG!\n\nMã số Counselor & Mật khẩu của bạn là: ${code}\nHệ thống sẽ mở màn hình đăng nhập để bạn bắt đầu sử dụng.`);
-    openLoginModal(code);
-  }, 300);
+    showCounselorActivationSuccessModal(code, email);
+  }, 200);
 
   return true;
+}
+
+// Modal Chúc mừng Kích hoạt thành công kèm Thông tin Đăng nhập & Mật khẩu
+export function showCounselorActivationSuccessModal(code, email = '') {
+  closeAuthModal();
+
+  const modal = document.createElement('div');
+  modal.id = 'authMasterModal';
+  modal.className = 'auth-modal-overlay';
+  modal.innerHTML = `
+    <div class="auth-modal-card auth-card-notice" style="max-width: 480px;">
+      <button type="button" class="auth-modal-close" id="closeAuthModalBtn">&times;</button>
+      
+      <div class="auth-notice-icon" style="background: #ecfdf5; border-color: #6ee7b7;">
+        <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+          <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>
+      </div>
+
+      <div class="auth-card-head" style="margin-bottom: 16px;">
+        <h2 style="color: #0f2347; font-size: 1.4rem; margin-bottom: 6px;">Kích hoạt tài khoản thành công!</h2>
+        <p style="color: #475569; font-size: 0.92rem;">Chúc mừng bạn đã hoàn tất kích hoạt tài khoản <strong>Counselor beVIBE</strong>.</p>
+      </div>
+
+      <div class="auth-notice-box" style="border: 2px solid #f59e0b; background: #fffbeb;">
+        <div style="font-weight: 700; color: #92400e; font-size: 0.85rem; text-transform: uppercase; margin-bottom: 6px; text-align: center;">
+          🔑 THÔNG TIN ĐĂNG NHẬP CỦA BẠN
+        </div>
+        <div class="auth-notice-row">
+          <span class="auth-notice-lbl">Tài khoản (Mã Counselor):</span>
+          <span class="auth-notice-code" style="font-size: 1.05rem;">${code}</span>
+        </div>
+        <div class="auth-notice-row">
+          <span class="auth-notice-lbl">Mật khẩu đăng nhập:</span>
+          <span class="auth-notice-code" style="font-size: 1.05rem; background: #fee2e2; color: #dc2626;">${code}</span>
+        </div>
+        <div style="font-size: 0.82rem; color: #78350f; margin-top: 6px; text-align: center; border-top: 1px dashed #fed7aa; padding-top: 6px;">
+          📌 <em>Mật khẩu đăng nhập chính là mã số Counselor <strong>${code}</strong> của bạn.</em>
+        </div>
+      </div>
+
+      <div class="auth-notice-guide" style="background: #f0fdf4; border-color: #bbf7d0;">
+        <p style="margin: 0; font-size: 0.88rem; color: #166534; line-height: 1.5;">
+          ✨ Tài khoản của bạn đã được kích hoạt chế độ <strong>Giảm giá sỉ 55%</strong> và <strong>Tích lũy 5% doanh số thưởng năm</strong>. Hãy bấm nút bên dưới để bắt đầu đăng nhập.
+        </p>
+      </div>
+
+      <div class="auth-notice-actions">
+        <button type="button" class="auth-submit-btn" id="btnGoToLogin" style="background: #16a34a; font-weight: 700; padding: 13px;">
+          <span>👉 Bắt đầu Đăng nhập ngay 👈</span>
+        </button>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+
+  modal.querySelector('#closeAuthModalBtn').addEventListener('click', closeAuthModal);
+  modal.querySelector('#btnGoToLogin').addEventListener('click', () => {
+    closeAuthModal();
+    openLoginModal(code);
+  });
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) closeAuthModal();
+  });
 }
 
