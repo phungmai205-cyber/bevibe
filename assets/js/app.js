@@ -481,6 +481,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const p = localized(entry);
     const soldOut = isSoldOut(entry);
     const pct = salePct(entry);
+    const raw = isVi ? (entry.vi || {}) : (entry.ko || entry.vi || {});
+    const galleryCount = (raw.gallery && raw.gallery.length) || 0;
     return `
       <article class="pcard ${soldOut ? 'is-soldout' : ''}" data-action="product-modal" data-product-id="${p.id}" tabindex="0">
         <div class="pcard-media">
@@ -488,6 +490,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <span class="pcard-badge-brand">${p.brandName}</span>
           ${soldOut ? `<span class="soldout-stamp">${isVi ? escapeHtml(entry.stock) : '품절'}</span>` : pct ? `<span class="pcard-badge-sale">-${pct}%</span>` : ''}
           ${p.hasVideo ? `<span class="pcard-badge-video"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg> Video</span>` : ''}
+          ${galleryCount > 1 ? `<span class="pcard-badge-gallery" title="${galleryCount} ${isVi ? 'ảnh sản phẩm' : '개 이미지'}"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg> ${galleryCount} ${isVi ? 'ảnh' : '사진'}</span>` : ''}
         </div>
         <div class="pcard-body">
           <span class="pcard-cat">${[lineLabel(p.brandId, p.line), categoryLabel(p.category)].filter(Boolean).join(' · ')}</span>
@@ -1901,6 +1904,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const hasVideo = !!foundProduct.video;
     const videoSrc = foundProduct.video || '';
     const imgSrc = foundProduct.image || foundBrand.coverImage || '/assets/images/hero.jpg';
+    const modalImages = [imgSrc, ...(foundProduct.gallery || [])].filter((v, i, a) => v && a.indexOf(v) === i);
 
     const t = i18nData[currentLang] || {};
 
@@ -1938,11 +1942,17 @@ document.addEventListener('DOMContentLoaded', () => {
             <!-- Photo Box -->
             <div class="prod-photo-wrapper ${hasVideo ? 'hidden' : ''}" id="prodModalPhotoWrapper" ${!hasVideo ? 'style="display:flex;"' : 'style="display:none;"'}>
               <img src="${imgSrc}" alt="${foundProduct.name}" id="prodModalImage">
+              ${modalImages.length > 1 ? `
+                <button type="button" class="prod-modal-nav prev" id="prodModalPrev" aria-label="${isVi ? 'Ảnh trước' : '이전 사진'}">‹</button>
+                <button type="button" class="prod-modal-nav next" id="prodModalNext" aria-label="${isVi ? 'Ảnh kế tiếp' : '다음 사진'}">›</button>
+                <div class="prod-modal-counter" id="prodModalCounter"><span id="prodModalCurrIdx">1</span> / ${modalImages.length}</div>
+                <div class="prod-modal-swipe-hint"><span>‹ ${isVi ? 'Lướt sang để xem ảnh' : '스와이프하여 사진 보기'} ›</span></div>
+              ` : ''}
             </div>
 
-            ${(foundProduct.gallery && foundProduct.gallery.length) ? `
+            ${modalImages.length > 1 ? `
               <div class="prod-gallery-strip" id="prodGalleryStrip">
-                ${[imgSrc, ...foundProduct.gallery].map((src, i) => `<button type="button" class="prod-gallery-thumb ${i === 0 ? 'active' : ''}" data-src="${src}" aria-label="Ảnh ${i + 1}"><img src="${src}" alt="" loading="lazy"></button>`).join('')}
+                ${modalImages.map((src, i) => `<button type="button" class="prod-gallery-thumb ${i === 0 ? 'active' : ''}" data-src="${src}" aria-label="Ảnh ${i + 1}"><img src="${src}" alt="" loading="lazy"></button>`).join('')}
               </div>
             ` : ''}
 
@@ -2039,17 +2049,80 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
       `;
 
-      // Gallery thumbnails → swap main photo (and switch to the photo tab)
+      // Gallery slider, thumbnails & touch swipe ("lướt sang")
+      let currentModalImgIdx = 0;
+      const setModalImage = (idx) => {
+        if (!modalImages.length) return;
+        if (idx < 0) idx = modalImages.length - 1;
+        if (idx >= modalImages.length) idx = 0;
+        currentModalImgIdx = idx;
+        const mainImg = document.getElementById('prodModalImage');
+        if (mainImg) {
+          mainImg.style.transition = 'opacity 0.15s ease';
+          mainImg.style.opacity = '0.35';
+          mainImg.src = modalImages[currentModalImgIdx];
+          setTimeout(() => { mainImg.style.opacity = '1'; }, 100);
+        }
+        const currSpan = document.getElementById('prodModalCurrIdx');
+        if (currSpan) currSpan.textContent = currentModalImgIdx + 1;
+        const strip = document.getElementById('prodGalleryStrip');
+        if (strip) {
+          const thumbs = strip.querySelectorAll('.prod-gallery-thumb');
+          thumbs.forEach((t, i) => {
+            const isActive = (i === currentModalImgIdx);
+            t.classList.toggle('active', isActive);
+            if (isActive) t.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+          });
+        }
+        const photoTab = document.getElementById('tabMediaPhoto');
+        if (photoTab && !photoTab.classList.contains('active')) photoTab.click();
+      };
+
+      // Prev / Next button listeners
+      document.getElementById('prodModalPrev')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        setModalImage(currentModalImgIdx - 1);
+      });
+      document.getElementById('prodModalNext')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        setModalImage(currentModalImgIdx + 1);
+      });
+
+      // Touch swipe gestures ("lướt sang") on main photo
+      const photoWrapper = document.getElementById('prodModalPhotoWrapper');
+      if (photoWrapper && modalImages.length > 1) {
+        let touchStartX = null;
+        let touchStartY = null;
+        photoWrapper.addEventListener('touchstart', (e) => {
+          touchStartX = e.touches[0].clientX;
+          touchStartY = e.touches[0].clientY;
+        }, { passive: true });
+        photoWrapper.addEventListener('touchend', (e) => {
+          if (touchStartX === null) return;
+          const dx = e.changedTouches[0].clientX - touchStartX;
+          const dy = e.changedTouches[0].clientY - touchStartY;
+          touchStartX = null;
+          touchStartY = null;
+          if (Math.abs(dx) > 35 && Math.abs(dx) > Math.abs(dy)) {
+            if (dx < 0) setModalImage(currentModalImgIdx + 1); // lướt sang trái -> xem ảnh kế tiếp
+            else setModalImage(currentModalImgIdx - 1); // lướt sang phải -> xem ảnh trước
+          }
+        }, { passive: true });
+      }
+
+      // Thumbnail click
       const galleryStrip = document.getElementById('prodGalleryStrip');
       if (galleryStrip) {
         galleryStrip.addEventListener('click', (ev) => {
           const thumb = ev.target.closest('.prod-gallery-thumb');
           if (!thumb) return;
-          const mainImg = document.getElementById('prodModalImage');
-          if (mainImg) mainImg.src = thumb.getAttribute('data-src');
-          galleryStrip.querySelectorAll('.prod-gallery-thumb').forEach((t) => t.classList.toggle('active', t === thumb));
-          const photoTab = document.getElementById('tabMediaPhoto');
-          if (photoTab && !photoTab.classList.contains('active')) photoTab.click();
+          const src = thumb.getAttribute('data-src');
+          const idx = modalImages.indexOf(src);
+          if (idx !== -1) setModalImage(idx);
+          else {
+            const mainImg = document.getElementById('prodModalImage');
+            if (mainImg) mainImg.src = src;
+          }
         });
       }
 

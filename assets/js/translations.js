@@ -678,45 +678,57 @@ export const brandsData = [
       },
       {
         "id": "drbargo-6",
-        "name": "Kojic Acid Dipalmitate Cream 30 mL",
-        "spec": "Tuýp 30ml",
-        "image": "/assets/images/catalog/dr-bargo/drbargo-kojic.jpg",
-        "tag": "Mờ thâm nám & dưỡng sáng da",
-        "desc": "Kem dưỡng chuyên sâu chứa Kojic Acid Dipalmitate giúp ức chế hình thành sắc tố melanin, làm mờ nám sạm, tàn nhang và dưỡng da đều màu rạng rỡ.",
+        "name": "DBB LAB Kojic Acid Dipalmitate Cream 30 mL",
+        "spec": "Tuýp 30ml / 1.01 fl.oz.",
+        "image": "/assets/images/catalog/dr-bargo/kojic-acid-1.jpg",
+        "tag": "Mờ thâm nám & dưỡng sáng da chuyên sâu",
+        "desc": "Kem dưỡng chuyên sâu DBB LAB ứng dụng phức hợp Kojic Acid Dipalmitate 3% (dạng este ổn định cao) kết hợp Niacinamide, Glycerin và chiết xuất Rau má Centella Asiatica, hỗ trợ làm mờ các đốm nâu, sạm nám, tàn nhang, đồng thời cấp ẩm sâu và tăng cường độ đàn hồi cho làn da.",
         "ingredients": [
-          { "name": "Kojic Acid Dipalmitate", "desc": "Dạng este ổn định cao của Kojic Acid, ức chế enzyme Tyrosinase ngăn ngừa hình thành hắc sắc tố." },
-          { "name": "Niacinamide", "desc": "Ngăn chặn vận chuyển melanosome lên tế bào sừng, làm sáng đều màu da." }
+          { "name": "Kojic Acid Dipalmitate (3%)", "desc": "Dạng este cải tiến có độ bền nhiệt và ánh sáng vượt trội, ức chế enzyme Tyrosinase ngăn ngừa hình thành hắc sắc tố Melanin." },
+          { "name": "Niacinamide (Vitamin B3)", "desc": "Ngăn chặn vận chuyển melanosome lên tế bào sừng, kháng viêm, làm sáng đều màu da và se khít chân lông." },
+          { "name": "Centella Asiatica Leaf Extract (Rau má)", "desc": "Làm dịu da, kháng viêm, kích thích tăng sinh collagen và phục hồi hàng rào màng ẩm tự nhiên." },
+          { "name": "Sodium Hyaluronate & Glycerin", "desc": "Hút ẩm đa tầng, duy trì độ mềm mịn suốt ngày dài và ngăn ngừa mất nước qua biểu bì." }
         ],
         "benefits": [
-          "Hỗ trợ làm mờ các đốm nâu, sạm nám, tàn nhang cứng đầu.",
-          "Dưỡng sáng và nâng tông da tự nhiên, ngăn ngừa tăng sắc tố sau viêm.",
-          "Công thức ổn định cao, êm dịu, không gây kích ứng hay châm chích."
+          "Hỗ trợ làm mờ sạm nám, tàn nhang, thâm mụn và đốm nâu cứng đầu.",
+          "Dưỡng da sáng hồng, đều màu, cải thiện tình trạng da xỉn màu do stress và ánh nắng.",
+          "Cấp ẩm sâu, dưỡng da mềm mịn và tăng cường độ đàn hồi, ngăn ngừa lão hóa sớm.",
+          "Nhập khẩu chính ngạch từ Hàn Quốc (Enbioscience Co., Ltd), có đầy đủ số GCB BYT 332900/26/CBMP-QLD."
         ],
-        "usage": "Thoa một lớp mỏng lên vùng da nám, sạm hoặc toàn mặt vào buổi tối sau bước làm sạch và tinh chất. Luôn dùng kem chống nắng vào ban ngày.",
+        "usage": "Làm sạch da, lấy một lượng kem vừa đủ thoa đều lên mặt và cổ hoặc khu vực cần làm sáng da sau đó massage nhẹ nhàng. Sử dụng đều đặn mỗi tối sau bước làm sạch và tinh chất.",
         "gallery": [
-          "/assets/images/catalog/dr-bargo/drbargo-kojic.jpg"
+          "/assets/images/catalog/dr-bargo/kojic-acid-1.jpg",
+          "/assets/images/catalog/dr-bargo/kojic-acid-2.jpg",
+          "/assets/images/catalog/dr-bargo/kojic-acid-3.jpg",
+          "/assets/images/catalog/dr-bargo/kojic-acid-4.jpg"
         ],
         "line": "drbargo-31c"
       },
       {
         "id": "drbargo-7",
-        "name": "Alpha Arbutin 7% Cream 30 mL",
-        "spec": "Tuýp 30ml",
-        "image": "/assets/images/catalog/dr-bargo/drbargo-arbutin.jpg",
-        "tag": "Dưỡng trắng da chuyên sâu 7%",
-        "desc": "Kem dưỡng sáng da đột phá với nồng độ Alpha Arbutin 7% tinh khiết, mang lại hiệu quả làm sáng vượt trội, đẩy lùi thâm mụn và đều màu da an toàn chuẩn y khoa.",
+        "name": "Whitening Cream Alpha Arbutin 7% Cream",
+        "spec": "Tuýp 15ml",
+        "image": "/assets/images/catalog/dr-bargo/alpha-arbutin-1.jpg",
+        "tag": "Dưỡng trắng mờ nám chuyên sâu · Thay thế Hydroquinone",
+        "desc": "Kem dưỡng sáng da đột phá với nồng độ Alpha Arbutin 7% tinh khiết kết hợp Niacinamide 2% và chiết xuất thực vật quả mọng, ức chế enzyme Tyrosinase mạnh mẽ, giảm thâm nám, làm đều màu da và mang lại làn da trắng hồng rạng rỡ an toàn chuẩn y khoa sau 4-8 tuần.",
         "ingredients": [
-          { "name": "Alpha Arbutin 7%", "desc": "Nồng độ tối ưu ức chế hoạt tính Tyrosinase mạnh mẽ gấp 10 lần Beta-Arbutin, làm sáng da an toàn." },
-          { "name": "Hyaluronic Acid", "desc": "Cấp nước đa tầng, duy trì làn da căng bóng mịn màng suốt cả ngày." }
+          { "name": "Alpha-Arbutin 7% tinh khiết", "desc": "Nồng độ tối ưu ức chế hoạt tính Tyrosinase mạnh gấp 10 lần Beta-Arbutin, cắt đứt chuỗi sản sinh Melanin, giải pháp hạ liều an toàn thay thế Hydroquinone." },
+          { "name": "Niacinamide 2% (Vitamin B3)", "desc": "Ngăn chặn vận chuyển túi melanosome lên bề mặt tế bào sừng, kháng viêm, củng cố hàng rào lipid và làm sáng đều màu da." },
+          { "name": "Alpha-Bisabolol", "desc": "Hoạt chất làm dịu sinh học chiết xuất Cúc La Mã, phục hồi da nhạy cảm và tăng khả năng dung nạp hoạt chất sáng da." },
+          { "name": "Chiết xuất thực vật quả mọng (Việt quất, Dâu tây)", "desc": "Giàu polyphenol chống oxy hóa mạnh mẽ, bảo vệ tế bào da khỏi gốc tự do và kích thích tái sinh tế bào mới." }
         ],
         "benefits": [
-          "Làm mờ rõ rệt thâm mụn, đốm nâu và các vùng da xỉn màu.",
-          "Cải thiện độ đàn hồi, dưỡng trắng hồng rạng rỡ từ bên trong.",
-          "Phù hợp cho mọi loại da, kể cả làn da nhạy cảm sau các liệu trình clinic."
+          "Giảm rõ rệt tình trạng thâm nám, tàn nhang, đốm nâu và sạm màu da sau 4-8 tuần.",
+          "Giải pháp dưỡng sáng chuẩn da liễu, an toàn lành tính, hạ liều thay thế hoàn hảo cho Hydroquinone.",
+          "Cải thiện độ đàn hồi, làm đều màu da, mang lại làn da trắng sáng mịn màng sau liệu trình 12 tuần.",
+          "Chất kem mỏng nhẹ thẩm thấu nhanh, không gây châm chích, không nhờn rít, phù hợp mọi loại da."
         ],
-        "usage": "Lấy một lượng kem vừa đủ thoa đều lên da mặt và cổ, vỗ nhẹ cho dưỡng chất thẩm thấu hoàn toàn. Sử dụng sáng và tối đều đặn.",
+        "usage": "Sử dụng liều tấn công 2 lần/ngày:\n• Ban ngày: Rửa mặt → Toner → Alpha Arbutin 7% Cream → Kem chống nắng.\n• Ban đêm: Rửa mặt → Toner → Alpha Arbutin 7% Cream → Kem dưỡng ẩm.",
         "gallery": [
-          "/assets/images/catalog/dr-bargo/drbargo-arbutin.jpg"
+          "/assets/images/catalog/dr-bargo/alpha-arbutin-1.jpg",
+          "/assets/images/catalog/dr-bargo/alpha-arbutin-2.jpg",
+          "/assets/images/catalog/dr-bargo/alpha-arbutin-3.jpg",
+          "/assets/images/catalog/dr-bargo/alpha-arbutin-4.jpg"
         ],
         "line": "drbargo-31c"
       }
@@ -915,11 +927,11 @@ export const brandsData = [
       },
       {
         "id": "drbargo-6",
-        "name": "코직산 디팔미테이트 크림 30mL (Kojic Acid Dipalmitate Cream)",
+        "name": "디비비 랩 코직 애씨드 디팔미테이트 크림 30mL (DBB LAB Kojic Acid Dipalmitate Cream)",
         "spec": "30ml",
-        "image": "/assets/images/catalog/dr-bargo/drbargo-kojic.jpg",
-        "tag": "색소 침착 개선 미백 크림",
-        "desc": "코직산 디팔미테이트 성분이 멜라닌 생성을 억제하여 기미, 주근깨 및 잡티를 완화하는 집중 브라이트닝 크림.",
+        "image": "/assets/images/catalog/dr-bargo/kojic-acid-1.jpg",
+        "tag": "기미 잡티 완화 기능성 미백 크림",
+        "desc": "코직산 디팔미테이트(3%)와 나이아신아마이드 성분이 피부 미백에 도움을 주며, 피부에 생기를 더해 촉촉하고 환하게 가꿔주는 미백 전문 기능성 제품.",
         "ingredients": [
           { "name": "코직산 디팔미테이트", "desc": "티로시나아제 효소를 억제하여 멜라닌 생성을 차단합니다." },
           { "name": "나이아신아마이드", "desc": "피부 톤을 맑고 균일하게 가꾸어 줍니다." }
@@ -931,17 +943,20 @@ export const brandsData = [
         ],
         "usage": "저녁 스킨케어 마지막 단계에서 색소 부위 또는 얼굴 전체에 얇게 펴 바릅니다.",
         "gallery": [
-          "/assets/images/catalog/dr-bargo/drbargo-kojic.jpg"
+          "/assets/images/catalog/dr-bargo/kojic-acid-1.jpg",
+          "/assets/images/catalog/dr-bargo/kojic-acid-2.jpg",
+          "/assets/images/catalog/dr-bargo/kojic-acid-3.jpg",
+          "/assets/images/catalog/dr-bargo/kojic-acid-4.jpg"
         ],
         "line": "drbargo-31c"
       },
       {
         "id": "drbargo-7",
-        "name": "알파 알부틴 7% 크림 30mL (Alpha Arbutin 7% Cream)",
-        "spec": "30ml",
-        "image": "/assets/images/catalog/dr-bargo/drbargo-arbutin.jpg",
-        "tag": "고농축 7% 집중 미백 크림",
-        "desc": "고순도 알파 알부틴 7%를 함유하여 칙칙한 피부 톤을 환하게 밝혀주고 잡티 흔적을 케어하는 프리미엄 미백 크림.",
+        "name": "알파 알부틴 7% 미백 크림 15mL (Whitening Cream Alpha Arbutin 7% Cream)",
+        "spec": "15ml",
+        "image": "/assets/images/catalog/dr-bargo/alpha-arbutin-1.jpg",
+        "tag": "고농축 7% 집중 미백 크림 · 하이드로퀴논 대체",
+        "desc": "고순도 알파 알부틴 7%와 나이아신아마이드 2% 복합 처방으로 멜라닌 생성을 강력 차단하고 칙칙한 피부 톤을 맑고 투명하게 가꾸어 주는 프리미엄 미백 크림.",
         "ingredients": [
           { "name": "알파 알부틴 7%", "desc": "기존 베타 알부틴 대비 강력한 효능으로 멜라닌을 집중 케어합니다." },
           { "name": "히알루론산", "desc": "충분한 수분을 공급하여 촉촉하고 탄력 있는 피부 유지." }
@@ -953,7 +968,10 @@ export const brandsData = [
         ],
         "usage": "아침과 저녁 스킨케어 시 적당량을 덜어 부드럽게 흡수시켜 줍니다.",
         "gallery": [
-          "/assets/images/catalog/dr-bargo/drbargo-arbutin.jpg"
+          "/assets/images/catalog/dr-bargo/alpha-arbutin-1.jpg",
+          "/assets/images/catalog/dr-bargo/alpha-arbutin-2.jpg",
+          "/assets/images/catalog/dr-bargo/alpha-arbutin-3.jpg",
+          "/assets/images/catalog/dr-bargo/alpha-arbutin-4.jpg"
         ],
         "line": "drbargo-31c"
       }

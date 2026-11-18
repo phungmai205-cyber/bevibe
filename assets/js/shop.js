@@ -26,6 +26,9 @@ export const CONCERN_TAGS = {
   'drbargo-4': ['hydration', 'soothing', 'brightening'],
   'drbargo-3': ['repair', 'antiaging', 'soothing'],
   'drbargo-1': ['repair', 'hydration', 'soothing'],
+  'drbargo-5': ['hydration', 'soothing', 'repair'],
+  'drbargo-6': ['brightening', 'hydration', 'repair'],
+  'drbargo-7': ['brightening', 'hydration', 'antiaging'],
   'neura-3': ['antiaging'],
   'neura-6': ['repair', 'hydration'],
   'neura-11': ['antiaging'],
@@ -750,6 +753,11 @@ export function initShop(ctx) {
               <img src="${images[0]}" alt="${escapeHtml(p.name)}" id="pdMainImg">
               ${soldOut ? `<span class="soldout-stamp soldout-stamp-lg">${vi ? escapeHtml(entry.stock) : '품절'}</span>` : ''}
               ${video ? `<button type="button" class="pd-video-badge" data-shop="pd-tab" data-tab="vid">▶ Video</button>` : ''}
+              ${images.length > 1 ? `
+                <button type="button" class="pd-stage-nav prev" id="pdStagePrev" aria-label="${vi ? 'Ảnh trước' : '이전 사진'}">‹</button>
+                <button type="button" class="pd-stage-nav next" id="pdStageNext" aria-label="${vi ? 'Ảnh sau' : '다음 사진'}">›</button>
+                <div class="pd-stage-counter" id="pdStageCounter"><span id="pdCurrIdx">1</span> / ${images.length}</div>
+              ` : ''}
             </div>
             ${images.length > 1 ? `
               <div class="pd-thumbs" role="list">
@@ -882,6 +890,56 @@ export function initShop(ctx) {
       });
       stage.addEventListener('mouseleave', () => stage.classList.remove('zoom'));
     }
+
+    // Gallery swiping & navigation
+    const thumbs = Array.from(host.querySelectorAll('.pd-thumb'));
+    if (stage && img && thumbs.length > 1) {
+      const imgList = thumbs.map((t) => t.getAttribute('data-src'));
+      let stageIdx = 0;
+      const counterSpan = host.querySelector('#pdCurrIdx');
+
+      const goToStageImg = (idx) => {
+        if (idx < 0) idx = imgList.length - 1;
+        if (idx >= imgList.length) idx = 0;
+        stageIdx = idx;
+        img.style.transition = 'opacity 0.15s ease';
+        img.style.opacity = '0.35';
+        img.src = imgList[stageIdx];
+        setTimeout(() => { img.style.opacity = '1'; }, 100);
+        thumbs.forEach((t, i) => t.classList.toggle('active', i === stageIdx));
+        if (counterSpan) counterSpan.textContent = stageIdx + 1;
+      };
+
+      // Prev / Next arrow buttons
+      host.querySelector('#pdStagePrev')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        goToStageImg(stageIdx - 1);
+      });
+      host.querySelector('#pdStageNext')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        goToStageImg(stageIdx + 1);
+      });
+
+      // Touch swipe gestures ("lướt sang")
+      let touchStartX = null;
+      let touchStartY = null;
+      stage.addEventListener('touchstart', (e) => {
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+      }, { passive: true });
+      stage.addEventListener('touchend', (e) => {
+        if (touchStartX === null) return;
+        const dx = e.changedTouches[0].clientX - touchStartX;
+        const dy = e.changedTouches[0].clientY - touchStartY;
+        touchStartX = null;
+        touchStartY = null;
+        if (Math.abs(dx) > 35 && Math.abs(dx) > Math.abs(dy)) {
+          if (dx < 0) goToStageImg(stageIdx + 1); // lướt sang trái -> xem ảnh kế tiếp
+          else goToStageImg(stageIdx - 1); // lướt sang phải -> xem ảnh trước
+        }
+      }, { passive: true });
+    }
+
     if (stickyObserver) { stickyObserver.disconnect(); stickyObserver = null; }
     const buy = host.querySelector('#pdBuy');
     const sticky = host.querySelector('#pdSticky');

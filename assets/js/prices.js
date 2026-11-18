@@ -42,8 +42,8 @@ export const productPrices = {
   'drbargo-3': { price: 660000, unit: 'Chai 50ml' },      // #26 Serum Niacinamide 20%
   'drbargo-4': { price: 420000, unit: 'Chai 150ml' },     // #24 Toner Dr Bargo 31 độ C
   'drbargo-5': { price: 660000, unit: 'Tuýp 50ml' },      // Kem cấp ẩm Madeca Soside
-  'drbargo-6': { price: 510000, unit: 'Tuýp 30ml' },      // Kojic Acid Dipalmitate Cream 30 mL
-  'drbargo-7': { price: 510000, unit: 'Tuýp 30ml' },      // Alpha Arbutin 7% Cream 30 mL
+  'drbargo-6': { price: 510000, unit: 'Tuýp 30ml' },      // DBB LAB Kojic Acid Dipalmitate Cream 30 mL
+  'drbargo-7': { price: 510000, unit: 'Tuýp 15ml' },      // Whitening Cream Alpha Arbutin 7% Cream 15mL
 
   // SMIB (Hair & Scalp Care)
   'smib-5': { price: 740000, unit: 'Chai 500ml' },        // SMIB INNABI SHAMPOO
