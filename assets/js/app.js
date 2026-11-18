@@ -11,6 +11,7 @@ import { buildSearchEntry, searchIndex } from './search.js';
 import { ORDER_ENDPOINT, sendOrderToSupabase } from './order-config.js';
 import { CATEGORY_DEFS, TPCN_CATEGORY_DEFS, detectCategory } from './catalog-defs.js';
 import { getCurrentCounselor, openCounselorLoginModal, updateCounselorNavUI, renderCounselorDashboard } from './counselor.js';
+import { updateHeaderAuthUI, openLoginModal, openRegisterModal, handleCounselorActivationRoute } from './auth-modal.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   // --- State ---
@@ -2913,6 +2914,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function renderRoute({ initial = false } = {}) {
+    if (handleCounselorActivationRoute()) return;
     if (contactSection && contactSection.classList.contains('as-modal')) closeContactModal();
     let route = parseRoute();
     if (!route) {
@@ -3080,28 +3082,40 @@ document.addEventListener('DOMContentLoaded', () => {
   renderRoute({ initial: true });
   loadLivePrices();
 
-  // Counselor Portal Navigation & Actions
-  const cslNavBtn = document.getElementById('counselorNavBtn');
-  if (cslNavBtn) {
-    cslNavBtn.addEventListener('click', () => {
-      const counselor = getCurrentCounselor();
-      if (counselor) navigate('counselor');
-      else openCounselorLoginModal();
-    });
-  }
+  // Header Auth UI & Mobile Auth Buttons (Đăng nhập · Đăng ký · Ngôn ngữ)
+  updateHeaderAuthUI();
 
-  const cslMobBtn = document.getElementById('counselorMobileBtn');
-  if (cslMobBtn) {
-    cslMobBtn.addEventListener('click', () => {
+  const cslMobLoginBtn = document.getElementById('counselorMobileLoginBtn');
+  if (cslMobLoginBtn) {
+    cslMobLoginBtn.addEventListener('click', () => {
       if (mobileNavDrawer) mobileNavDrawer.classList.remove('open');
       if (mobileNavOverlay) mobileNavOverlay.classList.remove('open');
-
-      const counselor = getCurrentCounselor();
-      if (counselor) navigate('counselor');
-      else openCounselorLoginModal();
+      openLoginModal();
     });
   }
-  updateCounselorNavUI();
+
+  const cslMobRegBtn = document.getElementById('counselorMobileRegBtn');
+  if (cslMobRegBtn) {
+    cslMobRegBtn.addEventListener('click', () => {
+      if (mobileNavDrawer) mobileNavDrawer.classList.remove('open');
+      if (mobileNavOverlay) mobileNavOverlay.classList.remove('open');
+      openRegisterModal();
+    });
+  }
+
+  // Header Language Switcher (🌐 VI / KR)
+  const langHeaderBtn = document.getElementById('btnHeaderLang');
+  const langCurrentText = document.getElementById('langCurrentText');
+  if (langHeaderBtn) {
+    if (langCurrentText) langCurrentText.textContent = currentLang === 'ko' ? 'KR' : 'VI';
+    langHeaderBtn.addEventListener('click', () => {
+      currentLang = currentLang === 'vi' ? 'ko' : 'vi';
+      localStorage.setItem('bevibe_lang', currentLang);
+      if (langCurrentText) langCurrentText.textContent = currentLang === 'ko' ? 'KR' : 'VI';
+      applyTranslations();
+      renderRoute();
+    });
+  }
 
   /**
    * Thank-you promo popup: shows once per browser session on the public site.
