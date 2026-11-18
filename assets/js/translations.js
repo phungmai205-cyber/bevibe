@@ -522,12 +522,7 @@ export const brandsData = [
         "usage": "Lấy một lượng nhỏ cỡ hạt đậu ra lòng bàn tay, hòa cùng một ít nước ấm để tạo bọt bông mịn. Massage nhẹ nhàng toàn mặt 60 giây theo hình xoắn ốc rồi xả sạch với nước mát.",
         "gallery": [
           "/assets/images/catalog/dr-bargo/drbargo-2-g1.jpg",
-          "/assets/images/catalog/dr-bargo/drbargo-2-g2.jpg",
-          "/assets/images/catalog/dr-bargo/drbargo-2-g3.jpg",
-          "/assets/images/catalog/dr-bargo/drbargo-2-g4.jpg",
-          "/assets/images/catalog/dr-bargo/drbargo-2-img-1.jpg",
-          "/assets/images/catalog/dr-bargo/drbargo-2-img-2.jpg",
-          "/assets/images/catalog/dr-bargo/drbargo-2-img-3.jpg"
+          "/assets/images/catalog/dr-bargo/drbargo-2-g2.jpg"
         ],
         "line": "drbargo-31c"
       },
@@ -568,10 +563,6 @@ export const brandsData = [
         "usage": "Sau khi rửa mặt, thấm đẫm toner ra bông tẩy trang lau nhẹ theo chiều cấu tạo da, hoặc vỗ trực tiếp bằng lòng bàn tay 2-3 lớp theo phương pháp 7-Skin trứ danh Hàn Quốc.",
         "gallery": [
           "/assets/images/catalog/dr-bargo/drbargo-4-g1.jpg",
-          "/assets/images/catalog/dr-bargo/drbargo-4-g2.jpg",
-          "/assets/images/catalog/dr-bargo/drbargo-4-g3.jpg",
-          "/assets/images/catalog/dr-bargo/drbargo-4-img-1.jpg",
-          "/assets/images/catalog/dr-bargo/drbargo-4-img-2.jpg",
           "/assets/images/catalog/dr-bargo/drbargo-4-img-3.jpg"
         ],
         "line": "drbargo-31c"
@@ -613,11 +604,7 @@ export const brandsData = [
         "usage": "Nhỏ 3-4 giọt serum trực tiếp lên trán và hai bên má. Dùng các đầu ngón tay vỗ nhẹ và massage hướng nâng cơ từ trong ra ngoài cho đến khi serum thẩm thấu hoàn toàn. Ngày 2 lần.",
         "gallery": [
           "/assets/images/catalog/dr-bargo/drbargo-3-g1.jpg",
-          "/assets/images/catalog/dr-bargo/drbargo-3-g2.jpg",
-          "/assets/images/catalog/dr-bargo/drbargo-3-g3.jpg",
-          "/assets/images/catalog/dr-bargo/drbargo-3-img-1.jpg",
-          "/assets/images/catalog/dr-bargo/drbargo-3-img-2.jpg",
-          "/assets/images/catalog/dr-bargo/drbargo-3-img-3.jpg"
+          "/assets/images/catalog/dr-bargo/drbargo-3-g2.jpg"
         ],
         "line": "drbargo-31c"
       },
@@ -658,11 +645,7 @@ export const brandsData = [
         "usage": "Sau bước Serum/Ampoule, lấy 2-3 pump sữa dưỡng ra lòng bàn tay, thoa đều khắp mặt và vùng cổ. Vỗ nhẹ 30 giây để dưỡng chất thẩm thấu sâu. Sử dụng đều đặn sáng và tối.",
         "gallery": [
           "/assets/images/catalog/dr-bargo/drbargo-1-g1.jpg",
-          "/assets/images/catalog/dr-bargo/drbargo-1-g2.jpg",
-          "/assets/images/catalog/dr-bargo/drbargo-1-g3.jpg",
-          "/assets/images/catalog/dr-bargo/drbargo-1-img-1.jpg",
-          "/assets/images/catalog/dr-bargo/drbargo-1-img-2.jpg",
-          "/assets/images/catalog/dr-bargo/drbargo-1-img-3.jpg"
+          "/assets/images/catalog/dr-bargo/drbargo-1-g2.jpg"
         ],
         "line": "drbargo-31c"
       }
@@ -705,12 +688,7 @@ export const brandsData = [
         "usage": "손바닥에 적당량을 덜어 미온수로 충분히 거품을 낸 후, 얼굴 전체를 부드럽게 마사지하듯 클렌징하고 미온수로 깨끗이 헹구어 냅니다.",
         "gallery": [
           "/assets/images/catalog/dr-bargo/drbargo-2-g1.jpg",
-          "/assets/images/catalog/dr-bargo/drbargo-2-g2.jpg",
-          "/assets/images/catalog/dr-bargo/drbargo-2-g3.jpg",
-          "/assets/images/catalog/dr-bargo/drbargo-2-g4.jpg",
-          "/assets/images/catalog/dr-bargo/drbargo-2-img-1.jpg",
-          "/assets/images/catalog/dr-bargo/drbargo-2-img-2.jpg",
-          "/assets/images/catalog/dr-bargo/drbargo-2-img-3.jpg"
+          "/assets/images/catalog/dr-bargo/drbargo-2-g2.jpg"
         ],
         "line": "drbargo-31c"
       },
@@ -751,10 +729,6 @@ export const brandsData = [
         "usage": "세안 직후 화장솜에 충분히 적셔 피부결을 따라 부드럽게 닦아내거나, 손에 덜어 가볍게 두드리며 2~3회 레이어링하여 흡수시킵니다.",
         "gallery": [
           "/assets/images/catalog/dr-bargo/drbargo-4-g1.jpg",
-          "/assets/images/catalog/dr-bargo/drbargo-4-g2.jpg",
-          "/assets/images/catalog/dr-bargo/drbargo-4-g3.jpg",
-          "/assets/images/catalog/dr-bargo/drbargo-4-img-1.jpg",
-          "/assets/images/catalog/dr-bargo/drbargo-4-img-2.jpg",
           "/assets/images/catalog/dr-bargo/drbargo-4-img-3.jpg"
         ],
         "line": "drbargo-31c"
@@ -796,11 +770,7 @@ export const brandsData = [
         "usage": "토너 다음 단계에서 3~4방울을 스포이드로 취해 얼굴 전체에 고르게 펴 바른 후, 가볍게 두드려 흡수시킵니다. 집중 케어가 필요한 부위는 한 번 더 레이어링합니다.",
         "gallery": [
           "/assets/images/catalog/dr-bargo/drbargo-3-g1.jpg",
-          "/assets/images/catalog/dr-bargo/drbargo-3-g2.jpg",
-          "/assets/images/catalog/dr-bargo/drbargo-3-g3.jpg",
-          "/assets/images/catalog/dr-bargo/drbargo-3-img-1.jpg",
-          "/assets/images/catalog/dr-bargo/drbargo-3-img-2.jpg",
-          "/assets/images/catalog/dr-bargo/drbargo-3-img-3.jpg"
+          "/assets/images/catalog/dr-bargo/drbargo-3-g2.jpg"
         ],
         "line": "drbargo-31c"
       },
@@ -841,11 +811,7 @@ export const brandsData = [
         "usage": "세럼/앰플 사용 후, 적당량(2~3회 펌핑)을 취해 얼굴과 목 전체에 부드럽게 펴 바른 후 가볍게 두드려 흡수시킵니다. 아침, 저녁 데일리 루틴으로 사용합니다.",
         "gallery": [
           "/assets/images/catalog/dr-bargo/drbargo-1-g1.jpg",
-          "/assets/images/catalog/dr-bargo/drbargo-1-g2.jpg",
-          "/assets/images/catalog/dr-bargo/drbargo-1-g3.jpg",
-          "/assets/images/catalog/dr-bargo/drbargo-1-img-1.jpg",
-          "/assets/images/catalog/dr-bargo/drbargo-1-img-2.jpg",
-          "/assets/images/catalog/dr-bargo/drbargo-1-img-3.jpg"
+          "/assets/images/catalog/dr-bargo/drbargo-1-g2.jpg"
         ],
         "line": "drbargo-31c"
       }
@@ -934,10 +900,7 @@ export const brandsData = [
         "gallery": [
           "/assets/images/catalog/neuraderm/neura-3-g1.jpg",
           "/assets/images/catalog/neuraderm/neura-3-g2.jpg",
-          "/assets/images/catalog/neuraderm/neura-3-g3.jpg",
-          "/assets/images/catalog/neuraderm/neura-3-img-1.webp",
-          "/assets/images/catalog/neuraderm/neura-3-img-2.webp",
-          "/assets/images/catalog/neuraderm/neura-3-img-3.webp"
+          "/assets/images/catalog/neuraderm/neura-3-g3.jpg"
         ],
         "line": "neura-basic"
       },
@@ -979,10 +942,7 @@ export const brandsData = [
         "gallery": [
           "/assets/images/catalog/neuraderm/neura-6-g1.jpg",
           "/assets/images/catalog/neuraderm/neura-6-g2.jpg",
-          "/assets/images/catalog/neuraderm/neura-6-g3.jpg",
-          "/assets/images/catalog/neuraderm/neura-6-img-1.png",
-          "/assets/images/catalog/neuraderm/neura-6-img-2.png",
-          "/assets/images/catalog/neuraderm/neura-6-img-3.webp"
+          "/assets/images/catalog/neuraderm/neura-6-g3.jpg"
         ],
         "line": "neura-basic"
       },
@@ -1149,10 +1109,7 @@ export const brandsData = [
         "gallery": [
           "/assets/images/catalog/neuraderm/neura-1-g1.jpg",
           "/assets/images/catalog/neuraderm/neura-1-g2.jpg",
-          "/assets/images/catalog/neuraderm/neura-1-g3.jpg",
-          "/assets/images/catalog/neuraderm/neura-1-img-1.png",
-          "/assets/images/catalog/neuraderm/neura-1-img-2.png",
-          "/assets/images/catalog/neuraderm/neura-1-img-3.webp"
+          "/assets/images/catalog/neuraderm/neura-1-g3.jpg"
         ],
         "line": "neura-clinic"
       },
@@ -1194,10 +1151,7 @@ export const brandsData = [
         "gallery": [
           "/assets/images/catalog/neuraderm/neura-8-g1.jpg",
           "/assets/images/catalog/neuraderm/neura-8-g2.jpg",
-          "/assets/images/catalog/neuraderm/neura-8-g3.jpg",
-          "/assets/images/catalog/neuraderm/neura-8-img-1.webp",
-          "/assets/images/catalog/neuraderm/neura-8-img-2.png",
-          "/assets/images/catalog/neuraderm/neura-8-img-3.png"
+          "/assets/images/catalog/neuraderm/neura-8-g3.jpg"
         ],
         "line": "neura-clinic"
       },
@@ -1239,10 +1193,7 @@ export const brandsData = [
         "gallery": [
           "/assets/images/catalog/neuraderm/neura-7-g1.jpg",
           "/assets/images/catalog/neuraderm/neura-7-g2.jpg",
-          "/assets/images/catalog/neuraderm/neura-7-g3.jpg",
-          "/assets/images/catalog/neuraderm/neura-7-img-1.webp",
-          "/assets/images/catalog/neuraderm/neura-7-img-2.png",
-          "/assets/images/catalog/neuraderm/neura-7-img-3.png"
+          "/assets/images/catalog/neuraderm/neura-7-g3.jpg"
         ],
         "line": "neura-clinic"
       },
@@ -1315,10 +1266,7 @@ export const brandsData = [
         "usage": "Giữ chai xịt cách mặt 20-30cm, nhắm mắt và xịt đều 3-4 lần khắp mặt. Để khô tự nhiên hoặc vỗ nhẹ. Sử dụng bất cứ khi nào cảm thấy da khô hoặc căng thẳng.",
         "gallery": [
           "/assets/images/catalog/neuraderm/neura-2-g1.jpg",
-          "/assets/images/catalog/neuraderm/neura-2-g2.jpg",
-          "/assets/images/catalog/neuraderm/neura-2-img-1.jpg",
-          "/assets/images/catalog/neuraderm/neura-2-img-2.png",
-          "/assets/images/catalog/neuraderm/neura-2-img-3.png"
+          "/assets/images/catalog/neuraderm/neura-2-g2.jpg"
         ],
         "line": "neura-clinic"
       },
@@ -1359,10 +1307,7 @@ export const brandsData = [
         "usage": "Sử dụng ở bước cuối cùng trong chu trình dưỡng da buổi sáng. Lấy lượng kem bằng 2 ngón tay thoa đều khắp mặt và cổ trước khi ra ngoài 15-20 phút. Thoa lại sau 4-5 tiếng nếu hoạt động nhiều ngoài nắng.",
         "gallery": [
           "/assets/images/catalog/neuraderm/neura-5-g1.jpg",
-          "/assets/images/catalog/neuraderm/neura-5-g2.jpg",
-          "/assets/images/catalog/neuraderm/neura-5-img-1.jpg",
-          "/assets/images/catalog/neuraderm/neura-5-img-2.png",
-          "/assets/images/catalog/neuraderm/neura-5-img-3.png"
+          "/assets/images/catalog/neuraderm/neura-5-g2.jpg"
         ],
         "line": "neura-clinic"
       }
@@ -1406,10 +1351,7 @@ export const brandsData = [
         "gallery": [
           "/assets/images/catalog/neuraderm/neura-3-g1.jpg",
           "/assets/images/catalog/neuraderm/neura-3-g2.jpg",
-          "/assets/images/catalog/neuraderm/neura-3-g3.jpg",
-          "/assets/images/catalog/neuraderm/neura-3-img-1.webp",
-          "/assets/images/catalog/neuraderm/neura-3-img-2.webp",
-          "/assets/images/catalog/neuraderm/neura-3-img-3.webp"
+          "/assets/images/catalog/neuraderm/neura-3-g3.jpg"
         ],
         "line": "neura-basic"
       },
@@ -1451,10 +1393,7 @@ export const brandsData = [
         "gallery": [
           "/assets/images/catalog/neuraderm/neura-6-g1.jpg",
           "/assets/images/catalog/neuraderm/neura-6-g2.jpg",
-          "/assets/images/catalog/neuraderm/neura-6-g3.jpg",
-          "/assets/images/catalog/neuraderm/neura-6-img-1.png",
-          "/assets/images/catalog/neuraderm/neura-6-img-2.png",
-          "/assets/images/catalog/neuraderm/neura-6-img-3.webp"
+          "/assets/images/catalog/neuraderm/neura-6-g3.jpg"
         ],
         "line": "neura-basic"
       },
@@ -1621,10 +1560,7 @@ export const brandsData = [
         "gallery": [
           "/assets/images/catalog/neuraderm/neura-1-g1.jpg",
           "/assets/images/catalog/neuraderm/neura-1-g2.jpg",
-          "/assets/images/catalog/neuraderm/neura-1-g3.jpg",
-          "/assets/images/catalog/neuraderm/neura-1-img-1.png",
-          "/assets/images/catalog/neuraderm/neura-1-img-2.png",
-          "/assets/images/catalog/neuraderm/neura-1-img-3.webp"
+          "/assets/images/catalog/neuraderm/neura-1-g3.jpg"
         ],
         "line": "neura-clinic"
       },
@@ -1666,10 +1602,7 @@ export const brandsData = [
         "gallery": [
           "/assets/images/catalog/neuraderm/neura-8-g1.jpg",
           "/assets/images/catalog/neuraderm/neura-8-g2.jpg",
-          "/assets/images/catalog/neuraderm/neura-8-g3.jpg",
-          "/assets/images/catalog/neuraderm/neura-8-img-1.webp",
-          "/assets/images/catalog/neuraderm/neura-8-img-2.png",
-          "/assets/images/catalog/neuraderm/neura-8-img-3.png"
+          "/assets/images/catalog/neuraderm/neura-8-g3.jpg"
         ],
         "line": "neura-clinic"
       },
@@ -1711,10 +1644,7 @@ export const brandsData = [
         "gallery": [
           "/assets/images/catalog/neuraderm/neura-7-g1.jpg",
           "/assets/images/catalog/neuraderm/neura-7-g2.jpg",
-          "/assets/images/catalog/neuraderm/neura-7-g3.jpg",
-          "/assets/images/catalog/neuraderm/neura-7-img-1.webp",
-          "/assets/images/catalog/neuraderm/neura-7-img-2.png",
-          "/assets/images/catalog/neuraderm/neura-7-img-3.png"
+          "/assets/images/catalog/neuraderm/neura-7-g3.jpg"
         ],
         "line": "neura-clinic"
       },
@@ -1787,10 +1717,7 @@ export const brandsData = [
         "usage": "얼굴에서 20~30cm 거리를 두고 눈을 감은 상태에서 얼굴 전체에 골고루 분사한 뒤 자연 건조시키거나 가볍게 두드려 흡수시킵니다.",
         "gallery": [
           "/assets/images/catalog/neuraderm/neura-2-g1.jpg",
-          "/assets/images/catalog/neuraderm/neura-2-g2.jpg",
-          "/assets/images/catalog/neuraderm/neura-2-img-1.jpg",
-          "/assets/images/catalog/neuraderm/neura-2-img-2.png",
-          "/assets/images/catalog/neuraderm/neura-2-img-3.png"
+          "/assets/images/catalog/neuraderm/neura-2-g2.jpg"
         ],
         "line": "neura-clinic"
       },
@@ -1831,10 +1758,7 @@ export const brandsData = [
         "usage": "아침 기초 스킨케어 마지막 단계에서 적당량을 취해 자외선에 노출되기 쉬운 얼굴, 목 등에 골고루 펴 바릅니다.",
         "gallery": [
           "/assets/images/catalog/neuraderm/neura-5-g1.jpg",
-          "/assets/images/catalog/neuraderm/neura-5-g2.jpg",
-          "/assets/images/catalog/neuraderm/neura-5-img-1.jpg",
-          "/assets/images/catalog/neuraderm/neura-5-img-2.png",
-          "/assets/images/catalog/neuraderm/neura-5-img-3.png"
+          "/assets/images/catalog/neuraderm/neura-5-g2.jpg"
         ],
         "line": "neura-clinic"
       }
@@ -1906,8 +1830,7 @@ export const brandsData = [
         "driveVideoUrl": null,
         "image": "/assets/images/catalog/medipharm/stemc-5.jpg",
         "gallery": [
-          "/assets/images/catalog/medipharm/stemc-5-g1.webp",
-          "/assets/images/catalog/medipharm/stemc-5-g2.webp"
+          "/assets/images/catalog/medipharm/stemc-5-g1.webp"
         ],
         "line": "medipharm-stemc"
       },
@@ -1948,8 +1871,7 @@ export const brandsData = [
         "usage": "Sau khi rửa mặt, thấm đẫm ra bông cotton lau nhẹ khắp mặt, hoặc vỗ trực tiếp bằng tay 2-3 lớp theo phương pháp 7-Skin để tạo hiệu ứng căng bóng Glass Skin.",
         "gallery": [
           "/assets/images/catalog/medipharm/stemc-4-g1.jpg",
-          "/assets/images/catalog/medipharm/stemc-4-g2.jpg",
-          "/assets/images/catalog/medipharm/stemc-4-g3.jpg"
+          "/assets/images/catalog/medipharm/stemc-4-g2.jpg"
         ],
         "line": "medipharm-stemc"
       },
@@ -1988,8 +1910,7 @@ export const brandsData = [
           "/assets/images/catalog/medipharm/stemc-2-g1.jpg",
           "/assets/images/catalog/medipharm/stemc-2-g2.jpg",
           "/assets/images/catalog/medipharm/stemc-2-g3.jpg",
-          "/assets/images/catalog/medipharm/stemc-2-g4.webp",
-          "/assets/images/catalog/medipharm/stemc-2-g5.webp"
+          "/assets/images/catalog/medipharm/stemc-2-g4.webp"
         ],
         "line": "medipharm-stemc"
       },
@@ -2032,7 +1953,6 @@ export const brandsData = [
           "/assets/images/catalog/medipharm/stemc-3-g1.jpg",
           "/assets/images/catalog/medipharm/stemc-3-g2.jpg",
           "/assets/images/catalog/medipharm/stemc-3-g3.jpg",
-          "/assets/images/catalog/medipharm/stemc-3-g4.jpg",
           "/assets/images/catalog/medipharm/stemc-3-g5.webp"
         ],
         "line": "medipharm-stemc"
@@ -2100,10 +2020,8 @@ export const brandsData = [
         ],
         "usage": "Làm sạch da, lấy một lượng kem vừa đủ thoa đều lên mặt và cổ hoặc khu vực cần làm sáng da sau đó massage nhẹ nhàng. Sử dụng đều đặn mỗi tối sau bước làm sạch và tinh chất.",
         "gallery": [
-          "/assets/images/catalog/medipharm/kojic-acid-1.jpg",
           "/assets/images/catalog/medipharm/kojic-acid-2.jpg",
-          "/assets/images/catalog/medipharm/kojic-acid-3.jpg",
-          "/assets/images/catalog/medipharm/kojic-acid-4.jpg"
+          "/assets/images/catalog/medipharm/kojic-acid-3.jpg"
         ],
         "line": "medipharm-treatment"
       },
@@ -2128,7 +2046,6 @@ export const brandsData = [
         ],
         "usage": "Sử dụng liều tấn công 2 lần/ngày:\n• Ban ngày: Rửa mặt → Toner → Alpha Arbutin 7% Cream → Kem chống nắng.\n• Ban đêm: Rửa mặt → Toner → Alpha Arbutin 7% Cream → Kem dưỡng ẩm.",
         "gallery": [
-          "/assets/images/catalog/medipharm/alpha-arbutin-1.jpg",
           "/assets/images/catalog/medipharm/alpha-arbutin-2.jpg",
           "/assets/images/catalog/medipharm/alpha-arbutin-3.jpg",
           "/assets/images/catalog/medipharm/alpha-arbutin-4.jpg"
@@ -2151,8 +2068,7 @@ export const brandsData = [
         "driveVideoUrl": null,
         "image": "/assets/images/catalog/medipharm/stemc-5.jpg",
         "gallery": [
-          "/assets/images/catalog/medipharm/stemc-5-g1.webp",
-          "/assets/images/catalog/medipharm/stemc-5-g2.webp"
+          "/assets/images/catalog/medipharm/stemc-5-g1.webp"
         ],
         "line": "medipharm-stemc"
       },
@@ -2193,8 +2109,7 @@ export const brandsData = [
         "usage": "세안 후 화장솜에 충분히 적셔 닦아내거나, 손바닥에 덜어 가볍게 두드리며 여러 번 덧발라 흡수시킵니다.",
         "gallery": [
           "/assets/images/catalog/medipharm/stemc-4-g1.jpg",
-          "/assets/images/catalog/medipharm/stemc-4-g2.jpg",
-          "/assets/images/catalog/medipharm/stemc-4-g3.jpg"
+          "/assets/images/catalog/medipharm/stemc-4-g2.jpg"
         ],
         "line": "medipharm-stemc"
       },
@@ -2233,8 +2148,7 @@ export const brandsData = [
           "/assets/images/catalog/medipharm/stemc-2-g1.jpg",
           "/assets/images/catalog/medipharm/stemc-2-g2.jpg",
           "/assets/images/catalog/medipharm/stemc-2-g3.jpg",
-          "/assets/images/catalog/medipharm/stemc-2-g4.webp",
-          "/assets/images/catalog/medipharm/stemc-2-g5.webp"
+          "/assets/images/catalog/medipharm/stemc-2-g4.webp"
         ],
         "line": "medipharm-stemc"
       },
@@ -2277,7 +2191,6 @@ export const brandsData = [
           "/assets/images/catalog/medipharm/stemc-3-g1.jpg",
           "/assets/images/catalog/medipharm/stemc-3-g2.jpg",
           "/assets/images/catalog/medipharm/stemc-3-g3.jpg",
-          "/assets/images/catalog/medipharm/stemc-3-g4.jpg",
           "/assets/images/catalog/medipharm/stemc-3-g5.webp"
         ],
         "line": "medipharm-stemc"
@@ -2342,10 +2255,8 @@ export const brandsData = [
         ],
         "usage": "저녁 스킨케어 마지막 단계에서 색소 부위 또는 얼굴 전체에 얇게 펴 바릅니다.",
         "gallery": [
-          "/assets/images/catalog/medipharm/kojic-acid-1.jpg",
           "/assets/images/catalog/medipharm/kojic-acid-2.jpg",
-          "/assets/images/catalog/medipharm/kojic-acid-3.jpg",
-          "/assets/images/catalog/medipharm/kojic-acid-4.jpg"
+          "/assets/images/catalog/medipharm/kojic-acid-3.jpg"
         ],
         "line": "medipharm-treatment"
       },
@@ -2367,7 +2278,6 @@ export const brandsData = [
         ],
         "usage": "아침과 저녁 스킨케어 시 적당량을 덜어 부드럽게 흡수시켜 줍니다.",
         "gallery": [
-          "/assets/images/catalog/medipharm/alpha-arbutin-1.jpg",
           "/assets/images/catalog/medipharm/alpha-arbutin-2.jpg",
           "/assets/images/catalog/medipharm/alpha-arbutin-3.jpg",
           "/assets/images/catalog/medipharm/alpha-arbutin-4.jpg"
@@ -2459,8 +2369,7 @@ export const brandsData = [
         "usage": "Tạo bọt và massage nhẹ nhàng da đầu 2-3 phút rồi xả sạch.",
         "driveVideoUrl": null,
         "gallery": [
-          "/assets/images/catalog/smib/smib-3-g1.jpg",
-          "/assets/images/catalog/smib/smib-3-g2.png"
+          "/assets/images/catalog/smib/smib-3-g1.jpg"
         ],
         "line": "smib-lactobio"
       },
@@ -2530,9 +2439,7 @@ export const brandsData = [
         "driveVideoUrl": null,
         "gallery": [
           "/assets/images/catalog/smib/smib-1-g1.jpg",
-          "/assets/images/catalog/smib/smib-1-g2.jpg",
-          "/assets/images/catalog/smib/smib-1-g3.jfif",
-          "/assets/images/catalog/smib/smib-1-g4.jpg"
+          "/assets/images/catalog/smib/smib-1-g2.jpg"
         ],
         "line": "smib-colorchange"
       },
@@ -2569,8 +2476,7 @@ export const brandsData = [
         "driveVideoUrl": null,
         "gallery": [
           "/assets/images/catalog/smib/smib-2-g1.jpg",
-          "/assets/images/catalog/smib/smib-2-g2.jpg",
-          "/assets/images/catalog/smib/smib-2-g3.jpeg"
+          "/assets/images/catalog/smib/smib-2-g2.jpg"
         ],
         "line": "smib-colorchange"
       },
@@ -2597,8 +2503,7 @@ export const brandsData = [
         "usage": "Dùng gội đầu hằng ngày.",
         "driveVideoUrl": null,
         "gallery": [
-          "/assets/images/catalog/smib/smib-5-g1.jpg",
-          "/assets/images/catalog/smib/smib-5-g2.jpg"
+          "/assets/images/catalog/smib/smib-5-g1.jpg"
         ],
         "line": "smib-innabi"
       },
@@ -2634,8 +2539,7 @@ export const brandsData = [
         "usage": "Lấy một lượng vừa đủ massage đều khắp da đầu và thân tóc, để 2-3 phút rồi xả sạch với nước.",
         "driveVideoUrl": null,
         "gallery": [
-          "/assets/images/catalog/smib/smib-6-g1.jpg",
-          "/assets/images/catalog/smib/smib-6-g2.jpg"
+          "/assets/images/catalog/smib/smib-6-g1.jpg"
         ],
         "line": "smib-innabi"
       },
@@ -2665,8 +2569,7 @@ export const brandsData = [
         "usage": "Xịt trực tiếp vào chân tóc khi khô hoặc sau khi gội đầu, dùng ngón tay massage nhẹ 1 phút.",
         "driveVideoUrl": null,
         "gallery": [
-          "/assets/images/catalog/smib/smib-7-g1.jpg",
-          "/assets/images/catalog/smib/smib-7-g2.jpg"
+          "/assets/images/catalog/smib/smib-7-g1.jpg"
         ],
         "line": "smib-innabi"
       }
@@ -2703,8 +2606,7 @@ export const brandsData = [
         "usage": "두피를 중심으로 2~3분간 마사지 후 깨끗이 헹굽니다.",
         "driveVideoUrl": null,
         "gallery": [
-          "/assets/images/catalog/smib/smib-3-g1.jpg",
-          "/assets/images/catalog/smib/smib-3-g2.png"
+          "/assets/images/catalog/smib/smib-3-g1.jpg"
         ],
         "line": "smib-lactobio"
       },
@@ -2774,9 +2676,7 @@ export const brandsData = [
         "driveVideoUrl": null,
         "gallery": [
           "/assets/images/catalog/smib/smib-1-g1.jpg",
-          "/assets/images/catalog/smib/smib-1-g2.jpg",
-          "/assets/images/catalog/smib/smib-1-g3.jfif",
-          "/assets/images/catalog/smib/smib-1-g4.jpg"
+          "/assets/images/catalog/smib/smib-1-g2.jpg"
         ],
         "line": "smib-colorchange"
       },
@@ -2813,8 +2713,7 @@ export const brandsData = [
         "driveVideoUrl": null,
         "gallery": [
           "/assets/images/catalog/smib/smib-2-g1.jpg",
-          "/assets/images/catalog/smib/smib-2-g2.jpg",
-          "/assets/images/catalog/smib/smib-2-g3.jpeg"
+          "/assets/images/catalog/smib/smib-2-g2.jpg"
         ],
         "line": "smib-colorchange"
       },
@@ -2841,8 +2740,7 @@ export const brandsData = [
         "usage": "매일 데일리 샴푸로 사용합니다.",
         "driveVideoUrl": null,
         "gallery": [
-          "/assets/images/catalog/smib/smib-5-g1.jpg",
-          "/assets/images/catalog/smib/smib-5-g2.jpg"
+          "/assets/images/catalog/smib/smib-5-g1.jpg"
         ],
         "line": "smib-innabi"
       },
@@ -2878,8 +2776,7 @@ export const brandsData = [
         "usage": "적당량을 취해 두피와 모발에 마사지하듯 거품을 낸 뒤 2~3분 후 미온수로 깨끗이 헹궈냅니다.",
         "driveVideoUrl": null,
         "gallery": [
-          "/assets/images/catalog/smib/smib-6-g1.jpg",
-          "/assets/images/catalog/smib/smib-6-g2.jpg"
+          "/assets/images/catalog/smib/smib-6-g1.jpg"
         ],
         "line": "smib-innabi"
       },
@@ -2909,8 +2806,7 @@ export const brandsData = [
         "usage": "두피에 직접 분사 후 손가락 끝으로 가볍게 마사지하여 흡수시킵니다.",
         "driveVideoUrl": null,
         "gallery": [
-          "/assets/images/catalog/smib/smib-7-g1.jpg",
-          "/assets/images/catalog/smib/smib-7-g2.jpg"
+          "/assets/images/catalog/smib/smib-7-g1.jpg"
         ],
         "line": "smib-innabi"
       }

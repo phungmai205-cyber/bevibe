@@ -483,7 +483,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const soldOut = isSoldOut(entry);
     const pct = salePct(entry);
     const raw = isVi ? (entry.vi || {}) : (entry.ko || entry.vi || {});
-    const galleryCount = (raw.gallery && raw.gallery.length) || 0;
+    const allUniqueImages = [p.image, ...(raw.gallery || [])].filter((v, i, a) => v && a.indexOf(v) === i);
+    const galleryCount = allUniqueImages.length;
     return `
       <article class="pcard ${soldOut ? 'is-soldout' : ''}" data-action="product-modal" data-product-id="${p.id}" tabindex="0">
         <div class="pcard-media">
