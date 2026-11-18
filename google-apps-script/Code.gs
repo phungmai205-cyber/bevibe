@@ -93,7 +93,6 @@ const PRICES = {
   "drbargo-2": { "name": "Dr.BARGO Foam Cleansing", "unit": "Tuýp 150ml", "price": 420000 },
   "drbargo-3": { "name": "Dr.BARGO Serum", "unit": "Chai 50ml", "price": 660000 },
   "drbargo-4": { "name": "Dr.BARGO Toner", "unit": "Chai 150ml", "price": 420000 },
-  "drbargo-5": { "name": "Kem cấp ẩm Madeca Soside", "unit": "Tuýp 50ml", "price": 660000 },
   "drbargo-6": { "name": "DBB LAB Kojic Acid Dipalmitate Cream 30 mL", "unit": "Tuýp 30ml", "price": 510000 },
   "drbargo-7": { "name": "Whitening Cream Alpha Arbutin 7% Cream", "unit": "Tuýp 15ml", "price": 510000 },
   "smib-5": { "name": "SMIB innaBi Shampoo", "unit": "Chai 500ml", "price": 740000 },

@@ -655,28 +655,6 @@ export const brandsData = [
         "line": "drbargo-31c"
       },
       {
-        "id": "drbargo-5",
-        "name": "Kem cấp ẩm Madeca Soside",
-        "spec": "Tuýp 50ml",
-        "image": "/assets/images/catalog/dr-bargo/drbargo-madeca.jpg",
-        "tag": "Cấp ẩm làm dịu & phục hồi chuyên sâu",
-        "desc": "Kem dưỡng phục hồi sinh học chứa phức hợp Madecassoside (chiết xuất Rau má) và Panthenol B5, cấp ẩm tầng sâu và làm dịu tức thì làn da kích ứng, da sau treatment.",
-        "ingredients": [
-          { "name": "Madecassoside", "desc": "Làm dịu cấp tốc làn da kích ứng, thúc đẩy tái tạo mô hạt và củng cố hàng rào biểu bì." },
-          { "name": "Panthenol (Vitamin B5)", "desc": "Giữ ẩm sâu, phục hồi làn da tổn thương và giảm đỏ rát hiệu quả." }
-        ],
-        "benefits": [
-          "Cấp ẩm sâu và duy trì độ ẩm suốt 24 giờ cho da mịn màng.",
-          "Làm dịu tức thì tình trạng ửng đỏ, căng rát sau laser, peel hay meso.",
-          "Chất kem mỏng nhẹ, thẩm thấu nhanh, không gây bết rít hay bít tắc chân lông."
-        ],
-        "usage": "Thoa đều một lượng vừa đủ lên da sau bước serum, massage nhẹ nhàng để kem thẩm thấu. Dùng 2 lần mỗi ngày (sáng/tối).",
-        "gallery": [
-          "/assets/images/catalog/dr-bargo/drbargo-madeca.jpg"
-        ],
-        "line": "drbargo-31c"
-      },
-      {
         "id": "drbargo-6",
         "name": "DBB LAB Kojic Acid Dipalmitate Cream 30 mL",
         "spec": "Tuýp 30ml / 1.01 fl.oz.",
@@ -900,28 +878,6 @@ export const brandsData = [
           "/assets/images/catalog/dr-bargo/drbargo-1-g1.jpg",
           "/assets/images/catalog/dr-bargo/drbargo-1-g2.jpg",
           "/assets/images/catalog/dr-bargo/drbargo-1-g3.jpg"
-        ],
-        "line": "drbargo-31c"
-      },
-      {
-        "id": "drbargo-5",
-        "name": "마데카소사이드 수분크림 (Kem cấp ẩm Madeca Soside)",
-        "spec": "50ml",
-        "image": "/assets/images/catalog/dr-bargo/drbargo-madeca.jpg",
-        "tag": "집중 진정 보습 크림",
-        "desc": "아시아티코사이드와 판테놀 복합 처방으로 자극받은 피부를 빠르게 진정시키고 깊은 보습막을 형성하는 리페어 크림.",
-        "ingredients": [
-          { "name": "마데카소사이드", "desc": "자극받은 피부를 급속 진정시키고 피부 장벽을 튼튼하게 강화합니다." },
-          { "name": "판테놀 (비타민 B5)", "desc": "깊은 수분을 공급하고 손상된 피부의 재생을 돕습니다." }
-        ],
-        "benefits": [
-          "24시간 마르지 않는 깊은 보습과 피부 진정 효과.",
-          "시술 후 붉어지고 예민해진 피부에 즉각적인 편안함 제공.",
-          "끈적임 없이 산뜻하게 밀착되는 텍스처."
-        ],
-        "usage": "세럼 사용 후 적당량을 덜어 얼굴 전체에 부드럽게 펴 바릅니다.",
-        "gallery": [
-          "/assets/images/catalog/dr-bargo/drbargo-madeca.jpg"
         ],
         "line": "drbargo-31c"
       },
