@@ -26,8 +26,6 @@ export const CONCERN_TAGS = {
   'drbargo-4': ['hydration', 'soothing', 'brightening'],
   'drbargo-3': ['repair', 'antiaging', 'soothing'],
   'drbargo-1': ['repair', 'hydration', 'soothing'],
-  'drbargo-6': ['brightening', 'hydration', 'repair'],
-  'drbargo-7': ['brightening', 'hydration', 'antiaging'],
   'neura-3': ['antiaging'],
   'neura-6': ['repair', 'hydration'],
   'neura-11': ['antiaging'],
@@ -49,6 +47,8 @@ export const CONCERN_TAGS = {
   'stemc-2': ['antiaging', 'hydration'],
   'stemc-3': ['hydration', 'brightening'],
   'stemc-1': ['hydration'],
+  'medipharm-6': ['brightening', 'hydration', 'repair'],
+  'medipharm-7': ['brightening', 'hydration', 'antiaging'],
   'smib-3': ['scalp'], 'smib-8': ['scalp'],
   'smib-1': ['scalp'], 'smib-2': ['scalp'], 'smib-5': ['scalp'], 'smib-6': ['scalp'], 'smib-7': ['scalp']
 };
