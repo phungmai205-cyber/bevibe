@@ -10,6 +10,7 @@ import { initAccount } from './account.js';
 import { buildSearchEntry, searchIndex } from './search.js';
 import { ORDER_ENDPOINT, sendOrderToSupabase } from './order-config.js';
 import { CATEGORY_DEFS, TPCN_CATEGORY_DEFS, detectCategory } from './catalog-defs.js';
+import { getCurrentCounselor, openCounselorLoginModal, updateCounselorNavUI, renderCounselorDashboard } from './counselor.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   // --- State ---
@@ -2792,6 +2793,11 @@ document.addEventListener('DOMContentLoaded', () => {
       sections: ['#products'],
       vi: { eyebrow: 'HEALTH FOOD', title: 'Thực phẩm chức năng', desc: 'Thực phẩm chức năng Hàn Quốc chính hãng từ VN Healing Farm, sản xuất theo chuẩn GMP. Lọc theo nhu cầu sức khỏe để tìm đúng sản phẩm bạn cần.' },
       ko: { eyebrow: 'HEALTH FOOD', title: '건강기능식품', desc: 'VN Healing Farm의 GMP 인증 한국 건강기능식품. 건강 고민별로 찾아보세요.' }
+    },
+    'counselor': {
+      sections: ['#counselorPortalView'],
+      vi: { eyebrow: 'COUNSELOR PORTAL', title: 'Phân hệ Tư vấn viên beVIBE', desc: 'Báo cáo doanh số, giá vốn sỉ, lợi nhuận bán lẻ và quỹ thưởng tích lũy cuối năm.' },
+      ko: { eyebrow: 'COUNSELOR PORTAL', title: '비바이브 카운슬러 포털', desc: '도매 매출, 이익 및 연말 보너스 리포트.' }
     }
   };
 
@@ -2968,6 +2974,7 @@ document.addEventListener('DOMContentLoaded', () => {
     else renderPageHero();
     if (route.page === 'blog') renderBlogPage();
     if (route.page === 'post') renderBlogPost(blogPosts.find((p) => p.slug === route.slug));
+    if (route.page === 'counselor') renderCounselorDashboard();
     pageSeo(route);
 
     const productEntry = route.page === 'product' ? productIndex.find((e) => e.id === route.productId) : null;
@@ -3071,6 +3078,29 @@ document.addEventListener('DOMContentLoaded', () => {
   renderBlogFeatured();
   renderRoute({ initial: true });
   loadLivePrices();
+
+  // Counselor Portal Navigation & Actions
+  const cslNavBtn = document.getElementById('counselorNavBtn');
+  if (cslNavBtn) {
+    cslNavBtn.addEventListener('click', () => {
+      const counselor = getCurrentCounselor();
+      if (counselor) navigate('counselor');
+      else openCounselorLoginModal();
+    });
+  }
+
+  const cslMobBtn = document.getElementById('counselorMobileBtn');
+  if (cslMobBtn) {
+    cslMobBtn.addEventListener('click', () => {
+      if (mobileNavDrawer) mobileNavDrawer.classList.remove('open');
+      if (mobileNavOverlay) mobileNavOverlay.classList.remove('open');
+
+      const counselor = getCurrentCounselor();
+      if (counselor) navigate('counselor');
+      else openCounselorLoginModal();
+    });
+  }
+  updateCounselorNavUI();
 
   /**
    * Thank-you promo popup: shows once per browser session on the public site.
