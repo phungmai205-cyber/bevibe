@@ -19,7 +19,7 @@ import {
   clearCounselorSession,
   getCurrentCounselor
 } from './counselor.js';
-import { sendOrderToSupabase } from './order-config.js';
+import { ORDER_ENDPOINT, sendOrderToSupabase } from './order-config.js';
 
 const STORAGE_CUSTOMERS = 'bevibe_registered_customers_v1';
 const STORAGE_CURRENT_USER = 'bevibe_current_customer_v1';
@@ -376,7 +376,34 @@ export function openRegisterModal() {
 
       saveNewCounselor(newCounselor);
 
-      // Gửi Supabase ghi nhận
+      // Đường link kích hoạt tài khoản
+      const confirmUrl = `${window.location.origin}${window.location.pathname}#/xac-nhan-counselor?code=${newCode}&email=${encodeURIComponent(email)}`;
+
+      // 1. Gửi thông tin tới Google Apps Script để ghi dữ liệu & gửi Gmail thực tế
+      if (ORDER_ENDPOINT) {
+        try {
+          fetch(ORDER_ENDPOINT, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({
+              type: 'Đăng ký Counselor',
+              name: name,
+              phone: phone,
+              email: email,
+              counselorCode: newCode,
+              confirmUrl: confirmUrl,
+              origin: window.location.origin,
+              clinic: 'Counselor beVIBE',
+              interest: 'Đăng ký làm Tư vấn viên sỉ (Giảm 55% + Thưởng 5%)',
+              note: `Đăng ký Counselor: Mã ${newCode} | MK: ${newCode} | Link: ${confirmUrl}`
+            })
+          }).catch((err) => console.warn('Lỗi gọi Apps Script:', err));
+        } catch (e) {
+          console.warn('Lỗi fetch Google Apps Script:', e);
+        }
+      }
+
+      // 2. Gửi Supabase ghi nhận sao lưu
       sendOrderToSupabase({
         order_type: `Đăng ký Counselor mới [${newCode}]`,
         customer_name: `${name} (${newCode})`,
@@ -384,64 +411,82 @@ export function openRegisterModal() {
         email: email,
         clinic_or_spa: `Counselor beVIBE`,
         collaboration_need: 'Đăng ký làm Tư vấn viên sỉ',
-        note: `Mã cấp phát: ${newCode} | Mật khẩu: ${newCode}`
+        note: `Mã cấp phát: ${newCode} | Mật khẩu: ${newCode} | Link: ${confirmUrl}`
       }).catch(() => {});
 
       closeAuthModal();
 
-      // Hiện modal mô phỏng gửi Gmail xác nhận cho Counselor
-      showCounselorEmailConfirmationModal(newCounselor);
+      // 3. Hiển thị thông báo xác nhận đã gửi thư vào Gmail thực tế
+      showCounselorEmailSentNotice(newCounselor, confirmUrl);
     }
   });
 }
 
 // -----------------------------------------------------------------------------
-// UI: Modal Mô phỏng Gửi Gmail cho Counselor kèm Link Kích hoạt
+// UI: Thông báo xác nhận ĐÃ GỬI EMAIL KÍCH HOẠT ĐẾN GMAIL CỦA KHÁCH
 // -----------------------------------------------------------------------------
-export function showCounselorEmailConfirmationModal(counselor) {
+export function showCounselorEmailSentNotice(counselor, confirmUrl = '') {
   closeAuthModal();
 
-  const confirmUrl = `${window.location.origin}${window.location.pathname}#/xac-nhan-counselor?code=${counselor.code}&email=${encodeURIComponent(counselor.email)}`;
+  if (!confirmUrl) {
+    confirmUrl = `${window.location.origin}${window.location.pathname}#/xac-nhan-counselor?code=${counselor.code}&email=${encodeURIComponent(counselor.email)}`;
+  }
 
   const modal = document.createElement('div');
   modal.id = 'authMasterModal';
   modal.className = 'auth-modal-overlay';
   modal.innerHTML = `
-    <div class="auth-modal-card auth-card-email">
+    <div class="auth-modal-card auth-card-notice">
       <button type="button" class="auth-modal-close" id="closeAuthModalBtn">&times;</button>
-      <div class="email-sim-badge">✉️ Hộp thư Gmail kích hoạt tài khoản</div>
       
-      <div class="email-sim-box">
-        <div class="email-sim-header">
-          <div><strong>Người gửi:</strong> beVIBE Partner Center &lt;counselor@bevibe.vn&gt;</div>
-          <div><strong>Tới:</strong> ${counselor.email}</div>
-          <div><strong>Tiêu đề:</strong> [beVIBE] Chúc mừng bạn đã đăng ký Counselor — Mã số &amp; Link xác nhận kích hoạt</div>
+      <div class="auth-notice-icon">
+        <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 13V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v12c0 1.1.9 2 2 2h9"></path>
+          <polyline points="22,6 12,13 2,6"></polyline>
+          <polyline points="16 19 19 22 25 16"></polyline>
+        </svg>
+      </div>
+
+      <div class="auth-card-head" style="margin-bottom: 16px;">
+        <h2 style="color: #0f2347; font-size: 1.35rem; margin-bottom: 6px;">Đăng ký Counselor thành công!</h2>
+        <p style="color: #475569; font-size: 0.92rem;">Hệ thống đã gửi thư kích hoạt tài khoản đến hòm thư Gmail của bạn.</p>
+      </div>
+
+      <div class="auth-notice-box">
+        <div class="auth-notice-row">
+          <span class="auth-notice-lbl">Họ và tên:</span>
+          <strong>${counselor.name}</strong>
         </div>
-
-        <div class="email-sim-body">
-          <p>Xin chào <strong>${counselor.name}</strong>,</p>
-          <p>Chúc mừng bạn đã gia nhập mạng lưới <strong>Counselor (Tư vấn viên &amp; Đại lý sỉ)</strong> của beVIBE!</p>
-          
-          <div class="email-sim-keyinfo">
-            <div>Mã Counselor của bạn: <strong class="text-gold">${counselor.code}</strong></div>
-            <div>Mật khẩu đăng nhập: <strong class="text-gold">${counselor.code}</strong></div>
-            <small>(Mật khẩu chính là mã Counselor của bạn để dễ dàng kiểm soát &amp; đăng nhập)</small>
-          </div>
-
-          <p>Để hoàn tất đăng ký và bắt đầu được giảm sỉ 55% + tích lũy thưởng 5% cuối năm, vui lòng <strong>bấm vào đường link xác nhận</strong> bên dưới:</p>
-
-          <div style="text-align: center; margin: 20px 0;">
-            <a href="${confirmUrl}" class="email-confirm-btn" id="btnClickConfirmLink">
-              👉 BẤM VÀO ĐÂY ĐỂ XÁC NHẬN KÍCH HOẠT TÀI KHOẢN 👈
-            </a>
-          </div>
-
-          <p class="email-note">Đường link xác nhận: <br><code style="word-break: break-all;">${confirmUrl}</code></p>
+        <div class="auth-notice-row">
+          <span class="auth-notice-lbl">Hòm thư Gmail nhận:</span>
+          <strong class="auth-notice-email">${counselor.email}</strong>
+        </div>
+        <div class="auth-notice-row">
+          <span class="auth-notice-lbl">Mã Counselor / Mật khẩu:</span>
+          <span class="auth-notice-code">${counselor.code}</span>
         </div>
       </div>
 
-      <div class="email-sim-footer">
-        <p>💡 <em>Bạn có thể bấm ngay vào nút xanh ở trên để trải nghiệm luồng kích hoạt tài khoản thực tế!</em></p>
+      <div class="auth-notice-guide">
+        <h4 style="margin: 0 0 8px; font-size: 0.92rem; color: #0f2347;">👉 Các bước tiếp theo:</h4>
+        <ol style="margin: 0; padding-left: 20px; font-size: 0.88rem; color: #334155; line-height: 1.6;">
+          <li>Mở ứng dụng <strong>Gmail</strong> trên điện thoại hoặc máy tính của bạn.</li>
+          <li>Tìm thư từ <strong>beVIBE Partner Center</strong> trong hộp thư Đến (hoặc mục <em>Quảng cáo / Thư rác</em>).</li>
+          <li>Bấm vào liên kết <strong>"Xác nhận kích hoạt tài khoản"</strong> trong thư để bắt đầu đăng nhập.</li>
+        </ol>
+      </div>
+
+      <div class="auth-notice-actions">
+        <a href="https://mail.google.com" target="_blank" rel="noopener noreferrer" class="auth-btn-gmail">
+          <span>📬 Mở hộp thư Gmail (mail.google.com) ↗</span>
+        </a>
+        <button type="button" class="auth-btn-close-notice" id="btnNoticeDismiss">
+          <span>Đã hiểu</span>
+        </button>
+      </div>
+
+      <div class="auth-notice-devlink">
+        <small>💡 Cần kích hoạt ngay trên trình duyệt này? <a href="${confirmUrl}" id="directConfirmLink">Bấm vào đây để xác nhận trực tiếp</a></small>
       </div>
     </div>
   `;
@@ -449,8 +494,12 @@ export function showCounselorEmailConfirmationModal(counselor) {
   document.body.appendChild(modal);
 
   modal.querySelector('#closeAuthModalBtn').addEventListener('click', closeAuthModal);
-  modal.querySelector('#btnClickConfirmLink').addEventListener('click', (e) => {
+  modal.querySelector('#btnNoticeDismiss').addEventListener('click', closeAuthModal);
+  modal.querySelector('#directConfirmLink').addEventListener('click', () => {
     closeAuthModal();
+  });
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) closeAuthModal();
   });
 }
 

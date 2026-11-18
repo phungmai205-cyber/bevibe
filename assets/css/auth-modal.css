@@ -383,79 +383,111 @@
 }
 
 /* ==========================================================================
-   Email Simulation Modal (Counselor Confirmation)
+   Counselor Email Sent Success Notice Modal
    ========================================================================== */
-.email-sim-badge {
-  display: inline-block;
-  background: #dbeafe;
-  color: #1e40af;
-  font-size: 0.76rem;
-  font-weight: 800;
-  padding: 4px 12px;
-  border-radius: 20px;
-  margin-bottom: 12px;
+.auth-card-notice {
+  text-align: center;
+  max-width: 480px;
 }
-.email-sim-box {
+.auth-notice-icon {
+  margin: 4px auto 14px;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: #f0fdf4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid #bbf7d0;
+}
+.auth-notice-box {
   background: #f8fafc;
   border: 1px solid #e2e8f0;
-  border-radius: 14px;
-  overflow: hidden;
-  margin-bottom: 14px;
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
-.email-sim-header {
-  background: #ffffff;
-  padding: 14px 18px;
-  border-bottom: 1px solid #e2e8f0;
-  font-size: 0.84rem;
-  color: #475569;
-  line-height: 1.6;
+.auth-notice-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.88rem;
 }
-.email-sim-body {
-  padding: 20px;
-  font-size: 0.9rem;
-  color: #1e293b;
-  line-height: 1.6;
+.auth-notice-lbl {
+  color: #64748b;
+  font-weight: 500;
 }
-.email-sim-keyinfo {
+.auth-notice-email {
+  color: #0284c7;
+  font-family: monospace;
+  font-size: 0.95rem;
+}
+.auth-notice-code {
   background: #fef3c7;
-  border: 1.5px dashed #f59e0b;
+  color: #b45309;
+  font-weight: 700;
+  font-family: monospace;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 0.92rem;
+}
+.auth-notice-guide {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
   border-radius: 12px;
   padding: 14px 16px;
-  margin: 14px 0;
-  font-size: 1rem;
+  text-align: left;
+  margin-bottom: 18px;
 }
-.email-sim-keyinfo strong {
-  font-size: 1.25rem;
+.auth-notice-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
-.email-sim-keyinfo small {
-  display: block;
-  font-size: 0.8rem;
-  color: #92400e;
-  margin-top: 4px;
-}
-.email-confirm-btn {
-  display: inline-block;
-  background: linear-gradient(135deg, #16a34a, #15803d);
+.auth-btn-gmail {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ea4335 !important;
   color: #ffffff !important;
   text-decoration: none;
-  padding: 14px 24px;
-  border-radius: 12px;
-  font-size: 0.95rem;
-  font-weight: 800;
-  box-shadow: 0 4px 14px rgba(22, 163, 74, 0.35);
+  padding: 12px 18px;
+  border-radius: 10px;
+  font-size: 0.94rem;
+  font-weight: 700;
+  box-shadow: 0 3px 10px rgba(234, 67, 53, 0.3);
   transition: all 0.2s;
 }
-.email-confirm-btn:hover {
-  background: linear-gradient(135deg, #15803d, #166534);
-  transform: translateY(-2px);
+.auth-btn-gmail:hover {
+  background: #d93025 !important;
+  transform: translateY(-1px);
 }
-.email-note {
-  font-size: 0.78rem;
+.auth-btn-close-notice {
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  color: #334155;
+  padding: 10px;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.auth-btn-close-notice:hover {
+  background: #e2e8f0;
+}
+.auth-notice-devlink {
+  margin-top: 14px;
+  text-align: center;
+  font-size: 0.8rem;
   color: #64748b;
 }
-.email-sim-footer {
-  text-align: center;
-  font-size: 0.84rem;
-  color: #16a34a;
+.auth-notice-devlink a {
+  color: #0284c7;
+  text-decoration: underline;
+  font-weight: 600;
 }
 

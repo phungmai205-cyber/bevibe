@@ -421,6 +421,48 @@ function handleLead_(body) {
       console.error('Lead notify failed: ' + mailErr);
     }
   }
+
+  // Nếu là đăng ký Counselor: gửi email kích hoạt trực tiếp đến Gmail của Counselor
+  if (lead.email && (lead.type.indexOf('Counselor') !== -1 || body.counselorCode)) {
+    try {
+      const cCode = clean_(body.counselorCode, 20) || 'BV0001';
+      const origin = body.origin || 'https://bevibe.vn';
+      const confirmUrl = body.confirmUrl || (origin + '/#/xac-nhan-counselor?code=' + encodeURIComponent(cCode) + '&email=' + encodeURIComponent(lead.email));
+      MailApp.sendEmail({
+        to: lead.email,
+        subject: '[' + CONFIG.SHOP_NAME + '] Chúc mừng bạn đã đăng ký Counselor — Mã số & Mật khẩu kích hoạt tài khoản',
+        htmlBody:
+          '<div style="max-width:600px;margin:0 auto;font-family:Arial,sans-serif;color:#1e293b;line-height:1.6;border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;background:#fff;">' +
+            '<div style="background:#0f2347;color:#fff;padding:24px;text-align:center;">' +
+              '<h1 style="margin:0;font-size:22px;letter-spacing:1px;font-weight:700;">beVIBE Partner Center</h1>' +
+              '<p style="margin:8px 0 0;font-size:13px;color:#94a3b8;">Mạng lưới Counselor (Tư vấn viên &amp; Đại lý sỉ) beVIBE</p>' +
+            '</div>' +
+            '<div style="padding:28px 24px;">' +
+              '<p style="font-size:16px;">Xin chào <b>' + esc_(lead.name) + '</b>,</p>' +
+              '<p>Chúc mừng bạn đã gia nhập mạng lưới <b>Counselor (Tư vấn viên &amp; Đại lý sỉ)</b> của beVIBE!</p>' +
+              '<div style="background:#fef3c7;border:2px dashed #f59e0b;border-radius:10px;padding:18px;margin:20px 0;text-align:center;">' +
+                '<p style="margin:0 0 8px;font-size:13px;color:#92400e;text-transform:uppercase;font-weight:700;">Thông tin tài khoản đăng nhập của bạn</p>' +
+                '<p style="margin:6px 0;font-size:17px;color:#78350f;">Mã Counselor: <b style="font-size:22px;color:#b45309;font-family:monospace;letter-spacing:1px;">' + esc_(cCode) + '</b></p>' +
+                '<p style="margin:6px 0;font-size:17px;color:#78350f;">Mật khẩu đăng nhập: <b style="font-size:22px;color:#b45309;font-family:monospace;letter-spacing:1px;">' + esc_(cCode) + '</b></p>' +
+                '<p style="margin:8px 0 0;font-size:12px;color:#a16207;">(Mật khẩu được đặt trùng khớp với Mã Counselor để bạn dễ dàng kiểm soát &amp; đăng nhập)</p>' +
+              '</div>' +
+              '<p>Để bắt đầu nhận <b>chiết khấu giảm sỉ 55%</b> và <b>tích lũy 5% doanh số thưởng năm</b>, vui lòng bấm vào nút bên dưới để xác nhận kích hoạt tài khoản:</p>' +
+              '<div style="text-align:center;margin:30px 0;">' +
+                '<a href="' + confirmUrl + '" style="display:inline-block;background:#16a34a;color:#ffffff;text-decoration:none;padding:14px 28px;font-size:16px;font-weight:700;border-radius:8px;box-shadow:0 4px 12px rgba(22,163,74,0.35);">' +
+                  '👉 BẤM VÀO ĐÂY ĐỂ XÁC NHẬN KÍCH HOẠT TÀI KHOẢN 👈' +
+                '</a>' +
+              '</div>' +
+              '<p style="font-size:13px;color:#64748b;">Nếu không bấm được nút trên, bạn có thể copy và dán đường link sau vào trình duyệt:<br>' +
+              '<a href="' + confirmUrl + '" style="color:#0284c7;word-break:break-all;">' + confirmUrl + '</a></p>' +
+              '<hr style="border:none;border-top:1px solid #e2e8f0;margin:24px 0;">' +
+              '<p style="margin:0;font-size:13px;color:#64748b;text-align:center;">Mọi thắc mắc cần hỗ trợ, vui lòng liên hệ Hotline/Zalo: <b>' + CONFIG.HOTLINE + '</b></p>' +
+            '</div>' +
+          '</div>'
+      });
+    } catch (cslMailErr) {
+      console.error('Counselor activation mail failed: ' + cslMailErr);
+    }
+  }
   return { ok: true, id: id };
 }
 
