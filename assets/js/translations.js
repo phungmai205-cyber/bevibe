@@ -524,7 +524,10 @@ export const brandsData = [
           "/assets/images/catalog/dr-bargo/drbargo-2-g1.jpg",
           "/assets/images/catalog/dr-bargo/drbargo-2-g2.jpg",
           "/assets/images/catalog/dr-bargo/drbargo-2-g3.jpg",
-          "/assets/images/catalog/dr-bargo/drbargo-2-g4.jpg"
+          "/assets/images/catalog/dr-bargo/drbargo-2-g4.jpg",
+          "/assets/images/catalog/dr-bargo/drbargo-2-img-1.jpg",
+          "/assets/images/catalog/dr-bargo/drbargo-2-img-2.jpg",
+          "/assets/images/catalog/dr-bargo/drbargo-2-img-3.jpg"
         ],
         "line": "drbargo-31c"
       },
@@ -566,7 +569,10 @@ export const brandsData = [
         "gallery": [
           "/assets/images/catalog/dr-bargo/drbargo-4-g1.jpg",
           "/assets/images/catalog/dr-bargo/drbargo-4-g2.jpg",
-          "/assets/images/catalog/dr-bargo/drbargo-4-g3.jpg"
+          "/assets/images/catalog/dr-bargo/drbargo-4-g3.jpg",
+          "/assets/images/catalog/dr-bargo/drbargo-4-img-1.jpg",
+          "/assets/images/catalog/dr-bargo/drbargo-4-img-2.jpg",
+          "/assets/images/catalog/dr-bargo/drbargo-4-img-3.jpg"
         ],
         "line": "drbargo-31c"
       },
@@ -608,7 +614,10 @@ export const brandsData = [
         "gallery": [
           "/assets/images/catalog/dr-bargo/drbargo-3-g1.jpg",
           "/assets/images/catalog/dr-bargo/drbargo-3-g2.jpg",
-          "/assets/images/catalog/dr-bargo/drbargo-3-g3.jpg"
+          "/assets/images/catalog/dr-bargo/drbargo-3-g3.jpg",
+          "/assets/images/catalog/dr-bargo/drbargo-3-img-1.jpg",
+          "/assets/images/catalog/dr-bargo/drbargo-3-img-2.jpg",
+          "/assets/images/catalog/dr-bargo/drbargo-3-img-3.jpg"
         ],
         "line": "drbargo-31c"
       },
@@ -650,7 +659,10 @@ export const brandsData = [
         "gallery": [
           "/assets/images/catalog/dr-bargo/drbargo-1-g1.jpg",
           "/assets/images/catalog/dr-bargo/drbargo-1-g2.jpg",
-          "/assets/images/catalog/dr-bargo/drbargo-1-g3.jpg"
+          "/assets/images/catalog/dr-bargo/drbargo-1-g3.jpg",
+          "/assets/images/catalog/dr-bargo/drbargo-1-img-1.jpg",
+          "/assets/images/catalog/dr-bargo/drbargo-1-img-2.jpg",
+          "/assets/images/catalog/dr-bargo/drbargo-1-img-3.jpg"
         ],
         "line": "drbargo-31c"
       }
@@ -695,7 +707,10 @@ export const brandsData = [
           "/assets/images/catalog/dr-bargo/drbargo-2-g1.jpg",
           "/assets/images/catalog/dr-bargo/drbargo-2-g2.jpg",
           "/assets/images/catalog/dr-bargo/drbargo-2-g3.jpg",
-          "/assets/images/catalog/dr-bargo/drbargo-2-g4.jpg"
+          "/assets/images/catalog/dr-bargo/drbargo-2-g4.jpg",
+          "/assets/images/catalog/dr-bargo/drbargo-2-img-1.jpg",
+          "/assets/images/catalog/dr-bargo/drbargo-2-img-2.jpg",
+          "/assets/images/catalog/dr-bargo/drbargo-2-img-3.jpg"
         ],
         "line": "drbargo-31c"
       },
@@ -737,7 +752,10 @@ export const brandsData = [
         "gallery": [
           "/assets/images/catalog/dr-bargo/drbargo-4-g1.jpg",
           "/assets/images/catalog/dr-bargo/drbargo-4-g2.jpg",
-          "/assets/images/catalog/dr-bargo/drbargo-4-g3.jpg"
+          "/assets/images/catalog/dr-bargo/drbargo-4-g3.jpg",
+          "/assets/images/catalog/dr-bargo/drbargo-4-img-1.jpg",
+          "/assets/images/catalog/dr-bargo/drbargo-4-img-2.jpg",
+          "/assets/images/catalog/dr-bargo/drbargo-4-img-3.jpg"
         ],
         "line": "drbargo-31c"
       },
@@ -779,7 +797,10 @@ export const brandsData = [
         "gallery": [
           "/assets/images/catalog/dr-bargo/drbargo-3-g1.jpg",
           "/assets/images/catalog/dr-bargo/drbargo-3-g2.jpg",
-          "/assets/images/catalog/dr-bargo/drbargo-3-g3.jpg"
+          "/assets/images/catalog/dr-bargo/drbargo-3-g3.jpg",
+          "/assets/images/catalog/dr-bargo/drbargo-3-img-1.jpg",
+          "/assets/images/catalog/dr-bargo/drbargo-3-img-2.jpg",
+          "/assets/images/catalog/dr-bargo/drbargo-3-img-3.jpg"
         ],
         "line": "drbargo-31c"
       },
@@ -821,7 +842,10 @@ export const brandsData = [
         "gallery": [
           "/assets/images/catalog/dr-bargo/drbargo-1-g1.jpg",
           "/assets/images/catalog/dr-bargo/drbargo-1-g2.jpg",
-          "/assets/images/catalog/dr-bargo/drbargo-1-g3.jpg"
+          "/assets/images/catalog/dr-bargo/drbargo-1-g3.jpg",
+          "/assets/images/catalog/dr-bargo/drbargo-1-img-1.jpg",
+          "/assets/images/catalog/dr-bargo/drbargo-1-img-2.jpg",
+          "/assets/images/catalog/dr-bargo/drbargo-1-img-3.jpg"
         ],
         "line": "drbargo-31c"
       }
@@ -910,7 +934,10 @@ export const brandsData = [
         "gallery": [
           "/assets/images/catalog/neuraderm/neura-3-g1.jpg",
           "/assets/images/catalog/neuraderm/neura-3-g2.jpg",
-          "/assets/images/catalog/neuraderm/neura-3-g3.jpg"
+          "/assets/images/catalog/neuraderm/neura-3-g3.jpg",
+          "/assets/images/catalog/neuraderm/neura-3-img-1.webp",
+          "/assets/images/catalog/neuraderm/neura-3-img-2.webp",
+          "/assets/images/catalog/neuraderm/neura-3-img-3.webp"
         ],
         "line": "neura-basic"
       },
@@ -952,7 +979,10 @@ export const brandsData = [
         "gallery": [
           "/assets/images/catalog/neuraderm/neura-6-g1.jpg",
           "/assets/images/catalog/neuraderm/neura-6-g2.jpg",
-          "/assets/images/catalog/neuraderm/neura-6-g3.jpg"
+          "/assets/images/catalog/neuraderm/neura-6-g3.jpg",
+          "/assets/images/catalog/neuraderm/neura-6-img-1.png",
+          "/assets/images/catalog/neuraderm/neura-6-img-2.png",
+          "/assets/images/catalog/neuraderm/neura-6-img-3.webp"
         ],
         "line": "neura-basic"
       },
@@ -1039,7 +1069,11 @@ export const brandsData = [
           "Độ bám dính siêu việt giúp dưỡng chất thẩm thấu sâu gấp 10 lần so với mặt nạ giấy thông thường."
         ],
         "usage": "Rửa sạch mặt, gỡ lớp màng bảo vệ rồi đắp mặt nạ Bio-Cellulose ôm khít theo khuôn mặt. Thư giãn 15-20 phút, gỡ mặt nạ và massage nhẹ nhàng lượng tinh chất còn lại cho ngấm hết.",
-        "gallery": [],
+        "gallery": [
+          "/assets/images/catalog/neuraderm/neura-4-img-1.webp",
+          "/assets/images/catalog/neuraderm/neura-4-img-2.webp",
+          "/assets/images/catalog/neuraderm/neura-4-img-3.webp"
+        ],
         "line": "neura-basic"
       },
       {
@@ -1115,7 +1149,10 @@ export const brandsData = [
         "gallery": [
           "/assets/images/catalog/neuraderm/neura-1-g1.jpg",
           "/assets/images/catalog/neuraderm/neura-1-g2.jpg",
-          "/assets/images/catalog/neuraderm/neura-1-g3.jpg"
+          "/assets/images/catalog/neuraderm/neura-1-g3.jpg",
+          "/assets/images/catalog/neuraderm/neura-1-img-1.png",
+          "/assets/images/catalog/neuraderm/neura-1-img-2.png",
+          "/assets/images/catalog/neuraderm/neura-1-img-3.webp"
         ],
         "line": "neura-clinic"
       },
@@ -1157,7 +1194,10 @@ export const brandsData = [
         "gallery": [
           "/assets/images/catalog/neuraderm/neura-8-g1.jpg",
           "/assets/images/catalog/neuraderm/neura-8-g2.jpg",
-          "/assets/images/catalog/neuraderm/neura-8-g3.jpg"
+          "/assets/images/catalog/neuraderm/neura-8-g3.jpg",
+          "/assets/images/catalog/neuraderm/neura-8-img-1.webp",
+          "/assets/images/catalog/neuraderm/neura-8-img-2.png",
+          "/assets/images/catalog/neuraderm/neura-8-img-3.png"
         ],
         "line": "neura-clinic"
       },
@@ -1199,7 +1239,10 @@ export const brandsData = [
         "gallery": [
           "/assets/images/catalog/neuraderm/neura-7-g1.jpg",
           "/assets/images/catalog/neuraderm/neura-7-g2.jpg",
-          "/assets/images/catalog/neuraderm/neura-7-g3.jpg"
+          "/assets/images/catalog/neuraderm/neura-7-g3.jpg",
+          "/assets/images/catalog/neuraderm/neura-7-img-1.webp",
+          "/assets/images/catalog/neuraderm/neura-7-img-2.png",
+          "/assets/images/catalog/neuraderm/neura-7-img-3.png"
         ],
         "line": "neura-clinic"
       },
@@ -1272,7 +1315,10 @@ export const brandsData = [
         "usage": "Giữ chai xịt cách mặt 20-30cm, nhắm mắt và xịt đều 3-4 lần khắp mặt. Để khô tự nhiên hoặc vỗ nhẹ. Sử dụng bất cứ khi nào cảm thấy da khô hoặc căng thẳng.",
         "gallery": [
           "/assets/images/catalog/neuraderm/neura-2-g1.jpg",
-          "/assets/images/catalog/neuraderm/neura-2-g2.jpg"
+          "/assets/images/catalog/neuraderm/neura-2-g2.jpg",
+          "/assets/images/catalog/neuraderm/neura-2-img-1.jpg",
+          "/assets/images/catalog/neuraderm/neura-2-img-2.png",
+          "/assets/images/catalog/neuraderm/neura-2-img-3.png"
         ],
         "line": "neura-clinic"
       },
@@ -1313,7 +1359,10 @@ export const brandsData = [
         "usage": "Sử dụng ở bước cuối cùng trong chu trình dưỡng da buổi sáng. Lấy lượng kem bằng 2 ngón tay thoa đều khắp mặt và cổ trước khi ra ngoài 15-20 phút. Thoa lại sau 4-5 tiếng nếu hoạt động nhiều ngoài nắng.",
         "gallery": [
           "/assets/images/catalog/neuraderm/neura-5-g1.jpg",
-          "/assets/images/catalog/neuraderm/neura-5-g2.jpg"
+          "/assets/images/catalog/neuraderm/neura-5-g2.jpg",
+          "/assets/images/catalog/neuraderm/neura-5-img-1.jpg",
+          "/assets/images/catalog/neuraderm/neura-5-img-2.png",
+          "/assets/images/catalog/neuraderm/neura-5-img-3.png"
         ],
         "line": "neura-clinic"
       }
@@ -1357,7 +1406,10 @@ export const brandsData = [
         "gallery": [
           "/assets/images/catalog/neuraderm/neura-3-g1.jpg",
           "/assets/images/catalog/neuraderm/neura-3-g2.jpg",
-          "/assets/images/catalog/neuraderm/neura-3-g3.jpg"
+          "/assets/images/catalog/neuraderm/neura-3-g3.jpg",
+          "/assets/images/catalog/neuraderm/neura-3-img-1.webp",
+          "/assets/images/catalog/neuraderm/neura-3-img-2.webp",
+          "/assets/images/catalog/neuraderm/neura-3-img-3.webp"
         ],
         "line": "neura-basic"
       },
@@ -1399,7 +1451,10 @@ export const brandsData = [
         "gallery": [
           "/assets/images/catalog/neuraderm/neura-6-g1.jpg",
           "/assets/images/catalog/neuraderm/neura-6-g2.jpg",
-          "/assets/images/catalog/neuraderm/neura-6-g3.jpg"
+          "/assets/images/catalog/neuraderm/neura-6-g3.jpg",
+          "/assets/images/catalog/neuraderm/neura-6-img-1.png",
+          "/assets/images/catalog/neuraderm/neura-6-img-2.png",
+          "/assets/images/catalog/neuraderm/neura-6-img-3.webp"
         ],
         "line": "neura-basic"
       },
@@ -1486,7 +1541,11 @@ export const brandsData = [
           "일반 부직포 마스크 대비 유효 성분 전달률 1,000% 극대화."
         ],
         "usage": "세안 후 지지체를 제거하고 바이오 셀룰로오스 시트를 얼굴 형태에 맞춰 밀착시킵니다. 15~20분 휴식 후 떼어내고 남은 에센스를 가볍게 두드려 흡수시킵니다.",
-        "gallery": [],
+        "gallery": [
+          "/assets/images/catalog/neuraderm/neura-4-img-1.webp",
+          "/assets/images/catalog/neuraderm/neura-4-img-2.webp",
+          "/assets/images/catalog/neuraderm/neura-4-img-3.webp"
+        ],
         "line": "neura-basic"
       },
       {
@@ -1562,7 +1621,10 @@ export const brandsData = [
         "gallery": [
           "/assets/images/catalog/neuraderm/neura-1-g1.jpg",
           "/assets/images/catalog/neuraderm/neura-1-g2.jpg",
-          "/assets/images/catalog/neuraderm/neura-1-g3.jpg"
+          "/assets/images/catalog/neuraderm/neura-1-g3.jpg",
+          "/assets/images/catalog/neuraderm/neura-1-img-1.png",
+          "/assets/images/catalog/neuraderm/neura-1-img-2.png",
+          "/assets/images/catalog/neuraderm/neura-1-img-3.webp"
         ],
         "line": "neura-clinic"
       },
@@ -1604,7 +1666,10 @@ export const brandsData = [
         "gallery": [
           "/assets/images/catalog/neuraderm/neura-8-g1.jpg",
           "/assets/images/catalog/neuraderm/neura-8-g2.jpg",
-          "/assets/images/catalog/neuraderm/neura-8-g3.jpg"
+          "/assets/images/catalog/neuraderm/neura-8-g3.jpg",
+          "/assets/images/catalog/neuraderm/neura-8-img-1.webp",
+          "/assets/images/catalog/neuraderm/neura-8-img-2.png",
+          "/assets/images/catalog/neuraderm/neura-8-img-3.png"
         ],
         "line": "neura-clinic"
       },
@@ -1646,7 +1711,10 @@ export const brandsData = [
         "gallery": [
           "/assets/images/catalog/neuraderm/neura-7-g1.jpg",
           "/assets/images/catalog/neuraderm/neura-7-g2.jpg",
-          "/assets/images/catalog/neuraderm/neura-7-g3.jpg"
+          "/assets/images/catalog/neuraderm/neura-7-g3.jpg",
+          "/assets/images/catalog/neuraderm/neura-7-img-1.webp",
+          "/assets/images/catalog/neuraderm/neura-7-img-2.png",
+          "/assets/images/catalog/neuraderm/neura-7-img-3.png"
         ],
         "line": "neura-clinic"
       },
@@ -1719,7 +1787,10 @@ export const brandsData = [
         "usage": "얼굴에서 20~30cm 거리를 두고 눈을 감은 상태에서 얼굴 전체에 골고루 분사한 뒤 자연 건조시키거나 가볍게 두드려 흡수시킵니다.",
         "gallery": [
           "/assets/images/catalog/neuraderm/neura-2-g1.jpg",
-          "/assets/images/catalog/neuraderm/neura-2-g2.jpg"
+          "/assets/images/catalog/neuraderm/neura-2-g2.jpg",
+          "/assets/images/catalog/neuraderm/neura-2-img-1.jpg",
+          "/assets/images/catalog/neuraderm/neura-2-img-2.png",
+          "/assets/images/catalog/neuraderm/neura-2-img-3.png"
         ],
         "line": "neura-clinic"
       },
@@ -1760,7 +1831,10 @@ export const brandsData = [
         "usage": "아침 기초 스킨케어 마지막 단계에서 적당량을 취해 자외선에 노출되기 쉬운 얼굴, 목 등에 골고루 펴 바릅니다.",
         "gallery": [
           "/assets/images/catalog/neuraderm/neura-5-g1.jpg",
-          "/assets/images/catalog/neuraderm/neura-5-g2.jpg"
+          "/assets/images/catalog/neuraderm/neura-5-g2.jpg",
+          "/assets/images/catalog/neuraderm/neura-5-img-1.jpg",
+          "/assets/images/catalog/neuraderm/neura-5-img-2.png",
+          "/assets/images/catalog/neuraderm/neura-5-img-3.png"
         ],
         "line": "neura-clinic"
       }
