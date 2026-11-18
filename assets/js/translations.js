@@ -523,7 +523,8 @@ export const brandsData = [
         "gallery": [
           "/assets/images/catalog/dr-bargo/drbargo-2-g1.jpg",
           "/assets/images/catalog/dr-bargo/drbargo-2-g2.jpg",
-          "/assets/images/catalog/dr-bargo/drbargo-2-g3.jpg"
+          "/assets/images/catalog/dr-bargo/drbargo-2-g3.jpg",
+          "/assets/images/catalog/dr-bargo/drbargo-2-g4.jpg"
         ],
         "line": "drbargo-31c"
       },
@@ -563,7 +564,9 @@ export const brandsData = [
         ],
         "usage": "Sau khi rửa mặt, thấm đẫm toner ra bông tẩy trang lau nhẹ theo chiều cấu tạo da, hoặc vỗ trực tiếp bằng lòng bàn tay 2-3 lớp theo phương pháp 7-Skin trứ danh Hàn Quốc.",
         "gallery": [
-          "/assets/images/catalog/dr-bargo/drbargo-4-g1.jpg"
+          "/assets/images/catalog/dr-bargo/drbargo-4-g1.jpg",
+          "/assets/images/catalog/dr-bargo/drbargo-4-g2.jpg",
+          "/assets/images/catalog/dr-bargo/drbargo-4-g3.jpg"
         ],
         "line": "drbargo-31c"
       },
@@ -604,7 +607,8 @@ export const brandsData = [
         "usage": "Nhỏ 3-4 giọt serum trực tiếp lên trán và hai bên má. Dùng các đầu ngón tay vỗ nhẹ và massage hướng nâng cơ từ trong ra ngoài cho đến khi serum thẩm thấu hoàn toàn. Ngày 2 lần.",
         "gallery": [
           "/assets/images/catalog/dr-bargo/drbargo-3-g1.jpg",
-          "/assets/images/catalog/dr-bargo/drbargo-3-g2.jpg"
+          "/assets/images/catalog/dr-bargo/drbargo-3-g2.jpg",
+          "/assets/images/catalog/dr-bargo/drbargo-3-g3.jpg"
         ],
         "line": "drbargo-31c"
       },
@@ -645,7 +649,74 @@ export const brandsData = [
         "usage": "Sau bước Serum/Ampoule, lấy 2-3 pump sữa dưỡng ra lòng bàn tay, thoa đều khắp mặt và vùng cổ. Vỗ nhẹ 30 giây để dưỡng chất thẩm thấu sâu. Sử dụng đều đặn sáng và tối.",
         "gallery": [
           "/assets/images/catalog/dr-bargo/drbargo-1-g1.jpg",
-          "/assets/images/catalog/dr-bargo/drbargo-1-g2.jpg"
+          "/assets/images/catalog/dr-bargo/drbargo-1-g2.jpg",
+          "/assets/images/catalog/dr-bargo/drbargo-1-g3.jpg"
+        ],
+        "line": "drbargo-31c"
+      },
+      {
+        "id": "drbargo-5",
+        "name": "Kem cấp ẩm Madeca Soside",
+        "spec": "Tuýp 50ml",
+        "image": "/assets/images/catalog/dr-bargo/drbargo-madeca.jpg",
+        "tag": "Cấp ẩm làm dịu & phục hồi chuyên sâu",
+        "desc": "Kem dưỡng phục hồi sinh học chứa phức hợp Madecassoside (chiết xuất Rau má) và Panthenol B5, cấp ẩm tầng sâu và làm dịu tức thì làn da kích ứng, da sau treatment.",
+        "ingredients": [
+          { "name": "Madecassoside", "desc": "Làm dịu cấp tốc làn da kích ứng, thúc đẩy tái tạo mô hạt và củng cố hàng rào biểu bì." },
+          { "name": "Panthenol (Vitamin B5)", "desc": "Giữ ẩm sâu, phục hồi làn da tổn thương và giảm đỏ rát hiệu quả." }
+        ],
+        "benefits": [
+          "Cấp ẩm sâu và duy trì độ ẩm suốt 24 giờ cho da mịn màng.",
+          "Làm dịu tức thì tình trạng ửng đỏ, căng rát sau laser, peel hay meso.",
+          "Chất kem mỏng nhẹ, thẩm thấu nhanh, không gây bết rít hay bít tắc chân lông."
+        ],
+        "usage": "Thoa đều một lượng vừa đủ lên da sau bước serum, massage nhẹ nhàng để kem thẩm thấu. Dùng 2 lần mỗi ngày (sáng/tối).",
+        "gallery": [
+          "/assets/images/catalog/dr-bargo/drbargo-madeca.jpg"
+        ],
+        "line": "drbargo-31c"
+      },
+      {
+        "id": "drbargo-6",
+        "name": "Kojic Acid Dipalmitate Cream 30 mL",
+        "spec": "Tuýp 30ml",
+        "image": "/assets/images/catalog/dr-bargo/drbargo-kojic.jpg",
+        "tag": "Mờ thâm nám & dưỡng sáng da",
+        "desc": "Kem dưỡng chuyên sâu chứa Kojic Acid Dipalmitate giúp ức chế hình thành sắc tố melanin, làm mờ nám sạm, tàn nhang và dưỡng da đều màu rạng rỡ.",
+        "ingredients": [
+          { "name": "Kojic Acid Dipalmitate", "desc": "Dạng este ổn định cao của Kojic Acid, ức chế enzyme Tyrosinase ngăn ngừa hình thành hắc sắc tố." },
+          { "name": "Niacinamide", "desc": "Ngăn chặn vận chuyển melanosome lên tế bào sừng, làm sáng đều màu da." }
+        ],
+        "benefits": [
+          "Hỗ trợ làm mờ các đốm nâu, sạm nám, tàn nhang cứng đầu.",
+          "Dưỡng sáng và nâng tông da tự nhiên, ngăn ngừa tăng sắc tố sau viêm.",
+          "Công thức ổn định cao, êm dịu, không gây kích ứng hay châm chích."
+        ],
+        "usage": "Thoa một lớp mỏng lên vùng da nám, sạm hoặc toàn mặt vào buổi tối sau bước làm sạch và tinh chất. Luôn dùng kem chống nắng vào ban ngày.",
+        "gallery": [
+          "/assets/images/catalog/dr-bargo/drbargo-kojic.jpg"
+        ],
+        "line": "drbargo-31c"
+      },
+      {
+        "id": "drbargo-7",
+        "name": "Alpha Arbutin 7% Cream 30 mL",
+        "spec": "Tuýp 30ml",
+        "image": "/assets/images/catalog/dr-bargo/drbargo-arbutin.jpg",
+        "tag": "Dưỡng trắng da chuyên sâu 7%",
+        "desc": "Kem dưỡng sáng da đột phá với nồng độ Alpha Arbutin 7% tinh khiết, mang lại hiệu quả làm sáng vượt trội, đẩy lùi thâm mụn và đều màu da an toàn chuẩn y khoa.",
+        "ingredients": [
+          { "name": "Alpha Arbutin 7%", "desc": "Nồng độ tối ưu ức chế hoạt tính Tyrosinase mạnh mẽ gấp 10 lần Beta-Arbutin, làm sáng da an toàn." },
+          { "name": "Hyaluronic Acid", "desc": "Cấp nước đa tầng, duy trì làn da căng bóng mịn màng suốt cả ngày." }
+        ],
+        "benefits": [
+          "Làm mờ rõ rệt thâm mụn, đốm nâu và các vùng da xỉn màu.",
+          "Cải thiện độ đàn hồi, dưỡng trắng hồng rạng rỡ từ bên trong.",
+          "Phù hợp cho mọi loại da, kể cả làn da nhạy cảm sau các liệu trình clinic."
+        ],
+        "usage": "Lấy một lượng kem vừa đủ thoa đều lên da mặt và cổ, vỗ nhẹ cho dưỡng chất thẩm thấu hoàn toàn. Sử dụng sáng và tối đều đặn.",
+        "gallery": [
+          "/assets/images/catalog/dr-bargo/drbargo-arbutin.jpg"
         ],
         "line": "drbargo-31c"
       }
@@ -689,7 +760,8 @@ export const brandsData = [
         "gallery": [
           "/assets/images/catalog/dr-bargo/drbargo-2-g1.jpg",
           "/assets/images/catalog/dr-bargo/drbargo-2-g2.jpg",
-          "/assets/images/catalog/dr-bargo/drbargo-2-g3.jpg"
+          "/assets/images/catalog/dr-bargo/drbargo-2-g3.jpg",
+          "/assets/images/catalog/dr-bargo/drbargo-2-g4.jpg"
         ],
         "line": "drbargo-31c"
       },
@@ -729,7 +801,9 @@ export const brandsData = [
         ],
         "usage": "세안 직후 화장솜에 충분히 적셔 피부결을 따라 부드럽게 닦아내거나, 손에 덜어 가볍게 두드리며 2~3회 레이어링하여 흡수시킵니다.",
         "gallery": [
-          "/assets/images/catalog/dr-bargo/drbargo-4-g1.jpg"
+          "/assets/images/catalog/dr-bargo/drbargo-4-g1.jpg",
+          "/assets/images/catalog/dr-bargo/drbargo-4-g2.jpg",
+          "/assets/images/catalog/dr-bargo/drbargo-4-g3.jpg"
         ],
         "line": "drbargo-31c"
       },
@@ -770,7 +844,8 @@ export const brandsData = [
         "usage": "토너 다음 단계에서 3~4방울을 스포이드로 취해 얼굴 전체에 고르게 펴 바른 후, 가볍게 두드려 흡수시킵니다. 집중 케어가 필요한 부위는 한 번 더 레이어링합니다.",
         "gallery": [
           "/assets/images/catalog/dr-bargo/drbargo-3-g1.jpg",
-          "/assets/images/catalog/dr-bargo/drbargo-3-g2.jpg"
+          "/assets/images/catalog/dr-bargo/drbargo-3-g2.jpg",
+          "/assets/images/catalog/dr-bargo/drbargo-3-g3.jpg"
         ],
         "line": "drbargo-31c"
       },
@@ -811,7 +886,74 @@ export const brandsData = [
         "usage": "세럼/앰플 사용 후, 적당량(2~3회 펌핑)을 취해 얼굴과 목 전체에 부드럽게 펴 바른 후 가볍게 두드려 흡수시킵니다. 아침, 저녁 데일리 루틴으로 사용합니다.",
         "gallery": [
           "/assets/images/catalog/dr-bargo/drbargo-1-g1.jpg",
-          "/assets/images/catalog/dr-bargo/drbargo-1-g2.jpg"
+          "/assets/images/catalog/dr-bargo/drbargo-1-g2.jpg",
+          "/assets/images/catalog/dr-bargo/drbargo-1-g3.jpg"
+        ],
+        "line": "drbargo-31c"
+      },
+      {
+        "id": "drbargo-5",
+        "name": "마데카소사이드 수분크림 (Kem cấp ẩm Madeca Soside)",
+        "spec": "50ml",
+        "image": "/assets/images/catalog/dr-bargo/drbargo-madeca.jpg",
+        "tag": "집중 진정 보습 크림",
+        "desc": "아시아티코사이드와 판테놀 복합 처방으로 자극받은 피부를 빠르게 진정시키고 깊은 보습막을 형성하는 리페어 크림.",
+        "ingredients": [
+          { "name": "마데카소사이드", "desc": "자극받은 피부를 급속 진정시키고 피부 장벽을 튼튼하게 강화합니다." },
+          { "name": "판테놀 (비타민 B5)", "desc": "깊은 수분을 공급하고 손상된 피부의 재생을 돕습니다." }
+        ],
+        "benefits": [
+          "24시간 마르지 않는 깊은 보습과 피부 진정 효과.",
+          "시술 후 붉어지고 예민해진 피부에 즉각적인 편안함 제공.",
+          "끈적임 없이 산뜻하게 밀착되는 텍스처."
+        ],
+        "usage": "세럼 사용 후 적당량을 덜어 얼굴 전체에 부드럽게 펴 바릅니다.",
+        "gallery": [
+          "/assets/images/catalog/dr-bargo/drbargo-madeca.jpg"
+        ],
+        "line": "drbargo-31c"
+      },
+      {
+        "id": "drbargo-6",
+        "name": "코직산 디팔미테이트 크림 30mL (Kojic Acid Dipalmitate Cream)",
+        "spec": "30ml",
+        "image": "/assets/images/catalog/dr-bargo/drbargo-kojic.jpg",
+        "tag": "색소 침착 개선 미백 크림",
+        "desc": "코직산 디팔미테이트 성분이 멜라닌 생성을 억제하여 기미, 주근깨 및 잡티를 완화하는 집중 브라이트닝 크림.",
+        "ingredients": [
+          { "name": "코직산 디팔미테이트", "desc": "티로시나아제 효소를 억제하여 멜라닌 생성을 차단합니다." },
+          { "name": "나이아신아마이드", "desc": "피부 톤을 맑고 균일하게 가꾸어 줍니다." }
+        ],
+        "benefits": [
+          "기미, 잡티, 색소 침착 집중 개선.",
+          "피부 본연의 투명함과 화사함 회복.",
+          "안정적인 포뮬러로 피부 자극 최소화."
+        ],
+        "usage": "저녁 스킨케어 마지막 단계에서 색소 부위 또는 얼굴 전체에 얇게 펴 바릅니다.",
+        "gallery": [
+          "/assets/images/catalog/dr-bargo/drbargo-kojic.jpg"
+        ],
+        "line": "drbargo-31c"
+      },
+      {
+        "id": "drbargo-7",
+        "name": "알파 알부틴 7% 크림 30mL (Alpha Arbutin 7% Cream)",
+        "spec": "30ml",
+        "image": "/assets/images/catalog/dr-bargo/drbargo-arbutin.jpg",
+        "tag": "고농축 7% 집중 미백 크림",
+        "desc": "고순도 알파 알부틴 7%를 함유하여 칙칙한 피부 톤을 환하게 밝혀주고 잡티 흔적을 케어하는 프리미엄 미백 크림.",
+        "ingredients": [
+          { "name": "알파 알부틴 7%", "desc": "기존 베타 알부틴 대비 강력한 효능으로 멜라닌을 집중 케어합니다." },
+          { "name": "히알루론산", "desc": "충분한 수분을 공급하여 촉촉하고 탄력 있는 피부 유지." }
+        ],
+        "benefits": [
+          "여드름 자국, 칙칙한 피부 톤 집중 개선.",
+          "피부 속부터 차오르는 맑은 광채 선사.",
+          "민감성 피부도 안심하고 사용할 수 있는 저자극 포뮬러."
+        ],
+        "usage": "아침과 저녁 스킨케어 시 적당량을 덜어 부드럽게 흡수시켜 줍니다.",
+        "gallery": [
+          "/assets/images/catalog/dr-bargo/drbargo-arbutin.jpg"
         ],
         "line": "drbargo-31c"
       }
@@ -1821,7 +1963,10 @@ export const brandsData = [
         "driveVideoId": null,
         "driveVideoUrl": null,
         "image": "/assets/images/catalog/medipharm/stemc-5.jpg",
-        "gallery": [],
+        "gallery": [
+          "/assets/images/catalog/medipharm/stemc-5-g1.webp",
+          "/assets/images/catalog/medipharm/stemc-5-g2.webp"
+        ],
         "line": "medipharm-stemc"
       },
       {
@@ -1861,7 +2006,8 @@ export const brandsData = [
         "usage": "Sau khi rửa mặt, thấm đẫm ra bông cotton lau nhẹ khắp mặt, hoặc vỗ trực tiếp bằng tay 2-3 lớp theo phương pháp 7-Skin để tạo hiệu ứng căng bóng Glass Skin.",
         "gallery": [
           "/assets/images/catalog/medipharm/stemc-4-g1.jpg",
-          "/assets/images/catalog/medipharm/stemc-4-g2.jpg"
+          "/assets/images/catalog/medipharm/stemc-4-g2.jpg",
+          "/assets/images/catalog/medipharm/stemc-4-g3.jpg"
         ],
         "line": "medipharm-stemc"
       },
@@ -1878,7 +2024,9 @@ export const brandsData = [
         "driveVideoId": null,
         "driveVideoUrl": null,
         "image": "/assets/images/catalog/medipharm/stemc-6.jpg",
-        "gallery": [],
+        "gallery": [
+          "/assets/images/catalog/medipharm/stemc-6-g1.webp"
+        ],
         "line": "medipharm-stemc"
       },
       {
@@ -1897,7 +2045,9 @@ export const brandsData = [
         "gallery": [
           "/assets/images/catalog/medipharm/stemc-2-g1.jpg",
           "/assets/images/catalog/medipharm/stemc-2-g2.jpg",
-          "/assets/images/catalog/medipharm/stemc-2-g3.jpg"
+          "/assets/images/catalog/medipharm/stemc-2-g3.jpg",
+          "/assets/images/catalog/medipharm/stemc-2-g4.webp",
+          "/assets/images/catalog/medipharm/stemc-2-g5.webp"
         ],
         "line": "medipharm-stemc"
       },
@@ -1939,7 +2089,9 @@ export const brandsData = [
         "gallery": [
           "/assets/images/catalog/medipharm/stemc-3-g1.jpg",
           "/assets/images/catalog/medipharm/stemc-3-g2.jpg",
-          "/assets/images/catalog/medipharm/stemc-3-g3.jpg"
+          "/assets/images/catalog/medipharm/stemc-3-g3.jpg",
+          "/assets/images/catalog/medipharm/stemc-3-g4.jpg",
+          "/assets/images/catalog/medipharm/stemc-3-g5.webp"
         ],
         "line": "medipharm-stemc"
       },
@@ -1980,7 +2132,8 @@ export const brandsData = [
         "usage": "Sau các bước dưỡng da cơ bản, lấy một lượng kem BB bằng hạt đậu chấm đều lên trán, mũi, hai má và cằm. Dùng bông mút hoặc đầu ngón tay tán đều từ trong ra ngoài.",
         "gallery": [
           "/assets/images/catalog/medipharm/stemc-1-g1.jpg",
-          "/assets/images/catalog/medipharm/stemc-1-g2.jpg"
+          "/assets/images/catalog/medipharm/stemc-1-g2.jpg",
+          "/assets/images/catalog/medipharm/stemc-1-g3.jpg"
         ],
         "line": "medipharm-stemc"
       }
@@ -1999,7 +2152,10 @@ export const brandsData = [
         "driveVideoId": null,
         "driveVideoUrl": null,
         "image": "/assets/images/catalog/medipharm/stemc-5.jpg",
-        "gallery": [],
+        "gallery": [
+          "/assets/images/catalog/medipharm/stemc-5-g1.webp",
+          "/assets/images/catalog/medipharm/stemc-5-g2.webp"
+        ],
         "line": "medipharm-stemc"
       },
       {
@@ -2039,7 +2195,8 @@ export const brandsData = [
         "usage": "세안 후 화장솜에 충분히 적셔 닦아내거나, 손바닥에 덜어 가볍게 두드리며 여러 번 덧발라 흡수시킵니다.",
         "gallery": [
           "/assets/images/catalog/medipharm/stemc-4-g1.jpg",
-          "/assets/images/catalog/medipharm/stemc-4-g2.jpg"
+          "/assets/images/catalog/medipharm/stemc-4-g2.jpg",
+          "/assets/images/catalog/medipharm/stemc-4-g3.jpg"
         ],
         "line": "medipharm-stemc"
       },
@@ -2056,7 +2213,9 @@ export const brandsData = [
         "driveVideoId": null,
         "driveVideoUrl": null,
         "image": "/assets/images/catalog/medipharm/stemc-6.jpg",
-        "gallery": [],
+        "gallery": [
+          "/assets/images/catalog/medipharm/stemc-6-g1.webp"
+        ],
         "line": "medipharm-stemc"
       },
       {
@@ -2075,7 +2234,9 @@ export const brandsData = [
         "gallery": [
           "/assets/images/catalog/medipharm/stemc-2-g1.jpg",
           "/assets/images/catalog/medipharm/stemc-2-g2.jpg",
-          "/assets/images/catalog/medipharm/stemc-2-g3.jpg"
+          "/assets/images/catalog/medipharm/stemc-2-g3.jpg",
+          "/assets/images/catalog/medipharm/stemc-2-g4.webp",
+          "/assets/images/catalog/medipharm/stemc-2-g5.webp"
         ],
         "line": "medipharm-stemc"
       },
@@ -2117,7 +2278,9 @@ export const brandsData = [
         "gallery": [
           "/assets/images/catalog/medipharm/stemc-3-g1.jpg",
           "/assets/images/catalog/medipharm/stemc-3-g2.jpg",
-          "/assets/images/catalog/medipharm/stemc-3-g3.jpg"
+          "/assets/images/catalog/medipharm/stemc-3-g3.jpg",
+          "/assets/images/catalog/medipharm/stemc-3-g4.jpg",
+          "/assets/images/catalog/medipharm/stemc-3-g5.webp"
         ],
         "line": "medipharm-stemc"
       },
@@ -2158,7 +2321,8 @@ export const brandsData = [
         "usage": "기초 스킨케어 마지막 단계에서 적당량을 덜어 얼굴 전체에 골고루 펴 바른 후 가볍게 두드려 밀착시킵니다.",
         "gallery": [
           "/assets/images/catalog/medipharm/stemc-1-g1.jpg",
-          "/assets/images/catalog/medipharm/stemc-1-g2.jpg"
+          "/assets/images/catalog/medipharm/stemc-1-g2.jpg",
+          "/assets/images/catalog/medipharm/stemc-1-g3.jpg"
         ],
         "line": "medipharm-stemc"
       }
@@ -2240,7 +2404,8 @@ export const brandsData = [
         "usage": "Tạo bọt và massage nhẹ nhàng da đầu 2-3 phút rồi xả sạch.",
         "driveVideoUrl": null,
         "gallery": [
-          "/assets/images/catalog/smib/smib-3-g1.jpg"
+          "/assets/images/catalog/smib/smib-3-g1.jpg",
+          "/assets/images/catalog/smib/smib-3-g2.png"
         ],
         "line": "smib-lactobio"
       },
@@ -2266,7 +2431,9 @@ export const brandsData = [
         "usage": "Sau khi gội sạch, thoa kem ủ từ thân đến ngọn tóc, chờ 1 phút rồi xả sạch với nước.",
         "driveVideoUrl": null,
         "gallery": [
-          "/assets/images/catalog/smib/smib-8-g1.jpg"
+          "/assets/images/catalog/smib/smib-8-g1.jpg",
+          "/assets/images/catalog/smib/smib-8-g2.jpg",
+          "/assets/images/catalog/smib/smib-8-g3.jpg"
         ],
         "line": "smib-lactobio"
       },
@@ -2308,7 +2475,9 @@ export const brandsData = [
         "driveVideoUrl": null,
         "gallery": [
           "/assets/images/catalog/smib/smib-1-g1.jpg",
-          "/assets/images/catalog/smib/smib-1-g2.jpg"
+          "/assets/images/catalog/smib/smib-1-g2.jpg",
+          "/assets/images/catalog/smib/smib-1-g3.jfif",
+          "/assets/images/catalog/smib/smib-1-g4.jpg"
         ],
         "line": "smib-colorchange"
       },
@@ -2345,7 +2514,8 @@ export const brandsData = [
         "driveVideoUrl": null,
         "gallery": [
           "/assets/images/catalog/smib/smib-2-g1.jpg",
-          "/assets/images/catalog/smib/smib-2-g2.jpg"
+          "/assets/images/catalog/smib/smib-2-g2.jpg",
+          "/assets/images/catalog/smib/smib-2-g3.jpeg"
         ],
         "line": "smib-colorchange"
       },
@@ -2372,7 +2542,8 @@ export const brandsData = [
         "usage": "Dùng gội đầu hằng ngày.",
         "driveVideoUrl": null,
         "gallery": [
-          "/assets/images/catalog/smib/smib-5-g1.jpg"
+          "/assets/images/catalog/smib/smib-5-g1.jpg",
+          "/assets/images/catalog/smib/smib-5-g2.jpg"
         ],
         "line": "smib-innabi"
       },
@@ -2408,7 +2579,8 @@ export const brandsData = [
         "usage": "Lấy một lượng vừa đủ massage đều khắp da đầu và thân tóc, để 2-3 phút rồi xả sạch với nước.",
         "driveVideoUrl": null,
         "gallery": [
-          "/assets/images/catalog/smib/smib-6-g1.jpg"
+          "/assets/images/catalog/smib/smib-6-g1.jpg",
+          "/assets/images/catalog/smib/smib-6-g2.jpg"
         ],
         "line": "smib-innabi"
       },
@@ -2438,7 +2610,8 @@ export const brandsData = [
         "usage": "Xịt trực tiếp vào chân tóc khi khô hoặc sau khi gội đầu, dùng ngón tay massage nhẹ 1 phút.",
         "driveVideoUrl": null,
         "gallery": [
-          "/assets/images/catalog/smib/smib-7-g1.jpg"
+          "/assets/images/catalog/smib/smib-7-g1.jpg",
+          "/assets/images/catalog/smib/smib-7-g2.jpg"
         ],
         "line": "smib-innabi"
       }
@@ -2475,7 +2648,8 @@ export const brandsData = [
         "usage": "두피를 중심으로 2~3분간 마사지 후 깨끗이 헹굽니다.",
         "driveVideoUrl": null,
         "gallery": [
-          "/assets/images/catalog/smib/smib-3-g1.jpg"
+          "/assets/images/catalog/smib/smib-3-g1.jpg",
+          "/assets/images/catalog/smib/smib-3-g2.png"
         ],
         "line": "smib-lactobio"
       },
@@ -2501,7 +2675,9 @@ export const brandsData = [
         "usage": "샴푸 후 모발 끝을 중심으로 도포하고 1분 뒤 미온수로 헹궈냅니다.",
         "driveVideoUrl": null,
         "gallery": [
-          "/assets/images/catalog/smib/smib-8-g1.jpg"
+          "/assets/images/catalog/smib/smib-8-g1.jpg",
+          "/assets/images/catalog/smib/smib-8-g2.jpg",
+          "/assets/images/catalog/smib/smib-8-g3.jpg"
         ],
         "line": "smib-lactobio"
       },
@@ -2543,7 +2719,9 @@ export const brandsData = [
         "driveVideoUrl": null,
         "gallery": [
           "/assets/images/catalog/smib/smib-1-g1.jpg",
-          "/assets/images/catalog/smib/smib-1-g2.jpg"
+          "/assets/images/catalog/smib/smib-1-g2.jpg",
+          "/assets/images/catalog/smib/smib-1-g3.jfif",
+          "/assets/images/catalog/smib/smib-1-g4.jpg"
         ],
         "line": "smib-colorchange"
       },
@@ -2580,7 +2758,8 @@ export const brandsData = [
         "driveVideoUrl": null,
         "gallery": [
           "/assets/images/catalog/smib/smib-2-g1.jpg",
-          "/assets/images/catalog/smib/smib-2-g2.jpg"
+          "/assets/images/catalog/smib/smib-2-g2.jpg",
+          "/assets/images/catalog/smib/smib-2-g3.jpeg"
         ],
         "line": "smib-colorchange"
       },
@@ -2607,7 +2786,8 @@ export const brandsData = [
         "usage": "매일 데일리 샴푸로 사용합니다.",
         "driveVideoUrl": null,
         "gallery": [
-          "/assets/images/catalog/smib/smib-5-g1.jpg"
+          "/assets/images/catalog/smib/smib-5-g1.jpg",
+          "/assets/images/catalog/smib/smib-5-g2.jpg"
         ],
         "line": "smib-innabi"
       },
@@ -2643,7 +2823,8 @@ export const brandsData = [
         "usage": "적당량을 취해 두피와 모발에 마사지하듯 거품을 낸 뒤 2~3분 후 미온수로 깨끗이 헹궈냅니다.",
         "driveVideoUrl": null,
         "gallery": [
-          "/assets/images/catalog/smib/smib-6-g1.jpg"
+          "/assets/images/catalog/smib/smib-6-g1.jpg",
+          "/assets/images/catalog/smib/smib-6-g2.jpg"
         ],
         "line": "smib-innabi"
       },
@@ -2673,7 +2854,8 @@ export const brandsData = [
         "usage": "두피에 직접 분사 후 손가락 끝으로 가볍게 마사지하여 흡수시킵니다.",
         "driveVideoUrl": null,
         "gallery": [
-          "/assets/images/catalog/smib/smib-7-g1.jpg"
+          "/assets/images/catalog/smib/smib-7-g1.jpg",
+          "/assets/images/catalog/smib/smib-7-g2.jpg"
         ],
         "line": "smib-innabi"
       }

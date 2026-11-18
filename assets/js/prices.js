@@ -37,10 +37,22 @@ export const productPrices = {
   'stemc-2':  { price: 1400000, unit: 'Hũ 50ml' },        // #25 Kem dưỡng cấp ẩm TBG Stem C
 
   // DR.BARGO (31°C)
-  'drbargo-1': { price: 420000, unit: 'Chai 150ml' },     // #22 Emulsion
-  'drbargo-2': { price: 420000, unit: 'Chai 150ml' },     // #23 Sữa rửa mặt
-  'drbargo-3': { price: 660000, unit: 'Lọ 50ml' },        // #26 Serum (Niacinamide 20% + 5 Cica)
-  'drbargo-4': { price: 420000, unit: 'Chai 400ml' },     // #24 Toner
+  'drbargo-1': { price: 420000, unit: 'Chai 130ml' },     // #22 Sữa dưỡng Emulsion Dr Bargo 31 độ C
+  'drbargo-2': { price: 420000, unit: 'Tuýp 150ml' },     // #23 Sữa rửa mặt Dr Bargo 31 độ C
+  'drbargo-3': { price: 660000, unit: 'Chai 50ml' },      // #26 Serum Niacinamide 20%
+  'drbargo-4': { price: 420000, unit: 'Chai 150ml' },     // #24 Toner Dr Bargo 31 độ C
+  'drbargo-5': { price: 660000, unit: 'Tuýp 50ml' },      // Kem cấp ẩm Madeca Soside
+  'drbargo-6': { price: 510000, unit: 'Tuýp 30ml' },      // Kojic Acid Dipalmitate Cream 30 mL
+  'drbargo-7': { price: 510000, unit: 'Tuýp 30ml' },      // Alpha Arbutin 7% Cream 30 mL
+
+  // SMIB (Hair & Scalp Care)
+  'smib-5': { price: 740000, unit: 'Chai 500ml' },        // SMIB INNABI SHAMPOO
+  'smib-6': { price: 740000, unit: 'Chai 500ml' },        // SMIB INNABI TREATMENT
+  'smib-7': { price: 689000, unit: 'Chai xịt 115ml' },    // SMIB INNABI SCALP ESSENCE
+  'smib-3': { price: 580000, unit: 'Chai 400ml' },        // SMIB LACTO BIO REPAIR SHAMPOO 400ml
+  'smib-1': { price: 565000, unit: 'Chai 200ml' },        // SMIB LACTO BIO COLOR CHANGE SHAMPOO BLACK
+  'smib-2': { price: 565000, unit: 'Chai 200ml' },        // SMIB LACTO BIO COLOR CHANGE SHAMPOO BROWN
+  'smib-8': { price: 520000, unit: 'Hũ 400g' },           // SMIB LACTO BIO SILK HAIR TREATMENT
 
   // THỰC PHẨM CHỨC NĂNG · VN Healing Farm
   'hoat-luc-truong-tho': { price: 3500000, unit: '3,75g × 50 viên / hộp' },
