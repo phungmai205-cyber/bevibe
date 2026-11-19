@@ -326,19 +326,16 @@ export function initAccount(ctx) {
           <button type="button" class="auth-tab ${roleTab === 'counselor' ? 'active' : ''}" data-role-tab="counselor">Counselor (Tư vấn viên)</button>
         </div>
 
-        <!-- 1. Form Đăng nhập Khách hàng -->
+        <!-- 1. Form Đăng nhập Khách hàng (CHỈ CẦN GMAIL) -->
         <form id="acctLoginFormCust" class="auth-form" ${roleTab === 'customer' ? '' : 'hidden'} autocomplete="on">
           <label class="auth-field">
-            <span>Địa chỉ Email</span>
-            <input type="email" name="email" class="auth-input" placeholder="email@gmail.com" required>
-          </label>
-          <label class="auth-field">
-            <span>Mật khẩu</span>
-            <input type="password" name="password" class="auth-input" placeholder="Mật khẩu của bạn" required>
+            <span>Địa chỉ Gmail của bạn</span>
+            <input type="email" name="email" class="auth-input" placeholder="Ví dụ: yourname@gmail.com" required>
+            <small class="auth-hint">Chỉ cần nhập Gmail để đăng nhập thành công ngay.</small>
           </label>
           <div class="auth-error-box" id="acctLoginCustErr" ${formError && roleTab === 'customer' ? '' : 'hidden'}>${escapeHtml(formError)}</div>
           <button type="submit" class="auth-submit-btn">
-            <span>Đăng nhập Khách hàng</span>
+            <span>✨ Đăng nhập bằng Gmail</span>
           </button>
         </form>
 
@@ -346,8 +343,8 @@ export function initAccount(ctx) {
         <form id="acctLoginFormCsl" class="auth-form" ${roleTab === 'counselor' ? '' : 'hidden'} autocomplete="on">
           <label class="auth-field">
             <span>Mã Counselor / Mật khẩu (dạng BV0001)</span>
-            <input type="text" name="cslCode" class="auth-input" placeholder="Ví dụ: BV0001 hoặc BV 0001" required>
-            <small class="auth-hint">Nhập mã số Counselor do beVIBE cấp để truy cập Dashboard giá sỉ &amp; quỹ thưởng.</small>
+            <input type="text" name="cslCode" class="auth-input" placeholder="Ví dụ: BV0001 hoặc BV0008" required>
+            <small class="auth-hint">Nhập mã số Counselor do beVIBE cấp (mật khẩu chính là mã này).</small>
           </label>
           <div class="auth-error-box" id="acctLoginCslErr" ${formError && roleTab === 'counselor' ? '' : 'hidden'}>${escapeHtml(formError)}</div>
           <button type="submit" class="auth-submit-btn auth-submit-csl">
@@ -369,63 +366,57 @@ export function initAccount(ctx) {
       // TAB ĐĂNG KÝ
       contentHtml = `
         ${tabsHtml}
+        <!-- Lựa chọn vai trò đăng ký -->
+        <div class="auth-field" style="margin-bottom: 14px;">
+          <span style="font-size: 0.88rem; font-weight: 600; color: #334155; margin-bottom: 6px; display: block;">Chọn loại tài khoản đăng ký:</span>
+          <div class="auth-role-group">
+            <label class="auth-role-opt ${regRole === 'customer' ? 'is-active' : ''}" id="acctRoleOptCust">
+              <input type="radio" name="accountRole" value="customer" ${regRole === 'customer' ? 'checked' : ''}>
+              <div>
+                <strong>Khách hàng cá nhân</strong>
+                <small>Chỉ cần Gmail, đăng nhập thành công ngay</small>
+              </div>
+            </label>
+            <label class="auth-role-opt ${regRole === 'counselor' ? 'is-active' : ''}" id="acctRoleOptCsl">
+              <input type="radio" name="accountRole" value="counselor" ${regRole === 'counselor' ? 'checked' : ''}>
+              <div>
+                <strong>Counselor (Tư vấn viên)</strong>
+                <small>Đăng ký Gmail, hiện mã &amp; mật khẩu sỉ 55%</small>
+              </div>
+            </label>
+          </div>
+        </div>
+
         <form id="acctRegisterForm" class="auth-form" autocomplete="off">
+          <!-- Trường Gmail -->
           <label class="auth-field">
-            <span>Họ và tên <strong class="req" style="color: #dc2626;">*</strong></span>
-            <input type="text" name="name" class="auth-input" placeholder="Ví dụ: Nguyễn Văn An" required>
+            <span>Địa chỉ Gmail của bạn <strong class="req" style="color: #dc2626;">*</strong></span>
+            <input type="email" name="email" class="auth-input" placeholder="Ví dụ: yourname@gmail.com" required>
+            <small class="auth-hint" id="acctEmailHint">${regRole === 'customer' ? 'Khách hàng chỉ cần nhập Gmail là đăng nhập thành công ngay.' : 'Hệ thống dùng Gmail để gửi thông tin và quản lý tài khoản Counselor.'}</small>
           </label>
 
-          <label class="auth-field">
+          <!-- Họ và tên -->
+          <label class="auth-field" id="acctNameField">
+            <span>Họ và tên <strong class="req" id="acctNameReq" style="color: #dc2626; ${regRole === 'customer' ? 'display:none;' : ''}">*</strong></span>
+            <input type="text" name="name" class="auth-input" placeholder="${regRole === 'customer' ? 'Ví dụ: Nguyễn Văn An (tùy chọn)' : 'Ví dụ: Nguyễn Văn An'}" ${regRole === 'counselor' ? 'required' : ''}>
+          </label>
+
+          <!-- Số điện thoại: chỉ dành cho Counselor -->
+          <label class="auth-field" id="acctPhoneField" ${regRole === 'counselor' ? '' : 'hidden'}>
             <span>Số điện thoại <strong class="req" style="color: #dc2626;">*</strong></span>
-            <input type="tel" name="phone" class="auth-input" placeholder="Ví dụ: 0912 345 678" required>
+            <input type="tel" name="phone" class="auth-input" placeholder="Ví dụ: 0912 345 678">
           </label>
 
-          <label class="auth-field">
-            <span>Địa chỉ Email <strong class="req" style="color: #dc2626;">*</strong></span>
-            <input type="email" name="email" class="auth-input" placeholder="email@gmail.com" required>
-          </label>
-
-          <!-- Chọn vai trò -->
-          <div class="auth-field">
-            <span>Loại tài khoản:</span>
-            <div class="auth-role-group">
-              <label class="auth-role-opt ${regRole === 'customer' ? 'is-active' : ''}" id="acctRoleOptCust">
-                <input type="radio" name="accountRole" value="customer" ${regRole === 'customer' ? 'checked' : ''}>
-                <div>
-                  <strong>Khách hàng cá nhân</strong>
-                  <small>Mua sắm, lưu giỏ hàng &amp; địa chỉ</small>
-                </div>
-              </label>
-              <label class="auth-role-opt ${regRole === 'counselor' ? 'is-active' : ''}" id="acctRoleOptCsl">
-                <input type="radio" name="accountRole" value="counselor" ${regRole === 'counselor' ? 'checked' : ''}>
-                <div>
-                  <strong>Counselor (Tư vấn viên sỉ)</strong>
-                  <small>Giảm giá sỉ 55% + Thưởng 5%</small>
-                </div>
-              </label>
-            </div>
-          </div>
-
-          <div id="acctCustPwFields" class="auth-pw-block" ${regRole === 'customer' ? '' : 'hidden'}>
-            <label class="auth-field">
-              <span>Mật khẩu <strong class="req" style="color: #dc2626;">*</strong></span>
-              <input type="password" name="password" class="auth-input" placeholder="Nhập ít nhất 6 ký tự">
-            </label>
-            <label class="auth-field">
-              <span>Xác nhận mật khẩu <strong class="req" style="color: #dc2626;">*</strong></span>
-              <input type="password" name="passwordConfirm" class="auth-input" placeholder="Nhập lại mật khẩu">
-            </label>
-          </div>
-
+          <!-- Chú thích Counselor: mật khẩu tương ứng mã số -->
           <div id="acctCslNoteField" class="auth-csl-note" ${regRole === 'counselor' ? '' : 'hidden'}>
-            <div class="csl-note-badge">✨ Lưu ý dành cho Counselor</div>
-            <p>Mật khẩu đăng nhập sẽ là <strong>Mã số Counselor (như BV0001)</strong> do hệ thống cấp. Tài khoản được kích hoạt tức thì để bạn đăng nhập ngay mà không cần chờ đợi!</p>
+            <div class="csl-note-badge">🔑 Cấp mã &amp; Mật khẩu đăng nhập</div>
+            <p>Sau khi bấm Đăng ký, hệ thống sẽ <strong>hiển thị ngay Mật khẩu tương ứng với Mã số Counselor (ví dụ: BV0014)</strong> để bạn đăng nhập tức thì.</p>
           </div>
 
           <div class="auth-error-box" id="acctRegErr" ${formError ? '' : 'hidden'}>${escapeHtml(formError)}</div>
 
-          <button type="submit" class="auth-submit-btn" id="btnAcctSubmitRegister">
-            <span>Đăng ký ngay</span>
+          <button type="submit" class="auth-submit-btn ${regRole === 'counselor' ? 'auth-submit-csl' : ''}" id="btnAcctSubmitRegister">
+            <span>${regRole === 'customer' ? '✨ Đăng ký &amp; Đăng nhập ngay bằng Gmail' : '🚀 Đăng ký Counselor beVIBE'}</span>
           </button>
         </form>
 
@@ -470,24 +461,48 @@ export function initAccount(ctx) {
     });
 
     const radioRoles = body.querySelectorAll('input[name="accountRole"]');
-    const optCust = body.querySelector('#acctRoleOptCust');
-    const optCsl = body.querySelector('#acctRoleOptCsl');
-    const custPwFields = body.querySelector('#acctCustPwFields');
-    const cslNoteField = body.querySelector('#acctCslNoteField');
-
     radioRoles.forEach((r) => {
       r.addEventListener('change', () => {
         regRole = r.value;
+        const optCust = body.querySelector('#acctRoleOptCust');
+        const optCsl = body.querySelector('#acctRoleOptCsl');
+        const phoneField = body.querySelector('#acctPhoneField');
+        const cslNote = body.querySelector('#acctCslNoteField');
+        const emailHint = body.querySelector('#acctEmailHint');
+        const nameReq = body.querySelector('#acctNameReq');
+        const nameInput = body.querySelector('#acctNameField input');
+        const submitBtn = body.querySelector('#btnAcctSubmitRegister');
+
         if (r.value === 'counselor') {
           optCsl?.classList.add('is-active');
           optCust?.classList.remove('is-active');
-          if (custPwFields) custPwFields.hidden = true;
-          if (cslNoteField) cslNoteField.hidden = false;
+          if (phoneField) phoneField.hidden = false;
+          if (cslNote) cslNote.hidden = false;
+          if (emailHint) emailHint.textContent = 'Hệ thống dùng Gmail để gửi thông tin và quản lý tài khoản Counselor.';
+          if (nameReq) nameReq.style.display = 'inline';
+          if (nameInput) {
+            nameInput.placeholder = 'Ví dụ: Nguyễn Văn An';
+            nameInput.required = true;
+          }
+          if (submitBtn) {
+            submitBtn.className = 'auth-submit-btn auth-submit-csl';
+            submitBtn.querySelector('span').textContent = '🚀 Đăng ký Counselor beVIBE';
+          }
         } else {
           optCust?.classList.add('is-active');
           optCsl?.classList.remove('is-active');
-          if (custPwFields) custPwFields.hidden = false;
-          if (cslNoteField) cslNoteField.hidden = true;
+          if (phoneField) phoneField.hidden = true;
+          if (cslNote) cslNote.hidden = true;
+          if (emailHint) emailHint.textContent = 'Khách hàng chỉ cần nhập Gmail là đăng nhập thành công ngay.';
+          if (nameReq) nameReq.style.display = 'none';
+          if (nameInput) {
+            nameInput.placeholder = 'Ví dụ: Nguyễn Văn An (tùy chọn)';
+            nameInput.required = false;
+          }
+          if (submitBtn) {
+            submitBtn.className = 'auth-submit-btn';
+            submitBtn.querySelector('span').textContent = '✨ Đăng ký & Đăng nhập ngay bằng Gmail';
+          }
         }
       });
     });
@@ -497,20 +512,43 @@ export function initAccount(ctx) {
       formLoginCust.addEventListener('submit', (e) => {
         e.preventDefault();
         const emailVal = formLoginCust.email.value.trim().toLowerCase();
-        const pwVal = formLoginCust.password.value;
-        const allCust = getRegisteredCustomers();
-        const found = allCust.find((c) => c.email === emailVal && c.password === pwVal);
-        if (!found) {
-          formError = 'Email hoặc mật khẩu chưa chính xác. Vui lòng thử lại hoặc chọn Đăng ký.';
+        if (!emailVal || !EMAIL_RE.test(emailVal)) {
+          formError = 'Vui lòng nhập địa chỉ Gmail hợp lệ.';
           const errEl = body.querySelector('#acctLoginCustErr');
           if (errEl) { errEl.textContent = formError; errEl.hidden = false; }
           return;
         }
+
+        const allCust = getRegisteredCustomers();
+        let found = allCust.find((c) => c.email.toLowerCase() === emailVal);
+        if (!found) {
+          // Tự động tạo tài khoản: khách hàng chỉ cần Gmail là đăng nhập thành công
+          const defaultName = emailVal.split('@')[0];
+          found = {
+            id: `CUST-${Date.now()}`,
+            name: defaultName,
+            email: emailVal,
+            phone: '',
+            role: 'customer',
+            createdAt: new Date().toISOString()
+          };
+          allCust.push(found);
+          localStorage.setItem('bevibe_registered_customers_v1', JSON.stringify(allCust));
+          sendOrderToSupabase({
+            order_type: 'Khách hàng đăng nhập mới bằng Gmail',
+            customer_name: defaultName,
+            email: emailVal,
+            phone: '',
+            clinic_or_spa: 'Khách hàng cá nhân',
+            collaboration_need: 'Tài khoản website beVIBE',
+            note: 'Đăng nhập tức thì bằng Gmail'
+          }).catch(() => {});
+        }
+
         setCurrentCustomer(found);
         closeModal();
         renderButton();
         showToast(`Đăng nhập thành công! Xin chào ${found.name} ✓`);
-        window.location.reload();
       });
     }
 
@@ -553,61 +591,73 @@ export function initAccount(ctx) {
     if (formReg) {
       formReg.addEventListener('submit', (e) => {
         e.preventDefault();
-        const nameVal = formReg.name.value.trim();
-        const phoneVal = formReg.phone.value.trim();
         const emailVal = formReg.email.value.trim().toLowerCase();
+        const nameVal = (formReg.name?.value || '').trim();
+        const phoneVal = (formReg.phone?.value || '').trim();
         const errEl = body.querySelector('#acctRegErr');
 
-        if (!nameVal || !phoneVal || !emailVal) {
-          formError = 'Vui lòng điền đầy đủ Họ tên, Số điện thoại và Email.';
+        if (!emailVal || !EMAIL_RE.test(emailVal)) {
+          formError = 'Vui lòng nhập địa chỉ Gmail hợp lệ.';
           if (errEl) { errEl.textContent = formError; errEl.hidden = false; }
           return;
         }
 
         if (regRole === 'customer') {
-          const pw = formReg.password ? formReg.password.value : '';
-          const pw2 = formReg.passwordConfirm ? formReg.passwordConfirm.value : '';
-          if (pw.length < 6) {
-            formError = 'Mật khẩu cần ít nhất 6 ký tự.';
-            if (errEl) { errEl.textContent = formError; errEl.hidden = false; }
-            return;
-          }
-          if (pw !== pw2) {
-            formError = 'Hai mật khẩu chưa trùng khớp.';
-            if (errEl) { errEl.textContent = formError; errEl.hidden = false; }
-            return;
-          }
+          // KHÁCH HÀNG: CHỈ CẦN GMAIL LÀ ĐĂNG NHẬP THÀNH CÔNG
+          const displayName = nameVal || emailVal.split('@')[0];
           const allCust = getRegisteredCustomers();
-          if (allCust.some((c) => c.email === emailVal)) {
-            formError = 'Email này đã được đăng ký tài khoản. Vui lòng chọn Đăng nhập.';
-            if (errEl) { errEl.textContent = formError; errEl.hidden = false; }
-            return;
+          let cust = allCust.find((c) => c.email.toLowerCase() === emailVal);
+          if (!cust) {
+            cust = {
+              id: `CUST-${Date.now()}`,
+              name: displayName,
+              email: emailVal,
+              phone: phoneVal,
+              role: 'customer',
+              createdAt: new Date().toISOString()
+            };
+            allCust.push(cust);
+            localStorage.setItem('bevibe_registered_customers_v1', JSON.stringify(allCust));
+          } else if (nameVal) {
+            cust.name = displayName;
+            if (phoneVal) cust.phone = phoneVal;
+            localStorage.setItem('bevibe_registered_customers_v1', JSON.stringify(allCust));
           }
-          const newCust = { name: nameVal, phone: phoneVal, email: emailVal, password: pw, createdAt: new Date().toISOString() };
-          allCust.push(newCust);
-          localStorage.setItem('bevibe_registered_customers_v1', JSON.stringify(allCust));
-          setCurrentCustomer(newCust);
+
+          setCurrentCustomer(cust);
           sendOrderToSupabase({
-            order_type: 'Khách hàng đăng ký mới',
-            customer_name: nameVal,
-            phone: phoneVal,
+            order_type: 'Khách hàng đăng ký bằng Gmail',
+            customer_name: displayName,
+            phone: phoneVal || 'Chưa cung cấp',
             email: emailVal,
             clinic_or_spa: 'Khách hàng cá nhân',
-            collaboration_need: 'Tạo tài khoản website beVIBE',
-            note: 'Đăng ký thành công từ website'
+            collaboration_need: 'Đăng ký & đăng nhập qua Gmail',
+            note: 'Kích hoạt đăng nhập thành công tức thì'
           }).catch(() => {});
+
           closeModal();
           renderButton();
-          showToast(`Xin chào ${nameVal}! Đăng ký tài khoản thành công ✓`);
-          window.location.reload();
+          showToast(`Đăng nhập thành công! Xin chào ${displayName} ✓`);
         } else {
-          // Counselor
+          // COUNSELOR: ĐĂNG KÝ BẰNG GMAIL VÀ HIỆN MẬT KHẨU TƯƠNG ỨNG MÃ SỐ
+          if (!nameVal) {
+            formError = 'Vui lòng nhập họ và tên Tư vấn viên.';
+            if (errEl) { errEl.textContent = formError; errEl.hidden = false; }
+            return;
+          }
+          if (!phoneVal) {
+            formError = 'Vui lòng nhập số điện thoại liên hệ.';
+            if (errEl) { errEl.textContent = formError; errEl.hidden = false; }
+            return;
+          }
+
           const newCode = generateNextCounselorCode();
           const newCounselor = {
             code: newCode,
             name: nameVal,
             phone: phoneVal,
             email: emailVal,
+            password: newCode, // Mật khẩu tương ứng với mã số Counselor
             level: 'Tập sự ⭐',
             region: 'Toàn quốc',
             joinDate: new Date().toLocaleDateString('vi-VN'),
@@ -619,6 +669,7 @@ export function initAccount(ctx) {
             activatedAt: new Date().toISOString(),
             createdAt: new Date().toISOString()
           };
+
           saveNewCounselor(newCounselor);
           sendOrderToSupabase({
             order_type: `Đăng ký Counselor mới [${newCode}]`,
@@ -629,8 +680,10 @@ export function initAccount(ctx) {
             collaboration_need: 'Đăng ký làm Tư vấn viên sỉ (Giảm 55% + Thưởng 5%)',
             note: `Mã cấp phát: ${newCode} | Mật khẩu: ${newCode} | Kích hoạt tự động tức thì`
           }).catch(() => {});
+
           closeModal();
           renderButton();
+          // HIỆN RA MẬT KHẨU TƯƠNG ỨNG VS MÃ SỐ COUNSELOR
           showCounselorSuccessModal(newCounselor);
         }
       });

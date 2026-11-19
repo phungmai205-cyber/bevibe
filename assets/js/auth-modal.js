@@ -258,23 +258,16 @@ export function openRegisterModal() {
           </div>
         </div>
 
-        <!-- Khối mật khẩu dành riêng cho Khách hàng -->
-        <div id="customerPasswordFields" class="auth-pw-block">
-          <label class="auth-field">
-            <span>Mật khẩu <strong class="req">*</strong></span>
-            <input type="password" name="password" class="auth-input" placeholder="Nhập ít nhất 6 ký tự">
-          </label>
-
-          <label class="auth-field">
-            <span>Xác nhận mật khẩu <strong class="req">*</strong></span>
-            <input type="password" name="passwordConfirm" class="auth-input" placeholder="Nhập lại mật khẩu">
-          </label>
+        <!-- Ghi chú dành riêng cho Khách hàng -->
+        <div id="customerNoteField" class="auth-csl-note" style="background: #eff6ff; border-color: #bfdbfe;">
+          <div class="csl-note-badge" style="background: #dbeafe; color: #1e40af;">✨ Đăng nhập tức thì</div>
+          <p style="color: #1e3a8a;">Khách hàng chỉ cần nhập Gmail là đăng nhập thành công ngay.</p>
         </div>
 
         <!-- Ghi chú dành riêng cho Counselor -->
         <div id="counselorNoteField" class="auth-csl-note" hidden>
           <div class="csl-note-badge">✨ Lưu ý dành cho Counselor</div>
-          <p>Mật khẩu đăng nhập sẽ là <strong>Mã số Counselor (như BV0001)</strong> do hệ thống cấp. Tài khoản được kích hoạt tức thì để bạn đăng nhập ngay mà không cần chờ đợi!</p>
+          <p>Mật khẩu đăng nhập sẽ là <strong>Mã số Counselor (như BV0001)</strong> do hệ thống cấp. Hệ thống sẽ hiển thị mã và mật khẩu ngay sau khi bạn đăng ký!</p>
         </div>
 
         <div id="authRegisterError" class="auth-error-box" hidden></div>
@@ -295,7 +288,7 @@ export function openRegisterModal() {
   // Sự kiện
   const form = modal.querySelector('#authRegisterForm');
   const roleRadios = modal.querySelectorAll('input[name="accountRole"]');
-  const pwBlock = modal.querySelector('#customerPasswordFields');
+  const custNote = modal.querySelector('#customerNoteField');
   const cslNote = modal.querySelector('#counselorNoteField');
   const lblCustomer = modal.querySelector('#labelRoleCustomer');
   const lblCounselor = modal.querySelector('#labelRoleCounselor');
@@ -305,8 +298,8 @@ export function openRegisterModal() {
   roleRadios.forEach((r) => {
     r.addEventListener('change', () => {
       const isCsl = r.value === 'counselor';
-      pwBlock.hidden = isCsl;
-      cslNote.hidden = !isCsl;
+      if (custNote) custNote.hidden = isCsl;
+      if (cslNote) cslNote.hidden = !isCsl;
       lblCustomer.classList.toggle('active', !isCsl);
       lblCounselor.classList.toggle('active', isCsl);
       errBox.hidden = true;
@@ -333,65 +326,57 @@ export function openRegisterModal() {
     const email = form.email.value.trim().toLowerCase();
     const role = form.accountRole.value;
 
-    if (!name || !phone || !email) {
-      errBox.textContent = 'Vui lòng điền đầy đủ các thông tin bắt buộc (*).';
+    if (!email) {
+      errBox.textContent = 'Vui lòng nhập địa chỉ Gmail.';
       errBox.hidden = false;
       return;
     }
 
-    // XỬ LÝ KHÁCH HÀNG
+    // XỬ LÝ KHÁCH HÀNG: CHỈ CẦN GMAIL LÀ ĐĂNG NHẬP THÀNH CÔNG
     if (role === 'customer') {
-      const pw = form.password.value;
-      const pw2 = form.passwordConfirm.value;
-
-      if (!pw || pw.length < 6) {
-        errBox.textContent = 'Mật khẩu cần ít nhất 6 ký tự.';
-        errBox.hidden = false;
-        return;
-      }
-      if (pw !== pw2) {
-        errBox.textContent = 'Xác nhận mật khẩu không trùng khớp.';
-        errBox.hidden = false;
-        return;
-      }
-
-      // Lưu khách hàng
+      const displayName = name || email.split('@')[0];
       const customers = getRegisteredCustomers();
-      if (customers.some((c) => c.email === email)) {
-        errBox.textContent = 'Email này đã được đăng ký tài khoản khách hàng. Vui lòng bấm Đăng nhập.';
-        errBox.hidden = false;
-        return;
+      let customer = customers.find((c) => c.email.toLowerCase() === email);
+
+      if (!customer) {
+        customer = {
+          id: `CUST-${Date.now()}`,
+          name: displayName,
+          phone: phone || '',
+          email,
+          role: 'customer',
+          createdAt: new Date().toISOString()
+        };
+        customers.push(customer);
+        localStorage.setItem(STORAGE_CUSTOMERS, JSON.stringify(customers));
+      } else if (name) {
+        customer.name = displayName;
+        if (phone) customer.phone = phone;
+        localStorage.setItem(STORAGE_CUSTOMERS, JSON.stringify(customers));
       }
 
-      const newCustomer = {
-        id: `CUST-${Date.now()}`,
-        name,
-        phone,
-        email,
-        password: pw,
-        role: 'customer',
-        createdAt: new Date().toISOString()
-      };
+      setCurrentCustomer(customer);
 
-      customers.push(newCustomer);
-      localStorage.setItem(STORAGE_CUSTOMERS, JSON.stringify(customers));
-      setCurrentCustomer(newCustomer);
-
-      // Lưu Supabase
       sendOrderToSupabase({
         order_type: 'Khách hàng đăng ký mới',
-        customer_name: name,
-        phone: phone,
+        customer_name: displayName,
+        phone: phone || 'Chưa cung cấp',
         email: email,
         clinic_or_spa: 'Khách hàng cá nhân',
         collaboration_need: 'Tạo tài khoản website beVIBE',
-        note: 'Đăng ký thành công từ website'
+        note: 'Đăng nhập thành công bằng Gmail'
       }).catch(() => {});
 
       closeAuthModal();
-      alert(`Đăng ký tài khoản thành công!\nXin chào ${name}, hệ thống sẽ chuyển bạn về Trang chủ.`);
+      alert(`Đăng nhập thành công!\nXin chào ${displayName}, bạn đã có thể bắt đầu mua sắm.`);
       window.location.hash = '#';
       window.location.reload();
+      return;
+    }
+
+    if (!name || !phone) {
+      errBox.textContent = 'Vui lòng điền đầy đủ Họ tên và Số điện thoại của Counselor.';
+      errBox.hidden = false;
       return;
     }
 
@@ -471,19 +456,23 @@ export function showCounselorSuccessModal(counselor) {
           <strong>${counselor.name}</strong>
         </div>
         <div class="auth-notice-row">
+          <span class="auth-notice-lbl">Hòm thư Gmail:</span>
+          <strong style="color: #0284c7;">${counselor.email || 'Chưa cập nhật'}</strong>
+        </div>
+        <div class="auth-notice-row">
           <span class="auth-notice-lbl">Số điện thoại:</span>
           <strong>${counselor.phone || 'Chưa cập nhật'}</strong>
         </div>
         <div class="auth-notice-row">
           <span class="auth-notice-lbl">Tài khoản (Mã Counselor):</span>
-          <span class="auth-notice-code" style="font-size: 1.08rem; background: #fef08a; color: #854d0e;">${counselor.code}</span>
+          <span class="auth-notice-code" style="font-size: 1.12rem; background: #fef08a; color: #854d0e; font-weight: 800; padding: 4px 10px; border-radius: 6px;">${counselor.code}</span>
         </div>
         <div class="auth-notice-row">
           <span class="auth-notice-lbl">Mật khẩu đăng nhập:</span>
-          <span class="auth-notice-code" style="font-size: 1.08rem; background: #fee2e2; color: #dc2626;">${counselor.code}</span>
+          <span class="auth-notice-code" style="font-size: 1.12rem; background: #fee2e2; color: #dc2626; font-weight: 800; padding: 4px 10px; border-radius: 6px;">${counselor.code}</span>
         </div>
-        <div style="font-size: 0.82rem; color: #78350f; margin-top: 6px; text-align: center; border-top: 1px dashed #fed7aa; padding-top: 6px;">
-          📌 <em>Mật khẩu đăng nhập chính là mã số Counselor <strong>${counselor.code}</strong> để bạn dễ dàng quản lý &amp; đăng nhập.</em>
+        <div style="font-size: 0.85rem; color: #78350f; margin-top: 8px; text-align: center; border-top: 1px dashed #fed7aa; padding-top: 8px;">
+          📌 <em>Mật khẩu đăng nhập chính là mã số Counselor <strong>${counselor.code}</strong> tương ứng để bạn dễ dàng quản lý &amp; đăng nhập.</em>
         </div>
       </div>
 
