@@ -461,16 +461,8 @@ export function showCounselorEmailSentNotice(counselor, confirmUrl = '') {
           <span class="auth-notice-lbl">Hòm thư Gmail nhận:</span>
           <strong class="auth-notice-email">${counselor.email}</strong>
         </div>
-        <div class="auth-notice-row">
-          <span class="auth-notice-lbl">Mã Counselor:</span>
-          <span class="auth-notice-code">${counselor.code}</span>
-        </div>
-        <div class="auth-notice-row">
-          <span class="auth-notice-lbl">Mật khẩu đăng nhập:</span>
-          <span class="auth-notice-code" style="background: #fee2e2; color: #dc2626;">${counselor.code}</span>
-        </div>
-        <div style="font-size: 0.8rem; color: #78350f; text-align: center; border-top: 1px dashed #fed7aa; padding-top: 6px; margin-top: 4px;">
-          📌 <em>Mật khẩu được đặt chính là mã số Counselor <strong>${counselor.code}</strong> để bạn dễ dàng quản lý &amp; đăng nhập.</em>
+        <div style="font-size: 0.88rem; color: #1e3a8a; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 12px 14px; margin-top: 10px; line-height: 1.5; text-align: left;">
+          🔒 <strong>Mã Counselor</strong> và <strong>Mật khẩu đăng nhập</strong> đã được gửi trực tiếp đến hòm thư Gmail của bạn để đảm bảo bảo mật. Vui lòng mở Gmail để xem thông tin và bấm link kích hoạt tài khoản.
         </div>
       </div>
 
@@ -479,7 +471,7 @@ export function showCounselorEmailSentNotice(counselor, confirmUrl = '') {
         <ol style="margin: 0; padding-left: 20px; font-size: 0.88rem; color: #334155; line-height: 1.6;">
           <li>Mở ứng dụng <strong>Gmail</strong> trên điện thoại hoặc máy tính của bạn.</li>
           <li>Tìm thư từ <strong>beVIBE Partner Center</strong> trong hộp thư Đến (hoặc mục <em>Quảng cáo / Thư rác</em>).</li>
-          <li>Bấm vào liên kết <strong>"Xác nhận kích hoạt tài khoản"</strong> trong thư để bắt đầu đăng nhập.</li>
+          <li>Xem thông tin <strong>Mã số &amp; Mật khẩu</strong>, sau đó bấm vào nút <strong>"Xác nhận kích hoạt tài khoản"</strong> trong thư để bắt đầu đăng nhập.</li>
         </ol>
       </div>
 
@@ -491,10 +483,6 @@ export function showCounselorEmailSentNotice(counselor, confirmUrl = '') {
           <span>Đã hiểu</span>
         </button>
       </div>
-
-      <div class="auth-notice-devlink">
-        <small>💡 Cần kích hoạt ngay trên trình duyệt này? <a href="${confirmUrl}" id="directConfirmLink">Bấm vào đây để xác nhận trực tiếp</a></small>
-      </div>
     </div>
   `;
 
@@ -502,9 +490,6 @@ export function showCounselorEmailSentNotice(counselor, confirmUrl = '') {
 
   modal.querySelector('#closeAuthModalBtn').addEventListener('click', closeAuthModal);
   modal.querySelector('#btnNoticeDismiss').addEventListener('click', closeAuthModal);
-  modal.querySelector('#directConfirmLink').addEventListener('click', () => {
-    closeAuthModal();
-  });
   modal.addEventListener('click', (e) => {
     if (e.target === modal) closeAuthModal();
   });
