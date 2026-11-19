@@ -120,6 +120,7 @@ export function updateHeaderAuthUI() {
   const customer = getCurrentCustomer();
 
   if (counselor) {
+    container.style.display = 'inline-flex';
     container.innerHTML = `
       <div class="auth-logged-pill is-csl" id="userAccountDropdown">
         <span class="auth-avatar">💎</span>
@@ -129,6 +130,7 @@ export function updateHeaderAuthUI() {
       </div>
     `;
   } else if (customer) {
+    container.style.display = 'inline-flex';
     container.innerHTML = `
       <div class="auth-logged-pill is-cust" id="userAccountDropdown">
         <span class="auth-avatar">👤</span>
@@ -137,14 +139,9 @@ export function updateHeaderAuthUI() {
       </div>
     `;
   } else {
-    // Trạng thái chưa đăng nhập - Giống y chang Ảnh 2
-    container.innerHTML = `
-      <button type="button" class="btn-auth btn-auth-login" id="btnHeaderLogin">Đăng nhập</button>
-      <button type="button" class="btn-auth btn-auth-register" id="btnHeaderRegister">Đăng ký</button>
-    `;
-
-    document.getElementById('btnHeaderLogin')?.addEventListener('click', () => openLoginModal());
-    document.getElementById('btnHeaderRegister')?.addEventListener('click', () => openRegisterModal());
+    // Trạng thái chưa đăng nhập - Không hiển thị nút Đăng nhập / Đăng ký
+    container.innerHTML = '';
+    container.style.display = 'none';
   }
 
   // Gắn sự kiện nút đăng xuất

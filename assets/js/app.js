@@ -3108,26 +3108,8 @@ document.addEventListener('DOMContentLoaded', () => {
   renderRoute({ initial: true });
   loadLivePrices();
 
-  // Header Auth UI & Mobile Auth Buttons (Đăng nhập · Đăng ký · Ngôn ngữ)
+  // Header Auth UI
   updateHeaderAuthUI();
-
-  const cslMobLoginBtn = document.getElementById('counselorMobileLoginBtn');
-  if (cslMobLoginBtn) {
-    cslMobLoginBtn.addEventListener('click', () => {
-      if (mobileNavDrawer) mobileNavDrawer.classList.remove('open');
-      if (mobileNavOverlay) mobileNavOverlay.classList.remove('open');
-      openLoginModal();
-    });
-  }
-
-  const cslMobRegBtn = document.getElementById('counselorMobileRegBtn');
-  if (cslMobRegBtn) {
-    cslMobRegBtn.addEventListener('click', () => {
-      if (mobileNavDrawer) mobileNavDrawer.classList.remove('open');
-      if (mobileNavOverlay) mobileNavOverlay.classList.remove('open');
-      openRegisterModal();
-    });
-  }
 
   // Header Language Switcher (🌐 VI / KR)
   const langHeaderBtn = document.getElementById('btnHeaderLang');
