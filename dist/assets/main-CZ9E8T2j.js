@@ -1842,7 +1842,7 @@ Xin chào ${D}, bạn đã có thể bắt đầu mua sắm.`),window.location.h
 
       <div class="auth-notice-actions">
         <button type="button" class="auth-submit-btn" id="btnDirectLoginCsl" style="background: #16a34a; font-weight: 700; padding: 13px;">
-          <span>👉 Đăng nhập ngay vào Phân hệ Counselor 👈</span>
+          <span>Đăng nhập ngay vào Phân hệ Counselor</span>
         </button>
         <button type="button" class="auth-btn-close-notice" id="btnNoticeDismiss">
           <span>Về trang chủ</span>
@@ -1995,7 +1995,7 @@ Xin chào ${U.name}.`),window.location.reload()}),B.addEventListener("submit",T=
             </label>
             <div class="auth-error-box" id="acctLoginCustErr" ${L?"":"hidden"}>${y(L)}</div>
             <button type="submit" class="auth-submit-btn">
-              <span>✨ Đăng nhập bằng Gmail</span>
+              <span>Đăng nhập bằng Gmail</span>
             </button>
           </form>
         `:Q=`
@@ -2008,7 +2008,7 @@ Xin chào ${U.name}.`),window.location.reload()}),B.addEventListener("submit",T=
             </label>
             <div class="auth-error-box" id="acctLoginCslErr" ${L?"":"hidden"}>${y(L)}</div>
             <button type="submit" class="auth-submit-btn auth-submit-csl">
-              <span>🚀 Đăng nhập Phân hệ Counselor</span>
+              <span>Đăng nhập Phân hệ Counselor</span>
             </button>
             <div class="auth-demo-chips">
               <span>Mã mẫu:</span>
@@ -2057,14 +2057,14 @@ Xin chào ${U.name}.`),window.location.reload()}),B.addEventListener("submit",T=
 
           <!-- Chú thích Counselor: mật khẩu tương ứng mã số -->
           <div id="acctCslNoteField" class="auth-csl-note" ${en==="counselor"?"":"hidden"}>
-            <div class="csl-note-badge">🔑 Cấp mã &amp; Mật khẩu đăng nhập</div>
+            <div class="csl-note-badge">Cấp mã &amp; Mật khẩu đăng nhập</div>
             <p>Sau khi bấm Đăng ký, hệ thống sẽ <strong>hiển thị ngay Mật khẩu tương ứng với Mã số Counselor (ví dụ: BV0014)</strong> để bạn đăng nhập tức thì.</p>
           </div>
 
           <div class="auth-error-box" id="acctRegErr" ${L?"":"hidden"}>${y(L)}</div>
 
           <button type="submit" class="auth-submit-btn ${en==="counselor"?"auth-submit-csl":""}" id="btnAcctSubmitRegister">
-            <span>${en==="customer"?"✨ Đăng ký &amp; Đăng nhập ngay bằng Gmail":"🚀 Đăng ký Counselor beVIBE"}</span>
+            <span>${en==="customer"?"Đăng ký &amp; Đăng nhập ngay bằng Gmail":"Đăng ký Counselor beVIBE"}</span>
           </button>
         </form>
 

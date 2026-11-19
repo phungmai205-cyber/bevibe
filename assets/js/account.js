@@ -331,7 +331,7 @@ export function initAccount(ctx) {
             </label>
             <div class="auth-error-box" id="acctLoginCustErr" ${formError ? '' : 'hidden'}>${escapeHtml(formError)}</div>
             <button type="submit" class="auth-submit-btn">
-              <span>✨ Đăng nhập bằng Gmail</span>
+              <span>Đăng nhập bằng Gmail</span>
             </button>
           </form>
         `;
@@ -346,7 +346,7 @@ export function initAccount(ctx) {
             </label>
             <div class="auth-error-box" id="acctLoginCslErr" ${formError ? '' : 'hidden'}>${escapeHtml(formError)}</div>
             <button type="submit" class="auth-submit-btn auth-submit-csl">
-              <span>🚀 Đăng nhập Phân hệ Counselor</span>
+              <span>Đăng nhập Phân hệ Counselor</span>
             </button>
             <div class="auth-demo-chips">
               <span>Mã mẫu:</span>
@@ -401,14 +401,14 @@ export function initAccount(ctx) {
 
           <!-- Chú thích Counselor: mật khẩu tương ứng mã số -->
           <div id="acctCslNoteField" class="auth-csl-note" ${regRole === 'counselor' ? '' : 'hidden'}>
-            <div class="csl-note-badge">🔑 Cấp mã &amp; Mật khẩu đăng nhập</div>
+            <div class="csl-note-badge">Cấp mã &amp; Mật khẩu đăng nhập</div>
             <p>Sau khi bấm Đăng ký, hệ thống sẽ <strong>hiển thị ngay Mật khẩu tương ứng với Mã số Counselor (ví dụ: BV0014)</strong> để bạn đăng nhập tức thì.</p>
           </div>
 
           <div class="auth-error-box" id="acctRegErr" ${formError ? '' : 'hidden'}>${escapeHtml(formError)}</div>
 
           <button type="submit" class="auth-submit-btn ${regRole === 'counselor' ? 'auth-submit-csl' : ''}" id="btnAcctSubmitRegister">
-            <span>${regRole === 'customer' ? '✨ Đăng ký &amp; Đăng nhập ngay bằng Gmail' : '🚀 Đăng ký Counselor beVIBE'}</span>
+            <span>${regRole === 'customer' ? 'Đăng ký &amp; Đăng nhập ngay bằng Gmail' : 'Đăng ký Counselor beVIBE'}</span>
           </button>
         </form>
 

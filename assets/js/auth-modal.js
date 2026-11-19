@@ -482,7 +482,7 @@ export function showCounselorSuccessModal(counselor) {
 
       <div class="auth-notice-actions">
         <button type="button" class="auth-submit-btn" id="btnDirectLoginCsl" style="background: #16a34a; font-weight: 700; padding: 13px;">
-          <span>👉 Đăng nhập ngay vào Phân hệ Counselor 👈</span>
+          <span>Đăng nhập ngay vào Phân hệ Counselor</span>
         </button>
         <button type="button" class="auth-btn-close-notice" id="btnNoticeDismiss">
           <span>Về trang chủ</span>
