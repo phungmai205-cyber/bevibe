@@ -233,7 +233,7 @@ export function openRegisterModal() {
         <!-- Ghi chú dành riêng cho Counselor -->
         <div id="counselorNoteField" class="auth-csl-note" hidden>
           <div class="csl-note-badge">✨ Lưu ý dành cho Counselor</div>
-          <p>Mật khẩu sẽ là <strong>Mã số Counselor (như BV0001)</strong> được hệ thống tự động cấp phát và gửi vào Gmail của bạn kèm đường link kích hoạt tài khoản.</p>
+          <p>Mật khẩu đăng nhập sẽ là <strong>Mã số Counselor (như BV0001)</strong> do hệ thống cấp. Tài khoản được kích hoạt tức thì để bạn đăng nhập ngay mà không cần chờ đợi!</p>
         </div>
 
         <div id="authRegisterError" class="auth-error-box" hidden></div>
@@ -370,117 +370,94 @@ export function openRegisterModal() {
         bonusRate: 0.05,
         targetReward: 20000000,
         targetRewardName: 'Phần thưởng tiền mặt / Hiện vật cuối năm',
-        status: 'pending_activation',
+        status: 'active',
+        activatedAt: new Date().toISOString(),
         createdAt: new Date().toISOString()
       };
 
       saveNewCounselor(newCounselor);
 
-      // Đường link kích hoạt tài khoản
-      const confirmUrl = `${window.location.origin}${window.location.pathname}#/xac-nhan-counselor?code=${newCode}&email=${encodeURIComponent(email)}`;
-
-      // 1. Gửi thông tin tới Google Apps Script để ghi dữ liệu & gửi Gmail thực tế
-      if (ORDER_ENDPOINT) {
-        try {
-          fetch(ORDER_ENDPOINT, {
-            method: 'POST',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify({
-              type: 'Đăng ký Counselor',
-              name: name,
-              phone: phone,
-              email: email,
-              counselorCode: newCode,
-              confirmUrl: confirmUrl,
-              origin: window.location.origin,
-              clinic: 'Counselor beVIBE',
-              interest: 'Đăng ký làm Tư vấn viên sỉ (Giảm 55% + Thưởng 5%)',
-              note: `Đăng ký Counselor: Mã ${newCode} | MK: ${newCode} | Link: ${confirmUrl}`
-            })
-          }).catch((err) => console.warn('Lỗi gọi Apps Script:', err));
-        } catch (e) {
-          console.warn('Lỗi fetch Google Apps Script:', e);
-        }
-      }
-
-      // 2. Gửi Supabase ghi nhận sao lưu
+      // 1. Gửi Supabase lưu trữ dữ liệu tập trung
       sendOrderToSupabase({
         order_type: `Đăng ký Counselor mới [${newCode}]`,
         customer_name: `${name} (${newCode})`,
         phone: phone,
         email: email,
         clinic_or_spa: `Counselor beVIBE`,
-        collaboration_need: 'Đăng ký làm Tư vấn viên sỉ',
-        note: `Mã cấp phát: ${newCode} | Mật khẩu: ${newCode} | Link: ${confirmUrl}`
-      }).catch(() => {});
+        collaboration_need: 'Đăng ký làm Tư vấn viên sỉ (Giảm 55% + Thưởng 5%)',
+        note: `Mã cấp phát: ${newCode} | Mật khẩu: ${newCode} | Kích hoạt tự động tức thì`
+      }).catch((err) => console.warn('Lỗi lưu Supabase:', err));
 
       closeAuthModal();
 
-      // 3. Hiển thị thông báo xác nhận đã gửi thư vào Gmail thực tế
-      showCounselorEmailSentNotice(newCounselor, confirmUrl);
+      // 2. Hiển thị thông báo kích hoạt thành công & Đăng nhập ngay
+      showCounselorSuccessModal(newCounselor);
     }
   });
 }
 
 // -----------------------------------------------------------------------------
-// UI: Thông báo xác nhận ĐÃ GỬI EMAIL KÍCH HOẠT ĐẾN GMAIL CỦA KHÁCH
+// UI: Thông báo ĐĂNG KÝ COUNSELOR THÀNH CÔNG & KÍCH HOẠT TỨC THÌ
 // -----------------------------------------------------------------------------
-export function showCounselorEmailSentNotice(counselor, confirmUrl = '') {
+export function showCounselorSuccessModal(counselor) {
   closeAuthModal();
-
-  if (!confirmUrl) {
-    confirmUrl = `${window.location.origin}${window.location.pathname}#/xac-nhan-counselor?code=${counselor.code}&email=${encodeURIComponent(counselor.email)}`;
-  }
 
   const modal = document.createElement('div');
   modal.id = 'authMasterModal';
   modal.className = 'auth-modal-overlay';
   modal.innerHTML = `
-    <div class="auth-modal-card auth-card-notice">
+    <div class="auth-modal-card auth-card-notice" style="max-width: 480px;">
       <button type="button" class="auth-modal-close" id="closeAuthModalBtn">&times;</button>
       
-      <div class="auth-notice-icon">
-        <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M22 13V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v12c0 1.1.9 2 2 2h9"></path>
-          <polyline points="22,6 12,13 2,6"></polyline>
-          <polyline points="16 19 19 22 25 16"></polyline>
+      <div class="auth-notice-icon" style="background: #ecfdf5; border-color: #6ee7b7;">
+        <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+          <polyline points="22 4 12 14.01 9 11.01"></polyline>
         </svg>
       </div>
 
       <div class="auth-card-head" style="margin-bottom: 16px;">
         <h2 style="color: #0f2347; font-size: 1.35rem; margin-bottom: 6px;">Đăng ký Counselor thành công!</h2>
-        <p style="color: #475569; font-size: 0.92rem;">Hệ thống đã gửi thư kích hoạt tài khoản đến hòm thư Gmail của bạn.</p>
+        <p style="color: #475569; font-size: 0.92rem;">Tài khoản của bạn đã được kích hoạt thành công trên hệ thống beVIBE.</p>
       </div>
 
-      <div class="auth-notice-box">
+      <div class="auth-notice-box" style="border: 2px solid #f59e0b; background: #fffbeb;">
+        <div style="font-weight: 700; color: #92400e; font-size: 0.85rem; text-transform: uppercase; margin-bottom: 8px; text-align: center;">
+          🔑 THÔNG TIN TÀI KHOẢN ĐĂNG NHẬP
+        </div>
         <div class="auth-notice-row">
           <span class="auth-notice-lbl">Họ và tên:</span>
           <strong>${counselor.name}</strong>
         </div>
         <div class="auth-notice-row">
-          <span class="auth-notice-lbl">Hòm thư Gmail nhận:</span>
-          <strong class="auth-notice-email">${counselor.email}</strong>
+          <span class="auth-notice-lbl">Số điện thoại:</span>
+          <strong>${counselor.phone || 'Chưa cập nhật'}</strong>
         </div>
-        <div style="font-size: 0.88rem; color: #1e3a8a; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 12px 14px; margin-top: 10px; line-height: 1.5; text-align: left;">
-          🔒 <strong>Mã Counselor</strong> và <strong>Mật khẩu đăng nhập</strong> đã được gửi trực tiếp đến hòm thư Gmail của bạn để đảm bảo bảo mật. Vui lòng mở Gmail để xem thông tin và bấm link kích hoạt tài khoản.
+        <div class="auth-notice-row">
+          <span class="auth-notice-lbl">Tài khoản (Mã Counselor):</span>
+          <span class="auth-notice-code" style="font-size: 1.08rem; background: #fef08a; color: #854d0e;">${counselor.code}</span>
+        </div>
+        <div class="auth-notice-row">
+          <span class="auth-notice-lbl">Mật khẩu đăng nhập:</span>
+          <span class="auth-notice-code" style="font-size: 1.08rem; background: #fee2e2; color: #dc2626;">${counselor.code}</span>
+        </div>
+        <div style="font-size: 0.82rem; color: #78350f; margin-top: 6px; text-align: center; border-top: 1px dashed #fed7aa; padding-top: 6px;">
+          📌 <em>Mật khẩu đăng nhập chính là mã số Counselor <strong>${counselor.code}</strong> để bạn dễ dàng quản lý &amp; đăng nhập.</em>
         </div>
       </div>
 
-      <div class="auth-notice-guide">
-        <h4 style="margin: 0 0 8px; font-size: 0.92rem; color: #0f2347;">👉 Các bước tiếp theo:</h4>
-        <ol style="margin: 0; padding-left: 20px; font-size: 0.88rem; color: #334155; line-height: 1.6;">
-          <li>Mở ứng dụng <strong>Gmail</strong> trên điện thoại hoặc máy tính của bạn.</li>
-          <li>Tìm thư từ <strong>beVIBE Partner Center</strong> trong hộp thư Đến (hoặc mục <em>Quảng cáo / Thư rác</em>).</li>
-          <li>Xem thông tin <strong>Mã số &amp; Mật khẩu</strong>, sau đó bấm vào nút <strong>"Xác nhận kích hoạt tài khoản"</strong> trong thư để bắt đầu đăng nhập.</li>
-        </ol>
+      <div class="auth-notice-guide" style="background: #f0fdf4; border-color: #bbf7d0;">
+        <p style="margin: 0; font-size: 0.88rem; color: #166534; line-height: 1.5;">
+          ✨ Tài khoản đã được kích hoạt chế độ <strong>Giảm giá sỉ 55%</strong> và <strong>Tích lũy 5% doanh số thưởng năm</strong>. Hãy bấm nút bên dưới để bắt đầu sử dụng ngay!
+        </p>
       </div>
 
       <div class="auth-notice-actions">
-        <a href="https://mail.google.com" target="_blank" rel="noopener noreferrer" class="auth-btn-gmail">
-          <span>📬 Mở hộp thư Gmail (mail.google.com) ↗</span>
-        </a>
+        <button type="button" class="auth-submit-btn" id="btnDirectLoginCsl" style="background: #16a34a; font-weight: 700; padding: 13px;">
+          <span>👉 Đăng nhập ngay vào Phân hệ Counselor 👈</span>
+        </button>
         <button type="button" class="auth-btn-close-notice" id="btnNoticeDismiss">
-          <span>Đã hiểu</span>
+          <span>Về trang chủ</span>
         </button>
       </div>
     </div>
@@ -490,10 +467,18 @@ export function showCounselorEmailSentNotice(counselor, confirmUrl = '') {
 
   modal.querySelector('#closeAuthModalBtn').addEventListener('click', closeAuthModal);
   modal.querySelector('#btnNoticeDismiss').addEventListener('click', closeAuthModal);
+  modal.querySelector('#btnDirectLoginCsl').addEventListener('click', () => {
+    setCounselorSession(counselor);
+    closeAuthModal();
+    window.location.hash = '/counselor';
+  });
   modal.addEventListener('click', (e) => {
     if (e.target === modal) closeAuthModal();
   });
 }
+
+// Tương thích ngược
+export const showCounselorEmailSentNotice = showCounselorSuccessModal;
 
 // -----------------------------------------------------------------------------
 // UI: Modal ĐĂNG NHẬP (Chuyển tab Khách hàng / Counselor)
