@@ -10022,11 +10022,12 @@ a.send-btn {
 .exec-timeline {
   display: grid;
   gap: 10px;
+  position: relative;
 }
 
 .exec-timeline-row {
   display: grid;
-  grid-template-columns: 130px minmax(0, 1fr) auto;
+  grid-template-columns: 145px minmax(0, 1fr) auto;
   gap: 16px;
   align-items: center;
   background: rgba(255, 255, 255, 0.035);
@@ -10046,6 +10047,36 @@ a.send-btn {
   background: linear-gradient(90deg, rgba(75, 207, 214, 0.16), rgba(26, 80, 146, 0.2));
   border-color: rgba(75, 207, 214, 0.45);
   box-shadow: 0 4px 18px rgba(75, 207, 214, 0.12);
+}
+
+.timeline-time-col {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.timeline-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #d4af37;
+  box-shadow: 0 0 8px rgba(212, 175, 55, 0.7);
+  flex-shrink: 0;
+  transition: all var(--transition-fast);
+}
+
+.exec-timeline-row:hover .timeline-dot {
+  transform: scale(1.3);
+  box-shadow: 0 0 12px rgba(212, 175, 55, 1);
+}
+
+.exec-timeline-row.is-current .timeline-dot {
+  background: #4bcfd6;
+  box-shadow: 0 0 10px rgba(75, 207, 214, 0.9);
+}
+
+.exec-timeline-row.is-current:hover .timeline-dot {
+  box-shadow: 0 0 14px rgba(75, 207, 214, 1);
 }
 
 .timeline-year {
@@ -11641,4 +11672,53 @@ body.acct-open { overflow: hidden; }
 .pd-stage.is-soldout img {
   opacity: 0.55;
   filter: grayscale(0.5);
+}
+
+/* ==========================================================================
+   Về beVIBE Sub-menu (Mobile Nav & Executive Section Layout)
+   ========================================================================== */
+.mobile-nav-group {
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 6px 0 10px;
+}
+.mobile-nav-heading {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-ink);
+  padding: 6px 0;
+}
+.mobile-nav-sublist {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-left: 12px;
+}
+.mobile-nav-sublink {
+  font-size: 0.92rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  padding: 6px 10px;
+  border-radius: var(--radius-xs);
+  display: flex;
+  align-items: center;
+  transition: all var(--transition-fast);
+}
+.mobile-nav-sublink:hover,
+.mobile-nav-sublink.is-active {
+  color: var(--accent-crimson);
+  background: var(--bg-sand-light);
+  font-weight: 600;
+}
+
+.executive-section-wrap {
+  padding-top: 30px;
+}
+.is-subpage .executive-section-wrap {
+  padding-top: 10px;
+}
+.is-subpage .executive-section-wrap .about-executive-showcase {
+  margin-top: 0;
+}
+.is-subpage .about-company-section {
+  padding-top: 10px;
 }

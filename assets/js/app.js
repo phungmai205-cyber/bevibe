@@ -2776,8 +2776,18 @@ document.addEventListener('DOMContentLoaded', () => {
     'product': {
       sections: ['#productPage']
     },
-    've-bevibe': {
+    'gioi-thieu-cong-ty': {
       sections: ['#about', '#aboutStory', '.usp-strip'],
+      vi: { eyebrow: 'ABOUT US', title: 'Giới thiệu công ty', desc: 'CÔNG TY TNHH BEVIBE – Sản xuất và phân phối độc quyền mỹ phẩm Hàn Quốc, “Chạm tới làn da hoàn hảo”.' },
+      ko: { eyebrow: 'ABOUT US', title: '회사 소개', desc: 'BEVIBE 유한회사 – 한국 화장품 제조 및 독점 유통, “완벽한 피부에 닿다”.' }
+    },
+    'nguoi-lanh-dao': {
+      sections: ['#leadershipSection'],
+      vi: { eyebrow: 'EXECUTIVE LEADERSHIP', title: 'Người lãnh đạo', desc: 'Tổng Giám đốc Kim Jong Hyuk – Kết nối công nghệ, con người và giá trị để cùng kiến tạo tương lai.' },
+      ko: { eyebrow: 'EXECUTIVE LEADERSHIP', title: '경영진 소개', desc: '김종혁 총괄대표 – 기술, 사람, 가치를 연결하여 함께 미래를 만들어갑니다.' }
+    },
+    've-bevibe': {
+      sections: ['#about', '#leadershipSection', '#aboutStory', '.usp-strip'],
       vi: { eyebrow: 'ABOUT US', title: 'Về beVIBE', desc: 'Sản xuất và phân phối độc quyền mỹ phẩm Hàn Quốc – được hơn 5000 TMV, Spa, Phòng khám da liễu Hàn Quốc và Việt Nam tin yêu.' },
       ko: { eyebrow: 'ABOUT US', title: '비바이브 소개', desc: '한국 화장품 제조 및 독점 유통 – 한국과 베트남 5,000곳 이상의 성형외과·스파·클리닉이 신뢰합니다.' }
     },
@@ -2823,6 +2833,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     if (parts[0] === 'thuong-hieu' && parts[1] && brandsData.some((b) => b.id === parts[1])) {
       return { page: 'brand', brandId: parts[1], params };
+    }
+    if (parts[0] === 've-bevibe') {
+      if (parts[1] === 'gioi-thieu' || parts[1] === 'cong-ty') return { page: 'gioi-thieu-cong-ty', params };
+      if (parts[1] === 'lanh-dao' || parts[1] === 'nguoi-lanh-dao') return { page: 'nguoi-lanh-dao', params };
+      return { page: 've-bevibe', params };
     }
     return PAGE_DEFS[parts[0]] ? { page: parts[0], params } : { page: 'home', params: {} };
   }
@@ -2875,6 +2890,9 @@ document.addEventListener('DOMContentLoaded', () => {
           isVi ? 'Công nghệ sinh học & hoạt chất độc quyền' : '핵심 독자 기술 및 유효 성분', tech)}
         </div>` : '';
     } else {
+      if (currentRoute.page === 'gioi-thieu-cong-ty' || currentRoute.page === 'nguoi-lanh-dao') {
+        crumbs.push(`<a href="#/ve-bevibe">${isVi ? 'Về beVIBE' : '비바이브'}</a>`);
+      }
       const t = PAGE_DEFS[currentRoute.page][isVi ? 'vi' : 'ko'];
       eyebrow = t.eyebrow;
       title = t.title;
@@ -2981,10 +2999,15 @@ document.addEventListener('DOMContentLoaded', () => {
     pageSeo(route);
 
     const productEntry = route.page === 'product' ? productIndex.find((e) => e.id === route.productId) : null;
+    const isAboutGroup = route.page === 've-bevibe' || route.page === 'gioi-thieu-cong-ty' || route.page === 'nguoi-lanh-dao';
     const navKey = route.page === 'brand' ? 'thuong-hieu' : route.page === 'post' ? 'blog'
+      : isAboutGroup ? 've-bevibe'
       : route.page === 'product' ? (productEntry && isTpcn(productEntry) ? 'thuc-pham-chuc-nang' : 'san-pham') : route.page;
     document.querySelectorAll('.hnav-link, .mobile-nav-link').forEach((a) => {
       a.classList.toggle('is-active', !isHome && a.getAttribute('href') === `#/${navKey}`);
+    });
+    document.querySelectorAll('.hnav-dd-item, .mobile-nav-sublink').forEach((a) => {
+      a.classList.toggle('is-active', !isHome && a.getAttribute('href') === `#/${route.page}`);
     });
 
     if (!(initial && isHome)) window.scrollTo(0, 0);

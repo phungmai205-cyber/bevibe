@@ -19,9 +19,9 @@
     rel="stylesheet">
 
   <!-- Main Stylesheet -->
-  <script type="module" crossorigin src="/assets/main-BcK3RSEm.js"></script>
-  <link rel="modulepreload" crossorigin href="/assets/catalog-defs-DlTklVQ3.js">
-  <link rel="stylesheet" crossorigin href="/assets/main-DLAYXBO1.css">
+  <script type="module" crossorigin src="/assets/main-K9K-IwQI.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/catalog-defs-LfVpZcGI.js">
+  <link rel="stylesheet" crossorigin href="/assets/main-Y_kZ4Wng.css">
 </head>
 
 <body>
@@ -111,7 +111,22 @@
           <div class="mega-menu" id="megaBrands"><!-- Rendered by app.js --></div>
         </div>
 
-        <a href="#/ve-bevibe" class="hnav-link" data-i18n="navAbout">Về beVIBE</a>
+        <div class="hnav-item has-dropdown">
+          <a href="#/ve-bevibe" class="hnav-link" data-i18n="navAbout">
+            <span data-i18n="navAbout">Về beVIBE</span>
+            <svg class="chevron-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </a>
+          <div class="hnav-dropdown">
+            <a href="#/gioi-thieu-cong-ty" class="hnav-dd-item">
+              <span data-i18n="navCompanyOverview">Giới thiệu công ty</span>
+              <span class="hnav-dd-badge">beVIBE</span>
+            </a>
+            <a href="#/nguoi-lanh-dao" class="hnav-dd-item">
+              <span data-i18n="navLeadership">Người lãnh đạo</span>
+              <span class="hnav-dd-badge">CEO</span>
+            </a>
+          </div>
+        </div>
         <a href="#/blog" class="hnav-link">Blog</a>
         <a href="#/lien-he" class="hnav-link" data-i18n="navContactPage">Liên hệ</a>
       </div>
@@ -141,7 +156,19 @@
         </div>
         <a href="#/san-pham" class="mobile-nav-link" data-i18n="navCategories">Mỹ phẩm</a>
         <a href="#/thuc-pham-chuc-nang" class="mobile-nav-link" data-i18n="navTPCN">Thực phẩm chức năng</a>
-        <a href="#/ve-bevibe" class="mobile-nav-link" data-i18n="navAbout">Về beVIBE</a>
+        <div class="mobile-nav-group">
+          <div class="mobile-nav-heading">
+            <span data-i18n="navAbout">Về beVIBE</span>
+          </div>
+          <div class="mobile-nav-sublist">
+            <a href="#/gioi-thieu-cong-ty" class="mobile-nav-sublink">
+              <span data-i18n="navCompanyOverview">Giới thiệu công ty</span>
+            </a>
+            <a href="#/nguoi-lanh-dao" class="mobile-nav-sublink">
+              <span data-i18n="navLeadership">Người lãnh đạo</span>
+            </a>
+          </div>
+        </div>
         <a href="#/blog" class="mobile-nav-link">Blog</a>
         <a href="#/lien-he" class="mobile-nav-link" data-i18n="navContactPage">Liên hệ</a>
         <a href="#contact" class="mobile-nav-link" data-i18n="navContact">Liên hệ hợp tác ↗</a>
@@ -437,8 +464,12 @@
             </div>
           </div>
         </div>
+      </div>
+    </section>
 
-        <!-- ================= Executive Leadership Profile (Tổng Giám đốc Kim Jong Hyuk) ================= -->
+    <!-- ================= Section 02: Người lãnh đạo (Executive Leadership - Ảnh 3) ================= -->
+    <section class="about-section executive-section-wrap" id="leadershipSection">
+      <div class="container">
         <article class="about-executive-showcase" id="leadershipProfile" aria-label="Ban Lãnh đạo BEVIBE">
           <div class="executive-header-bar">
             <span class="executive-badge-pill" data-i18n="execHeaderBadge">BAN LÃNH ĐẠO · EXECUTIVE LEADERSHIP</span>
@@ -476,7 +507,10 @@
                 </div>
                 <div class="exec-timeline">
                   <div class="exec-timeline-row">
-                    <span class="timeline-year" data-i18n="execT1Year">1996 ~ 2012</span>
+                    <div class="timeline-time-col">
+                      <span class="timeline-dot"></span>
+                      <span class="timeline-year" data-i18n="execT1Year">1996 ~ 2012</span>
+                    </div>
                     <div class="timeline-details">
                       <strong data-i18n="execT1Title">Nhà sản xuất (Producer), SBS</strong>
                       <p data-i18n="execT1Desc">Lên kế hoạch, sản xuất và phát sóng nhiều chương trình truyền hình.</p>
@@ -484,7 +518,10 @@
                     <span class="timeline-corp-pill">SBS</span>
                   </div>
                   <div class="exec-timeline-row">
-                    <span class="timeline-year" data-i18n="execT2Year">2013 ~ 2014</span>
+                    <div class="timeline-time-col">
+                      <span class="timeline-dot"></span>
+                      <span class="timeline-year" data-i18n="execT2Year">2013 ~ 2014</span>
+                    </div>
                     <div class="timeline-details">
                       <strong data-i18n="execT2Title">Tổng Giám đốc, NURIKREATIV</strong>
                       <p data-i18n="execT2Desc">Phát triển ứng dụng di động “HoiJa” và cung cấp dịch vụ công nghệ số.</p>
@@ -492,7 +529,10 @@
                     <span class="timeline-corp-pill">HoiJa</span>
                   </div>
                   <div class="exec-timeline-row">
-                    <span class="timeline-year" data-i18n="execT3Year">2015 ~ 2016</span>
+                    <div class="timeline-time-col">
+                      <span class="timeline-dot"></span>
+                      <span class="timeline-year" data-i18n="execT3Year">2015 ~ 2016</span>
+                    </div>
                     <div class="timeline-details">
                       <strong data-i18n="execT3Title">Trưởng phòng Truyền thông, EBS</strong>
                       <p data-i18n="execT3Desc">Lập chiến lược và vận hành mảng nội dung truyền thông EBS.</p>
@@ -500,7 +540,10 @@
                     <span class="timeline-corp-pill">EBS</span>
                   </div>
                   <div class="exec-timeline-row">
-                    <span class="timeline-year" data-i18n="execT4Year">2017 ~ 2018</span>
+                    <div class="timeline-time-col">
+                      <span class="timeline-dot"></span>
+                      <span class="timeline-year" data-i18n="execT4Year">2017 ~ 2018</span>
+                    </div>
                     <div class="timeline-details">
                       <strong data-i18n="execT4Title">Giám đốc Bộ phận Kinh doanh Mới, BUMJIN</strong>
                       <p data-i18n="execT4Desc">Lập kế hoạch kinh doanh mới và thúc đẩy chiến lược, phát triển kinh doanh.</p>
@@ -508,7 +551,10 @@
                     <span class="timeline-corp-pill">BUMJIN</span>
                   </div>
                   <div class="exec-timeline-row">
-                    <span class="timeline-year" data-i18n="execT5Year">2019 ~ 2022</span>
+                    <div class="timeline-time-col">
+                      <span class="timeline-dot"></span>
+                      <span class="timeline-year" data-i18n="execT5Year">2019 ~ 2022</span>
+                    </div>
                     <div class="timeline-details">
                       <strong data-i18n="execT5Title">Tổng Giám đốc, BJS CREATIVE</strong>
                       <p data-i18n="execT5Desc">Lên kế hoạch và sản xuất nội dung, vận hành nền tảng số.</p>
@@ -516,7 +562,10 @@
                     <span class="timeline-corp-pill">BJS</span>
                   </div>
                   <div class="exec-timeline-row is-current">
-                    <span class="timeline-year" data-i18n="execT6Year">2026 ~ Hiện tại</span>
+                    <div class="timeline-time-col">
+                      <span class="timeline-dot"></span>
+                      <span class="timeline-year" data-i18n="execT6Year">2026 ~ Hiện tại</span>
+                    </div>
                     <div class="timeline-details">
                       <strong data-i18n="execT6Title">Tổng Giám đốc, BEVIBE Việt Nam</strong>
                       <p data-i18n="execT6Desc">Trụ sở tại Việt Nam, dẫn dắt hoạt động kinh doanh toàn cầu.</p>
@@ -577,8 +626,6 @@
             </div>
           </div>
         </article>
-          </div>
-        </div>
       </div>
     </section>
 
@@ -994,7 +1041,8 @@
         <div class="footer-col">
           <h4 data-i18n="footerColAbout">Về beVIBE</h4>
           <ul class="footer-links-list">
-            <li><a href="#/ve-bevibe" data-i18n="navAbout">Về beVIBE</a></li>
+            <li><a href="#/gioi-thieu-cong-ty" data-i18n="navCompanyOverview">Giới thiệu công ty</a></li>
+            <li><a href="#/nguoi-lanh-dao" data-i18n="navLeadership">Người lãnh đạo</a></li>
             <li><a href="#/lien-he" data-i18n="navContactPage">Liên hệ</a></li>
           </ul>
         </div>
