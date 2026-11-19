@@ -181,7 +181,7 @@ export function initShop(ctx) {
   function setCustomerDefaults(defaults) {
     const info = safeGet(customerKey, {});
     let changed = false;
-    ['name', 'email'].forEach((k) => {
+    ['name', 'email', 'phone'].forEach((k) => {
       if (!info[k] && defaults && defaults[k]) { info[k] = defaults[k]; changed = true; }
     });
     if (changed) safeSet(customerKey, info);

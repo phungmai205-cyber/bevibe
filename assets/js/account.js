@@ -9,19 +9,34 @@
 import { FIREBASE_CONFIG } from './auth-config.js';
 import { ORDER_ENDPOINT, sendOrderToSupabase } from './order-config.js';
 import {
-  getRegisteredCustomers,
+  findCustomer,
+  registerCustomer,
   getCurrentCustomer,
   setCurrentCustomer,
-  getAllCounselors,
-  generateNextCounselorCode,
-  saveNewCounselor,
+  authenticateCounselor,
+  registerCounselor,
+  recoverCounselorCode,
   showCounselorSuccessModal
 } from './auth-modal.js';
+
+// Request to beVIBE (order system → admin "Khách tiềm năng" + e-mail báo, plus the Supabase copy)
+async function sendLead(payload) {
+  sendOrderToSupabase({
+    order_type: payload.type, customer_name: payload.name, phone: payload.phone || '', email: payload.email || '',
+    clinic_or_spa: payload.clinic || '', collaboration_need: payload.interest || '', note: payload.note || ''
+  }).catch(() => {});
+  if (!ORDER_ENDPOINT) return false;
+  try {
+    await fetch(ORDER_ENDPOINT, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) });
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
 import {
   getCurrentCounselor,
   setCounselorSession,
-  clearCounselorSession,
-  normalizeCounselorCode
+  clearCounselorSession
 } from './counselor.js';
 
 const T = {
@@ -159,9 +174,13 @@ export function initAccount(ctx) {
   document.body.appendChild(menu);
 
   let activeTab = 'login'; // 'login' | 'register'
+  let prefillCode = '';     // counselor code filled in (link #/xac-nhan-counselor?code=…)
   let roleTab = 'customer'; // 'customer' | 'counselor'
   let regRole = 'customer'; // 'customer' | 'counselor'
   let formError = '';
+  let cslForgot = false;     // "Quên mã Counselor?" form instead of the counselor login
+  let cslRecovered = null;   // { code, name } found by phone + e-mail
+  let cslRequestSent = false;
 
   function renderButton() {
     const counselor = getCurrentCounselor();
@@ -274,15 +293,27 @@ export function initAccount(ctx) {
       shop.openCart();
       return;
     }
-    if (action === 'signout') {
-      clearCounselorSession();
-      setCurrentCustomer(null);
-      if (backend) { try { await backend.signOut(); } catch (err) {} }
-      renderButton();
-      window.location.hash = '#';
-      window.location.reload();
-    }
+    if (action === 'signout') signOutAll();
   });
+
+  // Sign out of every kind of account; the signed-in customer's cart copy is removed from this device
+  async function signOutAll() {
+    clearCounselorSession();
+    if (getCurrentCustomer()) shop.switchAccount(null);
+    setCurrentCustomer(null);
+    if (backend) { try { await backend.signOut(); } catch (err) { /* ignore */ } }
+    renderButton();
+    window.location.hash = '#';
+    window.location.reload();
+  }
+  if (typeof window !== 'undefined') window.__bevibeSignOut = signOutAll;
+
+  // Local customer account: own cart on this device + name / email / phone fill the checkout form
+  function useCustomer(c) {
+    setCurrentCustomer(c);
+    shop.switchAccount(`cust-${c.id}`);
+    shop.setCustomerDefaults({ name: c.name, email: c.email, phone: c.phone });
+  }
 
   document.addEventListener('click', (e) => {
     if (!menu.hidden && !menu.contains(e.target) && e.target !== btn) toggleMenu(false);
@@ -325,14 +356,45 @@ export function initAccount(ctx) {
           <!-- Form Đăng nhập Khách hàng (CHỈ CẦN GMAIL) -->
           <form id="acctLoginFormCust" class="auth-form" autocomplete="on">
             <label class="auth-field">
-              <span>Địa chỉ Gmail của bạn</span>
-              <input type="email" name="email" class="auth-input" placeholder="Ví dụ: yourname@gmail.com" required>
-              <small class="auth-hint">Chỉ cần nhập Gmail để đăng nhập thành công ngay.</small>
+              <span>Email đã đăng ký</span>
+              <input type="email" name="email" class="auth-input" placeholder="Ví dụ: yourname@gmail.com" autocomplete="email" required>
+              <small class="auth-hint">Chưa có tài khoản? Chọn tab "Đăng ký".</small>
             </label>
             <div class="auth-error-box" id="acctLoginCustErr" ${formError ? '' : 'hidden'}>${escapeHtml(formError)}</div>
             <button type="submit" class="auth-submit-btn">
-              <span>Đăng nhập bằng Gmail</span>
+              <span>Đăng nhập</span>
             </button>
+          </form>
+        `;
+      } else if (cslForgot) {
+        loginFormHtml = cslRecovered ? `
+          <div class="auth-csl-note">
+            <div class="csl-note-badge">Đã tìm thấy mã Counselor</div>
+            <p>Xin chào <strong>${escapeHtml(cslRecovered.name)}</strong>, mã Counselor của bạn là
+              <strong style="font-size:1.1rem;color:#854d0e;background:#fef08a;padding:2px 8px;border-radius:6px;">${escapeHtml(cslRecovered.code)}</strong></p>
+          </div>
+          <button type="button" class="auth-submit-btn auth-submit-csl" data-csl-forgot="use">Đăng nhập với mã này</button>
+        ` : cslRequestSent ? `
+          <div class="auth-csl-note">
+            <div class="csl-note-badge">Đã gửi yêu cầu</div>
+            <p>beVIBE đã nhận yêu cầu lấy lại mã Counselor. Nhân viên sẽ gọi vào số điện thoại bạn đăng ký để xác minh và báo lại mã.
+              Cần gấp: gọi <a href="tel:0338282112"><strong>033 828 2112</strong></a>.</p>
+          </div>
+          <button type="button" class="auth-submit-btn auth-submit-csl" data-csl-forgot="back">Quay lại đăng nhập</button>
+        ` : `
+          <form id="acctCslForgotForm" class="auth-form" autocomplete="on">
+            <p class="auth-hint" style="margin:0 0 4px;">Nhập <strong>số điện thoại</strong> và <strong>email</strong> bạn dùng khi đăng ký Counselor.</p>
+            <label class="auth-field">
+              <span>Số điện thoại đã đăng ký</span>
+              <input type="tel" name="phone" class="auth-input" placeholder="Ví dụ: 0912 345 678" autocomplete="tel" required>
+            </label>
+            <label class="auth-field">
+              <span>Email đã đăng ký</span>
+              <input type="email" name="email" class="auth-input" placeholder="Ví dụ: yourname@gmail.com" autocomplete="email" required>
+            </label>
+            <div class="auth-error-box" id="acctCslForgotErr" ${formError ? '' : 'hidden'}>${escapeHtml(formError)}</div>
+            <button type="submit" class="auth-submit-btn auth-submit-csl"><span>Lấy lại mã Counselor</span></button>
+            <button type="button" class="acct-link" data-csl-forgot="back" style="margin-top:10px;color:#0284c7;font-weight:700;background:none;border:none;cursor:pointer;">← Quay lại đăng nhập</button>
           </form>
         `;
       } else {
@@ -340,20 +402,19 @@ export function initAccount(ctx) {
           <!-- Form Đăng nhập Counselor -->
           <form id="acctLoginFormCsl" class="auth-form" autocomplete="on">
             <label class="auth-field">
-              <span>Mã Counselor (Mật khẩu)</span>
-              <input type="text" name="cslCode" class="auth-input" placeholder="Ví dụ: BV0001 hoặc BV0008" required>
-              <small class="auth-hint">Mật khẩu chính là mã số Counselor do beVIBE cấp.</small>
+              <span>Mã Counselor</span>
+              <input type="text" name="cslCode" class="auth-input" placeholder="Ví dụ: BV482913" value="${escapeHtml(prefillCode)}" autocomplete="username" required>
+            </label>
+            <label class="auth-field">
+              <span>Số điện thoại đã đăng ký</span>
+              <input type="tel" name="cslPhone" class="auth-input" placeholder="Ví dụ: 0912 345 678" autocomplete="tel" required>
+              <small class="auth-hint">Nhập đúng số điện thoại bạn dùng khi đăng ký Counselor.</small>
             </label>
             <div class="auth-error-box" id="acctLoginCslErr" ${formError ? '' : 'hidden'}>${escapeHtml(formError)}</div>
             <button type="submit" class="auth-submit-btn auth-submit-csl">
               <span>Đăng nhập Phân hệ Counselor</span>
             </button>
-            <div class="auth-demo-chips">
-              <span>Mã mẫu:</span>
-              <button type="button" class="btn-demo-chip" data-code="BV0001">BV0001</button>
-              <button type="button" class="btn-demo-chip" data-code="BV0002">BV0002</button>
-              <button type="button" class="btn-demo-chip" data-code="BV0003">BV0003</button>
-            </div>
+            <button type="button" class="acct-link" data-csl-forgot="open" style="margin-top:10px;color:#0284c7;font-weight:700;background:none;border:none;cursor:pointer;">Quên mã Counselor?</button>
           </form>
         `;
       }
@@ -382,9 +443,9 @@ export function initAccount(ctx) {
         <form id="acctRegisterForm" class="auth-form" autocomplete="off">
           <!-- Trường Gmail -->
           <label class="auth-field">
-            <span>Địa chỉ Gmail của bạn <strong class="req" style="color: #dc2626;">*</strong></span>
-            <input type="email" name="email" class="auth-input" placeholder="Ví dụ: yourname@gmail.com" required>
-            <small class="auth-hint" id="acctEmailHint">${regRole === 'customer' ? 'Khách hàng chỉ cần nhập Gmail là đăng nhập thành công ngay.' : 'Hệ thống dùng Gmail để gửi thông tin và quản lý tài khoản Counselor.'}</small>
+            <span>Email <strong class="req" style="color: #dc2626;">*</strong></span>
+            <input type="email" name="email" class="auth-input" placeholder="Ví dụ: yourname@gmail.com" autocomplete="email" required>
+            <small class="auth-hint" id="acctEmailHint">${regRole === 'customer' ? 'Mỗi email chỉ đăng ký một tài khoản.' : 'beVIBE dùng email và số điện thoại để liên hệ xác nhận đơn sỉ.'}</small>
           </label>
 
           <!-- Họ và tên -->
@@ -401,14 +462,14 @@ export function initAccount(ctx) {
 
           <!-- Chú thích Counselor: mật khẩu tương ứng mã số -->
           <div id="acctCslNoteField" class="auth-csl-note" ${regRole === 'counselor' ? '' : 'hidden'}>
-            <div class="csl-note-badge">Cấp mã &amp; Mật khẩu đăng nhập</div>
-            <p>Sau khi bấm Đăng ký, hệ thống sẽ <strong>hiển thị ngay Mật khẩu tương ứng với Mã số Counselor (ví dụ: BV0014)</strong> để bạn đăng nhập tức thì.</p>
+            <div class="csl-note-badge">Cấp mã Counselor</div>
+            <p>Sau khi đăng ký, hệ thống cấp <strong>mã Counselor</strong>. Lần sau đăng nhập bằng <strong>mã Counselor + số điện thoại</strong> đã đăng ký.</p>
           </div>
 
           <div class="auth-error-box" id="acctRegErr" ${formError ? '' : 'hidden'}>${escapeHtml(formError)}</div>
 
           <button type="submit" class="auth-submit-btn ${regRole === 'counselor' ? 'auth-submit-csl' : ''}" id="btnAcctSubmitRegister">
-            <span>${regRole === 'customer' ? 'Đăng ký &amp; Đăng nhập ngay bằng Gmail' : 'Đăng ký Counselor beVIBE'}</span>
+            <span>${regRole === 'customer' ? 'Tạo tài khoản' : 'Đăng ký Counselor beVIBE'}</span>
           </button>
         </form>
 
@@ -437,6 +498,7 @@ export function initAccount(ctx) {
     body.querySelectorAll('[data-role-tab]').forEach((b) => {
       b.addEventListener('click', () => {
         roleTab = b.dataset.roleTab;
+        cslForgot = false;
         formError = '';
         render();
       });
@@ -450,58 +512,77 @@ export function initAccount(ctx) {
       });
     });
 
-    body.querySelectorAll('.btn-demo-chip').forEach((chip) => {
-      chip.addEventListener('click', () => {
-        const input = body.querySelector('#acctLoginFormCsl input[name="cslCode"]');
-        if (input) {
-          input.value = chip.dataset.code;
-          input.focus();
-        }
-      });
-    });
+    // Read an input by name (form.name would be the form's own name, not the "name" input)
+    const field = (form, name) => String((form.querySelector(`[name="${name}"]`) || {}).value || '').trim();
+
+    const showErr = (id, text) => {
+      formError = text;
+      const errEl = body.querySelector(id);
+      if (errEl) { errEl.textContent = text; errEl.hidden = false; }
+    };
 
     const formLoginCust = body.querySelector('#acctLoginFormCust');
     if (formLoginCust) {
       formLoginCust.addEventListener('submit', (e) => {
         e.preventDefault();
-        const emailVal = formLoginCust.email.value.trim().toLowerCase();
-        if (!emailVal || !EMAIL_RE.test(emailVal)) {
-          formError = 'Vui lòng nhập địa chỉ Gmail hợp lệ.';
-          const errEl = body.querySelector('#acctLoginCustErr');
-          if (errEl) { errEl.textContent = formError; errEl.hidden = false; }
-          return;
-        }
-
-        const allCust = getRegisteredCustomers();
-        let found = allCust.find((c) => c.email.toLowerCase() === emailVal);
-        if (!found) {
-          // Tự động tạo tài khoản: khách hàng chỉ cần Gmail là đăng nhập thành công
-          const defaultName = emailVal.split('@')[0];
-          found = {
-            id: `CUST-${Date.now()}`,
-            name: defaultName,
-            email: emailVal,
-            phone: '',
-            role: 'customer',
-            createdAt: new Date().toISOString()
-          };
-          allCust.push(found);
-          localStorage.setItem('bevibe_registered_customers_v1', JSON.stringify(allCust));
-          sendOrderToSupabase({
-            order_type: 'Khách hàng đăng nhập mới bằng Gmail',
-            customer_name: defaultName,
-            email: emailVal,
-            phone: '',
-            clinic_or_spa: 'Khách hàng cá nhân',
-            collaboration_need: 'Tài khoản website beVIBE',
-            note: 'Đăng nhập tức thì bằng Gmail'
-          }).catch(() => {});
-        }
-
-        setCurrentCustomer(found);
+        const emailVal = field(formLoginCust, 'email').toLowerCase();
+        if (!EMAIL_RE.test(emailVal)) return showErr('#acctLoginCustErr', 'Vui lòng nhập địa chỉ email hợp lệ.');
+        // Login and sign-up are separate: an unknown e-mail is not turned into an account silently
+        const found = findCustomer(emailVal);
+        if (!found) return showErr('#acctLoginCustErr', 'Email này chưa có tài khoản trên trình duyệt này. Vui lòng chọn tab "Đăng ký".');
+        clearCounselorSession();
+        useCustomer(found);
         closeModal();
         renderButton();
         showToast(`Đăng nhập thành công! Xin chào ${found.name} ✓`);
+      });
+    }
+
+    body.querySelectorAll('[data-csl-forgot]').forEach((b) => {
+      b.addEventListener('click', () => {
+        const act = b.dataset.cslForgot;
+        if (act === 'use' && cslRecovered) prefillCode = cslRecovered.code;
+        cslForgot = act === 'open';
+        cslRecovered = null;
+        cslRequestSent = false;
+        formError = '';
+        render();
+        const next = body.querySelector(act === 'use' ? '#acctLoginFormCsl [name="cslPhone"]' : 'input');
+        if (next) next.focus();
+      });
+    });
+
+    const formCslForgot = body.querySelector('#acctCslForgotForm');
+    if (formCslForgot) {
+      formCslForgot.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const phone = field(formCslForgot, 'phone');
+        const mail = field(formCslForgot, 'email').toLowerCase();
+        const res = recoverCounselorCode(phone, mail);
+        if (res.error) return showErr('#acctCslForgotErr', res.error);
+        if (res.counselor) {
+          cslRecovered = { code: res.counselor.code, name: res.counselor.name };
+          formError = '';
+          render();
+          return;
+        }
+        // Not registered on this browser: beVIBE checks and calls back (the code is never shown to an unverified person)
+        const btn = formCslForgot.querySelector('button[type="submit"]');
+        btn.disabled = true;
+        const ok = await sendLead({
+          type: 'Counselor quên mã',
+          name: 'Counselor quên mã',
+          phone,
+          email: mail,
+          clinic: 'Counselor beVIBE',
+          interest: 'Lấy lại mã Counselor',
+          note: 'Khách yêu cầu lấy lại mã Counselor trên website. Gọi lại số điện thoại này để xác minh (họ tên, email) trước khi báo mã.'
+        });
+        btn.disabled = false;
+        if (!ok) return showErr('#acctCslForgotErr', 'Chưa gửi được yêu cầu do lỗi kết nối. Vui lòng gọi 033 828 2112.');
+        cslRequestSent = true;
+        formError = '';
+        render();
       });
     }
 
@@ -509,31 +590,10 @@ export function initAccount(ctx) {
     if (formLoginCsl) {
       formLoginCsl.addEventListener('submit', (e) => {
         e.preventDefault();
-        const codeVal = formLoginCsl.cslCode.value.trim();
-        const norm = normalizeCounselorCode(codeVal);
-        if (!norm) {
-          formError = 'Vui lòng nhập mã Counselor hợp lệ.';
-          const errEl = body.querySelector('#acctLoginCslErr');
-          if (errEl) { errEl.textContent = formError; errEl.hidden = false; }
-          return;
-        }
-        const all = getAllCounselors();
-        let found = all.find((c) => normalizeCounselorCode(c.code) === norm);
-        if (!found) {
-          found = {
-            code: norm,
-            name: `Tư vấn viên ${norm}`,
-            phone: 'Chưa cập nhật',
-            level: 'Counselor Tiêu Chuẩn ⭐',
-            region: 'Toàn quốc',
-            joinDate: new Date().toLocaleDateString('vi-VN'),
-            discountRate: 0.55,
-            bonusRate: 0.05,
-            targetReward: 20000000,
-            targetRewardName: 'Phần thưởng cuối năm beVIBE'
-          };
-        }
-        setCounselorSession(found);
+        const res = authenticateCounselor(field(formLoginCsl, 'cslCode'), field(formLoginCsl, 'cslPhone'));
+        if (res.error) return showErr('#acctLoginCslErr', res.error);
+        if (getCurrentCustomer()) { shop.switchAccount(null); setCurrentCustomer(null); }
+        setCounselorSession(res.counselor);
         closeModal();
         renderButton();
         window.location.hash = '/counselor';
@@ -544,109 +604,66 @@ export function initAccount(ctx) {
     if (formReg) {
       formReg.addEventListener('submit', (e) => {
         e.preventDefault();
-        const emailVal = formReg.email.value.trim().toLowerCase();
-        const nameVal = (formReg.name?.value || '').trim();
-        const phoneVal = (formReg.phone?.value || '').trim();
-        const errEl = body.querySelector('#acctRegErr');
+        const emailVal = field(formReg, 'email').toLowerCase();
+        const nameVal = field(formReg, 'name');
+        const phoneVal = field(formReg, 'phone');
 
-        if (!emailVal || !EMAIL_RE.test(emailVal)) {
-          formError = 'Vui lòng nhập địa chỉ Gmail hợp lệ.';
-          if (errEl) { errEl.textContent = formError; errEl.hidden = false; }
+        if (regRole === 'customer') {
+          const res = registerCustomer({ name: nameVal, email: emailVal, phone: phoneVal });
+          if (res.error) return showErr('#acctRegErr', res.error);
+          clearCounselorSession();
+          useCustomer(res.customer);
+          sendOrderToSupabase({
+            order_type: 'Khách hàng đăng ký tài khoản',
+            customer_name: res.customer.name,
+            phone: res.customer.phone || 'Chưa cung cấp',
+            email: res.customer.email,
+            clinic_or_spa: 'Khách hàng cá nhân',
+            collaboration_need: 'Tài khoản website beVIBE',
+            note: 'Đăng ký tài khoản trên website'
+          }).catch(() => {});
+          closeModal();
+          renderButton();
+          showToast(`Tạo tài khoản thành công! Xin chào ${res.customer.name} ✓`);
           return;
         }
 
-        if (regRole === 'customer') {
-          // KHÁCH HÀNG: CHỈ CẦN GMAIL LÀ ĐĂNG NHẬP THÀNH CÔNG
-          const displayName = nameVal || emailVal.split('@')[0];
-          const allCust = getRegisteredCustomers();
-          let cust = allCust.find((c) => c.email.toLowerCase() === emailVal);
-          if (!cust) {
-            cust = {
-              id: `CUST-${Date.now()}`,
-              name: displayName,
-              email: emailVal,
-              phone: phoneVal,
-              role: 'customer',
-              createdAt: new Date().toISOString()
-            };
-            allCust.push(cust);
-            localStorage.setItem('bevibe_registered_customers_v1', JSON.stringify(allCust));
-          } else if (nameVal) {
-            cust.name = displayName;
-            if (phoneVal) cust.phone = phoneVal;
-            localStorage.setItem('bevibe_registered_customers_v1', JSON.stringify(allCust));
-          }
-
-          setCurrentCustomer(cust);
-          sendOrderToSupabase({
-            order_type: 'Khách hàng đăng ký bằng Gmail',
-            customer_name: displayName,
-            phone: phoneVal || 'Chưa cung cấp',
-            email: emailVal,
-            clinic_or_spa: 'Khách hàng cá nhân',
-            collaboration_need: 'Đăng ký & đăng nhập qua Gmail',
-            note: 'Kích hoạt đăng nhập thành công tức thì'
-          }).catch(() => {});
-
-          closeModal();
+        const res = registerCounselor({ name: nameVal, email: emailVal, phone: phoneVal });
+        if (res.error) return showErr('#acctRegErr', res.error);
+        const c = res.counselor;
+        sendOrderToSupabase({
+          order_type: `Đăng ký Counselor mới [${c.code}]`,
+          customer_name: `${c.name} (${c.code})`,
+          phone: c.phone,
+          email: c.email,
+          clinic_or_spa: 'Counselor beVIBE',
+          collaboration_need: 'Đăng ký làm Tư vấn viên sỉ',
+          note: `Mã cấp phát: ${c.code}`
+        }).catch(() => {});
+        closeModal();
+        renderButton();
+        showCounselorSuccessModal(c, (counselor) => {
+          if (getCurrentCustomer()) { shop.switchAccount(null); setCurrentCustomer(null); }
+          setCounselorSession(counselor);
           renderButton();
-          showToast(`Đăng nhập thành công! Xin chào ${displayName} ✓`);
-        } else {
-          // COUNSELOR: ĐĂNG KÝ BẰNG GMAIL VÀ HIỆN MẬT KHẨU TƯƠNG ỨNG MÃ SỐ
-          if (!nameVal) {
-            formError = 'Vui lòng nhập họ và tên Counselor.';
-            if (errEl) { errEl.textContent = formError; errEl.hidden = false; }
-            return;
-          }
-          if (!phoneVal) {
-            formError = 'Vui lòng nhập số điện thoại liên hệ.';
-            if (errEl) { errEl.textContent = formError; errEl.hidden = false; }
-            return;
-          }
-
-          const newCode = generateNextCounselorCode();
-          const newCounselor = {
-            code: newCode,
-            name: nameVal,
-            phone: phoneVal,
-            email: emailVal,
-            password: newCode, // Mật khẩu tương ứng với mã số Counselor
-            level: 'Tập sự ⭐',
-            region: 'Toàn quốc',
-            joinDate: new Date().toLocaleDateString('vi-VN'),
-            discountRate: 0.55,
-            bonusRate: 0.05,
-            targetReward: 20000000,
-            targetRewardName: 'Phần thưởng tiền mặt / Hiện vật cuối năm',
-            status: 'active',
-            activatedAt: new Date().toISOString(),
-            createdAt: new Date().toISOString()
-          };
-
-          saveNewCounselor(newCounselor);
-          sendOrderToSupabase({
-            order_type: `Đăng ký Counselor mới [${newCode}]`,
-            customer_name: `${nameVal} (${newCode})`,
-            phone: phoneVal,
-            email: emailVal,
-            clinic_or_spa: 'Counselor beVIBE',
-            collaboration_need: 'Đăng ký làm Tư vấn viên sỉ (Giảm 55% + Thưởng 5%)',
-            note: `Mã cấp phát: ${newCode} | Mật khẩu: ${newCode} | Kích hoạt tự động tức thì`
-          }).catch(() => {});
-
-          closeModal();
-          renderButton();
-          // HIỆN RA MẬT KHẨU TƯƠNG ỨNG VS MÃ SỐ COUNSELOR
-          showCounselorSuccessModal(newCounselor);
-        }
+          window.location.hash = '/counselor';
+        });
       });
     }
   }
 
   let lastFocus = null;
-  function openModal(tab = 'login') {
+  function openModal(tab = 'login', opts = {}) {
     lastFocus = document.activeElement;
     activeTab = tab === 'register' ? 'register' : 'login';
+    if (opts.role === 'counselor' || opts.role === 'customer') {
+      roleTab = opts.role;
+      regRole = opts.role;
+    }
+    prefillCode = typeof opts.code === 'string' ? opts.code.slice(0, 20) : '';
+    cslForgot = false;
+    cslRecovered = null;
+    cslRequestSent = false;
     formError = '';
     render();
     modal.hidden = false;
@@ -728,8 +745,14 @@ export function initAccount(ctx) {
       .then((b) => b.onAuthChange((u) => (u ? onSignedIn(u, b) : onSignedOut())))
       .catch((err) => { console.error('Account service failed to load', err); shop.switchAccount(null); });
   } else {
-    // Accounts switched off: make sure an old signed-in cart is not left in use
-    shop.switchAccount(null);
+    // Firebase off: the local customer account (if signed in) keeps its own cart, otherwise the guest cart
+    const local = getCurrentCustomer();
+    if (local && local.id) {
+      shop.switchAccount(`cust-${local.id}`);
+      shop.setCustomerDefaults({ name: local.name, email: local.email, phone: local.phone });
+    } else {
+      shop.switchAccount(null);
+    }
   }
 
   return {

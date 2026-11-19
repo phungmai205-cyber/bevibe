@@ -663,3 +663,287 @@
   }
 }
 
+
+/* ==========================================================================
+   Counselor portal v2: report period, tabs, wholesale cart, policy
+   ========================================================================== */
+.csl-report-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 8px 0 14px;
+}
+.csl-report-head h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #0f2347;
+}
+.csl-seg {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 4px;
+  background: #f1f5f9;
+  border-radius: 12px;
+}
+.csl-seg button {
+  border: 0;
+  background: transparent;
+  padding: 7px 14px;
+  border-radius: 9px;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #475569;
+  cursor: pointer;
+}
+.csl-seg button.active {
+  background: #fff;
+  color: #0f2347;
+  box-shadow: 0 1px 4px rgba(15, 35, 71, 0.12);
+}
+.csl-kpi-grid.csl-kpi-grid-6 {
+  grid-template-columns: repeat(3, 1fr);
+}
+.csl-kpi-card.highlight-gold {
+  background: #fffbeb;
+  border-color: #fde68a;
+}
+.csl-kpi-card .csl-kpi-value {
+  font-size: 1.35rem;
+}
+.csl-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 4px 0 16px;
+  border-bottom: 1px solid #e5e7eb;
+}
+.csl-tab {
+  border: 0;
+  background: none;
+  padding: 10px 16px;
+  font: inherit;
+  font-weight: 700;
+  color: #64748b;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -1px;
+  cursor: pointer;
+}
+.csl-tab.active {
+  color: #0f2347;
+  border-bottom-color: #0f2347;
+}
+.csl-muted {
+  color: #64748b;
+  font-size: 0.85rem;
+}
+
+/* Wholesale order: product list + cart */
+.csl-order-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+.csl-product-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.csl-product-tools .csl-input {
+  flex: 1 1 200px;
+}
+.csl-product-list {
+  max-height: 560px;
+  overflow-y: auto;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+}
+.csl-product-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-bottom: 1px solid #f1f5f9;
+}
+.csl-product-row:last-child {
+  border-bottom: 0;
+}
+.csl-product-row img {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 10px;
+  flex-shrink: 0;
+  background: #f8fafc;
+}
+.csl-product-info {
+  flex: 1;
+  min-width: 0;
+}
+.csl-product-info strong {
+  display: block;
+  font-size: 0.9rem;
+  color: #0f2347;
+}
+.csl-product-info small {
+  color: #64748b;
+  font-size: 0.78rem;
+}
+.csl-btn-add {
+  flex-shrink: 0;
+  border: 1px solid #0f2347;
+  background: #fff;
+  color: #0f2347;
+  border-radius: 999px;
+  padding: 6px 14px;
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.csl-btn-add.is-in {
+  background: #0f2347;
+  color: #fff;
+}
+.csl-cart {
+  position: sticky;
+  top: 96px;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 18px;
+  background: #fbfdff;
+}
+.csl-cart h4 {
+  margin: 0 0 12px;
+  color: #0f2347;
+}
+.csl-cart-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.csl-cart-line {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 72px auto 28px;
+  align-items: center;
+  gap: 8px;
+}
+.csl-cart-name strong {
+  display: block;
+  font-size: 0.85rem;
+  color: #0f2347;
+}
+.csl-cart-name small {
+  font-size: 0.75rem;
+  color: #64748b;
+}
+.csl-qty {
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font: inherit;
+  text-align: center;
+}
+.csl-cart-cost {
+  font-weight: 700;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+.csl-cart-x {
+  border: 0;
+  background: #f1f5f9;
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
+  cursor: pointer;
+  color: #64748b;
+  font-size: 1rem;
+  line-height: 1;
+}
+.csl-tier-note {
+  margin: 0 0 6px;
+  padding: 8px 10px;
+  background: #eff6ff;
+  border-radius: 10px;
+  font-size: 0.8rem;
+  color: #1e3a8a;
+}
+.csl-ship-form {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px dashed #cbd5e1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.csl-ship-form h4 {
+  margin: 0;
+}
+.csl-pay {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  font-size: 0.88rem;
+}
+.csl-total-row td {
+  font-weight: 800;
+  background: #f8fafc;
+}
+.csl-status-badge.is-cancel {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+/* Policy */
+.csl-policy-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 18px;
+  margin-bottom: 20px;
+}
+.csl-policy-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 14px;
+}
+.csl-policy-card h4 {
+  margin: 0 0 10px;
+  color: #0f2347;
+}
+.csl-formula {
+  background: #f8fafc;
+  border-radius: 14px;
+  padding: 16px 20px;
+  line-height: 1.6;
+}
+.csl-formula h4 {
+  margin: 6px 0 8px;
+  color: #0f2347;
+}
+
+@media (max-width: 900px) {
+  .csl-kpi-grid.csl-kpi-grid-6 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .csl-order-grid {
+    grid-template-columns: 1fr;
+  }
+  .csl-cart {
+    position: static;
+  }
+}
+@media (max-width: 600px) {
+  .csl-kpi-grid.csl-kpi-grid-6 {
+    grid-template-columns: 1fr;
+  }
+  .csl-product-list {
+    max-height: 420px;
+  }
+}
