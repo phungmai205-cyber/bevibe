@@ -319,45 +319,52 @@ export function initAccount(ctx) {
     `;
 
     if (activeTab === 'login') {
+      let loginFormHtml = '';
+      if (roleTab === 'customer') {
+        loginFormHtml = `
+          <!-- Form Đăng nhập Khách hàng (CHỈ CẦN GMAIL) -->
+          <form id="acctLoginFormCust" class="auth-form" autocomplete="on">
+            <label class="auth-field">
+              <span>Địa chỉ Gmail của bạn</span>
+              <input type="email" name="email" class="auth-input" placeholder="Ví dụ: yourname@gmail.com" required>
+              <small class="auth-hint">Chỉ cần nhập Gmail để đăng nhập thành công ngay.</small>
+            </label>
+            <div class="auth-error-box" id="acctLoginCustErr" ${formError ? '' : 'hidden'}>${escapeHtml(formError)}</div>
+            <button type="submit" class="auth-submit-btn">
+              <span>✨ Đăng nhập bằng Gmail</span>
+            </button>
+          </form>
+        `;
+      } else {
+        loginFormHtml = `
+          <!-- Form Đăng nhập Counselor -->
+          <form id="acctLoginFormCsl" class="auth-form" autocomplete="on">
+            <label class="auth-field">
+              <span>Mã Counselor (Mật khẩu)</span>
+              <input type="text" name="cslCode" class="auth-input" placeholder="Ví dụ: BV0001 hoặc BV0008" required>
+              <small class="auth-hint">Mật khẩu chính là mã số Counselor do beVIBE cấp.</small>
+            </label>
+            <div class="auth-error-box" id="acctLoginCslErr" ${formError ? '' : 'hidden'}>${escapeHtml(formError)}</div>
+            <button type="submit" class="auth-submit-btn auth-submit-csl">
+              <span>🚀 Đăng nhập Phân hệ Counselor</span>
+            </button>
+            <div class="auth-demo-chips">
+              <span>Mã mẫu:</span>
+              <button type="button" class="btn-demo-chip" data-code="BV0001">BV0001</button>
+              <button type="button" class="btn-demo-chip" data-code="BV0002">BV0002</button>
+              <button type="button" class="btn-demo-chip" data-code="BV0003">BV0003</button>
+            </div>
+          </form>
+        `;
+      }
+
       contentHtml = `
         ${tabsHtml}
         <div class="auth-tabs" style="margin-bottom: 16px;">
           <button type="button" class="auth-tab ${roleTab === 'customer' ? 'active' : ''}" data-role-tab="customer">Khách hàng</button>
           <button type="button" class="auth-tab ${roleTab === 'counselor' ? 'active' : ''}" data-role-tab="counselor">Counselor</button>
         </div>
-
-        <!-- 1. Form Đăng nhập Khách hàng (CHỈ CẦN GMAIL) -->
-        <form id="acctLoginFormCust" class="auth-form" ${roleTab === 'customer' ? '' : 'hidden'} autocomplete="on">
-          <label class="auth-field">
-            <span>Địa chỉ Gmail của bạn</span>
-            <input type="email" name="email" class="auth-input" placeholder="Ví dụ: yourname@gmail.com" required>
-            <small class="auth-hint">Chỉ cần nhập Gmail để đăng nhập thành công ngay.</small>
-          </label>
-          <div class="auth-error-box" id="acctLoginCustErr" ${formError && roleTab === 'customer' ? '' : 'hidden'}>${escapeHtml(formError)}</div>
-          <button type="submit" class="auth-submit-btn">
-            <span>✨ Đăng nhập bằng Gmail</span>
-          </button>
-        </form>
-
-        <!-- 2. Form Đăng nhập Counselor -->
-        <form id="acctLoginFormCsl" class="auth-form" ${roleTab === 'counselor' ? '' : 'hidden'} autocomplete="on">
-          <label class="auth-field">
-            <span>Mã Counselor / Mật khẩu (dạng BV0001)</span>
-            <input type="text" name="cslCode" class="auth-input" placeholder="Ví dụ: BV0001 hoặc BV0008" required>
-            <small class="auth-hint">Nhập mã số Counselor do beVIBE cấp (mật khẩu chính là mã này).</small>
-          </label>
-          <div class="auth-error-box" id="acctLoginCslErr" ${formError && roleTab === 'counselor' ? '' : 'hidden'}>${escapeHtml(formError)}</div>
-          <button type="submit" class="auth-submit-btn auth-submit-csl">
-            <span>Đăng nhập Phân hệ Counselor</span>
-          </button>
-          <div class="auth-demo-chips">
-            <span>Mã mẫu:</span>
-            <button type="button" class="btn-demo-chip" data-code="BV0001">BV0001</button>
-            <button type="button" class="btn-demo-chip" data-code="BV0002">BV0002</button>
-            <button type="button" class="btn-demo-chip" data-code="BV0003">BV0003</button>
-          </div>
-        </form>
-
+        ${loginFormHtml}
         <p class="acct-switch" style="margin-top: 16px; font-size: 0.88rem; text-align: center; color: #64748b;">
           Chưa có tài khoản? <button type="button" class="acct-link" data-nav-tab="register" style="color: #0284c7; font-weight: 700; background: none; border: none; cursor: pointer;">Tạo tài khoản mới</button>
         </p>
