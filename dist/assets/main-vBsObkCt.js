@@ -1753,7 +1753,6 @@ Quỹ thưởng năm cộng thêm: +${hn(I.bonusReward)}`),ma()})}}X.addEventLis
               <input type="radio" name="accountRole" value="customer" checked>
               <div class="radio-content">
                 <strong>Khách hàng</strong>
-                <small>Mua sắm lẻ, nhận ưu đãi</small>
               </div>
             </label>
 
@@ -1761,7 +1760,6 @@ Quỹ thưởng năm cộng thêm: +${hn(I.bonusReward)}`),ma()})}}X.addEventLis
               <input type="radio" name="accountRole" value="counselor">
               <div class="radio-content">
                 <strong>Counselor</strong>
-                <small>Giá sỉ giảm 55% + Thưởng 5%</small>
               </div>
             </label>
           </div>
@@ -2038,15 +2036,13 @@ Xin chào ${z.name}.`),window.location.reload()}),E.addEventListener("submit",T=
             <label class="auth-role-opt ${tn==="customer"?"is-active":""}" id="acctRoleOptCust">
               <input type="radio" name="accountRole" value="customer" ${tn==="customer"?"checked":""}>
               <div>
-                <strong>Khách hàng cá nhân</strong>
-                <small>Chỉ cần Gmail, đăng nhập thành công ngay</small>
+                <strong>Khách hàng</strong>
               </div>
             </label>
             <label class="auth-role-opt ${tn==="counselor"?"is-active":""}" id="acctRoleOptCsl">
               <input type="radio" name="accountRole" value="counselor" ${tn==="counselor"?"checked":""}>
               <div>
                 <strong>Counselor</strong>
-                <small>Đăng ký Gmail, hiện mã &amp; mật khẩu sỉ 55%</small>
               </div>
             </label>
           </div>

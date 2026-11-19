@@ -244,7 +244,6 @@ export function openRegisterModal() {
               <input type="radio" name="accountRole" value="customer" checked>
               <div class="radio-content">
                 <strong>Khách hàng</strong>
-                <small>Mua sắm lẻ, nhận ưu đãi</small>
               </div>
             </label>
 
@@ -252,7 +251,6 @@ export function openRegisterModal() {
               <input type="radio" name="accountRole" value="counselor">
               <div class="radio-content">
                 <strong>Counselor</strong>
-                <small>Giá sỉ giảm 55% + Thưởng 5%</small>
               </div>
             </label>
           </div>

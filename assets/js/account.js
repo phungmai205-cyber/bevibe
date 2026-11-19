@@ -373,15 +373,13 @@ export function initAccount(ctx) {
             <label class="auth-role-opt ${regRole === 'customer' ? 'is-active' : ''}" id="acctRoleOptCust">
               <input type="radio" name="accountRole" value="customer" ${regRole === 'customer' ? 'checked' : ''}>
               <div>
-                <strong>Khách hàng cá nhân</strong>
-                <small>Chỉ cần Gmail, đăng nhập thành công ngay</small>
+                <strong>Khách hàng</strong>
               </div>
             </label>
             <label class="auth-role-opt ${regRole === 'counselor' ? 'is-active' : ''}" id="acctRoleOptCsl">
               <input type="radio" name="accountRole" value="counselor" ${regRole === 'counselor' ? 'checked' : ''}>
               <div>
                 <strong>Counselor</strong>
-                <small>Đăng ký Gmail, hiện mã &amp; mật khẩu sỉ 55%</small>
               </div>
             </label>
           </div>
