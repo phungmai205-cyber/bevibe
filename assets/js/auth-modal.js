@@ -198,6 +198,11 @@ if (typeof window !== 'undefined') {
 // UI: Modal ĐĂNG KÝ (Khách hàng & Counselor)
 // -----------------------------------------------------------------------------
 export function openRegisterModal() {
+  if (typeof window !== 'undefined' && typeof window.__bevibeOpenAccountModal === 'function') {
+    closeAuthModal();
+    window.__bevibeOpenAccountModal('register');
+    return;
+  }
   closeAuthModal();
 
   const modal = document.createElement('div');
@@ -521,6 +526,11 @@ export const showCounselorEmailSentNotice = showCounselorSuccessModal;
 // UI: Modal ĐĂNG NHẬP (Chuyển tab Khách hàng / Counselor)
 // -----------------------------------------------------------------------------
 export function openLoginModal(prefillCode = '') {
+  if (typeof window !== 'undefined' && typeof window.__bevibeOpenAccountModal === 'function') {
+    closeAuthModal();
+    window.__bevibeOpenAccountModal('login');
+    return;
+  }
   closeAuthModal();
 
   const modal = document.createElement('div');

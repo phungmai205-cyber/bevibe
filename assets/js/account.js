@@ -8,6 +8,21 @@
  */
 import { FIREBASE_CONFIG } from './auth-config.js';
 import { ORDER_ENDPOINT, sendOrderToSupabase } from './order-config.js';
+import {
+  getRegisteredCustomers,
+  getCurrentCustomer,
+  setCurrentCustomer,
+  getAllCounselors,
+  generateNextCounselorCode,
+  saveNewCounselor,
+  showCounselorSuccessModal
+} from './auth-modal.js';
+import {
+  getCurrentCounselor,
+  setCounselorSession,
+  clearCounselorSession,
+  normalizeCounselorCode
+} from './counselor.js';
 
 const T = {
   vi: {
@@ -143,34 +158,83 @@ export function initAccount(ctx) {
   menu.hidden = true;
   document.body.appendChild(menu);
 
+  let activeTab = 'login'; // 'login' | 'register'
+  let roleTab = 'customer'; // 'customer' | 'counselor'
+  let regRole = 'customer'; // 'customer' | 'counselor'
+  let formError = '';
+
   function renderButton() {
-    const L = t();
-    if (user) {
+    const counselor = getCurrentCounselor();
+    const customer = getCurrentCustomer();
+    if (counselor) {
+      btn.innerHTML = `<span style="font-size: 1.15rem; line-height: 1;">💎</span>`;
+      btn.classList.add('is-signed-in');
+      btn.setAttribute('aria-label', `Counselor: ${counselor.code} - ${counselor.name}`);
+      btn.setAttribute('title', `Counselor: ${counselor.code} - ${counselor.name}`);
+      btn.setAttribute('aria-haspopup', 'menu');
+    } else if (customer) {
+      const initial = (customer.name || '?').trim().charAt(0).toUpperCase();
+      btn.innerHTML = `<span class="header-account-initial" style="background:#0f2347;color:#fff;display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;font-size:0.75rem;font-weight:700;">${escapeHtml(initial)}</span>`;
+      btn.classList.add('is-signed-in');
+      btn.setAttribute('aria-label', customer.name);
+      btn.setAttribute('title', customer.name);
+      btn.setAttribute('aria-haspopup', 'menu');
+    } else if (user) {
       const initial = (user.name || user.email || '?').trim().charAt(0).toUpperCase();
       btn.innerHTML = user.photo
         ? `<img class="header-account-photo" src="${escapeHtml(user.photo)}" alt="" referrerpolicy="no-referrer">`
         : `<span class="header-account-initial">${escapeHtml(initial)}</span>`;
       btn.classList.add('is-signed-in');
-      btn.setAttribute('aria-label', `${L.account}: ${user.name || user.email}`);
+      btn.setAttribute('aria-label', `${user.name || user.email}`);
       btn.setAttribute('aria-haspopup', 'menu');
     } else {
       btn.innerHTML = USER_ICON;
       btn.classList.remove('is-signed-in');
-      btn.setAttribute('aria-label', L.signIn);
+      btn.setAttribute('aria-label', 'Đăng nhập / Đăng ký tài khoản');
+      btn.setAttribute('title', 'Đăng nhập / Đăng ký tài khoản');
       btn.setAttribute('aria-haspopup', 'dialog');
     }
   }
 
   function renderMenu() {
-    if (!user) { menu.hidden = true; return; }
-    const L = t();
-    menu.innerHTML = `
-      <div class="acct-menu-head">
-        <strong>${escapeHtml(user.name || L.account)}</strong>
-        <small>${escapeHtml(user.email || '')}</small>
-      </div>
-      <button type="button" class="acct-menu-item" data-acct="cart">${L.myCart} <span>(${shop.cartCount()})</span></button>
-      <button type="button" class="acct-menu-item" data-acct="signout">${L.signOut}</button>`;
+    const counselor = getCurrentCounselor();
+    const customer = getCurrentCustomer();
+    if (counselor) {
+      menu.innerHTML = `
+        <div class="acct-menu-head">
+          <strong style="color: #d97706; display: flex; align-items: center; gap: 4px;">💎 Counselor ${escapeHtml(counselor.code)}</strong>
+          <small>${escapeHtml(counselor.name)} · ${escapeHtml(counselor.level)}</small>
+        </div>
+        <button type="button" class="acct-menu-item" data-acct="counselor">Phân hệ Counselor (Dashboard)</button>
+        <button type="button" class="acct-menu-item" data-acct="cart">Giỏ hàng của tôi <span>(${shop.cartCount()})</span></button>
+        <button type="button" class="acct-menu-item" data-acct="signout" style="color: #dc2626; font-weight: 600;">Đăng xuất</button>`;
+      menu.hidden = false;
+      return;
+    }
+    if (customer) {
+      menu.innerHTML = `
+        <div class="acct-menu-head">
+          <strong>👤 ${escapeHtml(customer.name)}</strong>
+          <small>${escapeHtml(customer.email)}</small>
+        </div>
+        <button type="button" class="acct-menu-item" data-acct="cart">Giỏ hàng của tôi <span>(${shop.cartCount()})</span></button>
+        <button type="button" class="acct-menu-item" data-acct="signout" style="color: #dc2626; font-weight: 600;">Đăng xuất</button>`;
+      menu.hidden = false;
+      return;
+    }
+    if (user) {
+      const L = t();
+      menu.innerHTML = `
+        <div class="acct-menu-head">
+          <strong>${escapeHtml(user.name || L.account)}</strong>
+          <small>${escapeHtml(user.email || '')}</small>
+        </div>
+        <button type="button" class="acct-menu-item" data-acct="cart">${L.myCart} <span>(${shop.cartCount()})</span></button>
+        <button type="button" class="acct-menu-item" data-acct="signout" style="color: #dc2626;">${L.signOut}</button>`;
+      menu.hidden = false;
+      return;
+    }
+    menu.hidden = true;
   }
 
   function positionMenu() {
@@ -188,17 +252,35 @@ export function initAccount(ctx) {
 
   btn.addEventListener('click', (e) => {
     e.stopPropagation();
-    if (user) toggleMenu();
-    else openModal();
+    const counselor = getCurrentCounselor();
+    const customer = getCurrentCustomer();
+    if (counselor || customer || user) {
+      toggleMenu();
+    } else {
+      openModal('login');
+    }
   });
 
   menu.addEventListener('click', async (e) => {
     const item = e.target.closest('[data-acct]');
     if (!item) return;
     toggleMenu(false);
-    if (item.getAttribute('data-acct') === 'cart') shop.openCart();
-    if (item.getAttribute('data-acct') === 'signout') {
-      try { await (await loadBackend()).signOut(); } catch (err) { /* already signed out */ }
+    const action = item.getAttribute('data-acct');
+    if (action === 'counselor') {
+      window.location.hash = '/counselor';
+      return;
+    }
+    if (action === 'cart') {
+      shop.openCart();
+      return;
+    }
+    if (action === 'signout') {
+      clearCounselorSession();
+      setCurrentCustomer(null);
+      if (backend) { try { await backend.signOut(); } catch (err) {} }
+      renderButton();
+      window.location.hash = '#';
+      window.location.reload();
     }
   });
 
@@ -207,7 +289,7 @@ export function initAccount(ctx) {
   });
   window.addEventListener('resize', () => { if (!menu.hidden) positionMenu(); });
 
-  /* ---------------- Sign-in dialog ---------------- */
+  /* ---------------- Sign-in & Register dialog ---------------- */
   const modal = document.createElement('div');
   modal.className = 'acct-overlay';
   modal.id = 'accountModal';
@@ -225,88 +307,347 @@ export function initAccount(ctx) {
   document.body.appendChild(modal);
   const body = modal.querySelector('#acctBody');
 
-  function msgHtml() {
-    if (!message) return '';
-    return `<p class="acct-msg acct-msg--${message.type}" role="${message.type === 'error' ? 'alert' : 'status'}">${escapeHtml(message.text)}</p>`;
-  }
-
   function render() {
     const L = t();
-    const off = !enabled();
-    const dis = busy || off ? 'disabled' : '';
-    const emailChip = `
-      <div class="acct-email-chip"><span>${escapeHtml(email)}</span>
-        <button type="button" class="acct-link" data-acct-step="start">${L.changeEmail}</button></div>`;
-    let html = '';
-    if (step === 'start') {
-      html = `
-        <h2 class="acct-title" id="acctTitle">${L.signIn}</h2>
-        <p class="acct-lead">${off ? '' : L.welcome}</p>
-        ${off ? `<p class="acct-msg acct-msg--info">${L.off}</p>` : ''}
-        <button type="button" class="acct-btn acct-btn-google" data-acct-google ${dis}>${GOOGLE_ICON}<span>${L.google}</span></button>
-        <div class="acct-divider"><span>${L.or}</span></div>
-        <form class="acct-form" data-acct-form="email" novalidate>
-          <input class="acct-input" type="email" name="email" autocomplete="email" inputmode="email" placeholder="${L.emailPh}" value="${escapeHtml(email)}" aria-label="Email" ${off ? 'disabled' : ''}>
-          ${msgHtml()}
-          <button type="submit" class="acct-btn acct-btn-primary" data-acct-next ${dis}>${L.next}</button>
-        </form>`;
-    } else if (step === 'login') {
-      html = `
-        <h2 class="acct-title" id="acctTitle">${L.loginTitle}</h2>
-        ${emailChip}
-        <form class="acct-form" data-acct-form="login" novalidate>
-          <input class="acct-input" type="password" name="password" autocomplete="current-password" placeholder="${L.pwPh}" aria-label="${L.pwPh}">
-          ${msgHtml()}
-          <button type="submit" class="acct-btn acct-btn-primary is-ready" ${dis}>${L.login}</button>
+    let contentHtml = '';
+
+    const tabsHtml = `
+      <div class="acct-main-tabs">
+        <button type="button" class="acct-main-tab ${activeTab === 'login' ? 'active' : ''}" data-nav-tab="login">Đăng nhập</button>
+        <button type="button" class="acct-main-tab ${activeTab === 'register' ? 'active' : ''}" data-nav-tab="register">Đăng ký</button>
+      </div>
+    `;
+
+    if (activeTab === 'login') {
+      contentHtml = `
+        ${tabsHtml}
+        <div class="auth-tabs" style="margin-bottom: 16px;">
+          <button type="button" class="auth-tab ${roleTab === 'customer' ? 'active' : ''}" data-role-tab="customer">Khách hàng</button>
+          <button type="button" class="auth-tab ${roleTab === 'counselor' ? 'active' : ''}" data-role-tab="counselor">Counselor (Tư vấn viên)</button>
+        </div>
+
+        <!-- 1. Form Đăng nhập Khách hàng -->
+        <form id="acctLoginFormCust" class="auth-form" ${roleTab === 'customer' ? '' : 'hidden'} autocomplete="on">
+          <label class="auth-field">
+            <span>Địa chỉ Email</span>
+            <input type="email" name="email" class="auth-input" placeholder="email@gmail.com" required>
+          </label>
+          <label class="auth-field">
+            <span>Mật khẩu</span>
+            <input type="password" name="password" class="auth-input" placeholder="Mật khẩu của bạn" required>
+          </label>
+          <div class="auth-error-box" id="acctLoginCustErr" ${formError && roleTab === 'customer' ? '' : 'hidden'}>${escapeHtml(formError)}</div>
+          <button type="submit" class="auth-submit-btn">
+            <span>Đăng nhập Khách hàng</span>
+          </button>
         </form>
-        <button type="button" class="acct-link acct-forgot" data-acct-reset ${dis}>${L.forgot}</button>
-        <p class="acct-switch">${L.noAccount} <button type="button" class="acct-link" data-acct-step="register">${L.createLink}</button></p>`;
+
+        <!-- 2. Form Đăng nhập Counselor -->
+        <form id="acctLoginFormCsl" class="auth-form" ${roleTab === 'counselor' ? '' : 'hidden'} autocomplete="on">
+          <label class="auth-field">
+            <span>Mã Counselor / Mật khẩu (dạng BV0001)</span>
+            <input type="text" name="cslCode" class="auth-input" placeholder="Ví dụ: BV0001 hoặc BV 0001" required>
+            <small class="auth-hint">Nhập mã số Counselor do beVIBE cấp để truy cập Dashboard giá sỉ &amp; quỹ thưởng.</small>
+          </label>
+          <div class="auth-error-box" id="acctLoginCslErr" ${formError && roleTab === 'counselor' ? '' : 'hidden'}>${escapeHtml(formError)}</div>
+          <button type="submit" class="auth-submit-btn auth-submit-csl">
+            <span>Đăng nhập Phân hệ Counselor</span>
+          </button>
+          <div class="auth-demo-chips">
+            <span>Mã mẫu:</span>
+            <button type="button" class="btn-demo-chip" data-code="BV0001">BV0001</button>
+            <button type="button" class="btn-demo-chip" data-code="BV0002">BV0002</button>
+            <button type="button" class="btn-demo-chip" data-code="BV0003">BV0003</button>
+          </div>
+        </form>
+
+        <p class="acct-switch" style="margin-top: 16px; font-size: 0.88rem; text-align: center; color: #64748b;">
+          Chưa có tài khoản? <button type="button" class="acct-link" data-nav-tab="register" style="color: #0284c7; font-weight: 700; background: none; border: none; cursor: pointer;">Tạo tài khoản mới</button>
+        </p>
+      `;
     } else {
-      html = `
-        <h2 class="acct-title" id="acctTitle">${L.registerTitle}</h2>
-        ${emailChip}
-        <form class="acct-form" data-acct-form="register" novalidate>
-          <input class="acct-input" type="text" name="name" autocomplete="name" placeholder="${L.namePh}" aria-label="${L.namePh}">
-          <input class="acct-input" type="password" name="password" autocomplete="new-password" placeholder="${L.pwNewPh}" aria-label="${L.pwNewPh}">
-          <input class="acct-input" type="password" name="password2" autocomplete="new-password" placeholder="${L.pw2Ph}" aria-label="${L.pw2Ph}">
-          ${msgHtml()}
-          <button type="submit" class="acct-btn acct-btn-primary is-ready" ${dis}>${L.register}</button>
+      // TAB ĐĂNG KÝ
+      contentHtml = `
+        ${tabsHtml}
+        <form id="acctRegisterForm" class="auth-form" autocomplete="off">
+          <label class="auth-field">
+            <span>Họ và tên <strong class="req" style="color: #dc2626;">*</strong></span>
+            <input type="text" name="name" class="auth-input" placeholder="Ví dụ: Nguyễn Văn An" required>
+          </label>
+
+          <label class="auth-field">
+            <span>Số điện thoại <strong class="req" style="color: #dc2626;">*</strong></span>
+            <input type="tel" name="phone" class="auth-input" placeholder="Ví dụ: 0912 345 678" required>
+          </label>
+
+          <label class="auth-field">
+            <span>Địa chỉ Email <strong class="req" style="color: #dc2626;">*</strong></span>
+            <input type="email" name="email" class="auth-input" placeholder="email@gmail.com" required>
+          </label>
+
+          <!-- Chọn vai trò -->
+          <div class="auth-field">
+            <span>Loại tài khoản:</span>
+            <div class="auth-role-group">
+              <label class="auth-role-opt ${regRole === 'customer' ? 'is-active' : ''}" id="acctRoleOptCust">
+                <input type="radio" name="accountRole" value="customer" ${regRole === 'customer' ? 'checked' : ''}>
+                <div>
+                  <strong>Khách hàng cá nhân</strong>
+                  <small>Mua sắm, lưu giỏ hàng &amp; địa chỉ</small>
+                </div>
+              </label>
+              <label class="auth-role-opt ${regRole === 'counselor' ? 'is-active' : ''}" id="acctRoleOptCsl">
+                <input type="radio" name="accountRole" value="counselor" ${regRole === 'counselor' ? 'checked' : ''}>
+                <div>
+                  <strong>Counselor (Tư vấn viên sỉ)</strong>
+                  <small>Giảm giá sỉ 55% + Thưởng 5%</small>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <div id="acctCustPwFields" class="auth-pw-block" ${regRole === 'customer' ? '' : 'hidden'}>
+            <label class="auth-field">
+              <span>Mật khẩu <strong class="req" style="color: #dc2626;">*</strong></span>
+              <input type="password" name="password" class="auth-input" placeholder="Nhập ít nhất 6 ký tự">
+            </label>
+            <label class="auth-field">
+              <span>Xác nhận mật khẩu <strong class="req" style="color: #dc2626;">*</strong></span>
+              <input type="password" name="passwordConfirm" class="auth-input" placeholder="Nhập lại mật khẩu">
+            </label>
+          </div>
+
+          <div id="acctCslNoteField" class="auth-csl-note" ${regRole === 'counselor' ? '' : 'hidden'}>
+            <div class="csl-note-badge">✨ Lưu ý dành cho Counselor</div>
+            <p>Mật khẩu đăng nhập sẽ là <strong>Mã số Counselor (như BV0001)</strong> do hệ thống cấp. Tài khoản được kích hoạt tức thì để bạn đăng nhập ngay mà không cần chờ đợi!</p>
+          </div>
+
+          <div class="auth-error-box" id="acctRegErr" ${formError ? '' : 'hidden'}>${escapeHtml(formError)}</div>
+
+          <button type="submit" class="auth-submit-btn" id="btnAcctSubmitRegister">
+            <span>Đăng ký ngay</span>
+          </button>
         </form>
-        <p class="acct-switch">${L.hasAccount} <button type="button" class="acct-link" data-acct-step="login">${L.loginLink}</button></p>`;
+
+        <p class="acct-switch" style="margin-top: 16px; font-size: 0.88rem; text-align: center; color: #64748b;">
+          Đã có tài khoản? <button type="button" class="acct-link" data-nav-tab="login" style="color: #0284c7; font-weight: 700; background: none; border: none; cursor: pointer;">Đăng nhập ngay</button>
+        </p>
+      `;
     }
-    body.innerHTML = `${html}<button type="button" class="acct-back" data-acct-close>${L.back}</button>`;
-    body.classList.toggle('is-busy', busy);
-    updateNextState();
+
+    body.innerHTML = `
+      ${contentHtml}
+      <button type="button" class="acct-back" data-acct-close>${L.back}</button>
+    `;
+    bindModalEvents();
   }
 
-  // "Tiếp tục" turns black once the email looks valid (grey before, as in the reference design)
-  function updateNextState() {
-    const input = body.querySelector('input[name="email"]');
-    const next = body.querySelector('[data-acct-next]');
-    if (input && next) next.classList.toggle('is-ready', EMAIL_RE.test(input.value.trim()));
-  }
+  function bindModalEvents() {
+    body.querySelectorAll('[data-nav-tab]').forEach((b) => {
+      b.addEventListener('click', () => {
+        activeTab = b.dataset.navTab;
+        formError = '';
+        render();
+      });
+    });
 
-  function setStep(s, keepMessage = false) {
-    step = s;
-    if (!keepMessage) message = null;
-    render();
-    const first = body.querySelector('input:not([disabled])');
-    if (first) first.focus();
+    body.querySelectorAll('[data-role-tab]').forEach((b) => {
+      b.addEventListener('click', () => {
+        roleTab = b.dataset.roleTab;
+        formError = '';
+        render();
+      });
+    });
+
+    body.querySelectorAll('.btn-demo-chip').forEach((chip) => {
+      chip.addEventListener('click', () => {
+        const input = body.querySelector('#acctLoginFormCsl input[name="cslCode"]');
+        if (input) {
+          input.value = chip.dataset.code;
+          input.focus();
+        }
+      });
+    });
+
+    const radioRoles = body.querySelectorAll('input[name="accountRole"]');
+    const optCust = body.querySelector('#acctRoleOptCust');
+    const optCsl = body.querySelector('#acctRoleOptCsl');
+    const custPwFields = body.querySelector('#acctCustPwFields');
+    const cslNoteField = body.querySelector('#acctCslNoteField');
+
+    radioRoles.forEach((r) => {
+      r.addEventListener('change', () => {
+        regRole = r.value;
+        if (r.value === 'counselor') {
+          optCsl?.classList.add('is-active');
+          optCust?.classList.remove('is-active');
+          if (custPwFields) custPwFields.hidden = true;
+          if (cslNoteField) cslNoteField.hidden = false;
+        } else {
+          optCust?.classList.add('is-active');
+          optCsl?.classList.remove('is-active');
+          if (custPwFields) custPwFields.hidden = false;
+          if (cslNoteField) cslNoteField.hidden = true;
+        }
+      });
+    });
+
+    const formLoginCust = body.querySelector('#acctLoginFormCust');
+    if (formLoginCust) {
+      formLoginCust.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const emailVal = formLoginCust.email.value.trim().toLowerCase();
+        const pwVal = formLoginCust.password.value;
+        const allCust = getRegisteredCustomers();
+        const found = allCust.find((c) => c.email === emailVal && c.password === pwVal);
+        if (!found) {
+          formError = 'Email hoặc mật khẩu chưa chính xác. Vui lòng thử lại hoặc chọn Đăng ký.';
+          const errEl = body.querySelector('#acctLoginCustErr');
+          if (errEl) { errEl.textContent = formError; errEl.hidden = false; }
+          return;
+        }
+        setCurrentCustomer(found);
+        closeModal();
+        renderButton();
+        showToast(`Đăng nhập thành công! Xin chào ${found.name} ✓`);
+        window.location.reload();
+      });
+    }
+
+    const formLoginCsl = body.querySelector('#acctLoginFormCsl');
+    if (formLoginCsl) {
+      formLoginCsl.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const codeVal = formLoginCsl.cslCode.value.trim();
+        const norm = normalizeCounselorCode(codeVal);
+        if (!norm) {
+          formError = 'Vui lòng nhập mã Counselor hợp lệ.';
+          const errEl = body.querySelector('#acctLoginCslErr');
+          if (errEl) { errEl.textContent = formError; errEl.hidden = false; }
+          return;
+        }
+        const all = getAllCounselors();
+        let found = all.find((c) => normalizeCounselorCode(c.code) === norm);
+        if (!found) {
+          found = {
+            code: norm,
+            name: `Tư vấn viên ${norm}`,
+            phone: 'Chưa cập nhật',
+            level: 'Counselor Tiêu Chuẩn ⭐',
+            region: 'Toàn quốc',
+            joinDate: new Date().toLocaleDateString('vi-VN'),
+            discountRate: 0.55,
+            bonusRate: 0.05,
+            targetReward: 20000000,
+            targetRewardName: 'Phần thưởng cuối năm beVIBE'
+          };
+        }
+        setCounselorSession(found);
+        closeModal();
+        renderButton();
+        window.location.hash = '/counselor';
+      });
+    }
+
+    const formReg = body.querySelector('#acctRegisterForm');
+    if (formReg) {
+      formReg.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const nameVal = formReg.name.value.trim();
+        const phoneVal = formReg.phone.value.trim();
+        const emailVal = formReg.email.value.trim().toLowerCase();
+        const errEl = body.querySelector('#acctRegErr');
+
+        if (!nameVal || !phoneVal || !emailVal) {
+          formError = 'Vui lòng điền đầy đủ Họ tên, Số điện thoại và Email.';
+          if (errEl) { errEl.textContent = formError; errEl.hidden = false; }
+          return;
+        }
+
+        if (regRole === 'customer') {
+          const pw = formReg.password ? formReg.password.value : '';
+          const pw2 = formReg.passwordConfirm ? formReg.passwordConfirm.value : '';
+          if (pw.length < 6) {
+            formError = 'Mật khẩu cần ít nhất 6 ký tự.';
+            if (errEl) { errEl.textContent = formError; errEl.hidden = false; }
+            return;
+          }
+          if (pw !== pw2) {
+            formError = 'Hai mật khẩu chưa trùng khớp.';
+            if (errEl) { errEl.textContent = formError; errEl.hidden = false; }
+            return;
+          }
+          const allCust = getRegisteredCustomers();
+          if (allCust.some((c) => c.email === emailVal)) {
+            formError = 'Email này đã được đăng ký tài khoản. Vui lòng chọn Đăng nhập.';
+            if (errEl) { errEl.textContent = formError; errEl.hidden = false; }
+            return;
+          }
+          const newCust = { name: nameVal, phone: phoneVal, email: emailVal, password: pw, createdAt: new Date().toISOString() };
+          allCust.push(newCust);
+          localStorage.setItem('bevibe_registered_customers_v1', JSON.stringify(allCust));
+          setCurrentCustomer(newCust);
+          sendOrderToSupabase({
+            order_type: 'Khách hàng đăng ký mới',
+            customer_name: nameVal,
+            phone: phoneVal,
+            email: emailVal,
+            clinic_or_spa: 'Khách hàng cá nhân',
+            collaboration_need: 'Tạo tài khoản website beVIBE',
+            note: 'Đăng ký thành công từ website'
+          }).catch(() => {});
+          closeModal();
+          renderButton();
+          showToast(`Xin chào ${nameVal}! Đăng ký tài khoản thành công ✓`);
+          window.location.reload();
+        } else {
+          // Counselor
+          const newCode = generateNextCounselorCode();
+          const newCounselor = {
+            code: newCode,
+            name: nameVal,
+            phone: phoneVal,
+            email: emailVal,
+            level: 'Tập sự ⭐',
+            region: 'Toàn quốc',
+            joinDate: new Date().toLocaleDateString('vi-VN'),
+            discountRate: 0.55,
+            bonusRate: 0.05,
+            targetReward: 20000000,
+            targetRewardName: 'Phần thưởng tiền mặt / Hiện vật cuối năm',
+            status: 'active',
+            activatedAt: new Date().toISOString(),
+            createdAt: new Date().toISOString()
+          };
+          saveNewCounselor(newCounselor);
+          sendOrderToSupabase({
+            order_type: `Đăng ký Counselor mới [${newCode}]`,
+            customer_name: `${nameVal} (${newCode})`,
+            phone: phoneVal,
+            email: emailVal,
+            clinic_or_spa: 'Counselor beVIBE',
+            collaboration_need: 'Đăng ký làm Tư vấn viên sỉ (Giảm 55% + Thưởng 5%)',
+            note: `Mã cấp phát: ${newCode} | Mật khẩu: ${newCode} | Kích hoạt tự động tức thì`
+          }).catch(() => {});
+          closeModal();
+          renderButton();
+          showCounselorSuccessModal(newCounselor);
+        }
+      });
+    }
   }
 
   let lastFocus = null;
-  function openModal() {
+  function openModal(tab = 'login') {
     lastFocus = document.activeElement;
-    step = 'start';
-    message = null;
-    busy = false;
+    activeTab = tab === 'register' ? 'register' : 'login';
+    formError = '';
     render();
     modal.hidden = false;
     document.body.classList.add('acct-open');
-    void modal.offsetWidth; // start the fade-in from the hidden state
+    void modal.offsetWidth;
     modal.classList.add('is-open');
-    if (enabled()) loadBackend().catch(() => {}); // start downloading while the customer types
-    const first = body.querySelector('input:not([disabled]), button:not([disabled])');
+    const first = body.querySelector('input:not([disabled])');
     if (first) first.focus();
   }
 
@@ -317,132 +658,17 @@ export function initAccount(ctx) {
     if (lastFocus && lastFocus.focus) lastFocus.focus();
   }
 
-  function errorText(err) {
-    const L = t();
-    const code = (err && err.code) || '';
-    if (/invalid-credential|wrong-password|user-not-found|invalid-login/.test(code)) return L.errWrong;
-    if (/email-already-in-use/.test(code)) return L.errExists;
-    if (/invalid-email/.test(code)) return L.errEmail;
-    if (/weak-password/.test(code)) return L.errPwShort;
-    if (/too-many-requests/.test(code)) return L.errMany;
-    if (/network-request-failed/.test(code)) return L.errNet;
-    if (/popup-blocked/.test(code)) return L.errPopup;
-    if (/unauthorized-domain/.test(code)) return L.errDomain;
-    return L.errOther;
-  }
-
-  async function run(task) {
-    if (busy) return;
-    busy = true;
-    message = null;
-    render();
-    try {
-      await task(await loadBackend());
-    } catch (err) {
-      const code = (err && err.code) || '';
-      // Customer closed the Google window: nothing to report
-      if (!/popup-closed-by-user|cancelled-popup-request/.test(code)) {
-        message = { type: 'error', text: errorText(err) };
-        if (/email-already-in-use/.test(code)) step = 'login';
-      }
-    } finally {
-      busy = false;
-      if (!modal.hidden) render();
-    }
-  }
-
   modal.addEventListener('click', (e) => {
     if (e.target.closest('[data-acct-close]')) { closeModal(); return; }
-    const stepBtn = e.target.closest('[data-acct-step]');
-    if (stepBtn) { setStep(stepBtn.getAttribute('data-acct-step')); return; }
-    if (e.target.closest('[data-acct-google]')) {
-      run(async (b) => { await b.signInWithGoogle(); closeModal(); });
-      return;
-    }
-    if (e.target.closest('[data-acct-reset]')) {
-      run(async (b) => {
-        await b.resetPassword(email);
-        message = { type: 'info', text: t().resetSent };
-      });
-    }
   });
 
-  modal.addEventListener('input', (e) => {
-    if (e.target.name === 'email') updateNextState();
-  });
-
-  modal.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const form = e.target;
-    const kind = form.getAttribute('data-acct-form');
-    const L = t();
-    const fail = (text) => {
-      message = { type: 'error', text };
-      render();
-      const bad = body.querySelector('input');
-      if (bad) bad.focus();
-    };
-    if (kind === 'email') {
-      const v = form.email.value.trim();
-      if (!EMAIL_RE.test(v)) { fail(L.errEmail); return; }
-      email = v;
-      setStep('login');
-    } else if (kind === 'login') {
-      const pw = form.password.value;
-      if (pw.length < 6) { fail(L.errWrong); return; }
-      run(async (b) => { await b.signInWithEmail(email, pw); closeModal(); });
-    } else if (kind === 'register') {
-      const name = form.name.value.trim();
-      const pw = form.password.value;
-      if (!name) { fail(L.errName); return; }
-      if (pw.length < 6) { fail(L.errPwShort); return; }
-      if (pw !== form.password2.value) { fail(L.errPwMatch); return; }
-      run(async (b) => {
-        const created = await b.register(name, email, pw);
-        if (created && user && user.uid === created.uid) {
-          user = { ...user, name: created.name || name };
-          renderButton();
-          shop.setCustomerDefaults({ name: user.name, email: user.email });
-        }
-
-        // Store into Supabase database
-        sendOrderToSupabase({
-          order_type: 'Đăng ký tài khoản mới',
-          customer_name: name,
-          phone: '',
-          email: email,
-          clinic_or_spa: 'Tài khoản website beVIBE',
-          collaboration_need: 'Đăng ký tài khoản khách hàng',
-          note: 'Khách hàng tạo tài khoản thành công trên website beVIBE',
-          shipping_address: '',
-          total_amount: 0
-        }).catch(() => {});
-
-        // Notify Google Sheet & send email notification
-        if (ORDER_ENDPOINT) {
-          try {
-            fetch(ORDER_ENDPOINT, {
-              method: 'POST',
-              mode: 'no-cors',
-              headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-              body: JSON.stringify({
-                type: 'Đăng ký tài khoản khách hàng mới',
-                name: name,
-                email: email,
-                phone: '',
-                clinic: 'Tài khoản website beVIBE',
-                interest: 'Đăng ký tài khoản khách hàng',
-                note: 'Khách hàng tạo tài khoản thành công trên website beVIBE'
-              })
-            }).catch(() => {});
-          } catch (e) {}
-        }
-
-        closeModal();
-        showToast(t().createdToast);
-      });
-    }
-  });
+  if (typeof window !== 'undefined') {
+    window.__bevibeOpenAccountModal = openModal;
+    window.addEventListener('bevibe:auth-change', () => {
+      renderButton();
+      if (!menu.hidden) renderMenu();
+    });
+  }
 
   document.addEventListener('keydown', (e) => {
     if (e.key !== 'Escape') return;

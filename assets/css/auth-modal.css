@@ -508,3 +508,33 @@
   font-weight: 600;
 }
 
+/* Main Tabs for Modal in Image 1 (Đăng nhập / Đăng ký) */
+.acct-main-tabs {
+  display: flex;
+  background: #f1f5f9;
+  border-radius: 12px;
+  padding: 4px;
+  margin: 0 auto 20px;
+  gap: 4px;
+  max-width: 340px;
+}
+.acct-main-tab {
+  flex: 1;
+  padding: 10px 16px;
+  border: none;
+  background: transparent;
+  border-radius: 9px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+.acct-main-tab.active {
+  background: #ffffff;
+  color: #0f2347;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
