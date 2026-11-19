@@ -367,22 +367,9 @@ export function initAccount(ctx) {
       contentHtml = `
         ${tabsHtml}
         <!-- Lựa chọn vai trò đăng ký -->
-        <div class="auth-field" style="margin-bottom: 14px;">
-          <span style="font-size: 0.88rem; font-weight: 600; color: #334155; margin-bottom: 6px; display: block;">Chọn loại tài khoản đăng ký:</span>
-          <div class="auth-role-group">
-            <label class="auth-role-opt ${regRole === 'customer' ? 'is-active' : ''}" id="acctRoleOptCust">
-              <input type="radio" name="accountRole" value="customer" ${regRole === 'customer' ? 'checked' : ''}>
-              <div>
-                <strong>Khách hàng</strong>
-              </div>
-            </label>
-            <label class="auth-role-opt ${regRole === 'counselor' ? 'is-active' : ''}" id="acctRoleOptCsl">
-              <input type="radio" name="accountRole" value="counselor" ${regRole === 'counselor' ? 'checked' : ''}>
-              <div>
-                <strong>Counselor</strong>
-              </div>
-            </label>
-          </div>
+        <div class="auth-tabs" style="margin-bottom: 16px;">
+          <button type="button" class="auth-tab ${regRole === 'customer' ? 'active' : ''}" data-reg-role="customer">Khách hàng</button>
+          <button type="button" class="auth-tab ${regRole === 'counselor' ? 'active' : ''}" data-reg-role="counselor">Counselor</button>
         </div>
 
         <form id="acctRegisterForm" class="auth-form" autocomplete="off">
@@ -448,59 +435,20 @@ export function initAccount(ctx) {
       });
     });
 
+    body.querySelectorAll('[data-reg-role]').forEach((b) => {
+      b.addEventListener('click', () => {
+        regRole = b.dataset.regRole;
+        formError = '';
+        render();
+      });
+    });
+
     body.querySelectorAll('.btn-demo-chip').forEach((chip) => {
       chip.addEventListener('click', () => {
         const input = body.querySelector('#acctLoginFormCsl input[name="cslCode"]');
         if (input) {
           input.value = chip.dataset.code;
           input.focus();
-        }
-      });
-    });
-
-    const radioRoles = body.querySelectorAll('input[name="accountRole"]');
-    radioRoles.forEach((r) => {
-      r.addEventListener('change', () => {
-        regRole = r.value;
-        const optCust = body.querySelector('#acctRoleOptCust');
-        const optCsl = body.querySelector('#acctRoleOptCsl');
-        const phoneField = body.querySelector('#acctPhoneField');
-        const cslNote = body.querySelector('#acctCslNoteField');
-        const emailHint = body.querySelector('#acctEmailHint');
-        const nameReq = body.querySelector('#acctNameReq');
-        const nameInput = body.querySelector('#acctNameField input');
-        const submitBtn = body.querySelector('#btnAcctSubmitRegister');
-
-        if (r.value === 'counselor') {
-          optCsl?.classList.add('is-active');
-          optCust?.classList.remove('is-active');
-          if (phoneField) phoneField.hidden = false;
-          if (cslNote) cslNote.hidden = false;
-          if (emailHint) emailHint.textContent = 'Hệ thống dùng Gmail để gửi thông tin và quản lý tài khoản Counselor.';
-          if (nameReq) nameReq.style.display = 'inline';
-          if (nameInput) {
-            nameInput.placeholder = 'Ví dụ: Nguyễn Văn An';
-            nameInput.required = true;
-          }
-          if (submitBtn) {
-            submitBtn.className = 'auth-submit-btn auth-submit-csl';
-            submitBtn.querySelector('span').textContent = '🚀 Đăng ký Counselor beVIBE';
-          }
-        } else {
-          optCust?.classList.add('is-active');
-          optCsl?.classList.remove('is-active');
-          if (phoneField) phoneField.hidden = true;
-          if (cslNote) cslNote.hidden = true;
-          if (emailHint) emailHint.textContent = 'Khách hàng chỉ cần nhập Gmail là đăng nhập thành công ngay.';
-          if (nameReq) nameReq.style.display = 'none';
-          if (nameInput) {
-            nameInput.placeholder = 'Ví dụ: Nguyễn Văn An';
-            nameInput.required = false;
-          }
-          if (submitBtn) {
-            submitBtn.className = 'auth-submit-btn';
-            submitBtn.querySelector('span').textContent = '✨ Đăng ký & Đăng nhập ngay bằng Gmail';
-          }
         }
       });
     });
