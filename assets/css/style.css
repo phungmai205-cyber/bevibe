@@ -9823,6 +9823,58 @@ a.send-btn {
   color: var(--text-body);
 }
 
+/* Nút Xem chi tiết & Rút gọn văn bản About trên trang chủ */
+.about-cta-row {
+  margin-top: 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.about-view-more-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 28px;
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  color: #ffffff !important;
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+  border-radius: var(--radius-pill, 999px);
+  text-decoration: none;
+  box-shadow: 0 6px 20px rgba(2, 132, 199, 0.28);
+  transition: all 0.3s ease;
+}
+
+.about-view-more-btn:hover {
+  background: linear-gradient(135deg, #0369a1 0%, #075985 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 26px rgba(2, 132, 199, 0.4);
+}
+
+.about-view-more-btn svg {
+  transition: transform 0.25s ease;
+}
+
+.about-view-more-btn:hover svg {
+  transform: translateX(4px);
+}
+
+/* Trên trang chủ: Ẩn bớt 2 đoạn văn chi tiết để rút ngắn */
+.public-main:not(.is-subpage) .about-desc-extra {
+  display: none !important;
+}
+
+/* Khi vào trang con chi tiết: Hiển thị đầy đủ đoạn văn và ẩn nút Xem chi tiết */
+.is-subpage .about-desc-extra {
+  display: block !important;
+}
+
+.is-subpage .about-cta-row {
+  display: none !important;
+}
+
 /* ===== About: Executive Leadership Profile (Tổng Giám đốc Kim Jong Hyuk - Phong cách Timeline & So le) ===== */
 .leadership-stagger-section {
   padding: 40px 0 80px;
