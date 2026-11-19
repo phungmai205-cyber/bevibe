@@ -323,7 +323,7 @@ export function initAccount(ctx) {
         ${tabsHtml}
         <div class="auth-tabs" style="margin-bottom: 16px;">
           <button type="button" class="auth-tab ${roleTab === 'customer' ? 'active' : ''}" data-role-tab="customer">Khách hàng</button>
-          <button type="button" class="auth-tab ${roleTab === 'counselor' ? 'active' : ''}" data-role-tab="counselor">Counselor (Tư vấn viên)</button>
+          <button type="button" class="auth-tab ${roleTab === 'counselor' ? 'active' : ''}" data-role-tab="counselor">Counselor</button>
         </div>
 
         <!-- 1. Form Đăng nhập Khách hàng (CHỈ CẦN GMAIL) -->
@@ -380,7 +380,7 @@ export function initAccount(ctx) {
             <label class="auth-role-opt ${regRole === 'counselor' ? 'is-active' : ''}" id="acctRoleOptCsl">
               <input type="radio" name="accountRole" value="counselor" ${regRole === 'counselor' ? 'checked' : ''}>
               <div>
-                <strong>Counselor (Tư vấn viên)</strong>
+                <strong>Counselor</strong>
                 <small>Đăng ký Gmail, hiện mã &amp; mật khẩu sỉ 55%</small>
               </div>
             </label>
@@ -398,7 +398,7 @@ export function initAccount(ctx) {
           <!-- Họ và tên -->
           <label class="auth-field" id="acctNameField">
             <span>Họ và tên <strong class="req" id="acctNameReq" style="color: #dc2626; ${regRole === 'customer' ? 'display:none;' : ''}">*</strong></span>
-            <input type="text" name="name" class="auth-input" placeholder="${regRole === 'customer' ? 'Ví dụ: Nguyễn Văn An (tùy chọn)' : 'Ví dụ: Nguyễn Văn An'}" ${regRole === 'counselor' ? 'required' : ''}>
+            <input type="text" name="name" class="auth-input" placeholder="Ví dụ: Nguyễn Văn An" ${regRole === 'counselor' ? 'required' : ''}>
           </label>
 
           <!-- Số điện thoại: chỉ dành cho Counselor -->
@@ -496,7 +496,7 @@ export function initAccount(ctx) {
           if (emailHint) emailHint.textContent = 'Khách hàng chỉ cần nhập Gmail là đăng nhập thành công ngay.';
           if (nameReq) nameReq.style.display = 'none';
           if (nameInput) {
-            nameInput.placeholder = 'Ví dụ: Nguyễn Văn An (tùy chọn)';
+            nameInput.placeholder = 'Ví dụ: Nguyễn Văn An';
             nameInput.required = false;
           }
           if (submitBtn) {
@@ -641,7 +641,7 @@ export function initAccount(ctx) {
         } else {
           // COUNSELOR: ĐĂNG KÝ BẰNG GMAIL VÀ HIỆN MẬT KHẨU TƯƠNG ỨNG MÃ SỐ
           if (!nameVal) {
-            formError = 'Vui lòng nhập họ và tên Tư vấn viên.';
+            formError = 'Vui lòng nhập họ và tên Counselor.';
             if (errEl) { errEl.textContent = formError; errEl.hidden = false; }
             return;
           }

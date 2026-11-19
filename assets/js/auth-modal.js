@@ -251,7 +251,7 @@ export function openRegisterModal() {
             <label class="auth-radio-label" id="labelRoleCounselor">
               <input type="radio" name="accountRole" value="counselor">
               <div class="radio-content">
-                <strong>Counselor (Tư vấn viên)</strong>
+                <strong>Counselor</strong>
                 <small>Giá sỉ giảm 55% + Thưởng 5%</small>
               </div>
             </label>
@@ -537,7 +537,7 @@ export function openLoginModal(prefillCode = '') {
       <!-- Tab Switcher -->
       <div class="auth-tabs">
         <button type="button" class="auth-tab ${prefillCode ? '' : 'active'}" id="tabLoginCustomer">Khách hàng</button>
-        <button type="button" class="auth-tab ${prefillCode ? 'active' : ''}" id="tabLoginCounselor">Counselor (Tư vấn viên)</button>
+        <button type="button" class="auth-tab ${prefillCode ? 'active' : ''}" id="tabLoginCounselor">Counselor</button>
       </div>
 
       <!-- 1. Form Đăng nhập Khách hàng -->
