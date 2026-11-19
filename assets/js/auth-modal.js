@@ -123,17 +123,17 @@ export function updateHeaderAuthUI() {
     container.innerHTML = `
       <div class="auth-logged-pill is-csl" id="userAccountDropdown">
         <span class="auth-avatar">💎</span>
-        <span class="auth-name"><strong>${counselor.code}</strong> (${counselor.name.split(' ').pop()})</span>
-        <a href="#/counselor" class="auth-action-link" title="Mở Dashboard">Dashboard</a>
-        <button type="button" class="auth-logout-link" id="btnLogoutAll" title="Đăng xuất">Thoát</button>
+        <span class="auth-name"><strong>${counselor.code}</strong> · ${counselor.name}</span>
+        <a href="#/counselor" class="auth-action-link" title="Mở phân hệ Counselor">Phân hệ Counselor</a>
+        <button type="button" class="auth-logout-link" id="btnLogoutAll" title="Đăng xuất">Đăng xuất</button>
       </div>
     `;
   } else if (customer) {
     container.innerHTML = `
       <div class="auth-logged-pill is-cust" id="userAccountDropdown">
         <span class="auth-avatar">👤</span>
-        <span class="auth-name">${customer.name}</span>
-        <button type="button" class="auth-logout-link" id="btnLogoutAll" title="Đăng xuất">Thoát</button>
+        <span class="auth-name"><strong>${customer.name}</strong></span>
+        <button type="button" class="auth-logout-link" id="btnLogoutAll" title="Đăng xuất">Đăng xuất</button>
       </div>
     `;
   } else {
@@ -152,10 +152,49 @@ export function updateHeaderAuthUI() {
     if (confirm('Bạn có muốn đăng xuất khỏi hệ thống beVIBE?')) {
       clearCounselorSession();
       setCurrentCustomer(null);
+      updateHeaderAuthUI();
       window.location.hash = '#';
       window.location.reload();
     }
   });
+
+  // Cập nhật cụm nút trong mobile drawer
+  const mobLoginBtn = document.getElementById('counselorMobileLoginBtn');
+  const mobGroup = mobLoginBtn ? mobLoginBtn.parentElement : null;
+  if (mobGroup) {
+    if (counselor) {
+      mobGroup.innerHTML = `
+        <div class="auth-logged-pill is-csl" style="width: 100%; justify-content: space-between;">
+          <span>💎 <strong>${counselor.code}</strong> · ${counselor.name}</span>
+          <button type="button" class="auth-logout-link" id="btnMobLogout">Đăng xuất</button>
+        </div>
+      `;
+      document.getElementById('btnMobLogout')?.addEventListener('click', () => {
+        clearCounselorSession();
+        updateHeaderAuthUI();
+        window.location.hash = '#';
+        window.location.reload();
+      });
+    } else if (customer) {
+      mobGroup.innerHTML = `
+        <div class="auth-logged-pill is-cust" style="width: 100%; justify-content: space-between;">
+          <span>👤 <strong>${customer.name}</strong></span>
+          <button type="button" class="auth-logout-link" id="btnMobLogout">Đăng xuất</button>
+        </div>
+      `;
+      document.getElementById('btnMobLogout')?.addEventListener('click', () => {
+        setCurrentCustomer(null);
+        updateHeaderAuthUI();
+        window.location.hash = '#';
+        window.location.reload();
+      });
+    }
+  }
+}
+
+if (typeof window !== 'undefined') {
+  window.__updateHeaderAuthUI = updateHeaderAuthUI;
+  window.addEventListener('bevibe:auth-change', updateHeaderAuthUI);
 }
 
 // -----------------------------------------------------------------------------
@@ -469,6 +508,7 @@ export function showCounselorSuccessModal(counselor) {
   modal.querySelector('#btnNoticeDismiss').addEventListener('click', closeAuthModal);
   modal.querySelector('#btnDirectLoginCsl').addEventListener('click', () => {
     setCounselorSession(counselor);
+    updateHeaderAuthUI();
     closeAuthModal();
     window.location.hash = '/counselor';
   });
@@ -649,6 +689,7 @@ export function openLoginModal(prefillCode = '') {
     }
 
     setCounselorSession(found);
+    updateHeaderAuthUI();
     closeAuthModal();
     window.location.hash = '/counselor';
   });

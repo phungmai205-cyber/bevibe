@@ -3010,6 +3010,9 @@ document.addEventListener('DOMContentLoaded', () => {
       a.classList.toggle('is-active', !isHome && a.getAttribute('href') === `#/${route.page}`);
     });
 
+    // Cập nhật trạng thái cụm Đăng nhập / Đăng ký trên Header mỗi khi đổi trang
+    updateHeaderAuthUI();
+
     if (!(initial && isHome)) window.scrollTo(0, 0);
   }
 

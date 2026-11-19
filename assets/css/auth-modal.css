@@ -76,18 +76,24 @@
   background: #f8fafc;
   border: 1px solid #e2e8f0;
   border-radius: 20px;
-  padding: 4px 12px;
+  padding: 5px 12px;
   font-size: 0.86rem;
+  line-height: 1.2;
 }
 .auth-logged-pill.is-csl {
-  background: #fef3c7;
+  background: #fffbeb;
   border-color: #fde68a;
   color: #92400e;
+  box-shadow: 0 1px 3px rgba(245, 158, 11, 0.12);
 }
 .auth-logged-pill.is-cust {
   background: #f0fdf4;
   border-color: #bbf7d0;
   color: #166534;
+}
+.auth-logged-pill .auth-name {
+  font-weight: 600;
+  color: #1e293b;
 }
 .auth-action-link {
   background: #d97706;
@@ -95,19 +101,30 @@
   text-decoration: none;
   font-size: 0.76rem;
   font-weight: 700;
-  padding: 2px 8px;
-  border-radius: 10px;
+  padding: 4px 10px;
+  border-radius: 12px;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+.auth-action-link:hover {
+  background: #b45309;
 }
 .auth-logout-link {
-  background: transparent;
-  border: none;
-  color: #9ca3af;
-  font-size: 0.78rem;
+  background: #fee2e2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+  font-size: 0.76rem;
+  font-weight: 600;
   cursor: pointer;
-  padding: 0 4px;
+  padding: 3px 8px;
+  border-radius: 10px;
+  transition: all 0.15s ease;
+  white-space: nowrap;
 }
 .auth-logout-link:hover {
-  color: #ef4444;
+  background: #dc2626;
+  color: #ffffff;
+  border-color: #dc2626;
 }
 
 /* Modal Overlay & Box */

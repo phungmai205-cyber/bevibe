@@ -75,12 +75,24 @@ export function getCurrentCounselor() {
 export function setCounselorSession(counselor) {
   localStorage.setItem(STORAGE_KEY_COUNSELOR, JSON.stringify(counselor));
   updateCounselorNavUI();
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent('bevibe:auth-change'));
+    if (typeof window.__updateHeaderAuthUI === 'function') {
+      window.__updateHeaderAuthUI();
+    }
+  }
 }
 
 // Đăng xuất
 export function clearCounselorSession() {
   localStorage.removeItem(STORAGE_KEY_COUNSELOR);
   updateCounselorNavUI();
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent('bevibe:auth-change'));
+    if (typeof window.__updateHeaderAuthUI === 'function') {
+      window.__updateHeaderAuthUI();
+    }
+  }
 }
 
 // Lấy danh sách đơn hàng sỉ của Counselor
