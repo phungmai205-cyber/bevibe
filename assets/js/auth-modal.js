@@ -114,46 +114,13 @@ export function activateCounselorByCode(code) {
 // -----------------------------------------------------------------------------
 export function updateHeaderAuthUI() {
   const container = document.getElementById('headerAuthGroup');
-  if (!container) return;
-
-  const counselor = getCurrentCounselor();
-  const customer = getCurrentCustomer();
-
-  if (counselor) {
-    container.style.display = 'inline-flex';
-    container.innerHTML = `
-      <div class="auth-logged-pill is-csl" id="userAccountDropdown">
-        <span class="auth-avatar">💎</span>
-        <span class="auth-name"><strong>${counselor.code}</strong> · ${counselor.name}</span>
-        <a href="#/counselor" class="auth-action-link" title="Mở phân hệ Counselor">Phân hệ Counselor</a>
-        <button type="button" class="auth-logout-link" id="btnLogoutAll" title="Đăng xuất">Đăng xuất</button>
-      </div>
-    `;
-  } else if (customer) {
-    container.style.display = 'inline-flex';
-    container.innerHTML = `
-      <div class="auth-logged-pill is-cust" id="userAccountDropdown">
-        <span class="auth-avatar">👤</span>
-        <span class="auth-name"><strong>${customer.name}</strong></span>
-        <button type="button" class="auth-logout-link" id="btnLogoutAll" title="Đăng xuất">Đăng xuất</button>
-      </div>
-    `;
-  } else {
-    // Trạng thái chưa đăng nhập - Không hiển thị nút Đăng nhập / Đăng ký
+  if (container) {
     container.innerHTML = '';
     container.style.display = 'none';
   }
 
-  // Gắn sự kiện nút đăng xuất
-  document.getElementById('btnLogoutAll')?.addEventListener('click', () => {
-    if (confirm('Bạn có muốn đăng xuất khỏi hệ thống beVIBE?')) {
-      clearCounselorSession();
-      setCurrentCustomer(null);
-      updateHeaderAuthUI();
-      window.location.hash = '#';
-      window.location.reload();
-    }
-  });
+  const counselor = getCurrentCounselor();
+  const customer = getCurrentCustomer();
 
   // Cập nhật cụm nút trong mobile drawer
   const mobLoginBtn = document.getElementById('counselorMobileLoginBtn');
