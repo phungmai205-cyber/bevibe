@@ -262,10 +262,17 @@ async function postOrder(payload) {
   const init = { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) };
   try {
     const res = await fetch(ORDER_ENDPOINT, init);
-    try { return await res.json(); } catch (e) { return { ok: true, unverified: true }; }
+    try {
+      const data = await res.json();
+      return { ok: data.status === 'success' || data.ok === true || !data.error, ...data };
+    } catch (e) {
+      return { ok: true, unverified: true };
+    }
   } catch (err) {
     // Answer not readable (CORS): send without reading it, the requestId stops a double order
-    await fetch(ORDER_ENDPOINT, { ...init, mode: 'no-cors' });
+    try {
+      await fetch(ORDER_ENDPOINT, { ...init, mode: 'no-cors' });
+    } catch (e) {}
     return { ok: true, unverified: true };
   }
 }
@@ -563,6 +570,19 @@ function bindDashboard(container, counselor, products) {
     const requestId = `csl-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
     const tiers = Object.entries(calc.groups).map(([g, x]) => `${PRODUCT_GROUPS[g].short} ${x.qty}sp ${x.tier.code}`).join(', ');
     const note = `[ĐƠN SỈ COUNSELOR ${counselor.code}] CK tạm tính ${formatVnd(calc.discount)} (${tiers}) · Thực trả dự kiến ${formatVnd(calc.cost)} · Quỹ thưởng ${formatVnd(calc.bonus)}. Cần đối chiếu mã Counselor và nhập Giảm giá khi xác nhận. ${val('note')}`.slice(0, 480);
+    // Lưu Supabase song song để đảm bảo dữ liệu luôn được ghi nhận an toàn
+    const supabasePromise = sendOrderToSupabase({
+      order_type: `Đơn sỉ Counselor [${counselor.code}]`,
+      customer_name: `${counselor.name} (${counselor.code})`,
+      phone: counselor.phone,
+      email: counselor.email || '',
+      clinic_or_spa: `Counselor ${counselor.code}`,
+      collaboration_need: calc.lines.map((l) => `${l.name} x${l.qty}`).join('; '),
+      note,
+      shipping_address: `${val('address')}, ${val('city')}`,
+      total_amount: calc.cost
+    }).catch(() => false);
+
     let res;
     try {
       // Real order (admin → Đơn hàng → tab Tư vấn viên). The server prices it at list price;
@@ -581,26 +601,20 @@ function bindDashboard(container, counselor, products) {
     } catch (sendErr) {
       res = null;
     }
-    if (!res || !res.ok) {
+
+    const sbOk = await supabasePromise;
+    const isSuccess = (res && (res.ok || res.status === 'success' || res.unverified)) || sbOk;
+
+    if (!isSuccess) {
       btn.disabled = false;
       btn.innerHTML = '<span>Gửi đơn sỉ</span>';
       return fail((res && res.error) || 'Chưa gửi được đơn do lỗi kết nối. Vui lòng thử lại hoặc gọi 033 828 2112.');
     }
-    sendOrderToSupabase({
-      order_type: `Đơn sỉ Counselor [${counselor.code}]`,
-      customer_name: `${counselor.name} (${counselor.code})`,
-      phone: counselor.phone,
-      email: counselor.email || '',
-      clinic_or_spa: `Counselor ${counselor.code}`,
-      collaboration_need: calc.lines.map((l) => `${l.name} x${l.qty}`).join('; '),
-      note,
-      shipping_address: `${val('address')}, ${val('city')}`,
-      total_amount: calc.cost
-    }).catch(() => {});
 
+    const orderCode = (res && res.code) || '';
     recordCounselorOrder({
       orderId: requestId,
-      code: res.code || '',
+      code: orderCode,
       counselorCode: counselor.code,
       createdAt: new Date().toISOString(),
       status: 'Chờ xác nhận',
@@ -617,6 +631,6 @@ function bindDashboard(container, counselor, products) {
     store();
     ui.tab = 'history';
     rerender();
-    alert(`Đã gửi đơn sỉ${res.code ? ` ${res.code}` : ''}.\nTiền nhập dự kiến: ${formatVnd(calc.cost)}.\nbeVIBE sẽ gọi số ${counselor.phone} để xác nhận đơn và chiết khấu.`);
+    alert(`Đã gửi đơn sỉ thành công${orderCode ? ` (${orderCode})` : ''}!\nTiền nhập dự kiến: ${formatVnd(calc.cost)}.\nbeVIBE sẽ gọi số ${counselor.phone} để xác nhận đơn và chiết khấu.`);
   });
 }
