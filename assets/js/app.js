@@ -2621,6 +2621,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const brandDescriptionsVi = {
       'neuraderm': 'Medytox · Basic Derma & Clinic Derma (17 sản phẩm)',
+      'counselor': 'Chương trình tuyển dụng Counselor beVIBE · Đồng hành & Đào tạo chuyên sâu',
       'dr-bargo': 'Gangnam Clinic Formula · Serum phục hồi màng bảo vệ da chuyên sâu',
       'medipharm': 'MediPharm · Dòng Stem C tế bào gốc (6 sản phẩm)',
       'smib': '100 Tỷ Postbiotic · Dầu gội phủ bạc tự nhiên & trị liệu da đầu',
@@ -2629,6 +2630,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const brandDescriptionsKo = {
       'neuraderm': '메디톡스 바이오 · 코어타임 앰플 및 병원 처방 MD 크림',
+      'counselor': 'beVIBE 카운슬러 채용 프로그램 · 전문 교육 및 비즈니스 파트너십',
       'dr-bargo': '강남 피부과 처방 · 손상 장벽 급속 리페어 세럼',
       'medipharm': '메디팜 · 스템씨 줄기세포 라인 (6개 제품)',
       'smib': '1000억 포스트바이오틱스 · 컬러 체인지 샴푸 및 두피 케어',
