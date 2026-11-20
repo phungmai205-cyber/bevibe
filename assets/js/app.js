@@ -1698,29 +1698,7 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
         </div>
 
-        ${brand.ebookUrl ? `
-          <div class="modal-ebook-banner modal-resource-banner">
-            <div class="ebook-banner-left">
-              <span class="ebook-badge">📖 TÀI LIỆU CHÍNH HÃNG</span>
-              <h4>${isVi ? 'Cẩm Nang Sản Phẩm Điện Tử (Ebook) — ' + brand.name : brand.name + ' 공식 E-Book 카탈로그'}</h4>
-              <p>${isVi ? 'Xem trọn bộ 10 trang cẩm nang sản phẩm với hình ảnh độ phân giải cao, thành phần hoạt tính và hướng dẫn sử dụng.' : '10페이지 전 분량의 고해상도 제품 이미지와 성분 해설 E-Book 바로보기.'}</p>
-            </div>
-            <a href="${brand.ebookUrl}" target="_blank" rel="noopener noreferrer" class="btn-ebook-open">
-              <span>${isVi ? 'Đọc Ebook Toàn Màn Hình ↗' : '전체 E-Book 열기 ↗'}</span>
-            </a>
-          </div>
-        ` : brand.driveFolder ? `
-          <div class="modal-ebook-banner modal-resource-banner">
-            <div class="ebook-banner-left">
-              <span class="ebook-badge">📁 TƯ LIỆU SẢN PHẨM GỐC</span>
-              <h4>${isVi ? 'Thư Mục Ảnh Gốc & Hồ Sơ — ' + brand.name : brand.name + ' 공식 원본 드라이브 자료'}</h4>
-              <p>${isVi ? 'Truy cập thư mục Google Drive chính hãng chứa hình ảnh sản phẩm độ phân giải cao, ảnh chụp thực tế và quy cách đóng gói.' : '고해상도 제품 실물 이미지 및 규격이 포함된 공식 Google Drive 폴더 바로가기.'}</p>
-            </div>
-            <a href="${brand.driveFolder}" target="_blank" rel="noopener noreferrer" class="btn-ebook-open">
-              <span>${isVi ? 'Mở Google Drive Hãng ↗' : '드라이브 열기 ↗'}</span>
-            </a>
-          </div>
-        ` : ''}
+        
 
         <div class="modal-grid-2col">
           <!-- Col 1: Câu chuyện & Công nghệ -->
@@ -1764,11 +1742,7 @@ document.addEventListener('DOMContentLoaded', () => {
                       <span class="modal-product-spec">${p.spec}</span>
                     </div>
                     <p class="modal-product-desc">${p.desc}</p>
-                    ${p.ebookPage ? `
-                      <a href="${p.ebookPage}" target="_blank" rel="noopener noreferrer" class="btn-product-ebook-link">
-                        <span>${isVi ? 'Xem trang chi tiết trong Ebook ↗' : 'E-Book 상세 페이지 보기 ↗'}</span>
-                      </a>
-                    ` : ''}
+                    
                   </div>
                 </div>
               `).join('');
@@ -1959,13 +1933,7 @@ document.addEventListener('DOMContentLoaded', () => {
               </div>
             ` : ''}
 
-            <!-- Direct Drive fallback link -->
-            ${foundProduct.driveVideoUrl ? `
-              <a href="${foundProduct.driveVideoUrl}" target="_blank" rel="noopener noreferrer" class="prod-drive-direct-link" title="Mở video gốc trên Google Drive">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>
-                <span>${t.modalProdDriveLink || (isVi ? 'Mở video gốc trên Google Drive ↗' : 'Google Drive에서 원본 영상 보기 ↗')}</span>
-              </a>
-            ` : ''}
+            
 
             <!-- Specs Highlights -->
             <div class="prod-specs-row">
@@ -2158,19 +2126,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       }
 
-      // Setup Extra Link Button (Ebook or Drive)
+      // Extra Link Button hidden (Ebook and Drive links removed per requirement)
       if (prodModalExtraLink) {
-        if (foundProduct.ebookPage || foundBrand.ebookUrl) {
-          prodModalExtraLink.href = foundProduct.ebookPage || foundBrand.ebookUrl;
-          prodModalExtraLink.style.display = 'inline-flex';
-          prodModalExtraLink.querySelector('span').textContent = isVi ? '📖 Đọc Cẩm Nang Ebook ↗' : '📖 공식 E-Book 열기 ↗';
-        } else if (foundProduct.driveVideoUrl || foundBrand.driveFolder) {
-          prodModalExtraLink.href = foundProduct.driveVideoUrl || foundBrand.driveFolder;
-          prodModalExtraLink.style.display = 'inline-flex';
-          prodModalExtraLink.querySelector('span').textContent = isVi ? '📁 Thư Mục Google Drive ↗' : '📁 구글 드라이브 자료 ↗';
-        } else {
-          prodModalExtraLink.style.display = 'none';
-        }
+        prodModalExtraLink.style.display = 'none';
       }
 
       // Setup Request Quote Button

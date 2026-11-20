@@ -249,9 +249,9 @@ export const i18nData = {
     "navTPCN": "Thực phẩm chức năng",
     "navServices": "Dịch vụ",
     "drawerExplore": "Khám phá",
-    "sb1Tag": "EBOOK CATALOGUE",
+    "sb1Tag": "BỘ SƯU TẬP",
     "sb1Title": "SMIB Hair & Scalp Care",
-    "sb1Cta": "Đọc Ebook 09 sản phẩm →",
+    "sb1Cta": "Khám phá sản phẩm SMIB →",
     "sb2Tag": "OEM / ODM",
     "sb2Title": "Gia công thương hiệu riêng từ 1.000 sản phẩm",
     "sb2Cta": "Nhận tư vấn OEM →",
@@ -526,7 +526,7 @@ export const i18nData = {
     "navTPCN": "건강기능식품",
     "navServices": "서비스",
     "drawerExplore": "둘러보기",
-    "sb1Tag": "EBOOK CATALOGUE",
+    "sb1Tag": "BỘ SƯU TẬP",
     "sb1Title": "SMIB Hair & Scalp Care",
     "sb1Cta": "09개 제품 이북 보기 →",
     "sb2Tag": "OEM / ODM",
@@ -569,7 +569,7 @@ export const brandsData = [
     "tagline": "Clinic Derma Solution",
     "badge": "Clinical Formula",
     "coverImage": "/assets/images/catalog/dr-bargo/drbargo-3.jpg",
-    "driveFolder": "https://drive.google.com/drive/folders/1czlOqSkvayMwIJ9Dx84odTKnJc5oWuRE",
+    "driveFolder": null,
     "descVi": "Dược mỹ phẩm chuyên khoa da liễu ứng dụng công nghệ phục hồi màng bảo vệ da, chuyên biệt cho liệu trình điều trị tại spa & clinic.",
     "descKo": "피부과 전문 처방 기반의 더마 코스메틱 브랜드. 손상된 피부 장벽 복구 및 에스테틱 전문 시술 후 진정 케어에 최적화.",
     "highlightsVi": [
@@ -595,8 +595,8 @@ export const brandsData = [
         "tag": "Sữa rửa mặt bọt dịu nhẹ",
         "desc": "Bọt rửa mặt siêu mịn độ pH chuẩn 5.5, lấy sạch bụi mịn và tạp chất bã nhờn sâu trong lỗ chân lông mà không làm tổn thương màng lipid bảo vệ tự nhiên của da.",
         "video": "/assets/videos/dr-bargo/drbargo_cleanser.mp4",
-        "driveVideoId": "11FN02-n0sD88whaT2FuEdsPOSyQ5Fcrm",
-        "driveVideoUrl": "https://drive.google.com/file/d/11FN02-n0sD88whaT2FuEdsPOSyQ5Fcrm/view",
+        "driveVideoId": null,
+        "driveVideoUrl": null,
         "ingredients": [
           {
             "name": "Gốc hoạt động bề mặt Amino Acid",
@@ -637,8 +637,8 @@ export const brandsData = [
         "tag": "Nước cân bằng làm dịu da",
         "desc": "Nước cân bằng y khoa cấp ẩm tầng sâu tức thì sau bước rửa mặt, làm mềm lớp sừng tế bào chết và mở đường dẫn cho các hoạt chất thẩm thấu tối đa vào biểu bì.",
         "video": "/assets/videos/dr-bargo/drbargo_toner.mp4",
-        "driveVideoId": "1UVbpBsy5BUL1wE8ZNjQWUl5GA1Ky0Oeg",
-        "driveVideoUrl": "https://drive.google.com/file/d/1UVbpBsy5BUL1wE8ZNjQWUl5GA1Ky0Oeg/view",
+        "driveVideoId": null,
+        "driveVideoUrl": null,
         "ingredients": [
           {
             "name": "Nước cất Rau má tinh khiết (82%)",
@@ -678,8 +678,8 @@ export const brandsData = [
         "tag": "Tinh chất phục hồi chuyên sâu",
         "desc": "Huyết thanh cô đặc chứa nồng độ cao Madecassoside sinh học và peptide phục hồi, làm dịu cấp tốc làn da kích ứng, đỏ rát và thúc đẩy tái tạo tế bào sau liệu trình clinic.",
         "video": "/assets/videos/dr-bargo/drbargo_serum.mp4",
-        "driveVideoId": "1Owy9JUN8ioYtgNE6p08sylrIihc2qsv6",
-        "driveVideoUrl": "https://drive.google.com/file/d/1Owy9JUN8ioYtgNE6p08sylrIihc2qsv6/view",
+        "driveVideoId": null,
+        "driveVideoUrl": null,
         "ingredients": [
           {
             "name": "Liposome Madecassoside cô đặc",
@@ -719,8 +719,8 @@ export const brandsData = [
         "tag": "Sữa dưỡng cân bằng màng ẩm",
         "desc": "Sữa dưỡng phục hồi màng ẩm sinh học lỏng nhẹ, bổ sung phức hợp Ceramide NP và Panthenol giúp cân bằng tỷ lệ dầu - nước, giảm thiểu mất nước qua biểu bì cho làn da nhạy cảm.",
         "video": "/assets/videos/dr-bargo/drbargo_emulsion.mp4",
-        "driveVideoId": "1hjIlxsoQwpquhykGg8LnrpWVg6oDxXlm",
-        "driveVideoUrl": "https://drive.google.com/file/d/1hjIlxsoQwpquhykGg8LnrpWVg6oDxXlm/view",
+        "driveVideoId": null,
+        "driveVideoUrl": null,
         "ingredients": [
           {
             "name": "Ceramide NP (5.000ppm)",
@@ -762,8 +762,8 @@ export const brandsData = [
         "tag": "약산성 마이크로 버블 폼",
         "desc": "pH 5.5 약산성 미세 거품이 모공 속 노폐물과 미세먼지를 자극 없이 말끔히 씻어내고 촉촉함을 남겨주는 피부과 전용 클렌저.",
         "video": "/assets/videos/dr-bargo/drbargo_cleanser.mp4",
-        "driveVideoId": "11FN02-n0sD88whaT2FuEdsPOSyQ5Fcrm",
-        "driveVideoUrl": "https://drive.google.com/file/d/11FN02-n0sD88whaT2FuEdsPOSyQ5Fcrm/view",
+        "driveVideoId": null,
+        "driveVideoUrl": null,
         "ingredients": [
           {
             "name": "아미노산 계열 천연 계면활성제",
@@ -804,8 +804,8 @@ export const brandsData = [
         "tag": "부스팅 수분 진정 토너",
         "desc": "세안 직후 건조해진 피부에 즉각적인 수분을 급속 공급하고 각질결을 정돈하여 다음 단계 유효 성분의 흡수율을 극대화하는 부스팅 토너.",
         "video": "/assets/videos/dr-bargo/drbargo_toner.mp4",
-        "driveVideoId": "1UVbpBsy5BUL1wE8ZNjQWUl5GA1Ky0Oeg",
-        "driveVideoUrl": "https://drive.google.com/file/d/1UVbpBsy5BUL1wE8ZNjQWUl5GA1Ky0Oeg/view",
+        "driveVideoId": null,
+        "driveVideoUrl": null,
         "ingredients": [
           {
             "name": "순수 병풀 추출수 (82%)",
@@ -845,8 +845,8 @@ export const brandsData = [
         "tag": "고농축 리페어 시카 세럼",
         "desc": "마데카소사이드와 리포좀 활성 펩타이드로 레이저, 필링 시술 후 붉어지고 예민해진 피부를 급속 진정시키는 에스테틱 세럼.",
         "video": "/assets/videos/dr-bargo/drbargo_serum.mp4",
-        "driveVideoId": "1Owy9JUN8ioYtgNE6p08sylrIihc2qsv6",
-        "driveVideoUrl": "https://drive.google.com/file/d/1Owy9JUN8ioYtgNE6p08sylrIihc2qsv6/view",
+        "driveVideoId": null,
+        "driveVideoUrl": null,
         "ingredients": [
           {
             "name": "고농축 리포좀 마데카소사이드",
@@ -886,8 +886,8 @@ export const brandsData = [
         "tag": "장벽 강화 수분 에멀전",
         "desc": "세라마이드 NP와 판테놀 복합 처방으로 유수분 밸런스를 즉각 정상화하고 손상된 피부 장벽을 밀착 케어하는 저자극 고보습 에멀전.",
         "video": "/assets/videos/dr-bargo/drbargo_emulsion.mp4",
-        "driveVideoId": "1hjIlxsoQwpquhykGg8LnrpWVg6oDxXlm",
-        "driveVideoUrl": "https://drive.google.com/file/d/1hjIlxsoQwpquhykGg8LnrpWVg6oDxXlm/view",
+        "driveVideoId": null,
+        "driveVideoUrl": null,
         "ingredients": [
           {
             "name": "세라마이드 NP (5,000ppm)",
@@ -948,7 +948,7 @@ export const brandsData = [
     "tagline": "Biotech Skin Rejuvenation",
     "badge": "Medytox Biotech",
     "coverImage": "/assets/images/neuraderm/neura_coretime_01_-_sao_ch_p.webp",
-    "driveFolder": "https://drive.google.com/drive/folders/1K4Ub6BlGeWj-wx7ITbMfENcMHlXIN_cD",
+    "driveFolder": null,
     "descVi": "Thương hiệu từ tập đoàn Medytox Hàn Quốc, độc quyền peptide M.Biome BTX cải thiện nếp nhăn và trẻ hóa sinh học cấp độ tế bào.",
     "descKo": "메디톡스(Medytox)의 바이오 기술이 집약된 브랜드. 독자 펩타이드 M.Biome BTX 성분으로 강력한 안티에이징 선사.",
     "highlightsVi": [
@@ -974,8 +974,8 @@ export const brandsData = [
         "tag": "Ampoule xóa nhăn nâng cơ lõi",
         "desc": "Tinh chất biểu tượng của Medytox chứa phức hợp M.Biome BTX™ độc quyền, kích hoạt tái tạo mạng lưới collagen lõi, làm mờ rãnh nhăn sâu và tăng độ đàn hồi săn chắc.",
         "video": "/assets/videos/neuraderm/neuraderm_ampoule.mp4",
-        "driveVideoId": "1fHykXjGCSEPaxGqlsir6seL9InwkJXB-",
-        "driveVideoUrl": "https://drive.google.com/file/d/1fHykXjGCSEPaxGqlsir6seL9InwkJXB-/view",
+        "driveVideoId": null,
+        "driveVideoUrl": null,
         "ingredients": [
           {
             "name": "M.Biome BTX™ nồng độ cao",
@@ -1146,8 +1146,8 @@ export const brandsData = [
         "ingredients": [],
         "benefits": [],
         "video": "/assets/videos/neuraderm/neuraderm_mask.mp4",
-        "driveVideoId": "1NP4W05pmgakIn7k2JiHsVijYNbFF62FW",
-        "driveVideoUrl": "https://drive.google.com/file/d/1NP4W05pmgakIn7k2JiHsVijYNbFF62FW/view",
+        "driveVideoId": null,
+        "driveVideoUrl": null,
         "image": "/assets/images/catalog/neuraderm/neura-14.jpg",
         "gallery": [],
         "line": "neura-basic"
@@ -1179,8 +1179,8 @@ export const brandsData = [
         "tag": "Sữa rửa mặt dịu nhẹ vi sinh",
         "desc": "Sữa rửa mặt tạo bọt mịn sinh học công nghệ Medytox, thanh lọc bã nhờn sâu mà không phá vỡ màng ẩm hay gây cảm giác khô căng sau khi rửa.",
         "video": "/assets/videos/neuraderm/neuraderm_cleanser.mp4",
-        "driveVideoId": "1aiSAMN1RaATDpwZRcjqD8x2HLLtyYEHa",
-        "driveVideoUrl": "https://drive.google.com/file/d/1aiSAMN1RaATDpwZRcjqD8x2HLLtyYEHa/view",
+        "driveVideoId": null,
+        "driveVideoUrl": null,
         "ingredients": [
           {
             "name": "Phức hợp M.Biome BTX™ độc quyền",
@@ -1261,8 +1261,8 @@ export const brandsData = [
         "tag": "Tinh chất men vi sinh cân bằng da",
         "desc": "Serum ứng dụng men vi sinh Lactobacillus lên men độc quyền, củng cố hệ vi sinh vật tự nhiên trên bề mặt da, nâng cao đề kháng tế bào và làm đều màu sắc tố.",
         "video": "/assets/videos/neuraderm/neuraderm_md_cream.mp4",
-        "driveVideoId": "1UNjmxeAdzpR41__eu4wvLhzNZAgVhHdi",
-        "driveVideoUrl": "https://drive.google.com/file/d/1UNjmxeAdzpR41__eu4wvLhzNZAgVhHdi/view",
+        "driveVideoId": null,
+        "driveVideoUrl": null,
         "ingredients": [
           {
             "name": "Dịch lọc men vi sinh Lactobacillus",
@@ -1334,8 +1334,8 @@ export const brandsData = [
         "tag": "Xịt khoáng cấp ẩm làm dịu tức thì",
         "desc": "Tia xịt sương nano siêu mịn phân tán dưỡng chất peptide làm dịu da cấp tốc, hạ nhiệt độ bề mặt da và cung cấp độ ẩm sinh học suốt ngày dài.",
         "video": "/assets/videos/neuraderm/neuraderm_mist.mp4",
-        "driveVideoId": "1OfyVFPNi3UT3layI_ffBsu3CoKRzKtdT",
-        "driveVideoUrl": "https://drive.google.com/file/d/1OfyVFPNi3UT3layI_ffBsu3CoKRzKtdT/view",
+        "driveVideoId": null,
+        "driveVideoUrl": null,
         "ingredients": [
           {
             "name": "Phức hợp Peptide M.Biome BTX™",
@@ -1375,8 +1375,8 @@ export const brandsData = [
         "tag": "Kem chống nắng phổ rộng Medytox",
         "desc": "Kem chống nắng quang phổ y khoa kết hợp dưỡng ẩm tế bào sinh học, chống tia UVA/UVB toàn diện mà không gây vệt trắng, bết dính hay bít tắc chân lông.",
         "video": "/assets/videos/neuraderm/neuraderm_suncream.mp4",
-        "driveVideoId": "1LQUyXp2z_YLqMF192Aw2cZdgTGFMbV0O",
-        "driveVideoUrl": "https://drive.google.com/file/d/1LQUyXp2z_YLqMF192Aw2cZdgTGFMbV0O/view",
+        "driveVideoId": null,
+        "driveVideoUrl": null,
         "ingredients": [
           {
             "name": "Màng lọc quang phổ rộng thế hệ mới",
@@ -1418,8 +1418,8 @@ export const brandsData = [
         "tag": "코어 탄력 리프팅 앰플",
         "desc": "메디톡스 독자 M.Biome BTX™ 특허 성분이 함유되어 피부 코어 탄력을 되살리고 주름을 집중 개선하는 고기능성 안티에이징 앰플.",
         "video": "/assets/videos/neuraderm/neuraderm_ampoule.mp4",
-        "driveVideoId": "1fHykXjGCSEPaxGqlsir6seL9InwkJXB-",
-        "driveVideoUrl": "https://drive.google.com/file/d/1fHykXjGCSEPaxGqlsir6seL9InwkJXB-/view",
+        "driveVideoId": null,
+        "driveVideoUrl": null,
         "ingredients": [
           {
             "name": "고농도 M.Biome BTX™ 독점 펩타이드",
@@ -1590,8 +1590,8 @@ export const brandsData = [
         "ingredients": [],
         "benefits": [],
         "video": "/assets/videos/neuraderm/neuraderm_mask.mp4",
-        "driveVideoId": "1NP4W05pmgakIn7k2JiHsVijYNbFF62FW",
-        "driveVideoUrl": "https://drive.google.com/file/d/1NP4W05pmgakIn7k2JiHsVijYNbFF62FW/view",
+        "driveVideoId": null,
+        "driveVideoUrl": null,
         "image": "/assets/images/catalog/neuraderm/neura-14.jpg",
         "gallery": [],
         "line": "neura-basic"
@@ -1623,8 +1623,8 @@ export const brandsData = [
         "tag": "저자극 마이크로 클렌징 폼",
         "desc": "메디톡스 바이오 기술로 개발된 저자극 약산성 버블 클렌저로 자극받은 피부를 부드럽게 세정하고 진정시킵니다.",
         "video": "/assets/videos/neuraderm/neuraderm_cleanser.mp4",
-        "driveVideoId": "1aiSAMN1RaATDpwZRcjqD8x2HLLtyYEHa",
-        "driveVideoUrl": "https://drive.google.com/file/d/1aiSAMN1RaATDpwZRcjqD8x2HLLtyYEHa/view",
+        "driveVideoId": null,
+        "driveVideoUrl": null,
         "ingredients": [
           {
             "name": "독자 특허 M.Biome BTX™ 펩타이드",
@@ -1705,8 +1705,8 @@ export const brandsData = [
         "tag": "마이크로바이옴 장벽 세럼",
         "desc": "락토바실러스 발효 용해물과 뉴로 펩타이드의 결합으로 무너진 피부 생태계를 복원하고 맑은 안색을 가꾸는 마이크로바이옴 세럼.",
         "video": "/assets/videos/neuraderm/neuraderm_md_cream.mp4",
-        "driveVideoId": "1UNjmxeAdzpR41__eu4wvLhzNZAgVhHdi",
-        "driveVideoUrl": "https://drive.google.com/file/d/1UNjmxeAdzpR41__eu4wvLhzNZAgVhHdi/view",
+        "driveVideoId": null,
+        "driveVideoUrl": null,
         "ingredients": [
           {
             "name": "락토바실러스 발효 여과물",
@@ -1778,8 +1778,8 @@ export const brandsData = [
         "tag": "급속 진정 안개 분사 미스트",
         "desc": "초미세 마이크로 안개 분사로 피부 온도를 즉각 낮추고 바이오 펩타이드 수분막을 형성하는 카밍 미스트.",
         "video": "/assets/videos/neuraderm/neuraderm_mist.mp4",
-        "driveVideoId": "1OfyVFPNi3UT3layI_ffBsu3CoKRzKtdT",
-        "driveVideoUrl": "https://drive.google.com/file/d/1OfyVFPNi3UT3layI_ffBsu3CoKRzKtdT/view",
+        "driveVideoId": null,
+        "driveVideoUrl": null,
         "ingredients": [
           {
             "name": "M.Biome BTX™ 특허 펩타이드",
@@ -1819,8 +1819,8 @@ export const brandsData = [
         "tag": "무백탁 저자극 데일리 선크림",
         "desc": "자외선 차단과 피부 장벽 케어를 동시에 실현하는 무백탁 저자극 데일리 병원 전용 바이오 선크림.",
         "video": "/assets/videos/neuraderm/neuraderm_suncream.mp4",
-        "driveVideoId": "1LQUyXp2z_YLqMF192Aw2cZdgTGFMbV0O",
-        "driveVideoUrl": "https://drive.google.com/file/d/1LQUyXp2z_YLqMF192Aw2cZdgTGFMbV0O/view",
+        "driveVideoId": null,
+        "driveVideoUrl": null,
         "ingredients": [
           {
             "name": "차세대 광대역 UV 필터",
@@ -1888,7 +1888,7 @@ export const brandsData = [
     "tagline": "Stem Cell Skincare · by Pharmicell",
     "badge": "Stem Cell Skincare",
     "coverImage": "/assets/images/catalog/medipharm/stemc-4.jpg",
-    "driveFolder": "https://drive.google.com/drive/folders/1EqjrirZMhbpEKIW1MwO1sn5jsdNeT0dP",
+    "driveFolder": null,
     "descVi": "Thương hiệu chăm sóc da MediPharm (Pharmicell, Hàn Quốc). beVIBE phân phối dòng Stem C ứng dụng chiết xuất tế bào gốc: làm sạch, toner, lotion, kem dưỡng, chống nắng và BB cream.",
     "descKo": "파미셀(Pharmicell)의 스킨케어 브랜드 메디팜. beVIBE는 줄기세포 추출물을 적용한 스템씨 라인(클렌징, 토너, 로션, 크림, 선크림, BB크림)을 유통합니다.",
     "highlightsVi": [
@@ -2011,8 +2011,8 @@ export const brandsData = [
         "tag": "Kem chống nắng tế bào gốc",
         "desc": "Kem chống nắng tế bào gốc thế hệ mới, màng lọc bảo vệ tế bào trước tia UVA/UVB và ánh sáng xanh HEV, chất kem mỏng nhẹ thấm nhanh không để lại vệt trắng.",
         "video": "/assets/videos/stem-c/stemc_video_2.mp4",
-        "driveVideoId": "1H_4t9Sjg6uKrWiR9BHIl_hNc51ZUSvo1",
-        "driveVideoUrl": "https://drive.google.com/file/d/1H_4t9Sjg6uKrWiR9BHIl_hNc51ZUSvo1/view",
+        "driveVideoId": null,
+        "driveVideoUrl": null,
         "ingredients": [
           {
             "name": "Dịch nuôi cấy Tế bào gốc thực vật Callus",
@@ -2053,8 +2053,8 @@ export const brandsData = [
         "tag": "Kem nền dưỡng sinh học đa năng",
         "desc": "Kem BB tích hợp tế bào gốc thực vật đa năng: che phủ hoàn hảo khuyết điểm, nâng tông căng bóng chuẩn Glass Skin Hàn Quốc và chống nắng bảo vệ toàn diện.",
         "video": "/assets/videos/stem-c/stemc_video_3.mp4",
-        "driveVideoId": "15fI4ak9d3Vt95TGcdmEdxwTKjV2TCWAn",
-        "driveVideoUrl": "https://drive.google.com/file/d/15fI4ak9d3Vt95TGcdmEdxwTKjV2TCWAn/view",
+        "driveVideoId": null,
+        "driveVideoUrl": null,
         "ingredients": [
           {
             "name": "Dịch chiết Tế bào gốc thực vật Callus 98%",
@@ -2247,8 +2247,8 @@ export const brandsData = [
         "tag": "줄기세포 데일리 프로텍트 선크림",
         "desc": "자외선과 블루라이트로부터 줄기세포를 안전하게 보호하며, 끈적임이나 백탁 없이 산뜻하게 밀착되는 고기능성 데일리 선블록.",
         "video": "/assets/videos/stem-c/stemc_video_2.mp4",
-        "driveVideoId": "1H_4t9Sjg6uKrWiR9BHIl_hNc51ZUSvo1",
-        "driveVideoUrl": "https://drive.google.com/file/d/1H_4t9Sjg6uKrWiR9BHIl_hNc51ZUSvo1/view",
+        "driveVideoId": null,
+        "driveVideoUrl": null,
         "ingredients": [
           {
             "name": "식물 줄기세포 캘러스 배양액",
@@ -2289,8 +2289,8 @@ export const brandsData = [
         "tag": "3중 기능성 물광 BB크림",
         "desc": "식물 줄기세포 배양액과 미백·주름개선·자외선 차단의 3중 기능성 처방으로 자연스러운 물광 피부를 연출하는 프리미엄 BB크림.",
         "video": "/assets/videos/stem-c/stemc_video_3.mp4",
-        "driveVideoId": "15fI4ak9d3Vt95TGcdmEdxwTKjV2TCWAn",
-        "driveVideoUrl": "https://drive.google.com/file/d/15fI4ak9d3Vt95TGcdmEdxwTKjV2TCWAn/view",
+        "driveVideoId": null,
+        "driveVideoUrl": null,
         "ingredients": [
           {
             "name": "순도 98% 식물 줄기세포 캘러스 배양액",
@@ -2406,7 +2406,7 @@ export const brandsData = [
     "tagline": "Postbiotic Hair & Scalp Therapy",
     "badge": "100 Billion Postbiotic",
     "coverImage": "/assets/images/smib-banner.jpg",
-    "ebookUrl": "https://bevibe-smib-ebook.quiettoad513.chatgpt.site/#page-1",
+    "ebookUrl": null,
     "descVi": "Thương hiệu chăm sóc da đầu & tóc hàng đầu Hàn Quốc, tiên phong công nghệ 100 tỷ Postbiotic và công thức chăm sóc phục hồi tóc chuyên sâu.",
     "descKo": "한국 대표 두피 케어 & 탈모 완화 브랜드. 1000억 포스트바이오틱스 및 특허 두피 활성 성분으로 모근 강화와 모발 복원 실현.",
     "highlightsVi": [
@@ -2429,7 +2429,7 @@ export const brandsData = [
         "name": "SMIB LactoBio Repair Shampoo (Chai lớn)",
         "spec": "Chai lớn 400ml / 13.52 fl.oz",
         "image": "/assets/images/catalog/smib/smib-3.jpg",
-        "ebookPage": "https://bevibe-smib-ebook.quiettoad513.chatgpt.site/#page-3",
+        "ebookPage": null,
         "tag": "Dầu gội giảm rụng tóc",
         "desc": "Chăm sóc da đầu mỗi ngày, chứa 100 tỷ Postbiotic giúp làm sạch dịu nhẹ, giảm ngứa, phục hồi da đầu nhạy cảm và hỗ trợ giảm rụng tóc.",
         "video": null,
@@ -2464,7 +2464,7 @@ export const brandsData = [
         "name": "SMIB LactoBio Silk Treatment (Hũ lớn)",
         "spec": "Hũ 400g / 14.10 oz",
         "image": "/assets/images/catalog/smib/smib-8.jpg",
-        "ebookPage": "https://bevibe-smib-ebook.quiettoad513.chatgpt.site/#page-8",
+        "ebookPage": null,
         "tag": "Kem ủ tóc mềm mượt 1 phút",
         "desc": "Anti-Break 1 Minute Silk Hair Treatment chứa 100 tỷ Postbiotic và chuỗi amino acid tơ tằm, phục hồi liên kết tóc chẻ ngọn trở nên suôn mượt như lụa chỉ sau 1 phút.",
         "video": null,
@@ -2490,7 +2490,7 @@ export const brandsData = [
         "name": "SMIB Color Change Black Shampoo",
         "spec": "Chai 200ml / 6.76 fl.oz",
         "image": "/assets/images/catalog/smib/smib-1.jpg",
-        "ebookPage": "https://bevibe-smib-ebook.quiettoad513.chatgpt.site/#page-1",
+        "ebookPage": null,
         "tag": "Dầu gội nhuộm tóc đen",
         "desc": "Chứa 100 tỷ Postbiotic, tạo màu đen tự nhiên tích lũy qua từng lần gội, lành tính dịu nhẹ, không xót rát da đầu, không gây khô xơ hư tổn tóc.",
         "video": null,
@@ -2532,7 +2532,7 @@ export const brandsData = [
         "name": "SMIB Color Change Dark Brown Shampoo",
         "spec": "Chai 200ml / 6.76 fl.oz",
         "image": "/assets/images/catalog/smib/smib-2.jpg",
-        "ebookPage": "https://bevibe-smib-ebook.quiettoad513.chatgpt.site/#page-2",
+        "ebookPage": null,
         "tag": "Dầu gội nhuộm nâu đậm",
         "desc": "Sắc Nâu Đậm sang trọng quý phái, phủ bạc tự nhiên và phục hồi sợi tóc bóng mượt từ gốc đến ngọn với 100 tỷ Postbiotic.",
         "video": null,
@@ -2569,7 +2569,7 @@ export const brandsData = [
         "name": "SMIB innaBi Shampoo",
         "spec": "Chai 500ml",
         "image": "/assets/images/catalog/smib/smib-5.jpg",
-        "ebookPage": "https://bevibe-smib-ebook.quiettoad513.chatgpt.site/#page-5",
+        "ebookPage": null,
         "tag": "Dầu gội giảm rụng chuyên sâu",
         "desc": "Chứa bộ 4 hoạt chất vàng: Zinc Pyrithione, Dexpanthenol, Niacinamide và Biotin. Làm sạch sâu nang tóc, ngăn ngừa gãy rụng và nuôi tóc con mọc dày khỏe.",
         "video": null,
@@ -2596,7 +2596,7 @@ export const brandsData = [
         "name": "SMIB innaBi Treatment",
         "spec": "Chai 500ml",
         "image": "/assets/images/catalog/smib/smib-6.jpg",
-        "ebookPage": "https://bevibe-smib-ebook.quiettoad513.chatgpt.site/#page-6",
+        "ebookPage": null,
         "tag": "Kem xả tóc mềm mượt",
         "desc": "Chứa Salicylic Acid, Zinc Pyrithione và Dexpanthenol giúp nuôi dưỡng sợi tóc hư tổn trở nên mềm mại bồng bềnh mà không gây bết dính nang tóc.",
         "video": null,
@@ -2632,7 +2632,7 @@ export const brandsData = [
         "name": "SMIB innaBi Scalp Essence",
         "spec": "Chai xịt 115ml",
         "image": "/assets/images/catalog/smib/smib-7.jpg",
-        "ebookPage": "https://bevibe-smib-ebook.quiettoad513.chatgpt.site/#page-7",
+        "ebookPage": null,
         "tag": "Tinh chất da đầu sảng khoái",
         "desc": "Xịt dưỡng trực tiếp vào chân tóc mang lại cảm giác sảng khoái mát lạnh tức thì nhờ L-Menthol, kết hợp Dexpanthenol và Salicylic Acid kích hoạt nang tóc phát triển.",
         "video": null,
@@ -2664,7 +2664,7 @@ export const brandsData = [
         "name": "SMIB 락토바이오 리페어 샴푸 (대용량)",
         "spec": "400ml / 13.52 fl.oz",
         "image": "/assets/images/catalog/smib/smib-3.jpg",
-        "ebookPage": "https://bevibe-smib-ebook.quiettoad513.chatgpt.site/#page-3",
+        "ebookPage": null,
         "tag": "데일리 두피 케어 샴푸",
         "desc": "1000억 포스트바이오틱스 함유 탈모 증상 완화 기능성 샴푸. 무너진 두피 장벽을 재건하고 모근에 활력 부여.",
         "video": null,
@@ -2699,7 +2699,7 @@ export const brandsData = [
         "name": "SMIB 락토바이오 실크 트리트먼트 (대용량)",
         "spec": "400g / 14.10 oz",
         "image": "/assets/images/catalog/smib/smib-8.jpg",
-        "ebookPage": "https://bevibe-smib-ebook.quiettoad513.chatgpt.site/#page-8",
+        "ebookPage": null,
         "tag": "1분 실크 헤어 트리트먼트",
         "desc": "1분 만에 실크 같은 윤기를 선사하는 안티 브레이크 헤어 트리트먼트. 1000억 포스트바이오틱스와 실크 단백질 결합.",
         "video": null,
@@ -2725,7 +2725,7 @@ export const brandsData = [
         "name": "SMIB 락토바이오 컬러체인지 블랙 샴푸",
         "spec": "200ml / 6.76 fl.oz",
         "image": "/assets/images/catalog/smib/smib-1.jpg",
-        "ebookPage": "https://bevibe-smib-ebook.quiettoad513.chatgpt.site/#page-1",
+        "ebookPage": null,
         "tag": "새치 케어 블랙 샴푸",
         "desc": "1000억 포스트바이오틱스 함유, 샴푸할수록 자연스러운 딥 블랙 컬러가 누적 발색되는 저자극 새치 케어.",
         "video": null,
@@ -2767,7 +2767,7 @@ export const brandsData = [
         "name": "SMIB 락토바이오 컬러체인지 다크브라운 샴푸",
         "spec": "200ml / 6.76 fl.oz",
         "image": "/assets/images/catalog/smib/smib-2.jpg",
-        "ebookPage": "https://bevibe-smib-ebook.quiettoad513.chatgpt.site/#page-2",
+        "ebookPage": null,
         "tag": "새치 케어 다크브라운 샴푸",
         "desc": "우아하고 세련된 다크 브라운 컬러, 1000억 유익균으로 두피 자극 없이 모발 윤기와 색상을 동시에 연출.",
         "video": null,
@@ -2804,7 +2804,7 @@ export const brandsData = [
         "name": "SMIB 인나비 샴푸",
         "spec": "500ml",
         "image": "/assets/images/catalog/smib/smib-5.jpg",
-        "ebookPage": "https://bevibe-smib-ebook.quiettoad513.chatgpt.site/#page-5",
+        "ebookPage": null,
         "tag": "탈모 완화 데일리 샴푸",
         "desc": "징크피리치온, 덱스판테놀, 나이아신아마이드, 비오틴 4대 핵심 성분으로 두피 모공 정화 및 모발 건강 집중 케어.",
         "video": null,
@@ -2831,7 +2831,7 @@ export const brandsData = [
         "name": "SMIB 인나비 트리트먼트",
         "spec": "500ml",
         "image": "/assets/images/catalog/smib/smib-6.jpg",
-        "ebookPage": "https://bevibe-smib-ebook.quiettoad513.chatgpt.site/#page-6",
+        "ebookPage": null,
         "tag": "손상모 집중 트리트먼트",
         "desc": "살리실산, 징크피리치온, 덱스판테놀 성분이 떡짐 없이 손상된 모발에 탄력과 실크 같은 윤기 선사.",
         "video": null,
@@ -2867,7 +2867,7 @@ export const brandsData = [
         "name": "SMIB 인나비 스칼프 에센스",
         "spec": "115ml",
         "image": "/assets/images/catalog/smib/smib-7.jpg",
-        "ebookPage": "https://bevibe-smib-ebook.quiettoad513.chatgpt.site/#page-7",
+        "ebookPage": null,
         "tag": "쿨링 두피 토닉 스프레이",
         "desc": "L-멘톨 성분으로 즉각적인 두피 쿨링 선사, 덱스판테놀과 살리실산으로 모근을 튼튼하게 영양 공급하는 에센스.",
         "video": null,
@@ -2903,7 +2903,7 @@ export const brandsData = [
       "고해상도 제품 이미지 에셋 및 한국어/베트남어 공식 이북(E-book) 카탈로그 제공",
       "beVIBE 독점 계약을 통한 베트남 정식 수입통관 및 온오프라인 가격 보호 정책 운영"
     ],
-    "driveFolder": "https://drive.google.com/drive/folders/1NzOS_Qpm58QJ5c1Shp5RV84WJNJlKk0Z",
+    "driveFolder": null,
     "lines": [
       {
         "id": "smib-lactobio",
