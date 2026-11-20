@@ -88,6 +88,10 @@ img {
   max-width: 100%;
   height: auto;
   display: block;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: high-quality;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 button, input, select, textarea {
@@ -613,6 +617,10 @@ nav.desktop-nav {
   background-position: center center;
   background-repeat: no-repeat;
   transition: transform 7s cubic-bezier(0.16, 1, 0.3, 1);
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: high-quality;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 .hero-slide.active .hero-slide-bg {
@@ -4626,6 +4634,11 @@ header.site-header {
   height: 100%;
   object-fit: cover;
   transition: transform var(--transition-slow);
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: high-quality;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
 }
 
 .pcard:hover .pcard-media img {
@@ -9071,8 +9084,14 @@ main.is-subpage > section:not(.page-hero) {
 .pd-stage img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  background-color: #ffffff;
   transition: transform 0.2s ease;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: high-quality;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
 }
 
 .pd-stage.zoom img {
@@ -9694,6 +9713,8 @@ main.is-subpage > section:not(.page-hero) {
 /* Hero slide backgrounds (moved out of inline style attributes) */
 .hero-slide-bg.hero-bg-1 {
   background-image: url('/assets/images/hero/hero-1.png');
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: high-quality;
 }
 
 .hero-slide-bg.hero-bg-2 {
@@ -9704,10 +9725,32 @@ main.is-subpage > section:not(.page-hero) {
 
 .hero-slide-bg.hero-bg-3 {
   background-image: url('/assets/images/hero/hero-3.png');
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: high-quality;
 }
 
 .hero-slide-bg.hero-bg-4 {
   background-image: url('/assets/images/hero/hero-4.png');
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: high-quality;
+}
+
+/* High-definition crisp rendering for all cards, banners & thumbs */
+.product-card-img,
+.product-card-thumb,
+.modal-prod-img,
+.brand-tile img,
+.brand-card-cover img,
+.brand-logo-img,
+.footer-logo,
+.counselor-preview-img,
+.about-director-photo img,
+.bestseller-card img {
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: high-quality;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 /* Order system: spam trap (hidden from people) + connection warning */
