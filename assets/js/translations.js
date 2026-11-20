@@ -2481,9 +2481,7 @@ export const brandsData = [
         "usage": "Sau khi gội sạch, thoa kem ủ từ thân đến ngọn tóc, chờ 1 phút rồi xả sạch với nước.",
         "driveVideoUrl": null,
         "gallery": [
-          "/assets/images/catalog/smib/smib-8-g1.jpg",
-          "/assets/images/catalog/smib/smib-8-g2.jpg",
-          "/assets/images/catalog/smib/smib-8-g3.jpg"
+          "/assets/images/catalog/smib/smib-8-g1.jpg"
         ],
         "line": "smib-lactobio"
       },
@@ -2718,9 +2716,7 @@ export const brandsData = [
         "usage": "샴푸 후 모발 끝을 중심으로 도포하고 1분 뒤 미온수로 헹궈냅니다.",
         "driveVideoUrl": null,
         "gallery": [
-          "/assets/images/catalog/smib/smib-8-g1.jpg",
-          "/assets/images/catalog/smib/smib-8-g2.jpg",
-          "/assets/images/catalog/smib/smib-8-g3.jpg"
+          "/assets/images/catalog/smib/smib-8-g1.jpg"
         ],
         "line": "smib-lactobio"
       },
