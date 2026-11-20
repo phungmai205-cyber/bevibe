@@ -1,3 +1,20 @@
+
+const VN_PROVINCES = [
+  "Hà Nội", "TP. Hồ Chí Minh", "Đà Nẵng", "Hải Phòng", "Cần Thơ",
+  "An Giang", "Bà Rịa - Vũng Tàu", "Bắc Giang", "Bắc Kạn", "Bạc Liêu",
+  "Bắc Ninh", "Bến Tre", "Bình Định", "Bình Dương", "Bình Phước",
+  "Bình Thuận", "Cà Mau", "Cao Bằng", "Đắk Lắk", "Đắk Nông",
+  "Điện Biên", "Đồng Nai", "Đồng Tháp", "Gia Lai", "Hà Giang",
+  "Hà Nam", "Hà Tĩnh", "Hải Dương", "Hậu Giang", "Hòa Bình",
+  "Hưng Yên", "Khánh Hòa", "Kiên Giang", "Kon Tum", "Lai Châu",
+  "Lâm Đồng", "Lạng Sơn", "Lào Cai", "Long An", "Nam Định",
+  "Nghệ An", "Ninh Bình", "Ninh Thuận", "Phú Thọ", "Phú Yên",
+  "Quảng Bình", "Quảng Nam", "Quảng Ngãi", "Quảng Ninh", "Quảng Trị",
+  "Sóc Trăng", "Sơn La", "Tây Ninh", "Thái Bình", "Thái Nguyên",
+  "Thanh Hóa", "Thừa Thiên Huế", "Tiền Giang", "Trà Vinh", "Tuyên Quang",
+  "Vĩnh Long", "Vĩnh Phúc", "Yên Bái"
+];
+
 /**
  * beVIBE storefront module
  * - Skin-concern tags + 5-step routine (data + home section)
@@ -359,56 +376,330 @@ export function initShop(ctx) {
       </div>`;
   }
 
+  
+  let currentCoupon = null; // { code: 'BEVIBE10', discountPct: 0.1, discountVal: 0 }
+
   function renderCheckoutForm() {
     if (!checkout) return;
     const vi = isVi();
     const info = safeGet(customerKey, {});
     const v = (k) => escapeHtml(info[k] || '');
-    checkout.querySelector('#checkoutBody').innerHTML = `
-      <div class="checkout-grid">
-        <form class="checkout-form" id="checkoutForm" novalidate>
-          <h2 class="checkout-title" id="checkoutTitle">${vi ? 'Thông tin đặt hàng' : '주문 정보'}</h2>
-          <fieldset class="checkout-ctype">
-            <legend>${vi ? 'Bạn đặt hàng với tư cách' : '주문 유형'}</legend>
-            <div class="ctype-options">
-              ${CUSTOMER_TYPES.map((t) => `<label class="ctype-option"><input type="radio" name="customerType" value="${t.id}" ${(info.customerType || 'b2c') === t.id ? 'checked' : ''}><span>${vi ? t.vi : t.ko}</span></label>`).join('')}
+    const checkoutBody = checkout.querySelector('#checkoutBody');
+    if (!checkoutBody) return;
+
+    if (!cart.length) {
+      checkoutBody.innerHTML = `
+        <div class="cm-empty-cart">
+          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="1.5">
+            <circle cx="9" cy="21" r="1"/>
+            <circle cx="20" cy="21" r="1"/>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+          </svg>
+          <p>${vi ? 'Giỏ hàng của bạn đang trống.' : '장바구니가 비어 있습니다.'}</p>
+          <button type="button" class="btn-primary" data-shop="close-checkout" style="background:#3d6312; border:none; padding:12px 28px; border-radius:6px; font-weight:700; color:#fff; cursor:pointer;" onclick="window.location.hash='#/san-pham'">
+            ${vi ? 'Khám phá sản phẩm ngay →' : '제품 보기 →'}
+          </button>
+        </div>`;
+      return;
+    }
+
+    const subtotal = cart.reduce((s, it) => s + priceOf(it.id) * it.qty, 0);
+    let discount = 0;
+    if (currentCoupon) {
+      if (currentCoupon.discountPct) discount = Math.round(subtotal * currentCoupon.discountPct);
+      else if (currentCoupon.discountVal) discount = Math.min(subtotal, currentCoupon.discountVal);
+    }
+    const finalTotal = Math.max(0, subtotal - discount);
+
+    // Pick 1 recommended upsell item not in cart
+    const allDefs = (CATALOG_PRODUCTS || []).concat();
+    const upsellCandidates = ['drbargo-1', 'neura-1', 'smib-1', 'drbargo-2', 'neura-3'];
+    const upsellId = upsellCandidates.find(id => !cart.some(it => it.id === id)) || 'drbargo-1';
+    const upsellProd = localized(entryOf(upsellId));
+    const upsellPrice = priceOf(upsellId) || 350000;
+    const upsellDiscountPrice = Math.round(upsellPrice * 0.77); // 23% off
+
+    checkoutBody.innerHTML = `
+      <div class="cm-cart-grid">
+        <!-- CỘT TRÁI: THÔNG TIN NHẬN HÀNG (CỎ MỀM STYLE) -->
+        <div class="cm-shipping-col">
+          <form class="checkout-form" id="checkoutForm" novalidate>
+            <h2 class="cm-col-title">${vi ? 'Thông tin nhận hàng' : '배송 정보'}</h2>
+
+            <div class="cm-form-grid">
+              <div class="cm-form-group">
+                <input type="text" name="name" class="cm-input" placeholder="${vi ? 'Họ tên *' : '이름 *'}" required autocomplete="name" value="${v('name')}">
+              </div>
+
+              <div class="cm-form-group">
+                <input type="tel" name="phone" class="cm-input" placeholder="${vi ? 'Số điện thoại *' : '전화번호 *'}" required inputmode="tel" autocomplete="tel" value="${v('phone')}">
+              </div>
+
+              <div class="cm-form-group col-full">
+                <input type="email" name="email" class="cm-input" placeholder="${vi ? 'Để lại email để nhận thông tin đơn hàng' : '주문 정보 수신용 이메일'}" autocomplete="email" value="${v('email')}">
+              </div>
+
+              <div class="cm-form-group col-full">
+                <input type="text" name="address" class="cm-input" placeholder="${vi ? 'Địa chỉ (Ví dụ: 123 Hoàng Cầu) *' : '상세 주소 (예: 123번지) *'}" required autocomplete="street-address" value="${v('address')}">
+              </div>
+
+              <div class="cm-form-group col-3">
+                <select name="city" class="cm-select" required>
+                  <option value="">${vi ? 'Chọn Tỉnh/thành phố ▾' : '시/도 선택 ▾'}</option>
+                  ${VN_PROVINCES.map(p => `<option value="${p}" ${v('city') === p ? 'selected' : ''}>${p}</option>`).join('')}
+                </select>
+              </div>
+
+              <div class="cm-form-group col-3">
+                <input type="text" name="district" class="cm-input" placeholder="${vi ? 'Quận / Huyện' : '구/군'}" autocomplete="address-level2" value="${v('district')}">
+              </div>
+
+              <div class="cm-form-group col-3">
+                <input type="text" name="ward" class="cm-input" placeholder="${vi ? 'Phường / Xã' : '동/읍/면'}" value="${v('ward')}">
+              </div>
+
+              <div class="cm-form-group col-full">
+                <textarea name="note" class="cm-textarea" placeholder="${vi ? 'Ghi chú thêm (Ví dụ: Giao giờ hành chính)' : '배송 메모 (예: 업무시간 배송)'}">${v('note')}</textarea>
+              </div>
             </div>
-            <label class="cf-field full ctype-org" ${(info.customerType || 'b2c') === 'b2c' ? 'hidden' : ''}><span class="ctype-org-label">${orgLabel(info.customerType, vi)}</span><input name="org" value="${v('org')}" autocomplete="organization"></label>
-          </fieldset>
-          <div class="checkout-fields">
-            <label class="cf-field"><span>${vi ? 'Họ và tên' : '이름'} *</span><input name="name" required autocomplete="name" value="${v('name')}"></label>
-            <label class="cf-field"><span>${vi ? 'Số điện thoại' : '전화번호'} *</span><input name="phone" required inputmode="tel" autocomplete="tel" value="${v('phone')}" placeholder="VD: 0912 345 678"></label>
-            <label class="cf-field full"><span>Email</span><input name="email" type="email" autocomplete="email" value="${v('email')}"></label>
-            <label class="cf-field"><span>${vi ? 'Tỉnh / Thành phố' : '시/도'} *</span><input name="city" required autocomplete="address-level1" value="${v('city')}"></label>
-            <label class="cf-field"><span>${vi ? 'Quận / Huyện' : '구/군'}</span><input name="district" autocomplete="address-level2" value="${v('district')}"></label>
-            <label class="cf-field full"><span>${vi ? 'Địa chỉ nhận hàng' : '배송 주소'} *</span><input name="address" required autocomplete="street-address" value="${v('address')}" placeholder="${vi ? 'Số nhà, tên đường, phường/xã' : '번지, 도로명, 동'}"></label>
-            <label class="cf-field full"><span>${vi ? 'Ghi chú' : '메모'}</span><textarea name="note" rows="2" placeholder="${vi ? 'Thời gian nhận hàng, xuất hóa đơn VAT…' : '수령 시간, 세금계산서 발행 등'}"></textarea></label>
+
+            <div class="cm-payment-section">
+              <h3 class="cm-col-title" style="font-size: 1.12rem;">${vi ? 'Chọn Hình thức thanh toán' : '결제 방법 선택'}</h3>
+              <div class="cm-payment-list">
+                <label class="cm-pay-card is-selected">
+                  <input type="radio" name="pay" value="cod" checked>
+                  <div class="cm-pay-info">
+                    <span class="cm-pay-title">🚚 ${vi ? 'Thanh toán khi nhận hàng (COD)' : '착불 결제 (COD)'}</span>
+                    <span class="cm-pay-sub">${vi ? 'Khách hàng được kiểm tra hàng trước khi thanh toán cho shipper.' : '배송 기사에게 상품 확인 후 현금 결제.'}</span>
+                  </div>
+                </label>
+
+                <label class="cm-pay-card">
+                  <input type="radio" name="pay" value="bank">
+                  <div class="cm-pay-info">
+                    <span class="cm-pay-title">💳 ${vi ? 'Chuyển khoản ngân hàng (VietQR / Internet Banking)' : '계좌 이체 / VietQR'}</span>
+                    <span class="cm-pay-sub">${vi ? 'beVIBE sẽ liên hệ gửi thông tin tài khoản và xác nhận đơn ngay khi bạn đặt hàng.' : '주문 접수 후 담당자가 계좌 번호를 안내해 드립니다.'}</span>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <label class="hp-field" aria-hidden="true" style="display:none;">Website<input name="website" tabindex="-1" autocomplete="off"></label>
+            <p class="checkout-error" id="checkoutError" role="alert" hidden></p>
+            <button type="submit" class="cm-btn-submit-order" style="margin-top: 22px;">${vi ? 'ĐẶT HÀNG' : '주문하기'}</button>
+            <p class="checkout-fineprint" style="margin-top: 10px; font-size: 0.78rem; color: #6b7280; text-align: center;">
+              ${vi ? 'Nhân viên beVIBE sẽ gọi điện xác nhận đơn, phí vận chuyển và thời gian giao hàng nhanh nhất.' : '비바이브 담당자가 확인 전화로 배송비와 일정을 안내해 드립니다.'}
+            </p>
+          </form>
+        </div>
+
+        <!-- CỘT PHẢI: GIỎ HÀNG CỦA BẠN (CỎ MỀM STYLE) -->
+        <div class="cm-cart-col">
+          <h2 class="cm-col-title">${vi ? 'Giỏ hàng của bạn' : '장바구니 상품'}</h2>
+
+          <!-- Social Proof Notification -->
+          <div class="cm-alert-proof">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="16" x2="12" y2="12"></line>
+              <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+            <span>Có <strong>17 người</strong> đang thêm cùng sản phẩm giống bạn vào giỏ hàng. Mua ngay trước khi các sản phẩm này hết hàng nhé!</span>
           </div>
-          <fieldset class="checkout-pay">
-            <legend>${vi ? 'Phương thức thanh toán' : '결제 방법'}</legend>
-            <label class="pay-option"><input type="radio" name="pay" value="bank"><span><strong>${vi ? 'Thanh toán ngay (chuyển khoản)' : '즉시 결제 (계좌 이체)'}</strong><small>${vi ? 'beVIBE gửi thông tin tài khoản khi xác nhận đơn.' : '주문 확인 시 계좌 정보를 보내드립니다.'}</small></span></label>
-            <label class="pay-option"><input type="radio" name="pay" value="cod" checked><span><strong>${vi ? 'Thanh toán khi nhận hàng (COD)' : '착불 결제 (COD)'}</strong><small>${vi ? 'Trả tiền mặt cho nhân viên giao hàng.' : '배송 기사에게 현금 결제.'}</small></span></label>
-          </fieldset>
-          <label class="hp-field" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>
-          <p class="checkout-error" id="checkoutError" role="alert" hidden></p>
-          <button type="submit" class="btn-primary checkout-submit">${vi ? 'Xác nhận đặt hàng' : '주문 확인'}</button>
-          <p class="checkout-fineprint">${ORDER_ENDPOINT
-            ? (vi ? 'Sau khi đặt hàng, nhân viên beVIBE sẽ gọi điện xác nhận đơn, phí vận chuyển và thời gian giao hàng.' : '주문 후 비바이브 담당자가 전화로 주문, 배송비, 배송 일정을 확인해 드립니다.')
-            : (vi ? 'Bước tiếp theo, bạn gửi đơn cho beVIBE qua Zalo hoặc Email. Đơn được ghi nhận khi beVIBE nhận được tin nhắn và gọi xác nhận.' : '다음 단계에서 Zalo 또는 이메일로 주문을 보내 주세요. 비바이브가 메시지를 받고 확인 전화를 드리면 주문이 접수됩니다.')}</p>
-        </form>
-        ${summaryHtml(cart)}
+
+          <!-- Wholesale contact hotline note -->
+          <p class="cm-bulk-note">
+            Nếu bạn muốn mua hàng với số lượng lớn, xin vui lòng liên hệ Hotline: <strong>098.223.9559</strong> hoặc Zalo: <strong>098.223.9559</strong>. beVIBE chân thành cảm ơn bạn!
+          </p>
+
+          <!-- Danh sách sản phẩm trong giỏ -->
+          <div class="cm-items-list">
+            ${cart.map(it => {
+              const p = localized(entryOf(it.id));
+              const price = priceOf(it.id);
+              const oldPrice = Math.round(price * 1.25);
+              return `
+                <div class="cm-item-card" data-cm-item="${p.id}">
+                  <img src="${p.image}" class="cm-item-thumb" alt="${escapeHtml(p.name)}" loading="lazy">
+                  <div class="cm-item-details">
+                    <a href="#/san-pham/${p.id}" class="cm-item-name" data-shop="close-checkout">${p.name}</a>
+                    <div class="cm-item-prices">
+                      <span class="cm-item-old-price">${formatVnd(oldPrice)}</span>
+                      <span class="cm-item-cur-price">${formatVnd(price)}</span>
+                    </div>
+                    <div class="cm-qty-stepper">
+                      <button type="button" class="cm-qty-btn" data-cm-step="dec" data-product-id="${p.id}">−</button>
+                      <input type="number" class="cm-qty-input" value="${it.qty}" min="1" max="99" data-cm-qty-input="${p.id}">
+                      <button type="button" class="cm-qty-btn" data-cm-step="inc" data-product-id="${p.id}">+</button>
+                    </div>
+                  </div>
+                  <div class="cm-item-actions">
+                    <button type="button" class="cm-btn-remove" data-cm-step="del" data-product-id="${p.id}">
+                      🗑 ${vi ? 'XÓA' : '삭제'}
+                    </button>
+                    <span style="font-size: 0.88rem; font-weight: 700; color: #1f2937;">${formatVnd(price * it.qty)}</span>
+                  </div>
+                </div>`;
+            }).join('')}
+          </div>
+
+          <!-- Hot Deal: Mua kèm sản phẩm với giá ưu đãi -->
+          ${upsellProd ? `
+            <div class="cm-upsell-box">
+              <div class="cm-upsell-head">
+                <span class="cm-badge-hotdeal">Hot Deal</span>
+                <span class="cm-upsell-title">${vi ? 'Mua kèm sản phẩm với giá ưu đãi' : '특가 추가 상품'}</span>
+              </div>
+              <div class="cm-upsell-item">
+                <img src="${upsellProd.image}" class="cm-upsell-thumb" alt="">
+                <div class="cm-upsell-info">
+                  <span class="cm-upsell-pname">${upsellProd.name}</span>
+                  <div class="cm-upsell-pricing">
+                    <span class="cm-discount-pill">-23%</span>
+                    <span style="font-size: 0.8rem; text-decoration: line-through; color: #9ca3af;">${formatVnd(upsellPrice)}</span>
+                    <strong style="font-size: 0.92rem; color: #b45309;">${formatVnd(upsellDiscountPrice)}</strong>
+                  </div>
+                </div>
+                <button type="button" class="cm-btn-add-upsell" data-cm-add-upsell="${upsellProd.id}">
+                  ${vi ? 'Mua kèm' : '추가'}
+                </button>
+              </div>
+            </div>
+          ` : ''}
+
+          <!-- Mã giảm giá -->
+          <div class="cm-coupon-row">
+            <input type="text" class="cm-coupon-input" id="cmCouponInput" placeholder="${vi ? 'Mã giảm giá (ví dụ: BEVIBE10)' : '할인 코드 입력'}" value="${currentCoupon ? currentCoupon.code : ''}">
+            <button type="button" class="cm-btn-coupon" id="cmApplyCouponBtn">${vi ? 'Áp dụng' : '적용'}</button>
+          </div>
+          ${currentCoupon ? `<div style="font-size: 0.84rem; color: #3d6312; font-weight: 600;">✓ Đã áp dụng mã giảm giá "${currentCoupon.code}" (-${formatVnd(discount)})</div>` : ''}
+
+          <!-- Bảng tính tiền chi tiết -->
+          <div class="cm-price-breakdown">
+            <div class="cm-pb-row">
+              <span>${vi ? 'Tạm tính' : '소계'}</span>
+              <strong>${formatVnd(subtotal)}</strong>
+            </div>
+            ${discount > 0 ? `
+              <div class="cm-pb-row" style="color: #3d6312;">
+                <span>${vi ? 'Giảm giá ưu đãi' : '할인 금액'}</span>
+                <strong>-${formatVnd(discount)}</strong>
+              </div>
+            ` : ''}
+            <div class="cm-pb-row">
+              <span>${vi ? 'Phí vận chuyển' : '배송비'}</span>
+              <span style="color: #3d6312; font-weight: 600;">${subtotal >= 500000 ? (vi ? 'Miễn phí' : '무료') : (vi ? 'Báo khi xác nhận đơn' : '확인 시 안내')}</span>
+            </div>
+            <div class="cm-pb-row total">
+              <span>${vi ? 'Tổng cộng' : '총 결제 금액'}</span>
+              <span class="cm-total-highlight">${formatVnd(finalTotal)}</span>
+            </div>
+          </div>
+        </div>
       </div>`;
-    const form = checkout.querySelector('#checkoutForm');
-    form.addEventListener('submit', onCheckoutSubmit);
-    // Shop / clinic name for wholesale, consultant code for consultants
-    form.querySelectorAll('input[name="customerType"]').forEach((r) => r.addEventListener('change', () => {
-      const org = form.querySelector('.ctype-org');
-      org.hidden = r.value === 'b2c';
-      org.querySelector('.ctype-org-label').textContent = orgLabel(r.value, isVi());
-    }));
+
+    bindComEmEvents(checkoutBody);
   }
 
-  async function sendOrder(payload) {
+  function bindComEmEvents(container) {
+    const form = container.querySelector('#checkoutForm');
+    if (form) form.addEventListener('submit', onCheckoutSubmit);
+
+    // Radio payment highlight
+    container.querySelectorAll('.cm-pay-card input[type="radio"]').forEach(r => {
+      r.addEventListener('change', () => {
+        container.querySelectorAll('.cm-pay-card').forEach(c => c.classList.remove('is-selected'));
+        const card = r.closest('.cm-pay-card');
+        if (card) card.classList.add('is-selected');
+      });
+    });
+
+    // Stepper & remove
+    container.querySelectorAll('[data-cm-step]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const action = btn.getAttribute('data-cm-step');
+        const pid = btn.getAttribute('data-product-id');
+        const item = cart.find(it => it.id === pid);
+        if (!item) return;
+
+        if (action === 'inc') {
+          item.qty = Math.min(99, item.qty + 1);
+          saveCart();
+          renderCheckoutForm();
+        } else if (action === 'dec') {
+          if (item.qty > 1) {
+            item.qty -= 1;
+            saveCart();
+            renderCheckoutForm();
+          } else {
+            removeFromCart(pid);
+            renderCheckoutForm();
+          }
+        } else if (action === 'del') {
+          removeFromCart(pid);
+          renderCheckoutForm();
+        }
+      });
+    });
+
+    // Quantity input direct edit
+    container.querySelectorAll('[data-cm-qty-input]').forEach(inp => {
+      inp.addEventListener('change', () => {
+        const pid = inp.getAttribute('data-cm-qty-input');
+        const val = parseInt(inp.value, 10);
+        if (val >= 1 && val <= 99) {
+          updateQty(pid, val);
+          renderCheckoutForm();
+        } else {
+          inp.value = 1;
+        }
+      });
+    });
+
+    // Upsell button
+    const upsellBtn = container.querySelector('[data-cm-add-upsell]');
+    if (upsellBtn) {
+      upsellBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const pid = upsellBtn.getAttribute('data-cm-add-upsell');
+        addToCart(pid, 1, { silent: true });
+        showToast('Đã thêm sản phẩm mua kèm ưu đãi vào giỏ hàng ✓');
+        renderCheckoutForm();
+      });
+    }
+
+    // Coupon button
+    const couponBtn = container.querySelector('#cmApplyCouponBtn');
+    const couponInput = container.querySelector('#cmCouponInput');
+    if (couponBtn && couponInput) {
+      couponBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const val = (couponInput.value || '').trim().toUpperCase();
+        if (!val) {
+          currentCoupon = null;
+          renderCheckoutForm();
+          return;
+        }
+        if (val === 'BEVIBE10' || val === 'COMEM' || val === 'BEVIBE') {
+          currentCoupon = { code: val, discountPct: 0.1 };
+          showToast('Áp dụng mã giảm 10% thành công! ✓');
+        } else if (val === 'BEVIBE50' || val === 'CHAOBAN') {
+          currentCoupon = { code: val, discountVal: 50000 };
+          showToast('Áp dụng mã giảm 50.000đ thành công! ✓');
+        } else if (val === 'FREESHIP') {
+          currentCoupon = { code: val, discountVal: 30000 };
+          showToast('Áp dụng miễn phí vận chuyển thành công! ✓');
+        } else {
+          showToast('Mã giảm giá không hợp lệ hoặc đã hết hạn.');
+          return;
+        }
+        renderCheckoutForm();
+      });
+    }
+  }
+
+async function sendOrder(payload) {
     // 1. Save directly into Supabase database
     try {
       sendOrderToSupabase({
@@ -472,9 +763,9 @@ export function initShop(ctx) {
       return;
     }
     err.hidden = true;
-    const customerType = CUSTOMER_TYPES.some((t) => t.id === data.customerType) ? data.customerType : 'b2c';
-    const org = customerType === 'b2c' ? '' : (data.org || '');
-    safeSet(customerKey, { name: data.name, phone: data.phone, email: data.email, city: data.city, district: data.district, address: data.address, customerType, org });
+    const customerType = 'b2c';
+    const org = '';
+    safeSet(customerKey, { name: data.name, phone: data.phone, email: data.email, city: data.city, district: data.district, ward: data.ward, address: data.address, note: data.note });
 
     const items = cart.map((it) => ({ ...it }));
     let code = orderCode();
@@ -488,7 +779,7 @@ export function initShop(ctx) {
       return `${i + 1}. ${p.name}${p.priceUnit ? ` (${p.priceUnit})` : ''} x${it.qty} = ${formatVnd(priceOf(it.id) * it.qty)}`;
     });
     const total = items.reduce((s, it) => s + priceOf(it.id) * it.qty, 0);
-    const address = [data.address, data.district, data.city].filter(Boolean).join(', ');
+    const address = [data.address, data.ward, data.district, data.city].filter(Boolean).join(', ');
 
     const productNames = items.map(it => {
       const e = entryOf(it.id);

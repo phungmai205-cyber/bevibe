@@ -3118,3 +3118,16 @@ document.addEventListener('DOMContentLoaded', () => {
   })();
 
 });
+
+
+  // Support Cỏ Mềm style #/cart and #/gio-hang
+  function checkCartRoute() {
+    const h = (window.location.hash || '').toLowerCase();
+    if (h === '#/cart' || h === '#/gio-hang') {
+      if (typeof shop !== 'undefined' && shop.openCheckout) {
+        shop.openCheckout();
+      }
+    }
+  }
+  window.addEventListener('hashchange', checkCartRoute);
+  setTimeout(checkCartRoute, 300);

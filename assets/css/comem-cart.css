@@ -1,0 +1,580 @@
+/* ==========================================================================
+   Cỏ Mềm (comem.vn/cart) Style Cart & Checkout for beVIBE
+   ========================================================================== */
+
+/* Dialog wrapper: wider to support comfortable 2-column layout */
+.checkout-modal .checkout-dialog {
+  max-width: 1080px;
+  width: 95%;
+  max-height: 92vh;
+  border-radius: 12px;
+  padding: 32px 36px;
+  background: #ffffff;
+  box-shadow: 0 20px 50px rgba(15, 35, 71, 0.18);
+  border: 1px solid #e5e7eb;
+}
+
+/* 2-Column Grid Layout like Cỏ Mềm */
+.cm-cart-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1.15fr);
+  gap: 36px;
+  align-items: start;
+}
+
+/* LEFT COLUMN: Thông tin nhận hàng */
+.cm-shipping-col {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.cm-col-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #27400b;
+  margin: 0 0 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cm-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.cm-form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.cm-form-group.col-full {
+  grid-column: 1 / -1;
+}
+
+.cm-form-group.col-3 {
+  grid-column: span 1;
+}
+
+.cm-input,
+.cm-select,
+.cm-textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.92rem;
+  color: #1f2937;
+  background: #ffffff;
+  font-family: inherit;
+  transition: all 0.15s ease;
+  box-sizing: border-box;
+}
+
+.cm-input:focus,
+.cm-select:focus,
+.cm-textarea:focus {
+  outline: none;
+  border-color: #3d6312;
+  box-shadow: 0 0 0 3px rgba(61, 99, 18, 0.15);
+}
+
+.cm-input::placeholder,
+.cm-textarea::placeholder {
+  color: #9ca3af;
+  font-size: 0.88rem;
+}
+
+.cm-textarea {
+  resize: vertical;
+  min-height: 68px;
+}
+
+/* Payment Method Cards */
+.cm-payment-section {
+  margin-top: 8px;
+  border-top: 1px solid #f3f4f6;
+  padding-top: 18px;
+}
+
+.cm-payment-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.cm-pay-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  cursor: pointer;
+  background: #ffffff;
+  transition: all 0.15s ease;
+}
+
+.cm-pay-card:hover {
+  border-color: #3d6312;
+  background: #fafcf8;
+}
+
+.cm-pay-card.is-selected,
+.cm-pay-card:has(input:checked) {
+  border-color: #3d6312;
+  background: #f4f8ee;
+  box-shadow: 0 0 0 1px #3d6312;
+}
+
+.cm-pay-card input[type="radio"] {
+  margin-top: 3px;
+  accent-color: #3d6312;
+  width: 17px;
+  height: 17px;
+}
+
+.cm-pay-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cm-pay-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1f2937;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cm-pay-sub {
+  font-size: 0.82rem;
+  color: #6b7280;
+  line-height: 1.4;
+}
+
+/* RIGHT COLUMN: Giỏ hàng của bạn */
+.cm-cart-col {
+  background: #fbfcfb;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Social Proof Banner */
+.cm-alert-proof {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: #f0f7ea;
+  border: 1px solid #d5e8cf;
+  border-radius: 6px;
+  padding: 10px 14px;
+  color: #27400b;
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+
+.cm-alert-proof svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: #3d6312;
+}
+
+/* Wholesale contact note */
+.cm-bulk-note {
+  font-size: 0.8rem;
+  font-style: italic;
+  color: #6b7280;
+  line-height: 1.5;
+  margin: 0;
+  border-bottom: 1px dashed #e5e7eb;
+  padding-bottom: 12px;
+}
+
+.cm-bulk-note strong {
+  color: #3d6312;
+  font-weight: 600;
+}
+
+/* Cart Items List */
+.cm-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-height: 380px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.cm-item-card {
+  display: grid;
+  grid-template-columns: 72px 1fr auto;
+  gap: 14px;
+  align-items: center;
+  padding: 12px;
+  background: #ffffff;
+  border: 1px solid #edf2f7;
+  border-radius: 8px;
+  position: relative;
+}
+
+.cm-item-thumb {
+  width: 72px;
+  height: 72px;
+  border-radius: 6px;
+  object-fit: cover;
+  background: #f8fafc;
+  border: 1px solid #f1f5f9;
+}
+
+.cm-item-details {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cm-item-name {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #1f2937;
+  line-height: 1.35;
+  text-decoration: none;
+}
+
+.cm-item-name:hover {
+  color: #3d6312;
+}
+
+.cm-item-prices {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.cm-item-old-price {
+  font-size: 0.82rem;
+  color: #9ca3af;
+  text-decoration: line-through;
+}
+
+.cm-item-cur-price {
+  font-size: 0.96rem;
+  font-weight: 700;
+  color: #b45309; /* Tone cam ấm như Cỏ Mềm */
+}
+
+/* Stepper [ - 1 + ] */
+.cm-qty-stepper {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  overflow: hidden;
+  height: 28px;
+  width: fit-content;
+  background: #ffffff;
+}
+
+.cm-qty-btn {
+  width: 28px;
+  height: 28px;
+  background: #f9fafb;
+  border: none;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #4b5563;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+}
+
+.cm-qty-btn:hover {
+  background: #e5e7eb;
+  color: #111827;
+}
+
+.cm-qty-input {
+  width: 36px;
+  height: 28px;
+  border: none;
+  border-left: 1px solid #d1d5db;
+  border-right: 1px solid #d1d5db;
+  text-align: center;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #1f2937;
+  outline: none;
+  -moz-appearance: textfield;
+}
+
+.cm-qty-input::-webkit-outer-spin-button,
+.cm-qty-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.cm-item-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.cm-btn-remove {
+  background: none;
+  border: none;
+  color: #9ca3af;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 6px;
+  border-radius: 4px;
+  transition: all 0.15s;
+}
+
+.cm-btn-remove:hover {
+  color: #dc2626;
+  background: #fee2e2;
+}
+
+/* Hot Deal Upsell Section */
+.cm-upsell-box {
+  border: 1px dashed #f59e0b;
+  background: #fffdfa;
+  border-radius: 8px;
+  padding: 12px 14px;
+}
+
+.cm-upsell-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.cm-badge-hotdeal {
+  background: #e11d48;
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.cm-upsell-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.cm-upsell-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.cm-upsell-thumb {
+  width: 48px;
+  height: 48px;
+  border-radius: 6px;
+  object-fit: cover;
+  border: 1px solid #f1f5f9;
+}
+
+.cm-upsell-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cm-upsell-pname {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.cm-upsell-pricing {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.cm-discount-pill {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #e11d48;
+  background: #ffe4e6;
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+
+.cm-btn-add-upsell {
+  padding: 6px 12px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  background: #ffffff;
+  color: #b45309;
+  border: 1px solid #b45309;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.cm-btn-add-upsell:hover {
+  background: #b45309;
+  color: #ffffff;
+}
+
+/* Coupon Row */
+.cm-coupon-row {
+  display: flex;
+  gap: 8px;
+}
+
+.cm-coupon-input {
+  flex: 1;
+  padding: 10px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  outline: none;
+}
+
+.cm-coupon-input:focus {
+  border-color: #3d6312;
+}
+
+.cm-btn-coupon {
+  padding: 10px 18px;
+  background: #f59e0b;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+  white-space: nowrap;
+}
+
+.cm-btn-coupon:hover {
+  background: #d97706;
+}
+
+/* Pricing Breakdown */
+.cm-price-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 14px;
+  font-size: 0.9rem;
+  color: #4b5563;
+}
+
+.cm-pb-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cm-pb-row.total {
+  border-top: 1px solid #e5e7eb;
+  padding-top: 10px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.cm-total-highlight {
+  font-size: 1.25rem;
+  color: #3d6312;
+  font-weight: 800;
+}
+
+/* Primary Submit Button (ĐẶT HÀNG) */
+.cm-btn-submit-order {
+  width: 100%;
+  padding: 14px 20px;
+  background: #3d6312;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-size: 1.08rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(61, 99, 18, 0.25);
+  letter-spacing: 0.3px;
+  font-family: inherit;
+}
+
+.cm-btn-submit-order:hover {
+  background: #31500e;
+  box-shadow: 0 6px 16px rgba(61, 99, 18, 0.35);
+}
+
+.cm-btn-submit-order:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+/* Empty Cart State */
+.cm-empty-cart {
+  text-align: center;
+  padding: 48px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.cm-empty-cart svg {
+  color: #9ca3af;
+}
+
+.cm-empty-cart p {
+  font-size: 1.05rem;
+  color: #4b5563;
+  margin: 0;
+}
+
+/* Responsive for Mobile */
+@media (max-width: 860px) {
+  .checkout-modal .checkout-dialog {
+    padding: 20px 16px;
+    width: 96%;
+    max-height: 94vh;
+  }
+  .cm-cart-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .cm-form-grid {
+    grid-template-columns: 1fr;
+  }
+  .cm-cart-col {
+    order: -1; /* Display cart review first on mobile for transparency */
+    padding: 16px;
+  }
+}
