@@ -133,12 +133,16 @@ export function authenticateCounselor(code, phone) {
  * @returns {{ counselor?: object, error?: string, notFound?: boolean }}
  */
 export function recoverCounselorCode(phone, email) {
-  if (!isValidPhone(phone)) return { error: 'Vui lòng nhập số điện thoại đã đăng ký Counselor.' };
+  const p = phone ? normalizePhone(phone) : '';
   const mail = String(email || '').trim().toLowerCase();
-  if (!EMAIL_RE.test(mail)) return { error: 'Vui lòng nhập email đã đăng ký Counselor.' };
-  const p = normalizePhone(phone);
-  const found = getAllCounselors().find((c) => normalizePhone(c.phone) === p && String(c.email || '').toLowerCase() === mail);
+  if (!p && !mail) return { error: 'Vui lòng nhập số điện thoại hoặc email đã đăng ký Counselor.' };
+  const all = getAllCounselors();
+  const found = all.find((c) => (p && normalizePhone(c.phone) === p) || (mail && String(c.email || '').toLowerCase() === mail));
   return found ? { counselor: found } : { notFound: true };
+}
+
+export function saveCounselor(counselor) {
+  writeJson(STORAGE_CUSTOM_COUNSELORS, [...readJson(STORAGE_CUSTOM_COUNSELORS, []), counselor]);
 }
 
 // Mã mới khó đoán và không trùng giữa các máy: BV + 6 chữ số ngẫu nhiên

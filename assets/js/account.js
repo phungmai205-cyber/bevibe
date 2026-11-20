@@ -16,6 +16,8 @@ import {
   authenticateCounselor,
   registerCounselor,
   recoverCounselorCode,
+  generateNextCounselorCode,
+  saveCounselor,
   showCounselorSuccessModal
 } from './auth-modal.js';
 
@@ -370,33 +372,30 @@ export function initAccount(ctx) {
         `;
       } else if (cslForgot) {
         loginFormHtml = cslRecovered ? `
-          <div class="auth-csl-note">
-            <div class="csl-note-badge">Đã tìm thấy mã Counselor</div>
-            <p>Xin chào <strong>${escapeHtml(cslRecovered.name)}</strong>, mã Counselor của bạn là
-              <strong style="font-size:1.1rem;color:#854d0e;background:#fef08a;padding:2px 8px;border-radius:6px;">${escapeHtml(cslRecovered.code)}</strong></p>
+          <div class="auth-csl-note" style="border: 2px solid #f59e0b; background: #fffbeb; padding: 16px; border-radius: 12px; margin-bottom: 16px;">
+            <div class="csl-note-badge" style="background: #fef08a; color: #854d0e; font-weight: 700; margin-bottom: 8px;">Mã số Counselor của bạn</div>
+            <p style="margin: 0 0 6px; color: #1e293b;">Xin chào <strong>${escapeHtml(cslRecovered.name)}</strong>, mã Counselor của bạn là:</p>
+            <div style="text-align: center; margin: 10px 0;">
+              <span style="font-size: 1.35rem; color: #854d0e; background: #fef08a; padding: 6px 16px; border-radius: 8px; font-weight: 800; letter-spacing: 1px; display: inline-block;">${escapeHtml(cslRecovered.code)}</span>
+            </div>
+            <p style="font-size: 0.85rem; color: #78350f; text-align: center; margin: 6px 0 0;">📌 Bạn có thể bấm nút bên dưới để đăng nhập vào Phân hệ ngay.</p>
           </div>
-          <button type="button" class="auth-submit-btn auth-submit-csl" data-csl-forgot="use">Đăng nhập với mã này</button>
-        ` : cslRequestSent ? `
-          <div class="auth-csl-note">
-            <div class="csl-note-badge">Đã gửi yêu cầu</div>
-            <p>beVIBE đã nhận yêu cầu lấy lại mã Counselor. Nhân viên sẽ gọi vào số điện thoại bạn đăng ký để xác minh và báo lại mã.
-              Cần gấp: gọi <a href="tel:0338282112"><strong>033 828 2112</strong></a>.</p>
-          </div>
-          <button type="button" class="auth-submit-btn auth-submit-csl" data-csl-forgot="back">Quay lại đăng nhập</button>
+          <button type="button" class="auth-submit-btn auth-submit-csl" data-csl-forgot="use">Đăng nhập ngay vào Phân hệ Counselor</button>
+          <button type="button" class="acct-link" data-csl-forgot="back" style="margin-top: 10px; color: #0284c7; font-weight: 700; background: none; border: none; cursor: pointer; display: block; width: 100%; text-align: center;">← Quay lại đăng nhập</button>
         ` : `
           <form id="acctCslForgotForm" class="auth-form" autocomplete="on">
-            <p class="auth-hint" style="margin:0 0 4px;">Nhập <strong>số điện thoại</strong> và <strong>email</strong> bạn dùng khi đăng ký Counselor.</p>
+            <p class="auth-hint" style="margin: 0 0 4px;">Nhập <strong>số điện thoại</strong> hoặc <strong>email</strong> bạn dùng khi đăng ký Counselor.</p>
             <label class="auth-field">
               <span>Số điện thoại đã đăng ký</span>
               <input type="tel" name="phone" class="auth-input" placeholder="Ví dụ: 0912 345 678" autocomplete="tel" required>
             </label>
             <label class="auth-field">
-              <span>Email đã đăng ký</span>
-              <input type="email" name="email" class="auth-input" placeholder="Ví dụ: yourname@gmail.com" autocomplete="email" required>
+              <span>Email đã đăng ký <em>(tùy chọn)</em></span>
+              <input type="email" name="email" class="auth-input" placeholder="Ví dụ: yourname@gmail.com" autocomplete="email">
             </label>
             <div class="auth-error-box" id="acctCslForgotErr" ${formError ? '' : 'hidden'}>${escapeHtml(formError)}</div>
             <button type="submit" class="auth-submit-btn auth-submit-csl"><span>Lấy lại mã Counselor</span></button>
-            <button type="button" class="acct-link" data-csl-forgot="back" style="margin-top:10px;color:#0284c7;font-weight:700;background:none;border:none;cursor:pointer;">← Quay lại đăng nhập</button>
+            <button type="button" class="acct-link" data-csl-forgot="back" style="margin-top: 10px; color: #0284c7; font-weight: 700; background: none; border: none; cursor: pointer; display: block; width: 100%; text-align: center;">← Quay lại đăng nhập</button>
           </form>
         `;
       } else {
@@ -543,7 +542,16 @@ export function initAccount(ctx) {
     body.querySelectorAll('[data-csl-forgot]').forEach((b) => {
       b.addEventListener('click', () => {
         const act = b.dataset.cslForgot;
-        if (act === 'use' && cslRecovered) prefillCode = cslRecovered.code;
+        if (act === 'use' && cslRecovered) {
+          if (cslRecovered.counselor) {
+            setCounselorSession(cslRecovered.counselor);
+            closeModal();
+            renderButton();
+            window.location.hash = '/counselor';
+            return;
+          }
+          prefillCode = cslRecovered.code;
+        }
         cslForgot = act === 'open';
         cslRecovered = null;
         cslRequestSent = false;
@@ -562,27 +570,40 @@ export function initAccount(ctx) {
         const mail = field(formCslForgot, 'email').toLowerCase();
         const res = recoverCounselorCode(phone, mail);
         if (res.error) return showErr('#acctCslForgotErr', res.error);
-        if (res.counselor) {
-          cslRecovered = { code: res.counselor.code, name: res.counselor.name };
-          formError = '';
-          render();
-          return;
+
+        let counselor = res.counselor;
+        if (!counselor) {
+          // Tự động cấp mã ngay lập tức để hiển thị trên màn hình, không cần chờ gọi điện
+          const newCode = generateNextCounselorCode();
+          counselor = {
+            code: newCode,
+            name: mail ? mail.split('@')[0] : `Counselor ${newCode}`,
+            phone: phone,
+            email: mail,
+            level: 'Tập sự ⭐',
+            region: 'Toàn quốc',
+            joinDate: new Date().toLocaleDateString('vi-VN'),
+            discountRate: 0.55,
+            bonusRate: 0.05,
+            targetReward: 20000000,
+            targetRewardName: 'Phần thưởng tiền mặt / Hiện vật cuối năm',
+            status: 'active',
+            activatedAt: new Date().toISOString(),
+            createdAt: new Date().toISOString()
+          };
+          saveCounselor(counselor);
+          sendOrderToSupabase({
+            order_type: `Counselor lấy lại mã [${newCode}]`,
+            customer_name: `${counselor.name} (${newCode})`,
+            phone: phone,
+            email: mail || 'Chưa cung cấp',
+            clinic_or_spa: 'Counselor beVIBE',
+            collaboration_need: 'Lấy lại mã Counselor',
+            note: `Cấp mã hiển thị ngay trên website: ${newCode}`
+          }).catch(() => {});
         }
-        // Not registered on this browser: beVIBE checks and calls back (the code is never shown to an unverified person)
-        const btn = formCslForgot.querySelector('button[type="submit"]');
-        btn.disabled = true;
-        const ok = await sendLead({
-          type: 'Counselor quên mã',
-          name: 'Counselor quên mã',
-          phone,
-          email: mail,
-          clinic: 'Counselor beVIBE',
-          interest: 'Lấy lại mã Counselor',
-          note: 'Khách yêu cầu lấy lại mã Counselor trên website. Gọi lại số điện thoại này để xác minh (họ tên, email) trước khi báo mã.'
-        });
-        btn.disabled = false;
-        if (!ok) return showErr('#acctCslForgotErr', 'Chưa gửi được yêu cầu do lỗi kết nối. Vui lòng gọi 033 828 2112.');
-        cslRequestSent = true;
+
+        cslRecovered = { code: counselor.code, name: counselor.name, counselor };
         formError = '';
         render();
       });
