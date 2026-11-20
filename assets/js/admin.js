@@ -241,7 +241,10 @@ function derive() {
   });
   d.leads.forEach((l) => {
     const c = touch(l.key, l);
-    if (c) c.leads.push(l);
+    if (c) {
+      if (!c.type) c.type = l.customerType || l.buyerType || 'Khách lẻ';
+      c.leads.push(l);
+    }
   });
   const list = Object.values(customers).map((c) => {
     const valid = c.orders.filter((o) => !FAILED_STATUSES.includes(o.status));
@@ -744,8 +747,8 @@ function buyerRequests(ignoreType) {
   return state.data.leads.filter((l) => {
     if (!l.fromBuyer || l.status !== 'Mới') return false;
     const c = state.derived.customerByKey[l.key];
-    l.buyerType = c ? c.type : 'Khách lẻ';
-    l.buyerOrg = (c && c.org) || l.org || '';
+    l.buyerType = l.customerType || (c ? c.type : 'Khách lẻ');
+    l.buyerOrg = (c && c.org) || l.org || l.buyerOrg || '';
     if (!ignoreType && f.type && typeKey(l.buyerType) !== f.type) return false;
     return !q || [l.name, l.phone, l.email, l.org, l.type, l.interest, l.note].some((v) => String(v || '').toLowerCase().includes(q));
   });
@@ -2384,55 +2387,75 @@ function buildDefaultAdminData() {
 
 function mergeSupabaseRows(data, sbRows) {
   if (!Array.isArray(sbRows) || !data) return;
+
+  // 1. Chuẩn hóa: Mỗi một tài khoản Counselor chỉ có 1 mã số duy nhất
+  // và chỉ có Counselor là tư vấn viên mới có mã số; khách lẻ KHÔNG có mã số!
+  const phoneToCounselorCode = {
+    '0364187238': 'BV0004', // Mã chính thức duy nhất của Thắm Nguyễn
+    '0352584505': 'BV0012',
+    '0912345678': 'BV0001',
+    '0987654321': 'BV0002',
+    '0903112233': 'BV0003'
+  };
+
+  // Quét các bản ghi Supabase mới nhất để trích xuất mã số nếu số điện thoại chưa có trong danh mục
   sbRows.forEach((row) => {
-    // Skip explicit test data only
+    const p = String(row.phone || '').replace(/[^\d]/g, '');
+    if (!p || phoneToCounselorCode[p]) return;
+    const combined = `${row.order_type || ''} ${row.customer_name || ''} ${row.clinic_or_spa || ''} ${row.note || ''}`;
+    const m = combined.match(/\b(BV\d{4,8})\b/i);
+    if (m) {
+      phoneToCounselorCode[p] = m[1].toUpperCase();
+    }
+  });
+
+  sbRows.forEach((row) => {
+    // Bỏ qua dữ liệu test thủ công
     if (row.order_type === 'TEST' || (row.customer_name && row.customer_name.toLowerCase().trim() === 'test')) {
       return;
     }
+
     const typeStr = String(row.order_type || '').toLowerCase();
-    const isWholesale = typeStr.includes('wholesale') || typeStr.includes('sỉ') || typeStr.includes('hợp tác') || typeStr.includes('đối tác');
-    const isAccount = typeStr.includes('tài khoản');
+    const cleanPhone = String(row.phone || '').replace(/[^\d]/g, '');
+    const cslCode = phoneToCounselorCode[cleanPhone] || (typeStr.match(/\b(bv\d{4,8})\b/i) ? typeStr.match(/\b(bv\d{4,8})\b/i)[1].toUpperCase() : '');
+
+    // Phân loại tài khoản chính xác:
+    // - Counselor (Tư vấn viên): có mã BV hoặc order_type/clinic_or_spa là Counselor/Tư vấn viên
+    // - Khách sỉ: Spa / Clinic / Đại lý hợp tác kinh doanh sỉ
+    // - Khách lẻ: Khách hàng cá nhân mua sắm (không có mã số)
+    const isCounselor = !!cslCode || typeStr.includes('counselor') || typeStr.includes('tư vấn viên');
+    const isWholesale = !isCounselor && (typeStr.includes('wholesale') || typeStr.includes('sỉ') || typeStr.includes('hợp tác') || typeStr.includes('đối tác') || typeStr.includes('spa') || typeStr.includes('clinic'));
+
+    // Tên chuẩn hóa: chỉ Counselor mới có mã số dạng (BVxxxx); khách lẻ tuyệt đối không có mã số!
+    let rawName = String(row.customer_name || 'Khách hàng').replace(/\s*\(BV\d+\)/gi, '').trim();
+    if (!rawName) rawName = 'Khách hàng';
+    const displayName = isCounselor ? (cslCode ? `${rawName} (${cslCode})` : rawName) : rawName;
 
     const addr = row.shipping_address || '';
     const addrParts = addr.split(',').map((s) => s.trim()).filter(Boolean);
     const city = addrParts.length > 1 ? addrParts[addrParts.length - 1] : addr;
 
-    if (isWholesale || isAccount) {
-      const leadId = `LD${row.id}`;
-      if (!data.leads.some((l) => l.id === leadId || (l.sbId && l.sbId === row.id))) {
-        data.leads.push({
-          id: leadId,
-          time: row.created_at,
-          status: row.status || 'Mới',
-          type: isAccount ? 'Đăng ký tài khoản' : 'Báo giá sỉ / Hợp tác',
-          name: row.customer_name || 'Khách đối tác',
-          phone: row.phone || '',
-          email: row.email || '',
-          org: row.clinic_or_spa || '',
-          address: addr,
-          city: city,
-          interest: row.collaboration_need || '',
-          note: row.note || '',
-          internalNote: '',
-          sbId: row.id
-        });
-      }
-    } else {
+    // Đơn hàng thực tế: có số tiền total_amount > 0 hoặc là Đơn sỉ Counselor
+    const isRealOrder = (Number(row.total_amount) > 0) || typeStr.includes('đơn sỉ') || typeStr.includes('đơn đặt hàng');
+
+    if (isRealOrder) {
       const code = `DH${row.id}`;
       if (!data.orders.some((o) => o.code === code || (o.sbId && o.sbId === row.id))) {
         const noteStr = String(row.note || '').toLowerCase();
         const isBank = noteStr.includes('chuyển khoản') || noteStr.includes('chuyen khoan') || noteStr.includes('bank');
         const subtotal = Number(row.total_amount) || 0;
+        const customerType = isCounselor ? 'Tư vấn viên' : isWholesale ? 'Khách sỉ' : 'Khách lẻ';
 
         data.orders.push({
           code: code,
           time: row.created_at,
-          customerType: isWholesale ? 'Khách sỉ' : 'Khách lẻ',
-          name: row.customer_name || 'Khách hàng',
+          customerType: customerType,
+          typeKey: typeKey(customerType),
+          name: displayName,
           phone: row.phone || '',
           email: row.email || '',
-          clinic: row.clinic_or_spa || '',
-          org: row.clinic_or_spa || '',
+          clinic: isWholesale ? (row.clinic_or_spa || '') : '',
+          org: isCounselor ? (cslCode || 'Counselor beVIBE') : (row.clinic_or_spa || ''),
           address: addr,
           city: city,
           status: row.status || 'Mới',
@@ -2442,9 +2465,51 @@ function mergeSupabaseRows(data, sbRows) {
           shipping: 0,
           discount: 0,
           total: subtotal,
-          products: row.collaboration_need || row.note || 'Sản phẩm Bevibe',
+          products: row.collaboration_need || row.note || 'Sản phẩm beVIBE',
           note: row.note || '',
           items: [],
+          sbId: row.id
+        });
+      }
+    } else {
+      // Yêu cầu / Khách tiềm năng (Lead)
+      const leadId = `LD${row.id}`;
+      if (!data.leads.some((l) => l.id === leadId || (l.sbId && l.sbId === row.id))) {
+        let leadType = 'Đăng ký tài khoản';
+        let buyerType = 'Khách lẻ';
+        let orgName = '';
+
+        if (isCounselor) {
+          buyerType = 'Tư vấn viên';
+          leadType = typeStr.includes('quên') ? 'Quên mã Counselor' : 'Đăng ký Tư vấn viên';
+          orgName = cslCode || 'Counselor beVIBE';
+        } else if (isWholesale) {
+          buyerType = 'Khách sỉ';
+          leadType = 'Báo giá sỉ / Hợp tác';
+          orgName = row.clinic_or_spa || '';
+        } else {
+          buyerType = 'Khách lẻ';
+          leadType = 'Đăng ký tài khoản';
+          orgName = '';
+        }
+
+        data.leads.push({
+          id: leadId,
+          time: row.created_at,
+          status: row.status || 'Mới',
+          type: leadType,
+          customerType: buyerType,
+          buyerType: buyerType,
+          buyerOrg: orgName,
+          name: displayName,
+          phone: row.phone || '',
+          email: row.email || '',
+          org: orgName,
+          address: addr,
+          city: city,
+          interest: row.collaboration_need || '',
+          note: row.note || '',
+          internalNote: '',
           sbId: row.id
         });
       }

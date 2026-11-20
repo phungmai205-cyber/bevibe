@@ -60,6 +60,19 @@ export const REGISTERED_COUNSELORS = [
     bonusRate: 0.05,
     targetReward: 15000000,
     targetRewardName: 'Phần thưởng tiền mặt 15.000.000 đ'
+  },
+  {
+    code: 'BV0004',
+    name: 'Thắm Nguyễn',
+    phone: '0364 187 238',
+    email: 'tahm16420005@gmail.com',
+    level: 'Tập sự ⭐',
+    region: 'Hà Nội',
+    joinDate: '20/11/2026',
+    discountRate: 0.55,
+    bonusRate: 0.05,
+    targetReward: 20000000,
+    targetRewardName: 'Phần thưởng tiền mặt / Hiện vật cuối năm'
   }
 ];
 
