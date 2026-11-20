@@ -7595,20 +7595,26 @@ main.is-subpage > section:not(.page-hero) {
   box-shadow: 0 4px 12px rgba(26, 80, 146, 0.35);
 }
 
-/* Hero photo banners (model + product lineup): show the full photo, no dark overlay */
+/* Hero photo banners: show the full banner crisp & edge to edge, no text crop */
 .hero-slide--image {
-  background-color: #ecebe9;
+  background-color: #f1f5f9;
 }
 
 .hero-slide--image .hero-slide-bg {
-  background-size: cover;
-  background-position: center top;
+  background-size: 100% 100%;
+  background-position: center center;
+  transform: none !important;
+}
+
+.hero-slide.active .hero-slide-bg {
+  transform: none !important;
 }
 
 @media (max-width: 860px) {
-  /* narrow screens: keep the model (left side) in frame */
   .hero-slide--image .hero-slide-bg {
-    background-position: 20% center;
+    background-position: center center;
+    background-size: 100% 100%;
+    transform: none !important;
   }
 }
 
@@ -9735,6 +9741,12 @@ main.is-subpage > section:not(.page-hero) {
   image-rendering: high-quality;
 }
 
+.hero-slide-bg.hero-bg-5 {
+  background-image: url('/assets/images/hero/hero-5.png');
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: high-quality;
+}
+
 /* High-definition crisp rendering for all cards, banners & thumbs */
 .product-card-img,
 .product-card-thumb,
@@ -10544,7 +10556,7 @@ a.send-btn {
 /* --- Banner: image only, edge to edge, prev · dots · next at the bottom centre --- */
 .hero-whoo .hero-visual-card.hero-full {
   height: auto;
-  aspect-ratio: 1024 / 506;
+  aspect-ratio: 1024 / 571;
   max-height: 720px;
   width: 100%;
   background: #f1f1f1;
@@ -10985,7 +10997,7 @@ a.send-btn {
   .hline { width: 92px; }
   .hline-img { width: 76px; height: 76px; }
   .home-lines-track { gap: 14px; }
-  .hero-whoo .hero-visual-card.hero-full { aspect-ratio: 1024 / 560; }
+  .hero-whoo .hero-visual-card.hero-full { aspect-ratio: 1024 / 571; }
   .hero-whoo .hero-full .hero-slideshow-nav { bottom: 8px; }
   .hero-whoo .hero-nav-arrow { width: 26px; height: 26px; }
   .hero-whoo .hero-indicator-dot.active { width: 32px; }

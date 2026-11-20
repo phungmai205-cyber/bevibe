@@ -2583,7 +2583,8 @@ document.addEventListener('DOMContentLoaded', () => {
       'dr-bargo': 'Gangnam Clinic Formula · Serum phục hồi màng bảo vệ da chuyên sâu',
       'medipharm': 'MediPharm · Dòng Stem C tế bào gốc (6 sản phẩm)',
       'smib': '100 Tỷ Postbiotic · Dầu gội phủ bạc tự nhiên & trị liệu da đầu',
-      'cellgrams': 'CELLGRAMS · Dòng chăm sóc da chuyên sâu'
+      'cellgrams': 'CELLGRAMS · Dòng chăm sóc da chuyên sâu',
+      'bevibe': 'beVIBE DAY · Siêu ưu đãi lớn nhất năm cùng nhiều quà tặng hấp dẫn'
     };
 
     const brandDescriptionsKo = {
@@ -2592,7 +2593,8 @@ document.addEventListener('DOMContentLoaded', () => {
       'dr-bargo': '강남 피부과 처방 · 손상 장벽 급속 리페어 세럼',
       'medipharm': '메디팜 · 스템씨 줄기세포 라인 (6개 제품)',
       'smib': '1000억 포스트바이오틱스 · 컬러 체인지 샴푸 및 두피 케어',
-      'cellgrams': '셀그램스 · 집중 스킨케어 라인'
+      'cellgrams': '셀그램스 · 집중 스킨케어 라인',
+      'bevibe': 'beVIBE DAY · 특별 프로모션 및 다양한 혜택'
     };
 
     // dir: 1 = next slide slides in from the right, -1 = previous slides in from the left
