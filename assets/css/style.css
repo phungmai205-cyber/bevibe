@@ -9698,6 +9698,8 @@ main.is-subpage > section:not(.page-hero) {
 
 .hero-slide-bg.hero-bg-2 {
   background-image: url('/assets/images/hero/hero-2.png');
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: high-quality;
 }
 
 .hero-slide-bg.hero-bg-3 {
