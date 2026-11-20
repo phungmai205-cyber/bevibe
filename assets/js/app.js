@@ -3124,7 +3124,9 @@ document.addEventListener('DOMContentLoaded', () => {
   function checkCartRoute() {
     const h = (window.location.hash || '').toLowerCase();
     if (h === '#/cart' || h === '#/gio-hang') {
-      if (typeof shop !== 'undefined' && shop.openCheckout) {
+      if (typeof window.__bevibeOpenCheckout === 'function') {
+        window.__bevibeOpenCheckout();
+      } else if (typeof shop !== 'undefined' && shop && shop.openCheckout) {
         shop.openCheckout();
       }
     }

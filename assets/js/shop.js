@@ -396,7 +396,7 @@ export function initShop(ctx) {
             <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
           </svg>
           <p>${vi ? 'Giỏ hàng của bạn đang trống.' : '장바구니가 비어 있습니다.'}</p>
-          <button type="button" class="btn-primary" data-shop="close-checkout" style="background:#3d6312; border:none; padding:12px 28px; border-radius:6px; font-weight:700; color:#fff; cursor:pointer;" onclick="window.location.hash='#/san-pham'">
+          <button type="button" class="btn-primary" data-shop="close-checkout" style="background:#3d6312; border:none; padding:12px 28px; border-radius:6px; font-weight:700; color:#fff; cursor:pointer;" onclick="window.location.hash='#/san-pham'; if (window.__bevibeCloseCheckout) window.__bevibeCloseCheckout();">
             ${vi ? 'Khám phá sản phẩm ngay →' : '제품 보기 →'}
           </button>
         </div>`;
@@ -412,7 +412,6 @@ export function initShop(ctx) {
     const finalTotal = Math.max(0, subtotal - discount);
 
     // Pick 1 recommended upsell item not in cart
-    const allDefs = (CATALOG_PRODUCTS || []).concat();
     const upsellCandidates = ['drbargo-1', 'neura-1', 'smib-1', 'drbargo-2', 'neura-3'];
     const upsellId = upsellCandidates.find(id => !cart.some(it => it.id === id)) || 'drbargo-1';
     const upsellProd = localized(entryOf(upsellId));
@@ -486,7 +485,7 @@ export function initShop(ctx) {
 
             <label class="hp-field" aria-hidden="true" style="display:none;">Website<input name="website" tabindex="-1" autocomplete="off"></label>
             <p class="checkout-error" id="checkoutError" role="alert" hidden></p>
-            <button type="submit" class="cm-btn-submit-order" style="margin-top: 22px;">${vi ? 'ĐẶT HÀNG' : '주문하기'}</button>
+            <button type="submit" class="cm-btn-submit-order checkout-submit" style="margin-top: 22px;">${vi ? 'ĐẶT HÀNG' : '주문하기'}</button>
             <p class="checkout-fineprint" style="margin-top: 10px; font-size: 0.78rem; color: #6b7280; text-align: center;">
               ${vi ? 'Nhân viên beVIBE sẽ gọi điện xác nhận đơn, phí vận chuyển và thời gian giao hàng nhanh nhất.' : '비바이브 담당자가 확인 전화로 배송비와 일정을 안내해 드립니다.'}
             </p>
@@ -649,7 +648,7 @@ export function initShop(ctx) {
         const pid = inp.getAttribute('data-cm-qty-input');
         const val = parseInt(inp.value, 10);
         if (val >= 1 && val <= 99) {
-          updateQty(pid, val);
+          setQty(pid, val);
           renderCheckoutForm();
         } else {
           inp.value = 1;
@@ -736,7 +735,7 @@ async function sendOrder(payload) {
       // The order carries a requestId, so the order system ignores it if the first try already arrived.
       console.warn('Order answer unreadable, resending without reading it:', err);
       await fetch(ORDER_ENDPOINT, { ...init, mode: 'no-cors' });
-      return { ok: true, unverified: true };
+      const api = { ok: true, unverified: true };
     } finally {
       if (timer) clearTimeout(timer);
     }
@@ -812,7 +811,7 @@ async function sendOrder(payload) {
     let mode = 'manual';
     if (ORDER_ENDPOINT) {
       submitting = true;
-      const btn = form.querySelector('.checkout-submit');
+      const btn = form.querySelector('.cm-btn-submit-order, .checkout-submit, button[type="submit"]');
       const btnLabel = btn.textContent;
       btn.disabled = true;
       btn.textContent = vi ? 'Đang gửi đơn…' : '주문 전송 중…';
@@ -923,7 +922,6 @@ async function sendOrder(payload) {
   }
 
   function openCheckout() {
-    if (!cart.length) return;
     lastOrder = null;
     renderCheckoutForm();
     closeOverlay(drawer);
@@ -1464,10 +1462,22 @@ async function sendOrder(payload) {
     addToCart,
     cartCount,
     openCart,
+    openCheckout,
+    closeCheckout: () => closeOverlay(checkout),
+    closeCart: () => closeOverlay(drawer),
     switchAccount,
     applyRemoteCart,
     setCustomerDefaults,
     onCartChange(fn) { cartListener = fn; },
     setTokenProvider(fn) { tokenProvider = fn; }
   };
+
+  if (typeof window !== 'undefined') {
+    window.__bevibeOpenCheckout = openCheckout;
+    window.__bevibeOpenCart = openCart;
+    window.__bevibeCloseCheckout = () => closeOverlay(checkout);
+    window.__bevibeCloseCart = () => closeOverlay(drawer);
+  }
+
+  return api;
 }
