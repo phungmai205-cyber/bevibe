@@ -144,15 +144,17 @@ export function initAccount(ctx) {
   let stopCartWatch = null;
   let pushTimer = null;
 
-  // Tests can provide their own login service; otherwise Firebase when configured
-  const enabled = () => !!(window.__bevibeAuthBackend || FIREBASE_CONFIG);
+  // Customer accounts are active and powered by Supabase (or Firebase if configured)
+  const enabled = () => true;
 
   function loadBackend() {
     if (backend) return Promise.resolve(backend);
     if (!backendPromise) {
       backendPromise = (window.__bevibeAuthBackend
         ? Promise.resolve(window.__bevibeAuthBackend)
-        : import('./account-firebase.js').then((m) => m.createFirebaseBackend(FIREBASE_CONFIG))
+        : FIREBASE_CONFIG
+          ? import('./account-firebase.js').then((m) => m.createFirebaseBackend(FIREBASE_CONFIG))
+          : import('./account-supabase.js').then((m) => m.createSupabaseBackend())
       ).then((b) => { backend = b; return b; });
     }
     return backendPromise;
