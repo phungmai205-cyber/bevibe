@@ -1,22 +1,16 @@
 /**
- * account.js — Tài khoản Khách hàng beVIBE theo phong cách Cỏ Mềm (comem.vn)
+ * account.js — Tài khoản Khách hàng beVIBE theo chuẩn giao diện Cỏ Mềm (comem.vn)
  *
- * Tính năng:
- *  - Modal Đăng nhập / Đăng ký hiện đại, tinh tế chuẩn Cỏ Mềm (comem.vn).
- *  - Tạm thời gỡ bỏ mọi nút/tab liên quan đến Counselor trong modal để tránh nhầm lẫn.
- *  - Đăng nhập bằng Email hoặc Số điện thoại + Mật khẩu (có ẩn/hiện mật khẩu).
- *  - Đăng nhập nhanh bằng Google.
- *  - Đăng ký đầy đủ: Họ tên, Số điện thoại, Email, Mật khẩu, Xác nhận mật khẩu.
- *  - Quên mật khẩu: Hỗ trợ gửi yêu cầu khôi phục mật khẩu.
- *  - Tự động lưu trữ và đồng bộ toàn bộ tài khoản lên Supabase & LocalStorage.
- *  - Đồng bộ giỏ hàng cá nhân hóa cho từng khách hàng.
+ * Mặc định: Hiển thị form Đăng nhập trước (giống 100% ảnh Cỏ Mềm người dùng cung cấp).
+ * Khi chưa có tài khoản: bấm "Vui lòng đăng ký Tài khoản mới tại đây" để mở form Đăng ký.
+ * Bấm "Lấy lại mật khẩu" để mở form khôi phục mật khẩu.
+ * Tạm thời bỏ toàn bộ phân hệ Counselor để tránh nhầm lẫn cho khách mua hàng.
+ * Tự động đồng bộ và lưu trữ tài khoản khách hàng trên Supabase & LocalStorage.
  */
 
 import { FIREBASE_CONFIG } from './auth-config.js';
 import { sendOrderToSupabase } from './order-config.js';
 import {
-  findCustomer,
-  registerCustomer,
   getCurrentCustomer,
   setCurrentCustomer
 } from './auth-modal.js';
@@ -29,11 +23,15 @@ const STORAGE_CUSTOMERS = 'bevibe_registered_customers_v1';
 const STORAGE_CURRENT_USER = 'bevibe_current_customer_v1';
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
-const GOOGLE_ICON = `<svg width="20" height="20" viewBox="0 0 48 48" aria-hidden="true">
+const GOOGLE_ICON = `<svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true">
   <path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.4-.4-3.5z"/>
   <path fill="#FF3D00" d="m6.3 14.7 6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/>
   <path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/>
   <path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/>
+</svg>`;
+
+const FB_ICON = `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
 </svg>`;
 
 const USER_ICON = `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
@@ -67,17 +65,14 @@ function writeJson(key, value) {
 }
 
 export function initAccount(ctx) {
-  const { shop, getLang, showToast, escapeHtml } = ctx;
-  const isVi = () => getLang() !== 'ko';
+  const { shop, showToast, escapeHtml } = ctx;
 
   let backend = null;
   let backendPromise = null;
   let user = null;
-  let activeTab = 'login'; // 'login' | 'register' | 'forgot'
+  let currentView = 'login'; // 'login' | 'register' | 'forgot'
   let formError = '';
   let formSuccess = '';
-  let pushTimer = null;
-  let stopCartWatch = null;
 
   function loadBackend() {
     if (backend) return Promise.resolve(backend);
@@ -94,6 +89,16 @@ export function initAccount(ctx) {
 
   /* ---------------- Header button + menu ---------------- */
   const cartBtn = document.querySelector('.header-cart');
+  let btn = document.getElementById('accountBtn');
+  if (!btn) {
+    btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'header-account';
+    btn.id = 'accountBtn';
+    btn.setAttribute('aria-haspopup', 'dialog');
+    if (cartBtn) cartBtn.insertAdjacentElement('beforebegin', btn);
+  }
+
   const mobBtn = document.getElementById('mobileAccountBtn');
   if (mobBtn) {
     mobBtn.addEventListener('click', () => {
@@ -106,15 +111,6 @@ export function initAccount(ctx) {
         openModal('login');
       }
     });
-  }
-  let btn = document.getElementById('accountBtn');
-  if (!btn) {
-    btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'header-account';
-    btn.id = 'accountBtn';
-    btn.setAttribute('aria-haspopup', 'dialog');
-    if (cartBtn) cartBtn.insertAdjacentElement('beforebegin', btn);
   }
 
   const menu = document.createElement('div');
@@ -282,10 +278,6 @@ export function initAccount(ctx) {
       <div class="acct-backdrop" data-acct-close></div>
       <div class="acct-dialog">
         <button type="button" class="acct-x" data-acct-close aria-label="Đóng">&times;</button>
-        <div class="cm-modal-head">
-          <img class="cm-modal-logo" src="/assets/images/logo.png" alt="beVIBE" width="150">
-          <p class="cm-modal-slogan">Beauty · Life · Vibe</p>
-        </div>
         <div class="acct-body" id="acctBody"></div>
       </div>`;
     document.body.appendChild(modal);
@@ -295,177 +287,147 @@ export function initAccount(ctx) {
   function render() {
     let contentHtml = '';
 
-    if (activeTab === 'forgot') {
-      // Form Quên mật khẩu
+    if (currentView === 'register') {
+      // ================= VIEW: ĐĂNG KÝ (khi bấm "tại đây") =================
       contentHtml = `
-        <h3 style="margin: 0 0 6px; font-size: 1.25rem; font-weight: 800; color: #0f2347; text-align: center;">Khôi phục mật khẩu</h3>
-        <p class="cm-subtitle">Nhập Email hoặc Số điện thoại bạn đã đăng ký để beVIBE hỗ trợ đặt lại mật khẩu mới.</p>
+        <h2 class="cm-auth-title">Đăng ký</h2>
+        <p class="cm-auth-notice">Tạo tài khoản thành viên để lưu trữ giỏ hàng, nhận ưu đãi độc quyền và đặt hàng nhanh hơn tại beVIBE.</p>
 
-        ${formError ? `<div class="cm-alert cm-alert-error">${escapeHtml(formError)}</div>` : ''}
-        ${formSuccess ? `<div class="cm-alert cm-alert-success">${escapeHtml(formSuccess)}</div>` : ''}
+        ${formError ? `<div class="cm-auth-alert-err">${escapeHtml(formError)}</div>` : ''}
+        ${formSuccess ? `<div class="cm-auth-alert-ok">${escapeHtml(formSuccess)}</div>` : ''}
 
-        <form id="cmForgotForm" class="cm-auth-form" autocomplete="on">
-          <div class="cm-form-group">
-            <label class="cm-label">Email hoặc Số điện thoại <span class="req">*</span></label>
-            <div class="cm-input-wrapper">
-              <input type="text" name="identifier" class="cm-input" placeholder="Ví dụ: yourname@gmail.com hoặc 0912345678" required autofocus>
-            </div>
+        <form id="cmRegisterForm" class="cm-auth-form" autocomplete="off">
+          <div class="cm-auth-input-group">
+            <input type="text" name="name" class="cm-auth-input" placeholder="Họ và tên của bạn" required autofocus>
           </div>
 
-          <button type="submit" class="cm-submit-btn" style="margin-top: 6px;">
-            <span>Gửi yêu cầu khôi phục</span>
+          <div class="cm-auth-input-group">
+            <input type="tel" name="phone" class="cm-auth-input" placeholder="Số điện thoại nhận hàng" required>
+          </div>
+
+          <div class="cm-auth-input-group">
+            <input type="email" name="email" class="cm-auth-input" placeholder="Email của bạn" required>
+          </div>
+
+          <div class="cm-auth-input-group cm-auth-pw-wrap">
+            <input type="password" name="password" class="cm-auth-input has-eye" placeholder="Nhập mật khẩu (tối thiểu 6 ký tự)" minlength="6" required>
+            <button type="button" class="cm-auth-pw-toggle" data-toggle-pw aria-label="Hiện/ẩn mật khẩu">
+              ${EYE_OPEN_ICON}
+            </button>
+          </div>
+
+          <div class="cm-auth-input-group cm-auth-pw-wrap">
+            <input type="password" name="confirmPassword" class="cm-auth-input has-eye" placeholder="Xác nhận mật khẩu" minlength="6" required>
+            <button type="button" class="cm-auth-pw-toggle" data-toggle-pw aria-label="Hiện/ẩn mật khẩu">
+              ${EYE_OPEN_ICON}
+            </button>
+          </div>
+
+          <div class="cm-auth-options" style="margin-bottom: 16px;">
+            <label class="cm-auth-remember">
+              <input type="checkbox" name="remember" checked>
+              <span>Lưu trạng thái đăng nhập 60 ngày</span>
+            </label>
+          </div>
+
+          <button type="submit" class="cm-btn-submit-main">
+            Đăng ký
           </button>
         </form>
 
-        <div class="cm-switch-wrap" style="margin-top: 20px;">
-          <button type="button" class="cm-switch-btn" data-switch="login" style="color: #0284c7; font-weight: 700;">
-            ← Quay lại đăng nhập
+        <div class="cm-auth-divider">
+          <span>Hoặc</span>
+        </div>
+
+        <button type="button" class="cm-btn-google-social" id="btnGoogleAuth" style="margin-bottom: 10px;">
+          ${GOOGLE_ICON}
+          <span>Đăng nhập với Google</span>
+        </button>
+
+        <button type="button" class="cm-btn-facebook" id="btnFacebookAuth">
+          ${FB_ICON}
+          <span>Đăng nhập với facebook</span>
+        </button>
+
+        <div class="cm-auth-footer-text">
+          Bạn đã có Tài khoản? Vui lòng Đăng nhập <button type="button" class="cm-auth-link-here" data-view="login">tại đây</button>
+        </div>
+      `;
+    } else if (currentView === 'forgot') {
+      // ================= VIEW: LẤY LẠI MẬT KHẨU =================
+      contentHtml = `
+        <h2 class="cm-auth-title">Lấy lại mật khẩu</h2>
+        <p class="cm-auth-notice">Vui lòng nhập Email hoặc Số điện thoại bạn đã dùng khi đăng ký. beVIBE sẽ hỗ trợ bạn đặt lại mật khẩu mới.</p>
+
+        ${formError ? `<div class="cm-auth-alert-err">${escapeHtml(formError)}</div>` : ''}
+        ${formSuccess ? `<div class="cm-auth-alert-ok">${escapeHtml(formSuccess)}</div>` : ''}
+
+        <form id="cmForgotForm" class="cm-auth-form" autocomplete="on">
+          <div class="cm-auth-input-group">
+            <input type="text" name="identifier" class="cm-auth-input" placeholder="Email hoặc số điện thoại của bạn" required autofocus>
+          </div>
+
+          <button type="submit" class="cm-btn-submit-main" style="margin-top: 6px;">
+            Gửi yêu cầu lấy lại mật khẩu
           </button>
+        </form>
+
+        <div class="cm-auth-footer-text" style="margin-top: 24px;">
+          Quay lại Đăng nhập <button type="button" class="cm-auth-link-here" data-view="login">tại đây</button>
         </div>
       `;
     } else {
-      // Thanh Tabs Đăng nhập | Đăng ký phong cách Cỏ Mềm (KHÔNG có Counselor)
-      const tabsHtml = `
-        <div class="cm-tabs-bar">
-          <button type="button" class="cm-tab-item ${activeTab === 'login' ? 'active' : ''}" data-switch="login">
-            ĐĂNG NHẬP
+      // ================= VIEW MẶC ĐỊNH: ĐĂNG NHẬP (GIỐNG 100% ẢNH COMEM.VN) =================
+      contentHtml = `
+        <h2 class="cm-auth-title">Đăng nhập</h2>
+        <p class="cm-auth-notice">Vui lòng đăng nhập để lưu trữ giỏ hàng, nhận ưu đãi độc quyền và theo dõi đơn hàng của bạn.</p>
+
+        ${formError ? `<div class="cm-auth-alert-err">${escapeHtml(formError)}</div>` : ''}
+        ${formSuccess ? `<div class="cm-auth-alert-ok">${escapeHtml(formSuccess)}</div>` : ''}
+
+        <form id="cmLoginForm" class="cm-auth-form" autocomplete="on">
+          <div class="cm-auth-input-group">
+            <input type="text" name="identifier" class="cm-auth-input" placeholder="Email của bạn" autocomplete="username" required autofocus>
+          </div>
+
+          <div class="cm-auth-input-group cm-auth-pw-wrap">
+            <input type="password" name="password" class="cm-auth-input has-eye" placeholder="Nhập mật khẩu" autocomplete="current-password" required>
+            <button type="button" class="cm-auth-pw-toggle" data-toggle-pw aria-label="Hiện/ẩn mật khẩu">
+              ${EYE_OPEN_ICON}
+            </button>
+          </div>
+
+          <div class="cm-auth-options">
+            <label class="cm-auth-remember">
+              <input type="checkbox" name="remember" checked>
+              <span>Lưu trạng thái đăng nhập 60 ngày</span>
+            </label>
+            <button type="button" class="cm-auth-forgot" data-view="forgot">Lấy lại mật khẩu</button>
+          </div>
+
+          <button type="submit" class="cm-btn-submit-main">
+            Đăng nhập
           </button>
-          <button type="button" class="cm-tab-item ${activeTab === 'register' ? 'active' : ''}" data-switch="register">
-            ĐĂNG KÝ
-          </button>
+        </form>
+
+        <div class="cm-auth-divider">
+          <span>Hoặc</span>
+        </div>
+
+        <button type="button" class="cm-btn-google-social" id="btnGoogleAuth" style="margin-bottom: 10px;">
+          ${GOOGLE_ICON}
+          <span>Đăng nhập với Google</span>
+        </button>
+
+        <button type="button" class="cm-btn-facebook" id="btnFacebookAuth">
+          ${FB_ICON}
+          <span>Đăng nhập với facebook</span>
+        </button>
+
+        <div class="cm-auth-footer-text">
+          Bạn chưa có Tài khoản? Vui lòng đăng ký Tài khoản mới <button type="button" class="cm-auth-link-here" data-view="register">tại đây</button>
         </div>
       `;
-
-      if (activeTab === 'login') {
-        // FORM ĐĂNG NHẬP (Cỏ Mềm Style)
-        contentHtml = `
-          ${tabsHtml}
-          <p class="cm-subtitle">Đăng nhập tài khoản để nhận đặc quyền thành viên & theo dõi đơn hàng của bạn.</p>
-
-          ${formError ? `<div class="cm-alert cm-alert-error">${escapeHtml(formError)}</div>` : ''}
-          ${formSuccess ? `<div class="cm-alert cm-alert-success">${escapeHtml(formSuccess)}</div>` : ''}
-
-          <form id="cmLoginForm" class="cm-auth-form" autocomplete="on">
-            <div class="cm-form-group">
-              <label class="cm-label">Email hoặc Số điện thoại <span class="req">*</span></label>
-              <div class="cm-input-wrapper">
-                <input type="text" name="identifier" class="cm-input" placeholder="Nhập email hoặc số điện thoại" autocomplete="username" required autofocus>
-              </div>
-            </div>
-
-            <div class="cm-form-group">
-              <label class="cm-label">Mật khẩu <span class="req">*</span></label>
-              <div class="cm-input-wrapper">
-                <input type="password" name="password" class="cm-input has-eye" placeholder="Nhập mật khẩu của bạn" autocomplete="current-password" required>
-                <button type="button" class="cm-eye-btn" data-toggle-pw aria-label="Hiện/ẩn mật khẩu">
-                  ${EYE_OPEN_ICON}
-                </button>
-              </div>
-            </div>
-
-            <div class="cm-options-row">
-              <label class="cm-remember">
-                <input type="checkbox" name="remember" checked>
-                <span>Ghi nhớ đăng nhập</span>
-              </label>
-              <button type="button" class="cm-forgot-link" data-switch="forgot">Quên mật khẩu?</button>
-            </div>
-
-            <button type="submit" class="cm-submit-btn">
-              <span>ĐĂNG NHẬP</span>
-            </button>
-          </form>
-
-          <div class="cm-divider">
-            <span>Hoặc tiếp tục với</span>
-          </div>
-
-          <button type="button" class="cm-google-btn" id="btnGoogleAuth">
-            ${GOOGLE_ICON}
-            <span>Tiếp tục với Google</span>
-          </button>
-
-          <div class="cm-switch-wrap">
-            Bạn chưa có tài khoản?
-            <button type="button" class="cm-switch-btn" data-switch="register">Đăng ký ngay</button>
-          </div>
-        `;
-      } else {
-        // FORM ĐĂNG KÝ (Cỏ Mềm Style)
-        contentHtml = `
-          ${tabsHtml}
-          <p class="cm-subtitle">Tạo tài khoản để tích điểm & nhận các chương trình ưu đãi độc quyền từ beVIBE.</p>
-
-          ${formError ? `<div class="cm-alert cm-alert-error">${escapeHtml(formError)}</div>` : ''}
-          ${formSuccess ? `<div class="cm-alert cm-alert-success">${escapeHtml(formSuccess)}</div>` : ''}
-
-          <form id="cmRegisterForm" class="cm-auth-form" autocomplete="off">
-            <div class="cm-form-group">
-              <label class="cm-label">Họ và tên <span class="req">*</span></label>
-              <div class="cm-input-wrapper">
-                <input type="text" name="name" class="cm-input" placeholder="Ví dụ: Nguyễn Thị Mai" required autofocus>
-              </div>
-            </div>
-
-            <div class="cm-form-group">
-              <label class="cm-label">Số điện thoại <span class="req">*</span></label>
-              <div class="cm-input-wrapper">
-                <input type="tel" name="phone" class="cm-input" placeholder="Ví dụ: 0912 345 678" required>
-              </div>
-            </div>
-
-            <div class="cm-form-group">
-              <label class="cm-label">Địa chỉ Email <span class="req">*</span></label>
-              <div class="cm-input-wrapper">
-                <input type="email" name="email" class="cm-input" placeholder="Ví dụ: yourname@gmail.com" required>
-              </div>
-            </div>
-
-            <div class="cm-form-group">
-              <label class="cm-label">Mật khẩu <span class="req">*</span></label>
-              <div class="cm-input-wrapper">
-                <input type="password" name="password" class="cm-input has-eye" placeholder="Mật khẩu từ 6 ký tự trở lên" minlength="6" required>
-                <button type="button" class="cm-eye-btn" data-toggle-pw aria-label="Hiện/ẩn mật khẩu">
-                  ${EYE_OPEN_ICON}
-                </button>
-              </div>
-            </div>
-
-            <div class="cm-form-group">
-              <label class="cm-label">Xác nhận mật khẩu <span class="req">*</span></label>
-              <div class="cm-input-wrapper">
-                <input type="password" name="confirmPassword" class="cm-input has-eye" placeholder="Nhập lại mật khẩu" minlength="6" required>
-                <button type="button" class="cm-eye-btn" data-toggle-pw aria-label="Hiện/ẩn mật khẩu">
-                  ${EYE_OPEN_ICON}
-                </button>
-              </div>
-            </div>
-
-            <label class="cm-terms">
-              <input type="checkbox" name="agree" checked required>
-              <span>Tôi đồng ý với Điều khoản dịch vụ và Chính sách bảo mật của beVIBE</span>
-            </label>
-
-            <button type="submit" class="cm-submit-btn">
-              <span>ĐĂNG KÝ TÀI KHOẢN</span>
-            </button>
-          </form>
-
-          <div class="cm-divider">
-            <span>Hoặc đăng ký nhanh với</span>
-          </div>
-
-          <button type="button" class="cm-google-btn" id="btnGoogleAuth">
-            ${GOOGLE_ICON}
-            <span>Tiếp tục với Google</span>
-          </button>
-
-          <div class="cm-switch-wrap">
-            Bạn đã có tài khoản?
-            <button type="button" class="cm-switch-btn" data-switch="login">Đăng nhập ngay</button>
-          </div>
-        `;
-      }
     }
 
     body.innerHTML = contentHtml;
@@ -473,11 +435,11 @@ export function initAccount(ctx) {
   }
 
   function bindModalEvents() {
-    // Chuyển tab Đăng nhập / Đăng ký / Quên mật khẩu
-    body.querySelectorAll('[data-switch]').forEach((el) => {
+    // Chuyển view qua các nút "tại đây", "Lấy lại mật khẩu"
+    body.querySelectorAll('[data-view]').forEach((el) => {
       el.addEventListener('click', (e) => {
         e.preventDefault();
-        activeTab = el.getAttribute('data-switch');
+        currentView = el.getAttribute('data-view');
         formError = '';
         formSuccess = '';
         render();
@@ -488,7 +450,7 @@ export function initAccount(ctx) {
     body.querySelectorAll('[data-toggle-pw]').forEach((btnToggle) => {
       btnToggle.addEventListener('click', (e) => {
         e.preventDefault();
-        const wrapper = btnToggle.closest('.cm-input-wrapper');
+        const wrapper = btnToggle.closest('.cm-auth-pw-wrap');
         const input = wrapper ? wrapper.querySelector('input') : null;
         if (!input) return;
         if (input.type === 'password') {
@@ -531,7 +493,6 @@ export function initAccount(ctx) {
           createdAt: new Date().toISOString()
         };
 
-        // Lưu tài khoản cục bộ
         const existingList = readJson(STORAGE_CUSTOMERS, []);
         const already = existingList.find((c) => c.email && c.email.toLowerCase() === cleanEmail);
         if (!already) {
@@ -557,6 +518,45 @@ export function initAccount(ctx) {
       });
     }
 
+    // Nút Facebook Sign In
+    const btnFacebook = body.querySelector('#btnFacebookAuth');
+    if (btnFacebook) {
+      btnFacebook.addEventListener('click', (e) => {
+        e.preventDefault();
+        const fbPrompt = prompt('Nhập tên hoặc Email Facebook của bạn để đăng nhập:', '');
+        if (!fbPrompt) return;
+
+        const fbUser = fbPrompt.trim();
+        const customer = {
+          id: `CUST-FB-${Date.now()}`,
+          name: fbUser,
+          email: fbUser.includes('@') ? fbUser : '',
+          phone: '',
+          role: 'customer',
+          createdAt: new Date().toISOString()
+        };
+
+        const existingList = readJson(STORAGE_CUSTOMERS, []);
+        writeJson(STORAGE_CUSTOMERS, [...existingList, customer]);
+        useCustomer(customer);
+
+        sendOrderToSupabase({
+          order_type: 'Khách hàng đăng nhập Facebook',
+          customer_name: customer.name,
+          phone: '',
+          email: customer.email,
+          clinic_or_spa: 'Khách hàng cá nhân',
+          collaboration_need: 'Đăng nhập Facebook (comem style)',
+          note: `Khách hàng Facebook: ${fbUser}`,
+          total_amount: 0
+        }).catch(() => {});
+
+        closeModal();
+        renderButton();
+        showToast(`Đăng nhập Facebook thành công! Xin chào ${customer.name} ✓`);
+      });
+    }
+
     // Submit: Form Đăng nhập
     const formLogin = body.querySelector('#cmLoginForm');
     if (formLogin) {
@@ -567,7 +567,7 @@ export function initAccount(ctx) {
         const password = String(formLogin.querySelector('[name="password"]')?.value || '').trim();
 
         if (!identifier) {
-          formError = 'Vui lòng nhập Email hoặc Số điện thoại.';
+          formError = 'Vui lòng nhập Email hoặc Số điện thoại của bạn.';
           render();
           return;
         }
@@ -580,7 +580,7 @@ export function initAccount(ctx) {
         const allCustomers = readJson(STORAGE_CUSTOMERS, []);
         const cleanId = identifier.toLowerCase();
 
-        // Tìm kiếm khách hàng theo email hoặc phone
+        // Tìm khách hàng đã lưu
         let found = allCustomers.find((c) =>
           (c.email && c.email.toLowerCase() === cleanId) ||
           (c.phone && c.phone.replace(/\D/g, '') === cleanId.replace(/\D/g, ''))
@@ -588,12 +588,12 @@ export function initAccount(ctx) {
 
         if (found) {
           if (found.password && found.password !== password) {
-            formError = 'Mật khẩu chưa chính xác. Vui lòng kiểm tra lại hoặc bấm "Quên mật khẩu?".';
+            formError = 'Mật khẩu chưa chính xác. Vui lòng kiểm tra lại hoặc bấm "Lấy lại mật khẩu".';
             render();
             return;
           }
         } else {
-          // Khách hàng đăng nhập lần đầu từ thiết bị mới -> Tự động khởi tạo tài khoản và đồng bộ
+          // Lần đầu đăng nhập trên thiết bị mới -> Khởi tạo tài khoản và đồng bộ
           const isMail = cleanId.includes('@');
           const defaultName = isMail ? cleanId.split('@')[0] : `Khách hàng ${cleanId.slice(-4)}`;
           found = {
@@ -611,7 +611,7 @@ export function initAccount(ctx) {
         // Đăng nhập
         useCustomer(found);
 
-        // Lưu & đồng bộ lên Supabase
+        // Đồng bộ lên Supabase
         sendOrderToSupabase({
           order_type: 'Khách hàng đăng nhập',
           customer_name: found.name,
@@ -629,7 +629,7 @@ export function initAccount(ctx) {
       });
     }
 
-    // Submit: Form Đăng ký
+    // Submit: Form Đăng ký (khi mở form đăng ký)
     const formRegister = body.querySelector('#cmRegisterForm');
     if (formRegister) {
       formRegister.addEventListener('submit', (e) => {
@@ -648,7 +648,7 @@ export function initAccount(ctx) {
           return;
         }
         if (!phone || phone.replace(/\D/g, '').length < 9) {
-          formError = 'Vui lòng nhập số điện thoại hợp lệ (từ 10 chữ số).';
+          formError = 'Vui lòng nhập số điện thoại hợp lệ.';
           render();
           return;
         }
@@ -677,7 +677,7 @@ export function initAccount(ctx) {
         );
 
         if (dup) {
-          formError = 'Email hoặc số điện thoại này đã có tài khoản. Vui lòng bấm tab "ĐĂNG NHẬP".';
+          formError = 'Email hoặc số điện thoại này đã có tài khoản. Vui lòng bấm "Đăng nhập tại đây".';
           render();
           return;
         }
@@ -692,10 +692,7 @@ export function initAccount(ctx) {
           createdAt: new Date().toISOString()
         };
 
-        // Lưu vào LocalStorage
         writeJson(STORAGE_CUSTOMERS, [...allCustomers, newCustomer]);
-
-        // Đăng nhập ngay lập tức
         useCustomer(newCustomer);
 
         // Lưu hồ sơ lên Supabase
@@ -723,12 +720,11 @@ export function initAccount(ctx) {
         e.preventDefault();
         const identifier = String(formForgot.querySelector('[name="identifier"]')?.value || '').trim();
         if (!identifier) {
-          formError = 'Vui lòng nhập Email hoặc Số điện thoại.';
+          formError = 'Vui lòng nhập Email hoặc Số điện thoại của bạn.';
           render();
           return;
         }
 
-        // Ghi nhận yêu cầu hỗ trợ lên Supabase
         sendOrderToSupabase({
           order_type: 'Yêu cầu khôi phục mật khẩu',
           customer_name: identifier,
@@ -741,14 +737,14 @@ export function initAccount(ctx) {
         }).catch(() => {});
 
         formError = '';
-        formSuccess = `beVIBE đã ghi nhận yêu cầu khôi phục mật khẩu cho ${identifier}. Bộ phận CSKH sẽ hỗ trợ bạn qua email/SĐT hoặc hotline 033 828 2112.`;
+        formSuccess = `beVIBE đã ghi nhận yêu cầu lấy lại mật khẩu cho ${identifier}. Bộ phận CSKH sẽ hỗ trợ bạn qua email/SĐT hoặc hotline 033 828 2112.`;
         render();
       });
     }
   }
 
-  function openModal(tab = 'login') {
-    activeTab = tab === 'register' ? 'register' : 'login';
+  function openModal(view = 'login') {
+    currentView = view === 'register' ? 'register' : (view === 'forgot' ? 'forgot' : 'login');
     formError = '';
     formSuccess = '';
     render();
@@ -787,10 +783,8 @@ export function initAccount(ctx) {
     });
   }
 
-  // Khởi tạo trạng thái ban đầu
   renderButton();
 
-  // Khởi tạo backend Supabase / Firebase nếu có
   loadBackend()
     .then((b) => {
       if (b && typeof b.onAuthChange === 'function') {
@@ -804,7 +798,6 @@ export function initAccount(ctx) {
     })
     .catch(() => {});
 
-  // Gán thông tin khách hàng hiện tại vào giỏ hàng nếu đã đăng nhập trước đó
   const localCust = getCurrentCustomer();
   if (localCust && localCust.id) {
     shop.switchAccount(`cust-${localCust.id}`);
