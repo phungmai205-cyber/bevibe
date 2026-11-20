@@ -498,17 +498,112 @@ function render() {
   document.querySelectorAll('.adm-nav a').forEach((a) => a.classList.toggle('is-active', a.dataset.view === state.view));
   $('#admUpdated').textContent = `${state.demo ? 'Dữ liệu mẫu · ' : ''}Cập nhật ${fmtDateTime(state.data.generatedAt)}${def.period ? ` · ${periodLabel()}` : ''}`;
 
-  // New orders + new requests from returning customers (both wait in "Đơn hàng")
-  const newOrders = state.data.orders.filter((o) => o.status === 'Mới').length
-    + state.data.leads.filter((l) => l.fromBuyer && l.status === 'Mới').length;
-  const newLeads = state.data.leads.filter((l) => l.status === 'Mới' && !l.converted).length;
+  // New orders (chỉ đếm đơn đặt hàng thực tế)
+  const newOrders = state.data.orders.filter((o) => o.status === 'Mới').length;
+  const newLeads = state.data.leads.filter((l) => l.status === 'Mới').length;
   $('#admNewOrders').hidden = !newOrders;
   $('#admNewOrders').textContent = newOrders;
   $('#admNewLeads').hidden = !newLeads;
   $('#admNewLeads').textContent = newLeads;
 
+  updateNotificationUI();
+
   const views = { 'bao-cao': renderReport, 'don-hang': renderOrders, 'khach-hang': renderCustomers, 'huy-hoan': renderFailed, 'tiem-nang': renderLeads, 'chi-phi': renderCosts };
   content().innerHTML = views[state.view]();
+}
+
+/* ==========================================================================
+   Chuông thông báo hệ thống (Counselor quên mã, đăng ký mới, v.v.)
+   ========================================================================== */
+const NOTIF_READ_KEY = 'bevibe_admin_read_notifs_v1';
+
+function getReadNotifIds() {
+  return storeGet(localStorage, NOTIF_READ_KEY, []);
+}
+
+function markAllNotifsRead() {
+  const notifs = getSystemNotifications();
+  const ids = notifs.map((n) => n.id);
+  storeSet(localStorage, NOTIF_READ_KEY, ids);
+  updateNotificationUI();
+}
+
+function getSystemNotifications() {
+  if (!state.data || !state.data.leads) return [];
+  const list = [];
+  state.data.leads.forEach((l) => {
+    const isForgot = String(l.type || '').toLowerCase().includes('quên') || String(l.note || '').toLowerCase().includes('lấy lại mã');
+    const isCslReg = String(l.type || '').toLowerCase().includes('tư vấn viên') || String(l.customerType || '').toLowerCase().includes('tư vấn viên');
+    const isWholesale = String(l.customerType || '').toLowerCase().includes('sỉ');
+
+    if (isForgot) {
+      list.push({
+        id: l.id,
+        badge: 'Quên mã Counselor',
+        badgeCls: 'danger',
+        title: `Counselor yêu cầu lấy lại mã`,
+        desc: `${l.name} · SĐT: ${l.phone || 'Chưa có'}${l.email ? ` · ${l.email}` : ''}`,
+        date: l._date,
+        leadId: l.id
+      });
+    } else if (isCslReg) {
+      list.push({
+        id: l.id,
+        badge: 'Counselor mới',
+        badgeCls: 'primary',
+        title: `Đăng ký Counselor mới`,
+        desc: `${l.name} · SĐT: ${l.phone || 'Chưa có'}`,
+        date: l._date,
+        leadId: l.id
+      });
+    } else if (isWholesale) {
+      list.push({
+        id: l.id,
+        badge: 'Khách sỉ',
+        badgeCls: 'warn',
+        title: `Yêu cầu hợp tác sỉ / Spa`,
+        desc: `${l.name} · SĐT: ${l.phone || 'Chưa có'}${l.interest ? ` (${l.interest})` : ''}`,
+        date: l._date,
+        leadId: l.id
+      });
+    }
+  });
+
+  list.sort((a, b) => (b.date ? b.date.getTime() : 0) - (a.date ? a.date.getTime() : 0));
+  return list;
+}
+
+function updateNotificationUI() {
+  const btn = $('#admNotifyBtn');
+  const badge = $('#admNotifyBadge');
+  const listEl = $('#admNotifyList');
+  if (!btn || !badge || !listEl) return;
+
+  const notifs = getSystemNotifications();
+  const readIds = new Set(getReadNotifIds());
+  const unreadCount = notifs.filter((n) => !readIds.has(n.id)).length;
+
+  badge.hidden = unreadCount === 0;
+  badge.textContent = unreadCount > 99 ? '99+' : unreadCount;
+
+  if (!notifs.length) {
+    listEl.innerHTML = '<li class="adm-notify-empty">Không có thông báo nào</li>';
+    return;
+  }
+
+  listEl.innerHTML = notifs.slice(0, 30).map((n) => {
+    const isUnread = !readIds.has(n.id);
+    return `
+      <li class="adm-notify-item ${isUnread ? 'is-unread' : ''}" data-act="open-lead" data-id="${esc(n.leadId)}">
+        <div class="adm-notify-item-title">
+          <span>${esc(n.title)}</span>
+          <span class="adm-chip adm-chip-${n.badgeCls || 'muted'}" style="font-size:0.68rem;padding:1px 6px;">${esc(n.badge)}</span>
+        </div>
+        <div class="adm-notify-item-desc">${esc(n.desc)}</div>
+        <div class="adm-notify-item-time">${fmtDateTime(n.date)}</div>
+      </li>
+    `;
+  }).join('');
 }
 
 /* ==========================================================================
@@ -775,31 +870,25 @@ function renderOrderList(group, opts = {}) {
   const unpaid = list.filter((o) => o.payStatus !== 'Đã thanh toán').reduce((s, o) => s + o.total, 0);
   const statuses = ORDER_GROUPS[group].statuses;
   const processing = group === 'processing';
-  const reqs = processing ? buyerRequests() : [];
-  const allReqs = processing ? buyerRequests(true) : [];
-  // Orders and returning customers' requests in one list, newest first
-  const merged = [...list.map((o) => ({ d: o._date, o })), ...reqs.map((l) => ({ d: l._date, l }))]
-    .sort((a, b) => (b.d ? b.d.getTime() : 0) - (a.d ? a.d.getTime() : 0));
-  const page = Math.min(f.page, Math.max(1, Math.ceil(merged.length / PAGE_SIZE)));
-  const pageItems = merged.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
-  const rows = pageItems.filter((x) => x.o).map((x) => x.o);
+  // Bảng Đơn hàng CHỈ ghi nhận các Đơn hàng thực tế, không lẫn yêu cầu hay quên mã
+  const page = Math.min(f.page, Math.max(1, Math.ceil(list.length / PAGE_SIZE)));
+  const rows = list.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
   // Tab counts follow every other filter (period, status, search…) except the customer type itself
   const base = filteredOrders(group, true);
   const groups = {};
   TYPE_TABS.forEach((t) => {
     const inTab = base.filter((o) => !t.key || o.typeKey === t.key);
-    const reqTab = allReqs.filter((l) => !t.key || typeKey(l.buyerType) === t.key);
     let alert = '';
-    if (processing) { const n = inTab.filter((o) => o.status === 'Mới').length + reqTab.length; alert = n ? `${n} mới` : ''; }
+    if (processing) { const n = inTab.filter((o) => o.status === 'Mới').length; alert = n ? `${n} mới` : ''; }
     if (group === 'failed') { const n = inTab.filter((o) => o.status === 'Hoàn hàng').length; alert = n ? `${n} hoàn` : ''; }
-    groups[t.key] = { count: inTab.length + reqTab.length, alert, alertTitle: processing ? 'Đơn mới chờ xác nhận và yêu cầu mới từ khách đã mua' : 'Đơn hoàn hàng' };
+    groups[t.key] = { count: inTab.length, alert, alertTitle: processing ? 'Đơn mới chờ xác nhận' : 'Đơn hoàn hàng' };
   });
 
   let summary;
   if (processing) {
-    const waiting = list.filter((o) => o.status === 'Mới').length + reqs.length;
-    summary = summaryBox('Đang xử lý', list.length + reqs.length)
+    const waiting = list.filter((o) => o.status === 'Mới').length;
+    summary = summaryBox('Đang xử lý', list.length)
       + summaryBox('Chờ xác nhận', waiting, waiting ? 'adm-warn-text' : '')
       + summaryBox('Tổng tiền', money(sum))
       + summaryBox('Chưa thu', money(unpaid), unpaid ? 'adm-warn-text' : '');
@@ -840,7 +929,7 @@ function renderOrderList(group, opts = {}) {
         ${select('payStatus', f.payStatus, state.data.options.payStatuses.map((s) => [s, s]), 'Mọi trạng thái TT')}
         <button type="button" class="adm-btn adm-btn-ghost adm-btn-sm" data-act="export-orders" data-group="${group}">Xuất CSV</button>
       </div>
-      <p class="adm-muted adm-result-meta">${tabLabel} · ${list.length + reqs.length} ${opts.purchase ? 'lần mua thành công' : 'đơn'}${opts.note ? ` · ${opts.note}` : ''}</p>
+      <p class="adm-muted adm-result-meta">${tabLabel} · ${list.length} ${opts.purchase ? 'lần mua thành công' : 'đơn'}${opts.note ? ` · ${opts.note}` : ''}</p>
       ${rows.length && opts.purchase ? `
       <div class="adm-table-wrap"><table class="adm-table">
         <thead><tr><th>Khách hàng</th><th>${orgHead}</th><th>Sản phẩm đã mua</th><th>Ngày mua</th><th class="num">Thành tiền</th><th>Thanh toán</th></tr></thead>
@@ -855,10 +944,10 @@ function renderOrderList(group, opts = {}) {
             <td class="num"><b>${money(o.total)}</b></td>
             <td>${o.pay === 'bank' ? 'Thanh toán ngay' : 'COD'}<br>${chip(o.payStatus, PAY_CLASS[o.payStatus])}</td>
           </tr>`).join('')}</tbody>
-      </table></div>${pager(list.length, page, group)}` : rows.length || reqs.length ? `
+      </table></div>${pager(list.length, page, group)}` : rows.length ? `
       <div class="adm-table-wrap"><table class="adm-table">
         <thead><tr><th>Mã đơn</th><th>Thời gian</th><th>Khách hàng</th><th>${orgHead}</th><th class="num">Tổng tiền</th>${failed ? '<th>Lý do</th>' : '<th>Thanh toán</th>'}<th>Trạng thái</th>${processing ? '<th style="min-width:180px">Thao tác nhanh</th>' : ''}</tr></thead>
-        <tbody>${pageItems.map(({ o, l }) => (l ? requestRowHtml(l, orgTab) : `
+        <tbody>${rows.map((o) => `
           <tr data-act="open-order" data-code="${esc(o.code)}" tabindex="0">
             <td><b>${esc(o.code)}</b></td>
             <td>${fmtDateTime(o._date)}</td>
@@ -877,8 +966,8 @@ function renderOrderList(group, opts = {}) {
                 <button type="button" class="adm-btn adm-btn-xs adm-btn-success" data-act="quick-complete-inline" data-code="${esc(o.code)}" title="Shipper đã giao xong và thu tiền COD (ghi nhận doanh thu)">✓ Thu tiền & Hoàn tất</button>
               </div>
             </td>` : ''}
-          </tr>`)).join('')}</tbody>
-      </table></div>${pager(merged.length, page, group)}` : `<p class="adm-empty">${opts.empty || 'Không có đơn nào phù hợp.'}</p>`}
+          </tr>`).join('')}</tbody>
+      </table></div>${pager(list.length, page, group)}` : `<p class="adm-empty">${opts.empty || 'Không có đơn nào phù hợp.'}</p>`}
     </section>
     ${opts.after || ''}`;
 }
@@ -2094,6 +2183,47 @@ function bindEvents() {
   }));
 
   $('#admRefresh').addEventListener('click', () => loadData(true));
+
+  // Chuông thông báo
+  const notifyBtn = $('#admNotifyBtn');
+  const notifyDropdown = $('#admNotifyDropdown');
+  const notifyClear = $('#admNotifyClear');
+  if (notifyBtn && notifyDropdown) {
+    notifyBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      notifyDropdown.hidden = !notifyDropdown.hidden;
+    });
+    document.addEventListener('click', (e) => {
+      if (!notifyDropdown.hidden && !e.target.closest('#admNotifyWrap')) {
+        notifyDropdown.hidden = true;
+      }
+    });
+  }
+  if (notifyClear) {
+    notifyClear.addEventListener('click', (e) => {
+      e.stopPropagation();
+      markAllNotifsRead();
+    });
+  }
+
+  // Click vào item thông báo -> mở chi tiết và đánh dấu đã đọc
+  const notifyList = $('#admNotifyList');
+  if (notifyList) {
+    notifyList.addEventListener('click', (e) => {
+      const item = e.target.closest('.adm-notify-item');
+      if (!item) return;
+      const leadId = item.dataset.id;
+      if (leadId) {
+        const readIds = getReadNotifIds();
+        if (!readIds.includes(leadId)) {
+          storeSet(localStorage, NOTIF_READ_KEY, [...readIds, leadId]);
+          updateNotificationUI();
+        }
+        if (notifyDropdown) notifyDropdown.hidden = true;
+        leadDrawer(leadId);
+      }
+    });
+  }
   $('#admLogout').addEventListener('click', () => signOut(false));
   $('#admChangePw').addEventListener('click', passwordDrawer);
   $('#admDrawerClose').addEventListener('click', closeDrawer);

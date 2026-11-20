@@ -90,6 +90,25 @@
               <label><span>Đến</span><input type="date" id="admTo" aria-label="Đến ngày"></label>
             </span>
           </div>
+          <div class="adm-notify-wrap" id="admNotifyWrap">
+            <button type="button" class="adm-btn adm-btn-ghost adm-notify-btn" id="admNotifyBtn" title="Thông báo hệ thống" aria-label="Thông báo">
+              <svg viewBox="0 0 24 24" aria-hidden="true" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+              </svg>
+              <span class="adm-notify-badge" id="admNotifyBadge" hidden>0</span>
+            </button>
+            <div class="adm-notify-dropdown" id="admNotifyDropdown" hidden>
+              <div class="adm-notify-head">
+                <h3>
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                  Thông báo hệ thống
+                </h3>
+                <button type="button" class="adm-notify-clear" id="admNotifyClear">Đã xem tất cả</button>
+              </div>
+              <ul class="adm-notify-list" id="admNotifyList"></ul>
+            </div>
+          </div>
           <button type="button" class="adm-btn adm-btn-ghost" id="admRefresh" title="Tải lại dữ liệu">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23 4v6h-6M1 20v-6h6M3.5 9a9 9 0 0 1 14.9-3.4L23 10M1 14l4.6 4.4A9 9 0 0 0 20.5 15" /></svg>
             <span>Tải lại</span>
