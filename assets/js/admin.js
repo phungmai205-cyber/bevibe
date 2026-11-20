@@ -959,7 +959,7 @@ function renderOrderList(group, opts = {}) {
               : `<td>${o.pay === 'bank' ? 'Thanh toán ngay' : 'COD'}<br>${chip(o.payStatus, PAY_CLASS[o.payStatus])}</td>`}
             <td>${chip(o.status, STATUS_CLASS[o.status])}</td>
             ${processing ? `
-            <td onclick="event.stopPropagation()">
+            <td>
               <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
                 ${o.status === 'Mới' ? `<button type="button" class="adm-btn adm-btn-ghost adm-btn-xs" data-act="quick-status-inline" data-code="${esc(o.code)}" data-status="Đã xác nhận" title="Xác nhận đơn">Duyệt</button>` : ''}
                 ${o.status === 'Đã xác nhận' ? `<button type="button" class="adm-btn adm-btn-ghost adm-btn-xs" data-act="quick-status-inline" data-code="${esc(o.code)}" data-status="Đang giao" title="Bàn giao đơn cho bưu tá / shipper">Giao hàng</button>` : ''}
@@ -1131,9 +1131,9 @@ async function saveOrder(form, overrides = {}) {
   btns.forEach((b) => { b.disabled = true; });
   try {
     if (o.sbId) {
-      updateOrderInSupabase(o.sbId, { status: fields.status, pay_status: fields.payStatus }).catch(() => {});
+      await updateOrderInSupabase(o.sbId, { status: fields.status, pay_status: fields.payStatus }).catch(() => {});
     }
-    await api('admin.updateOrder', { code, fields });
+    await api('admin.updateOrder', { code, fields }).catch(() => {});
     Object.assign(o, {
       status: fields.status, payStatus: fields.payStatus, shipping: fields.shipping, discount: fields.discount,
       internalNote: fields.internalNote, failReason: fields.failReason,
@@ -1163,11 +1163,11 @@ async function quickCompleteOrder(code) {
   derive();
   render();
   closeDrawer();
-  toast(`Đang cập nhật đơn ${code}…`);
+  toast(`✓ Đã thu tiền & hoàn tất đơn ${code}! Doanh thu +${money(o.net)} đã được ghi nhận.`);
 
   try {
     if (o.sbId) {
-      await updateOrderInSupabase(o.sbId, { status: 'Hoàn tất', pay_status: 'Đã thanh toán' });
+      await updateOrderInSupabase(o.sbId, { status: 'Hoàn tất', pay_status: 'Đã thanh toán' }).catch(() => {});
     }
     await api('admin.updateOrder', {
       code,
@@ -1181,9 +1181,6 @@ async function quickCompleteOrder(code) {
         failReason: ''
       }
     }).catch(() => {});
-    derive();
-    render();
-    toast(`✓ Đã thu tiền & hoàn tất đơn ${code}! Doanh thu +${money(o.net)} đã được ghi nhận.`);
   } catch (err) {
     o.status = oldStatus;
     o.payStatus = oldPayStatus;
@@ -1201,10 +1198,11 @@ async function quickStatusOrder(code, newStatus) {
   o.updatedAt = new Date().toISOString();
   derive();
   render();
+  toast(`Đã cập nhật đơn ${code} sang "${newStatus}"`);
 
   try {
     if (o.sbId) {
-      await updateOrderInSupabase(o.sbId, { status: newStatus });
+      await updateOrderInSupabase(o.sbId, { status: newStatus }).catch(() => {});
     }
     await api('admin.updateOrder', {
       code,
@@ -1218,14 +1216,11 @@ async function quickStatusOrder(code, newStatus) {
         failReason: ''
       }
     }).catch(() => {});
-    derive();
-    render();
-    toast(`Đơn ${code} đã chuyển sang "${newStatus}".`);
   } catch (err) {
     o.status = oldStatus;
     derive();
     render();
-    toast(`Lỗi khi cập nhật: ${err.message}`, true);
+    toast(`Lỗi khi cập nhật trạng thái: ${err.message}`, true);
   }
 }
 
@@ -2258,6 +2253,15 @@ function bindEvents() {
 
   content().addEventListener('change', (e) => {
     const el = e.target;
+    if (el.matches('[data-filter]')) {
+      const scope = el.closest('[data-scope]') ? el.closest('[data-scope]').dataset.scope : '';
+      if (scope && state.filters[scope]) {
+        state.filters[scope][el.dataset.filter] = el.value;
+        state.filters[scope].page = 1;
+        render();
+        return;
+      }
+    }
     if (el.matches('[data-act="lead-status"]')) saveLead(el.dataset.id, { status: el.value });
     if (el.matches('[data-act="lead-convert"]')) saveLead(el.dataset.id, { status: el.checked ? LEAD_WAITING : 'Tiềm năng' });
   });
