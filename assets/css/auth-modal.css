@@ -542,3 +542,326 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
+
+
+/* ==========================================================================
+   Co Mem (comem.vn) Style Auth Modal Styles for beVIBE
+   ========================================================================== */
+.acct-dialog {
+  max-width: 440px !important;
+  padding: 32px 30px 26px !important;
+  border-radius: 20px !important;
+  background: #ffffff !important;
+  box-shadow: 0 20px 60px rgba(15, 35, 71, 0.2) !important;
+}
+
+.cm-modal-head {
+  text-align: center;
+  margin-bottom: 22px;
+}
+.cm-modal-logo {
+  display: block;
+  margin: 0 auto 6px;
+  height: 38px;
+  width: auto;
+  object-fit: contain;
+}
+.cm-modal-slogan {
+  font-size: 0.78rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #94a3b8;
+  font-weight: 600;
+  margin: 0;
+}
+
+/* Tabs: Đăng nhập / Đăng ký kiểu Cỏ Mềm */
+.cm-tabs-bar {
+  display: flex;
+  border-bottom: 2px solid #f1f5f9;
+  margin-bottom: 20px;
+}
+.cm-tab-item {
+  flex: 1;
+  padding: 12px 10px;
+  border: none;
+  background: transparent;
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: #64748b;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+.cm-tab-item:hover {
+  color: #0f2347;
+}
+.cm-tab-item.active {
+  color: #0f2347;
+}
+.cm-tab-item.active::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 15%;
+  right: 15%;
+  height: 3px;
+  background: #0f2347;
+  border-radius: 3px 3px 0 0;
+}
+
+.cm-subtitle {
+  font-size: 0.86rem;
+  color: #64748b;
+  text-align: center;
+  margin: 0 0 18px;
+  line-height: 1.45;
+}
+
+/* Form inputs */
+.cm-auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.cm-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  text-align: left;
+}
+.cm-label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #334155;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.cm-label .req {
+  color: #ef4444;
+}
+
+.cm-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.cm-input {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 0.92rem;
+  color: #1e293b;
+  background: #f8fafc;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+.cm-input:focus {
+  outline: none;
+  background: #ffffff;
+  border-color: #0f2347;
+  box-shadow: 0 0 0 3px rgba(15, 35, 71, 0.1);
+}
+.cm-input::placeholder {
+  color: #94a3b8;
+  font-size: 0.88rem;
+}
+.cm-input.has-eye {
+  padding-right: 42px;
+}
+
+/* Eye button toggle */
+.cm-eye-btn {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  padding: 6px;
+  cursor: pointer;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: color 0.15s;
+}
+.cm-eye-btn:hover {
+  color: #334155;
+}
+
+/* Options row: Remember & Forgot */
+.cm-options-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.84rem;
+  margin-top: -2px;
+}
+.cm-remember {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  color: #475569;
+  user-select: none;
+}
+.cm-remember input {
+  accent-color: #0f2347;
+  width: 15px;
+  height: 15px;
+  cursor: pointer;
+}
+.cm-forgot-link {
+  background: none;
+  border: none;
+  color: #0284c7;
+  font-size: 0.84rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: none;
+}
+.cm-forgot-link:hover {
+  text-decoration: underline;
+  color: #0369a1;
+}
+
+/* Submit button */
+.cm-submit-btn {
+  width: 100%;
+  padding: 13px;
+  background: #0f2347;
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 14px rgba(15, 35, 71, 0.2);
+  margin-top: 4px;
+}
+.cm-submit-btn:hover {
+  background: #18376e;
+  box-shadow: 0 6px 18px rgba(15, 35, 71, 0.28);
+  transform: translateY(-1px);
+}
+.cm-submit-btn:active {
+  transform: translateY(0);
+}
+
+/* Divider "Hoặc đăng nhập với" */
+.cm-divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 16px 0 14px;
+  color: #94a3b8;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.cm-divider::before,
+.cm-divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #e2e8f0;
+}
+.cm-divider span {
+  padding: 0 12px;
+}
+
+/* Nút Google chuẩn */
+.cm-google-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 11px 16px;
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #1e293b;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+.cm-google-btn:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+.cm-google-btn svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+/* Bottom switch link */
+.cm-switch-wrap {
+  text-align: center;
+  font-size: 0.86rem;
+  color: #64748b;
+  margin: 16px 0 0;
+}
+.cm-switch-btn {
+  background: none;
+  border: none;
+  color: #0f2347;
+  font-size: 0.86rem;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0;
+  margin-left: 4px;
+  text-decoration: underline;
+}
+.cm-switch-btn:hover {
+  color: #0284c7;
+}
+
+/* Alert boxes */
+.cm-alert {
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  margin-bottom: 12px;
+}
+.cm-alert-error {
+  background: #fef2f2;
+  border: 1px solid #fee2e2;
+  border-left: 3.5px solid #ef4444;
+  color: #b91c1c;
+}
+.cm-alert-success {
+  background: #f0fdf4;
+  border: 1px solid #dcfce7;
+  border-left: 3.5px solid #22c55e;
+  color: #15803d;
+}
+
+/* Terms checkbox */
+.cm-terms {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 0.8rem;
+  color: #64748b;
+  line-height: 1.4;
+  margin: 2px 0 4px;
+}
+.cm-terms input {
+  margin-top: 2px;
+  accent-color: #0f2347;
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
+}
