@@ -666,7 +666,6 @@ export const brandsData = [
         "usage": "Sau khi rửa mặt, thấm đẫm toner ra bông tẩy trang lau nhẹ theo chiều cấu tạo da, hoặc vỗ trực tiếp bằng lòng bàn tay 2-3 lớp theo phương pháp 7-Skin trứ danh Hàn Quốc.",
         "gallery": [
           "/assets/images/catalog/dr-bargo/drbargo-4-img-1.jpg",
-          "/assets/images/catalog/dr-bargo/drbargo-4-img-2.jpg",
           "/assets/images/catalog/dr-bargo/drbargo-4-img-3.jpg"
         ],
         "line": "drbargo-31c"
@@ -708,8 +707,7 @@ export const brandsData = [
         "usage": "Nhỏ 3-4 giọt serum trực tiếp lên trán và hai bên má. Dùng các đầu ngón tay vỗ nhẹ và massage hướng nâng cơ từ trong ra ngoài cho đến khi serum thẩm thấu hoàn toàn. Ngày 2 lần.",
         "gallery": [
           "/assets/images/catalog/dr-bargo/drbargo-3-img-1.jpg",
-          "/assets/images/catalog/dr-bargo/drbargo-3-img-2.jpg",
-          "/assets/images/catalog/dr-bargo/drbargo-3-img-3.jpg"
+          "/assets/images/catalog/dr-bargo/drbargo-3-img-2.jpg"
         ],
         "line": "drbargo-31c"
       },
@@ -750,8 +748,7 @@ export const brandsData = [
         "usage": "Sau bước Serum/Ampoule, lấy 2-3 pump sữa dưỡng ra lòng bàn tay, thoa đều khắp mặt và vùng cổ. Vỗ nhẹ 30 giây để dưỡng chất thẩm thấu sâu. Sử dụng đều đặn sáng và tối.",
         "gallery": [
           "/assets/images/catalog/dr-bargo/drbargo-1-img-1.jpg",
-          "/assets/images/catalog/dr-bargo/drbargo-1-img-2.jpg",
-          "/assets/images/catalog/dr-bargo/drbargo-1-img-3.jpg"
+          "/assets/images/catalog/dr-bargo/drbargo-1-img-2.jpg"
         ],
         "line": "drbargo-31c"
       }
@@ -836,7 +833,6 @@ export const brandsData = [
         "usage": "세안 직후 화장솜에 충분히 적셔 피부결을 따라 부드럽게 닦아내거나, 손에 덜어 가볍게 두드리며 2~3회 레이어링하여 흡수시킵니다.",
         "gallery": [
           "/assets/images/catalog/dr-bargo/drbargo-4-img-1.jpg",
-          "/assets/images/catalog/dr-bargo/drbargo-4-img-2.jpg",
           "/assets/images/catalog/dr-bargo/drbargo-4-img-3.jpg"
         ],
         "line": "drbargo-31c"
@@ -878,8 +874,7 @@ export const brandsData = [
         "usage": "토너 다음 단계에서 3~4방울을 스포이드로 취해 얼굴 전체에 고르게 펴 바른 후, 가볍게 두드려 흡수시킵니다. 집중 케어가 필요한 부위는 한 번 더 레이어링합니다.",
         "gallery": [
           "/assets/images/catalog/dr-bargo/drbargo-3-img-1.jpg",
-          "/assets/images/catalog/dr-bargo/drbargo-3-img-2.jpg",
-          "/assets/images/catalog/dr-bargo/drbargo-3-img-3.jpg"
+          "/assets/images/catalog/dr-bargo/drbargo-3-img-2.jpg"
         ],
         "line": "drbargo-31c"
       },
@@ -920,8 +915,7 @@ export const brandsData = [
         "usage": "세럼/앰플 사용 후, 적당량(2~3회 펌핑)을 취해 얼굴과 목 전체에 부드럽게 펴 바른 후 가볍게 두드려 흡수시킵니다. 아침, 저녁 데일리 루틴으로 사용합니다.",
         "gallery": [
           "/assets/images/catalog/dr-bargo/drbargo-1-img-1.jpg",
-          "/assets/images/catalog/dr-bargo/drbargo-1-img-2.jpg",
-          "/assets/images/catalog/dr-bargo/drbargo-1-img-3.jpg"
+          "/assets/images/catalog/dr-bargo/drbargo-1-img-2.jpg"
         ],
         "line": "drbargo-31c"
       }
@@ -1008,7 +1002,6 @@ export const brandsData = [
         ],
         "usage": "Sau bước toner, lấy 1 ống dropper ampoule thoa đều khắp mặt và cổ. Massage chuyển động hướng lên từ hàm đến thái dương trong 2 phút. Dùng 2 lần/ngày để đạt hiệu quả tối ưu.",
         "gallery": [
-          "/assets/images/catalog/neuraderm/neura-3-img-1.webp",
           "/assets/images/catalog/neuraderm/neura-3-img-2.webp",
           "/assets/images/catalog/neuraderm/neura-3-img-3.webp"
         ],
@@ -1051,8 +1044,7 @@ export const brandsData = [
         "usage": "Lấy một lượng kem vừa đủ thoa một lớp mỏng lên vùng da khô rát, tổn thương cần phục hồi 2-3 lần mỗi ngày sau khi đã làm sạch nhẹ nhàng.",
         "gallery": [
           "/assets/images/catalog/neuraderm/neura-6-img-1.png",
-          "/assets/images/catalog/neuraderm/neura-6-img-2.png",
-          "/assets/images/catalog/neuraderm/neura-6-img-3.webp"
+          "/assets/images/catalog/neuraderm/neura-6-img-2.png"
         ],
         "line": "neura-basic"
       },
@@ -1140,7 +1132,6 @@ export const brandsData = [
         ],
         "usage": "Rửa sạch mặt, gỡ lớp màng bảo vệ rồi đắp mặt nạ Bio-Cellulose ôm khít theo khuôn mặt. Thư giãn 15-20 phút, gỡ mặt nạ và massage nhẹ nhàng lượng tinh chất còn lại cho ngấm hết.",
         "gallery": [
-          "/assets/images/catalog/neuraderm/neura-4-img-1.webp",
           "/assets/images/catalog/neuraderm/neura-4-img-2.webp"
         ],
         "line": "neura-basic"
@@ -1455,7 +1446,6 @@ export const brandsData = [
         ],
         "usage": "토너 다음 단계에서 스포이드 1회 분량을 취해 얼굴 안쪽에서 바깥쪽으로, 아래에서 위로 리프팅하듯 마사지하며 흡수시킵니다.",
         "gallery": [
-          "/assets/images/catalog/neuraderm/neura-3-img-1.webp",
           "/assets/images/catalog/neuraderm/neura-3-img-2.webp",
           "/assets/images/catalog/neuraderm/neura-3-img-3.webp"
         ],
@@ -1498,8 +1488,7 @@ export const brandsData = [
         "usage": "세안 또는 목욕 후 건조하거나 상처·자극받은 피부 부위에 적당량을 덜어 부드럽게 펴 발라줍니다 (하루 2~3회 수시 덧바름 권장).",
         "gallery": [
           "/assets/images/catalog/neuraderm/neura-6-img-1.png",
-          "/assets/images/catalog/neuraderm/neura-6-img-2.png",
-          "/assets/images/catalog/neuraderm/neura-6-img-3.webp"
+          "/assets/images/catalog/neuraderm/neura-6-img-2.png"
         ],
         "line": "neura-basic"
       },
@@ -1587,7 +1576,6 @@ export const brandsData = [
         ],
         "usage": "세안 후 지지체를 제거하고 바이오 셀룰로오스 시트를 얼굴 형태에 맞춰 밀착시킵니다. 15~20분 휴식 후 떼어내고 남은 에센스를 가볍게 두드려 흡수시킵니다.",
         "gallery": [
-          "/assets/images/catalog/neuraderm/neura-4-img-1.webp",
           "/assets/images/catalog/neuraderm/neura-4-img-2.webp"
         ],
         "line": "neura-basic"
@@ -1932,8 +1920,7 @@ export const brandsData = [
         "driveVideoUrl": null,
         "image": "/assets/images/catalog/medipharm/stemc-5.jpg",
         "gallery": [
-          "/assets/images/catalog/medipharm/stemc-5-g1.webp",
-          "/assets/images/catalog/medipharm/stemc-5-g2.webp"
+          "/assets/images/catalog/medipharm/stemc-5-g1.webp"
         ],
         "line": "medipharm-stemc"
       },
@@ -1974,8 +1961,7 @@ export const brandsData = [
         "usage": "Sau khi rửa mặt, thấm đẫm ra bông cotton lau nhẹ khắp mặt, hoặc vỗ trực tiếp bằng tay 2-3 lớp theo phương pháp 7-Skin để tạo hiệu ứng căng bóng Glass Skin.",
         "gallery": [
           "/assets/images/catalog/medipharm/stemc-4-g1.jpg",
-          "/assets/images/catalog/medipharm/stemc-4-g2.jpg",
-          "/assets/images/catalog/medipharm/stemc-4-g3.jpg"
+          "/assets/images/catalog/medipharm/stemc-4-g2.jpg"
         ],
         "line": "medipharm-stemc"
       },
@@ -2055,8 +2041,7 @@ export const brandsData = [
         "gallery": [
           "/assets/images/catalog/medipharm/stemc-3-g1.jpg",
           "/assets/images/catalog/medipharm/stemc-3-g2.jpg",
-          "/assets/images/catalog/medipharm/stemc-3-g3.jpg",
-          "/assets/images/catalog/medipharm/stemc-3-g4.jpg"
+          "/assets/images/catalog/medipharm/stemc-3-g3.jpg"
         ],
         "line": "medipharm-stemc"
       },
@@ -2124,8 +2109,7 @@ export const brandsData = [
         "usage": "Làm sạch da, lấy một lượng kem vừa đủ thoa đều lên mặt và cổ hoặc khu vực cần làm sáng da sau đó massage nhẹ nhàng. Sử dụng đều đặn mỗi tối sau bước làm sạch và tinh chất.",
         "gallery": [
           "/assets/images/catalog/medipharm/kojic-acid-2.jpg",
-          "/assets/images/catalog/medipharm/kojic-acid-3.jpg",
-          "/assets/images/catalog/medipharm/kojic-acid-4.jpg"
+          "/assets/images/catalog/medipharm/kojic-acid-3.jpg"
         ],
         "line": "medipharm-treatment"
       },
@@ -2172,8 +2156,7 @@ export const brandsData = [
         "driveVideoUrl": null,
         "image": "/assets/images/catalog/medipharm/stemc-5.jpg",
         "gallery": [
-          "/assets/images/catalog/medipharm/stemc-5-g1.webp",
-          "/assets/images/catalog/medipharm/stemc-5-g2.webp"
+          "/assets/images/catalog/medipharm/stemc-5-g1.webp"
         ],
         "line": "medipharm-stemc"
       },
@@ -2214,8 +2197,7 @@ export const brandsData = [
         "usage": "세안 후 화장솜에 충분히 적셔 닦아내거나, 손바닥에 덜어 가볍게 두드리며 여러 번 덧발라 흡수시킵니다.",
         "gallery": [
           "/assets/images/catalog/medipharm/stemc-4-g1.jpg",
-          "/assets/images/catalog/medipharm/stemc-4-g2.jpg",
-          "/assets/images/catalog/medipharm/stemc-4-g3.jpg"
+          "/assets/images/catalog/medipharm/stemc-4-g2.jpg"
         ],
         "line": "medipharm-stemc"
       },
@@ -2295,8 +2277,7 @@ export const brandsData = [
         "gallery": [
           "/assets/images/catalog/medipharm/stemc-3-g1.jpg",
           "/assets/images/catalog/medipharm/stemc-3-g2.jpg",
-          "/assets/images/catalog/medipharm/stemc-3-g3.jpg",
-          "/assets/images/catalog/medipharm/stemc-3-g4.jpg"
+          "/assets/images/catalog/medipharm/stemc-3-g3.jpg"
         ],
         "line": "medipharm-stemc"
       },
@@ -2361,8 +2342,7 @@ export const brandsData = [
         "usage": "저녁 스킨케어 마지막 단계에서 색소 부위 또는 얼굴 전체에 얇게 펴 바릅니다.",
         "gallery": [
           "/assets/images/catalog/medipharm/kojic-acid-2.jpg",
-          "/assets/images/catalog/medipharm/kojic-acid-3.jpg",
-          "/assets/images/catalog/medipharm/kojic-acid-4.jpg"
+          "/assets/images/catalog/medipharm/kojic-acid-3.jpg"
         ],
         "line": "medipharm-treatment"
       },
@@ -2475,8 +2455,7 @@ export const brandsData = [
         "usage": "Tạo bọt và massage nhẹ nhàng da đầu 2-3 phút rồi xả sạch.",
         "driveVideoUrl": null,
         "gallery": [
-          "/assets/images/catalog/smib/smib-3-g1.jpg",
-          "/assets/images/catalog/smib/smib-3-g2.png"
+          "/assets/images/catalog/smib/smib-3-g1.jpg"
         ],
         "line": "smib-lactobio"
       },
@@ -2546,8 +2525,7 @@ export const brandsData = [
         "driveVideoUrl": null,
         "gallery": [
           "/assets/images/catalog/smib/smib-1-g1.jpg",
-          "/assets/images/catalog/smib/smib-1-g2.jpg",
-          "/assets/images/catalog/smib/smib-1-g4.jpg"
+          "/assets/images/catalog/smib/smib-1-g2.jpg"
         ],
         "line": "smib-colorchange"
       },
@@ -2611,8 +2589,7 @@ export const brandsData = [
         "usage": "Dùng gội đầu hằng ngày.",
         "driveVideoUrl": null,
         "gallery": [
-          "/assets/images/catalog/smib/smib-5-g1.jpg",
-          "/assets/images/catalog/smib/smib-5-g2.jpg"
+          "/assets/images/catalog/smib/smib-5-g1.jpg"
         ],
         "line": "smib-innabi"
       },
@@ -2648,8 +2625,7 @@ export const brandsData = [
         "usage": "Lấy một lượng vừa đủ massage đều khắp da đầu và thân tóc, để 2-3 phút rồi xả sạch với nước.",
         "driveVideoUrl": null,
         "gallery": [
-          "/assets/images/catalog/smib/smib-6-g1.jpg",
-          "/assets/images/catalog/smib/smib-6-g2.jpg"
+          "/assets/images/catalog/smib/smib-6-g1.jpg"
         ],
         "line": "smib-innabi"
       },
@@ -2679,8 +2655,7 @@ export const brandsData = [
         "usage": "Xịt trực tiếp vào chân tóc khi khô hoặc sau khi gội đầu, dùng ngón tay massage nhẹ 1 phút.",
         "driveVideoUrl": null,
         "gallery": [
-          "/assets/images/catalog/smib/smib-7-g1.jpg",
-          "/assets/images/catalog/smib/smib-7-g2.jpg"
+          "/assets/images/catalog/smib/smib-7-g1.jpg"
         ],
         "line": "smib-innabi"
       }
@@ -2717,8 +2692,7 @@ export const brandsData = [
         "usage": "두피를 중심으로 2~3분간 마사지 후 깨끗이 헹굽니다.",
         "driveVideoUrl": null,
         "gallery": [
-          "/assets/images/catalog/smib/smib-3-g1.jpg",
-          "/assets/images/catalog/smib/smib-3-g2.png"
+          "/assets/images/catalog/smib/smib-3-g1.jpg"
         ],
         "line": "smib-lactobio"
       },
@@ -2788,8 +2762,7 @@ export const brandsData = [
         "driveVideoUrl": null,
         "gallery": [
           "/assets/images/catalog/smib/smib-1-g1.jpg",
-          "/assets/images/catalog/smib/smib-1-g2.jpg",
-          "/assets/images/catalog/smib/smib-1-g4.jpg"
+          "/assets/images/catalog/smib/smib-1-g2.jpg"
         ],
         "line": "smib-colorchange"
       },
@@ -2853,8 +2826,7 @@ export const brandsData = [
         "usage": "매일 데일리 샴푸로 사용합니다.",
         "driveVideoUrl": null,
         "gallery": [
-          "/assets/images/catalog/smib/smib-5-g1.jpg",
-          "/assets/images/catalog/smib/smib-5-g2.jpg"
+          "/assets/images/catalog/smib/smib-5-g1.jpg"
         ],
         "line": "smib-innabi"
       },
@@ -2890,8 +2862,7 @@ export const brandsData = [
         "usage": "적당량을 취해 두피와 모발에 마사지하듯 거품을 낸 뒤 2~3분 후 미온수로 깨끗이 헹궈냅니다.",
         "driveVideoUrl": null,
         "gallery": [
-          "/assets/images/catalog/smib/smib-6-g1.jpg",
-          "/assets/images/catalog/smib/smib-6-g2.jpg"
+          "/assets/images/catalog/smib/smib-6-g1.jpg"
         ],
         "line": "smib-innabi"
       },
@@ -2921,8 +2892,7 @@ export const brandsData = [
         "usage": "두피에 직접 분사 후 손가락 끝으로 가볍게 마사지하여 흡수시킵니다.",
         "driveVideoUrl": null,
         "gallery": [
-          "/assets/images/catalog/smib/smib-7-g1.jpg",
-          "/assets/images/catalog/smib/smib-7-g2.jpg"
+          "/assets/images/catalog/smib/smib-7-g1.jpg"
         ],
         "line": "smib-innabi"
       }
